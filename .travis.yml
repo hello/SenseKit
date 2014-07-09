@@ -1,0 +1,6 @@
+language: objective-c
+cache: bundler
+install:
+- gem install xcpretty
+script:
+- xcodebuild test -workspace Example/SenseKit.xcworkspace -scheme SenseKit -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
