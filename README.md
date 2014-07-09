@@ -1,4 +1,4 @@
-# SenseKit
+# SenseKit [![Build Status](https://magnum.travis-ci.com/hello/SenseKit.svg?token=tR1bHuwpRhYiEKnjx5ev&branch=master)](https://magnum.travis-ci.com/hello/SenseKit)
 
 Component library for building Sense clients
 
