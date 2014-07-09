@@ -4,7 +4,6 @@ Pod::Spec.new do |s|
   s.version          = "0.1.0"
   s.summary          = "Toolkit for building Sense apps"
   s.homepage         = "https://github.com/hello/SenseKit"
-  s.license          = 'MIT'
   s.author           = { "Delisa Mason" => "iskanamagus@gmail.com" }
   s.source           = { :git => "https://github.com/hello/SenseKit.git", :tag => s.version.to_s }
 

@@ -63,6 +63,7 @@
 		7947F1071D0449D58162C4F5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAlarmSpec.m; sourceTree = "<group>"; };
 		8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSensorSpec.m; sourceTree = "<group>"; };
+		8AB29B7F196DFD8C004BE34E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1959AD7D9E24415997D4FD4 /* Pods-SenseKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.xcconfig"; path = "Pods/Pods-SenseKit.xcconfig"; sourceTree = "<group>"; };
 		F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SenseKit.podspec; path = ../SenseKit.podspec; sourceTree = "<group>"; tabWidth = 2; };
@@ -178,6 +179,7 @@
 		60FF7A9C1954A5C5007DD14C /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				8AB29B7F196DFD8C004BE34E /* Makefile */,
 				F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */,
 				7947F1071D0449D58162C4F5 /* README.md */,
 			);
