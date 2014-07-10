@@ -66,6 +66,12 @@
 #define COCOAPODS_VERSION_MINOR_LGBluetooth 1
 #define COCOAPODS_VERSION_PATCH_LGBluetooth 4
 
+// Nocilla
+#define COCOAPODS_POD_AVAILABLE_Nocilla
+#define COCOAPODS_VERSION_MAJOR_Nocilla 0
+#define COCOAPODS_VERSION_MINOR_Nocilla 8
+#define COCOAPODS_VERSION_PATCH_Nocilla 1
+
 // SenseKit
 #define COCOAPODS_POD_AVAILABLE_SenseKit
 #define COCOAPODS_VERSION_MAJOR_SenseKit 0

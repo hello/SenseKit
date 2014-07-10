@@ -6,4 +6,5 @@ target 'Tests', :exclusive => true do
   pod "SenseKit", :path => "../"
 
   pod 'Kiwi'
+  pod 'Nocilla'
 end
