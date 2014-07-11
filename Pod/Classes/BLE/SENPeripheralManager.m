@@ -38,14 +38,8 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
 {
     [self connectAndDiscoverServiceWithUUIDString:SENDeviceServiceELLO andPerformBlock:^(LGService* helloService) {
         LGCharacteristic* deed = [self characteristicWithUUIDString:SENDeviceCharacteristicDEED onService:helloService];
-        [deed writeByte:0x6 completion:^(NSError *error) {
-            if (error) {
-                [self invokeCompletionBlock:completionBlock withError:error];
-                return;
-            }
-            [deed writeValue:SEN_dataForCurrentDate() completion:^(NSError *error) {
-                [self readCurrentTimeWithCompletion:completionBlock];
-            }];
+        [deed writeValue:SEN_dataForCurrentDate() completion:^(NSError *error) {
+            [self readCurrentTimeWithCompletion:completionBlock];
         }];
     } failureBlock:completionBlock];
 }
