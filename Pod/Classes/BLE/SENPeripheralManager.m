@@ -54,7 +54,7 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
                 return;
             }
             LGCharacteristic* deed = [self characteristicWithUUIDString:SENDeviceCharacteristicDEED onService:helloService];
-            [deed writeByte:0x5 completion:^(NSError *error) {
+            [deed writeByte:SENDeviceCommandGetTime completion:^(NSError *error) {
                 if (error)
                     [self invokeCompletionBlock:completionBlock withError:error];
             }];
@@ -79,7 +79,7 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
                 return;
             }
             LGCharacteristic* deed = [self characteristicWithUUIDString:SENDeviceCharacteristicDEED onService:service];
-            [deed writeByte:0x4 completion:^(NSError *error) {
+            [deed writeByte:SENDeviceCommandSendData completion:^(NSError *error) {
                 if (error)
                     [self invokeCompletionBlock:completionBlock withError:error];
             }];
@@ -116,7 +116,7 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
                 }
                 LGCharacteristic* deed = [self characteristicWithUUIDString:SENDeviceCharacteristicDEED onService:helloService];
                 LGCharacteristic* dood = [self characteristicWithUUIDString:SENDeviceCharacteristicD00D onService:helloService];
-                [deed writeByte:0x2 completion:^(NSError *error) {
+                [deed writeByte:SENDeviceCommandCalibrate completion:^(NSError *error) {
                     if (error) {
                         [self invokeCompletionBlock:completionBlock withError:error];
                         return;
@@ -161,7 +161,7 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
                     completionBlock(error);
                 return;
             }
-            [deed writeByte:0x3 completion:^(NSError *error) {
+            [deed writeByte:SENDeviceCommandDisconnect completion:^(NSError *error) {
                 if (error) {
                     if (completionBlock)
                         completionBlock(error);
@@ -192,7 +192,7 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
     [self connectAndDiscoverServiceWithUUIDString:SENDeviceServiceELLO andPerformBlock:^(LGService* helloService) {
         LGCharacteristic* deed = [self characteristicWithUUIDString:SENDeviceCharacteristicDEED onService:helloService];
         LGCharacteristic* dood = [self characteristicWithUUIDString:SENDeviceCharacteristicD00D onService:helloService];
-        char byteToSend = shouldCollectData ? 0x1 : 0x0;
+        char byteToSend = shouldCollectData ? SENDeviceCommandStartAccelerometer : SENDeviceCommandStopAccelerometer;
         [deed writeByte:byteToSend completion:^(NSError *error) {
             if (error) {
                 [self invokeCompletionBlock:completionBlock withError:error];

@@ -1,9 +1,38 @@
 
 #import <Foundation/Foundation.h>
 
+enum SENDeviceCommand {
+    SENDeviceCommandStopAccelerometer = 0x0,
+    SENDeviceCommandStartAccelerometer = 0x1,
+    SENDeviceCommandCalibrate = 0x2,
+    SENDeviceCommandDisconnect = 0x3,
+    SENDeviceCommandSendData = 0x4,
+    SENDeviceCommandGetTime = 0x5,
+    SENDeviceCommandSetTime = 0x6,
+};
+
+struct SENPillData {
+    uint8_t version; // version of the struct
+    uint8_t reserved_1; // reserved byte
+    uint16_t length; // length of the whole struct in memory, returned by sizeof(struct pill_data)
+
+    uint8_t seconds; // 0-59
+    uint8_t minutes; // 0-59
+    uint8_t hours; // 0-23
+    uint8_t day; // 1-31, or 0 (unknown)
+    uint8_t month; // 1-12, or 0 (unknown)
+    uint8_t reserved_2; // reserved byte
+
+    uint16_t year; // 1582-9999
+
+    uint16_t valid_index; // the index in data field contains data from the above timestamp
+    uint16_t data[1440 * 2]; // Data array, aggregated per-minute data from accelerometer
+};
+
 struct SENStreamHeader {
     uint16_t data_length;
 };
+
 struct SENPacket {
     union {
         struct {
@@ -34,6 +63,7 @@ struct SENPacket {
         uint8_t bytes[20];
     };
 };
+
 struct SENStreamFooter {
     uint8_t src_sha1[20];
 };
