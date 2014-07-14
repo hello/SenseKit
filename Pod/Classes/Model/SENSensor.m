@@ -4,13 +4,13 @@
 
 NSString* const SENSensorUpdatedNotification = @"SENSensorUpdatedNotification";
 
-static NSString* const SENSensorArchiveKey = @"Sensors";
-static NSString* const SENSensorNameKey = @"name";
-static NSString* const SENSensorValueKey = @"value";
-static NSString* const SENSensorMessageKey = @"message";
-static NSString* const SENSensorConditionKey = @"condition";
-static NSString* const SENSensorLastUpdatedKey = @"last_updated";
-static NSString* const SENSensorUnitKey = @"unit";
+NSString* const SENSensorArchiveKey = @"Sensors";
+NSString* const SENSensorNameKey = @"name";
+NSString* const SENSensorValueKey = @"value";
+NSString* const SENSensorMessageKey = @"message";
+NSString* const SENSensorConditionKey = @"condition";
+NSString* const SENSensorLastUpdatedKey = @"last_updated";
+NSString* const SENSensorUnitKey = @"unit";
 
 @implementation SENSensor
 

@@ -2,12 +2,12 @@
 #import "SENAlarm.h"
 #import "SENKeyedArchiver.h"
 
-static NSString* const soundNameKey = @"sound";
-static NSString* const onKey = @"on";
-static NSString* const hourKey = @"hour";
-static NSString* const minuteKey = @"minute";
-static NSString* const identifierKey = @"identifier";
-static NSString* const savedAlarmKey = @"SENSavedAlarmKey";
+static NSString* const SENAlarmSoundNameKey = @"sound";
+static NSString* const SENAlarmOnKey = @"on";
+static NSString* const SENAlarmHourKey = @"hour";
+static NSString* const SENAlarmMinuteKey = @"minute";
+static NSString* const SENAlarmIdentifierKey = @"identifier";
+static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
 
 @interface SENAlarm ()
 @property (nonatomic, strong) NSString* identifier;
@@ -17,13 +17,13 @@ static NSString* const savedAlarmKey = @"SENSavedAlarmKey";
 
 + (SENAlarm*)savedAlarm
 {
-    SENAlarm* alarm = [[[SENKeyedArchiver objectsForKey:savedAlarmKey] allObjects] firstObject];
+    SENAlarm* alarm = [[[SENKeyedArchiver objectsForKey:SENAlarmArchiveKey] allObjects] firstObject];
     if (!alarm) {
         NSDictionary* properties = @{
-            soundNameKey : @"None",
-            hourKey : @7,
-            minuteKey : @30,
-            onKey : @YES
+            SENAlarmSoundNameKey : @"None",
+            SENAlarmHourKey : @7,
+            SENAlarmMinuteKey : @30,
+            SENAlarmOnKey : @YES
         };
         alarm = [[SENAlarm alloc] initWithDictionary:properties];
         [alarm save];
@@ -35,11 +35,11 @@ static NSString* const savedAlarmKey = @"SENSavedAlarmKey";
 - (instancetype)initWithDictionary:(NSDictionary*)dict
 {
     if (self = [super init]) {
-        _on = [dict[onKey] boolValue];
-        _hour = [dict[hourKey] integerValue];
-        _minute = [dict[minuteKey] integerValue];
-        _soundName = dict[soundNameKey];
-        _identifier = dict[identifierKey] ?: [[[NSUUID alloc] init] UUIDString];
+        _on = [dict[SENAlarmOnKey] boolValue];
+        _hour = [dict[SENAlarmHourKey] integerValue];
+        _minute = [dict[SENAlarmMinuteKey] integerValue];
+        _soundName = dict[SENAlarmSoundNameKey];
+        _identifier = dict[SENAlarmIdentifierKey] ?: [[[NSUUID alloc] init] UUIDString];
     }
     return self;
 }
@@ -55,22 +55,22 @@ static NSString* const savedAlarmKey = @"SENSavedAlarmKey";
 - (id)initWithCoder:(NSCoder*)aDecoder
 {
     if (self = [super init]) {
-        _on = [[aDecoder decodeObjectForKey:onKey] boolValue];
-        _hour = [[aDecoder decodeObjectForKey:hourKey] integerValue];
-        _minute = [[aDecoder decodeObjectForKey:minuteKey] integerValue];
-        _soundName = [aDecoder decodeObjectForKey:soundNameKey];
-        _identifier = [aDecoder decodeObjectForKey:soundNameKey] ?: [[[NSUUID alloc] init] UUIDString];
+        _on = [[aDecoder decodeObjectForKey:SENAlarmOnKey] boolValue];
+        _hour = [[aDecoder decodeObjectForKey:SENAlarmHourKey] integerValue];
+        _minute = [[aDecoder decodeObjectForKey:SENAlarmMinuteKey] integerValue];
+        _soundName = [aDecoder decodeObjectForKey:SENAlarmSoundNameKey];
+        _identifier = [aDecoder decodeObjectForKey:SENAlarmSoundNameKey] ?: [[[NSUUID alloc] init] UUIDString];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder*)aCoder
 {
-    [aCoder encodeObject:@([self isOn]) forKey:onKey];
-    [aCoder encodeObject:@([self hour]) forKey:hourKey];
-    [aCoder encodeObject:@([self minute]) forKey:minuteKey];
-    [aCoder encodeObject:[self soundName] forKey:soundNameKey];
-    [aCoder encodeObject:[self identifier] forKey:identifierKey];
+    [aCoder encodeObject:@([self isOn]) forKey:SENAlarmOnKey];
+    [aCoder encodeObject:@([self hour]) forKey:SENAlarmHourKey];
+    [aCoder encodeObject:@([self minute]) forKey:SENAlarmMinuteKey];
+    [aCoder encodeObject:[self soundName] forKey:SENAlarmSoundNameKey];
+    [aCoder encodeObject:[self identifier] forKey:SENAlarmIdentifierKey];
 }
 
 - (NSUInteger)hash
@@ -135,7 +135,7 @@ static NSString* const savedAlarmKey = @"SENSavedAlarmKey";
 
 - (void)save
 {
-    [SENKeyedArchiver setObjects:[NSSet setWithObject:self] forKey:savedAlarmKey];
+    [SENKeyedArchiver setObjects:[NSSet setWithObject:self] forKey:SENAlarmArchiveKey];
 }
 
 - (void)setSoundName:(NSString*)soundName
