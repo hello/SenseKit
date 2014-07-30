@@ -49,6 +49,13 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
 - (NSString*)localizedValue;
 
 /**
+ *  The value translated into the user's preferred unit
+ *
+ *  @return the value
+ */
+- (NSNumber*)valueInPreferredUnit;
+
+/**
  *  A localized version of the unit
  *
  *  @return the localized string

@@ -30,6 +30,13 @@ NSString* const SENSensorUnitKey = @"unit";
         format = @"%@";
     }
     return [NSString stringWithFormat:format, [value doubleValue]];
+
++ (double)temperatureValueInPreferredUnit:(double)value
+{
+    if ([SENSettings temperatureFormat] == SENTemperatureFormatFahrenheit) {
+        return (value * 1.8) + 32;
+    }
+    return value;
 }
 
 + (NSString*)localizedStringPrefixForUnit:(SENSensorUnit)unit
@@ -83,6 +90,13 @@ NSString* const SENSensorUnitKey = @"unit";
     [aCoder encodeObject:@(self.condition) forKey:SENSensorConditionKey];
     [aCoder encodeObject:@(self.unit) forKey:SENSensorUnitKey];
     [aCoder encodeObject:self.lastUpdated forKey:SENSensorLastUpdatedKey];
+
+- (NSNumber*)valueInPreferredUnit
+{
+    if (self.unit == SENSensorUnitDegreeCentigrade) {
+        return @([SENSensor temperatureValueInPreferredUnit:[self.value doubleValue]]);
+    }
+    return self.value;
 }
 
 - (NSUInteger)hash

@@ -1,5 +1,6 @@
 
 #import "SENAlarm.h"
+#import "SENSettings.h"
 #import "SENKeyedArchiver.h"
 
 static NSString* const SENAlarmSoundNameKey = @"sound";
@@ -32,6 +33,24 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
     return alarm;
 }
 
++ (NSString*)localizedValueForTime:(struct SENAlarmTime)time
+{
+    long adjustedHour = time.hour;
+    NSString* formatString;
+    NSString* minuteText = time.minute < 10 ? [NSString stringWithFormat:@"0%ld", (long)time.minute] : [NSString stringWithFormat:@"%ld", (long)time.minute];
+    if ([SENSettings timeFormat] == SENTimeFormat12Hour) {
+        formatString = time.hour > 11 ? @"%ld:%@pm" : @"%ld:%@am";
+        if (time.hour > 12) {
+            adjustedHour = (long)(time.hour - 12);
+        } else if (time.hour == 0) {
+            adjustedHour = 12;
+        }
+    } else {
+        formatString = @"%ld:%@";
+    }
+    return [NSString stringWithFormat:formatString, adjustedHour, minuteText];
+}
+
 - (instancetype)initWithDictionary:(NSDictionary*)dict
 {
     if (self = [super init]) {
@@ -46,8 +65,10 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
 
 - (NSString*)localizedValue
 {
-    NSString* minuteText = self.minute < 10 ? [NSString stringWithFormat:@"0%ld", (long)self.minute] : [NSString stringWithFormat:@"%ld", (long)self.minute];
-    return [NSString stringWithFormat:@"%ld:%@", (long)self.hour, minuteText];
+    struct SENAlarmTime time;
+    time.hour = self.hour;
+    time.minute = self.minute;
+    return [SENAlarm localizedValueForTime:time];
 }
 
 #pragma mark - NSCoding

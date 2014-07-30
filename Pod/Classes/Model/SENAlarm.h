@@ -16,6 +16,15 @@ struct SENAlarmTime {
 + (SENAlarm*)savedAlarm;
 
 /**
+ *  Presents a time in a locale-specific representation
+ *
+ *  @param time the time to format
+ *
+ *  @return a string representing the time
+ */
++ (NSString*)localizedValueForTime:(struct SENAlarmTime)time;
+
+/**
  *  Creates a new alarm from a dictionary of property values
  *
  *  @param dict property values with keys corresponding to a translation map
