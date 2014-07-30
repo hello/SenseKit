@@ -1,8 +1,11 @@
 
+#import "SENAPIRoom.h"
 #import "SENSensor.h"
 #import "SENKeyedArchiver.h"
+#import "SENSettings.h"
 
 NSString* const SENSensorUpdatedNotification = @"SENSensorUpdatedNotification";
+NSString* const SENSensorUpdateFailedNotification = @"SENSensorUpdateFailedNotification";
 
 NSString* const SENSensorArchiveKey = @"Sensors";
 NSString* const SENSensorNameKey = @"name";
@@ -19,6 +22,17 @@ NSString* const SENSensorUnitKey = @"unit";
     return [[SENKeyedArchiver objectsForKey:SENSensorArchiveKey] allObjects];
 }
 
++ (void)refreshCachedSensors
+{
+    [SENAPIRoom currentWithCompletion:^(id data, NSError* error) {
+        if (error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:SENSensorUpdateFailedNotification object:nil];
+            return;
+        }
+        // TODO: handle parsing/saving sensor values
+    }];
+}
+
 + (NSString*)formatValue:(NSNumber*)value withUnit:(SENSensorUnit)unit
 {
     NSString* prefix = [self localizedStringPrefixForUnit:unit];
@@ -29,7 +43,12 @@ NSString* const SENSensorUnitKey = @"unit";
     } else {
         format = @"%@";
     }
-    return [NSString stringWithFormat:format, [value doubleValue]];
+
+    double formattedValue = (unit == SENSensorUnitDegreeCentigrade)
+                                ? [self temperatureValueInPreferredUnit:[value doubleValue]]
+                                : [value doubleValue];
+    return [NSString stringWithFormat:format, formattedValue];
+}
 
 + (double)temperatureValueInPreferredUnit:(double)value
 {
@@ -84,12 +103,13 @@ NSString* const SENSensorUnitKey = @"unit";
 
 - (void)encodeWithCoder:(NSCoder*)aCoder
 {
-    [aCoder encodeObject:self.name forKey:SENSensorNameKey];
-    [aCoder encodeObject:self.value forKey:SENSensorValueKey];
-    [aCoder encodeObject:self.message forKey:SENSensorMessageKey];
-    [aCoder encodeObject:@(self.condition) forKey:SENSensorConditionKey];
-    [aCoder encodeObject:@(self.unit) forKey:SENSensorUnitKey];
-    [aCoder encodeObject:self.lastUpdated forKey:SENSensorLastUpdatedKey];
+    [aCoder encodeObject:_name forKey:SENSensorNameKey];
+    [aCoder encodeObject:_value forKey:SENSensorValueKey];
+    [aCoder encodeObject:_message forKey:SENSensorMessageKey];
+    [aCoder encodeObject:@(_condition) forKey:SENSensorConditionKey];
+    [aCoder encodeObject:@(_unit) forKey:SENSensorUnitKey];
+    [aCoder encodeObject:_lastUpdated forKey:SENSensorLastUpdatedKey];
+}
 
 - (NSNumber*)valueInPreferredUnit
 {

@@ -6,6 +6,11 @@
  */
 extern NSString* const SENSensorUpdatedNotification;
 
+/**
+ *  Notification sent when a sensor update fails
+ */
+extern NSString* const SENSensorUpdateFailedNotification;
+
 typedef NS_ENUM(NSUInteger, SENSensorCondition) {
     SENSensorConditionUnknown,
     SENSensorConditionAlert,
@@ -28,6 +33,12 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
  *  @return Array of SENSensor objects
  */
 + (NSArray*)sensors;
+
+/**
+ *  Sends a request to the API for the latest environmental sensor values and
+ *  updates the cache
+ */
++ (void)refreshCachedSensors;
 
 /**
  *  Creates a localized string from a given value and unit
