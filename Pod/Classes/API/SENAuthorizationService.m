@@ -73,7 +73,8 @@ static NSString* const SEN_authorizationHeaderKey = @"Authorization";
 
 + (void)authorizeRequestsWithToken:(NSString*)token
 {
-    [[SENAPIClient HTTPSessionManager].requestSerializer setValue:token forHTTPHeaderField:SEN_authorizationHeaderKey];
+    NSString* headerValue = token ? [NSString stringWithFormat:@"Bearer %@", token] : nil;
+    [[SENAPIClient HTTPSessionManager].requestSerializer setValue:headerValue forHTTPHeaderField:SEN_authorizationHeaderKey];
     if (token) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SENAuthorizationServiceDidAuthorizeNotification object:self userInfo:nil];
     } else {
