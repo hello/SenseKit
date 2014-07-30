@@ -72,6 +72,13 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
         __block int expectedPacketCount = 0;
         __block int receivedPacketCount = 0;
         __block NSMutableArray* receivedPackets = [NSMutableArray array];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [feed setNotifyValue:NO completion:^(NSError *error) {
+                NSData* compiledPackets = [self formatPacketsInArray:receivedPackets];
+                // TODO: reply with 0x0 to F00D for received packets, reply with 0x1 for missing packets
+                [self invokeCompletionBlock:completionBlock withError:error];
+            }];
+        });
         
         [feed setNotifyValue:YES completion:^(NSError *error) {
             if (error) {
@@ -91,11 +98,6 @@ static NSInteger const BLE_MAX_PACKET_SIZE = 20;
                 expectedPacketCount = packet.header.packet_count;
             } else {
                 [receivedPackets addObject:data];
-                if (packet.sequence_number == expectedPacketCount - 1) {
-                    NSData* compiledPackets = [self formatPacketsInArray:receivedPackets];
-                    // TODO: reply with 0x0 to F00D for received packets, reply with 0x1 for missing packets
-                    [self invokeCompletionBlock:completionBlock withError:error];
-                }
             }
             
             receivedPacketCount++;
