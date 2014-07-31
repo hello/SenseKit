@@ -24,12 +24,20 @@ NSString* const SENSensorUnitKey = @"unit";
 
 + (void)refreshCachedSensors
 {
-    [SENAPIRoom currentWithCompletion:^(id data, NSError* error) {
+    [SENAPIRoom currentWithCompletion:^(NSDictionary* data, NSError* error) {
         if (error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SENSensorUpdateFailedNotification object:nil];
             return;
         }
-        // TODO: handle parsing/saving sensor values
+        [SENKeyedArchiver setObjects:nil forKey:SENSensorArchiveKey];
+        [data enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSDictionary* obj, BOOL *stop) {
+            NSMutableDictionary* values = [obj mutableCopy];
+            values[SENSensorNameKey] = key;
+            SENSensor* sensor = [[SENSensor alloc] initWithDictionary:values];
+            if (sensor) {
+                [sensor save];
+            }
+        }];
     }];
 }
 
