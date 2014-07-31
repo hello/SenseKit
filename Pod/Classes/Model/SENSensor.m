@@ -12,7 +12,7 @@ NSString* const SENSensorNameKey = @"name";
 NSString* const SENSensorValueKey = @"value";
 NSString* const SENSensorMessageKey = @"message";
 NSString* const SENSensorConditionKey = @"condition";
-NSString* const SENSensorLastUpdatedKey = @"last_updated";
+NSString* const SENSensorLastUpdatedKey = @"last_updated_utc";
 NSString* const SENSensorUnitKey = @"unit";
 
 @implementation SENSensor
@@ -41,7 +41,7 @@ NSString* const SENSensorUnitKey = @"unit";
         NSString* localizationKey = [NSString stringWithFormat:@"%@format", prefix];
         format = NSLocalizedString(localizationKey, nil);
     } else {
-        format = @"%@";
+        format = @"%.0f";
     }
 
     double formattedValue = (unit == SENSensorUnitDegreeCentigrade)
@@ -83,7 +83,7 @@ NSString* const SENSensorUnitKey = @"unit";
         _message = dict[SENSensorMessageKey];
         _condition = [SENSensor conditionFromValue:dict[SENSensorConditionKey]];
         _unit = [SENSensor unitFromValue:dict[SENSensorUnitKey]];
-        _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[dict[SENSensorLastUpdatedKey] doubleValue]];
+        _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[dict[SENSensorLastUpdatedKey] floatValue]/1000];
     }
     return self;
 }

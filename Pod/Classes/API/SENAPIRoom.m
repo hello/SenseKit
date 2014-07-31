@@ -30,26 +30,13 @@
                               timeScope:(NSString*)scope
                              completion:(SENAPIDataBlock)completion
 {
-    NSString* timestamp = [[self UTCMillisecondTimestampDateFormatter] stringFromDate:[NSDate date]];
+    NSString* timestamp = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     NSString* path = [NSString stringWithFormat:@"/room/%@/%@", sensorName, scope];
     [[SENAPIClient HTTPSessionManager] GET:path parameters:@{ @"from" : timestamp } success:^(NSURLSessionDataTask* task, id responseObject) {
         completion(responseObject, nil);
     } failure:^(NSURLSessionDataTask* task, NSError* error) {
         completion(nil, error);
     }];
-}
-
-+ (NSDateFormatter*)UTCMillisecondTimestampDateFormatter
-{
-    static NSDateFormatter* dateFormatter;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        NSTimeZone *tz = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        [dateFormatter setDateFormat:@"A"];
-        [dateFormatter setTimeZone:tz];
-    });
-    return dateFormatter;
 }
 
 @end
