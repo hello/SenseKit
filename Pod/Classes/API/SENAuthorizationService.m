@@ -1,5 +1,7 @@
 
 #import <AFNetworking/AFHTTPSessionManager.h>
+#import <AFNetworking/AFHTTPRequestOperation.h>
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import <FXKeychain/FXKeychain.h>
 
 #import "SENAuthorizationService.h"
@@ -8,34 +10,40 @@
 NSString* const SENAuthorizationServiceDidAuthorizeNotification = @"SENAuthorizationServiceDidAuthorize";
 NSString* const SENAuthorizationServiceDidDeauthorizeNotification = @"SENAuthorizationServiceDidDeauthorize";
 
-static NSString* const SEN_tokenPath = @"oauth2/token";
-static NSString* const SEN_applicationClientID = @"iphone_pill";
-static NSString* const SEN_credentialsKey = @"credentials";
-static NSString* const SEN_accessTokenKey = @"access_token";
-static NSString* const SEN_authorizationHeaderKey = @"Authorization";
+static NSString* const SENAuthorizationServiceTokenPath = @"oauth2/token";
+static NSString* const SENAuthorizationServiceClientID = @"iphone_pill";
+static NSString* const SENAuthorizationServiceCredentialsKey = @"credentials";
+static NSString* const SENAuthorizationServiceAccessTokenKey = @"access_token";
+static NSString* const SENAuthorizationServiceAuthorizationHeaderKey = @"Authorization";
 
 @implementation SENAuthorizationService
 
 + (void)authorizeWithUsername:(NSString*)username password:(NSString*)password callback:(void (^)(NSError*))block
 {
     NSDictionary* params = @{ @"grant_type" : @"password",
-                              @"client_id" : SEN_applicationClientID,
+                              @"client_id" : SENAuthorizationServiceClientID,
                               @"username" : username ?: @"",
                               @"password" : password ?: @"" };
 
-    [[SENAPIClient HTTPSessionManager] POST:SEN_tokenPath parameters:params success:^(NSURLSessionDataTask* task, id responseObject) {
-        [self authorizeRequestsWithResponse:responseObject];
+    NSURL* url = [[SENAPIClient baseURL] URLByAppendingPathComponent:SENAuthorizationServiceTokenPath];
+    NSMutableURLRequest* request = [[[SENAPIClient HTTPSessionManager] requestSerializer] requestWithMethod:@"POST" URLString:[url absoluteString] parameters:params error:nil];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+
+    AFHTTPRequestOperation* operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation* operation, id responseObject) {
+        [self authorizeRequestsWithResponse:[NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil]];
         if (block)
-            block(task.error);
-    } failure:^(NSURLSessionDataTask* task, NSError* error) {
+            block(operation.error);
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
         if (block)
             block(error);
     }];
+    [[AFHTTPRequestOperationManager manager].operationQueue addOperation:operation];
 }
 
 + (void)deauthorize
 {
-    [[FXKeychain defaultKeychain] removeObjectForKey:SEN_credentialsKey];
+    [[FXKeychain defaultKeychain] removeObjectForKey:SENAuthorizationServiceCredentialsKey];
     [self authorizeRequestsWithToken:nil];
 }
 
@@ -54,12 +62,12 @@ static NSString* const SEN_authorizationHeaderKey = @"Authorization";
 
 + (id)authorizationHeaderValue
 {
-    return [[SENAPIClient HTTPSessionManager].requestSerializer HTTPRequestHeaders][SEN_authorizationHeaderKey];
+    return [[SENAPIClient HTTPSessionManager].requestSerializer HTTPRequestHeaders][SENAuthorizationServiceAuthorizationHeaderKey];
 }
 
 + (void)authorizeRequestsFromKeychain
 {
-    id token = [FXKeychain defaultKeychain][SEN_credentialsKey][SEN_accessTokenKey];
+    id token = [FXKeychain defaultKeychain][SENAuthorizationServiceCredentialsKey][SENAuthorizationServiceAccessTokenKey];
     if (token)
         [self authorizeRequestsWithToken:token];
 }
@@ -67,14 +75,14 @@ static NSString* const SEN_authorizationHeaderKey = @"Authorization";
 + (void)authorizeRequestsWithResponse:(id)responseObject
 {
     NSDictionary* responseData = (NSDictionary*)responseObject;
-    [[FXKeychain defaultKeychain] setObject:responseObject forKey:SEN_credentialsKey];
-    [self authorizeRequestsWithToken:responseData[SEN_accessTokenKey]];
+    [[FXKeychain defaultKeychain] setObject:responseObject forKey:SENAuthorizationServiceCredentialsKey];
+    [self authorizeRequestsWithToken:responseData[SENAuthorizationServiceAccessTokenKey]];
 }
 
 + (void)authorizeRequestsWithToken:(NSString*)token
 {
     NSString* headerValue = token ? [NSString stringWithFormat:@"Bearer %@", token] : nil;
-    [[SENAPIClient HTTPSessionManager].requestSerializer setValue:headerValue forHTTPHeaderField:SEN_authorizationHeaderKey];
+    [[SENAPIClient HTTPSessionManager].requestSerializer setValue:headerValue forHTTPHeaderField:SENAuthorizationServiceAuthorizationHeaderKey];
     if (token) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SENAuthorizationServiceDidAuthorizeNotification object:self userInfo:nil];
     } else {

@@ -1,6 +1,9 @@
 
 #import <Foundation/Foundation.h>
+
 @class AFHTTPSessionManager;
+
+typedef void (^SENAPIDataBlock)(id data, NSError* error);
 
 @interface SENAPIClient : NSObject
 

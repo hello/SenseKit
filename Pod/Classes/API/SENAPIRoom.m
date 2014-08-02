@@ -1,8 +1,6 @@
 
 #import "AFHTTPSessionManager.h"
-
 #import "SENAPIRoom.h"
-#import "SENAPIClient.h"
 
 @implementation SENAPIRoom
 

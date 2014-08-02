@@ -1,7 +1,6 @@
 
 #import <Foundation/Foundation.h>
-
-typedef void (^SENAPIDataBlock)(id data, NSError* error);
+#import "SENAPIClient.h"
 
 @interface SENAPIRoom : NSObject
 

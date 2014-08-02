@@ -3,8 +3,8 @@
 
 #import "SENAPIClient.h"
 
-//static NSString* const SENDefaultBaseURLPath = @"http://api.skeletor.com";
-static NSString* const SENDefaultBaseURLPath = @"http://192.168.128.88:9999";
+static NSString* const SENDefaultBaseURLPath = @"https://dev-api.hello.is";
+//static NSString* const SENDefaultBaseURLPath = @"http://192.168.128.88:9999";
 static NSString* const SENAPIClientBaseURLPathKey = @"SENAPIClientBaseURLPathKey";
 static AFHTTPSessionManager* sessionManager = nil;
 
@@ -15,6 +15,7 @@ static AFHTTPSessionManager* sessionManager = nil;
     if (!sessionManager) {
         sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[self baseURL]];
         sessionManager.requestSerializer = [[AFHTTPRequestSerializer alloc] init];
+        [sessionManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     }
     return sessionManager;
 }
