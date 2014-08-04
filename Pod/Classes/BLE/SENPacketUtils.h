@@ -16,16 +16,11 @@ struct SENPillData {
     uint8_t reserved_1; // reserved byte
     uint16_t length; // length of the whole struct in memory, returned by sizeof(struct pill_data)
 
-    uint8_t seconds; // 0-59
-    uint8_t minutes; // 0-59
-    uint8_t hours; // 0-23
-    uint8_t day; // 1-31, or 0 (unknown)
-    uint8_t month; // 1-12, or 0 (unknown)
-    uint8_t reserved_2; // reserved byte
-
-    uint16_t year; // 1582-9999
+    uint64_t timestamp; // I changed this again... :P
 
     uint16_t valid_index; // the index in data field contains data from the above timestamp
+    
+    // Maybe dynamic length is better, now the firmware keep changing this buffer length...
     uint16_t data[1440 * 2]; // Data array, aggregated per-minute data from accelerometer
 };
 
