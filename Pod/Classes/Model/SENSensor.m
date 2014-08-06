@@ -91,7 +91,7 @@ NSString* const SENSensorUnitKey = @"unit";
         _message = dict[SENSensorMessageKey];
         _condition = [SENSensor conditionFromValue:dict[SENSensorConditionKey]];
         _unit = [SENSensor unitFromValue:dict[SENSensorUnitKey]];
-        _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[dict[SENSensorLastUpdatedKey] floatValue]/1000];
+        _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[dict[SENSensorLastUpdatedKey] floatValue] / 1000];
     }
     return self;
 }
@@ -173,11 +173,11 @@ NSString* const SENSensorUnitKey = @"unit";
 + (SENSensorUnit)unitFromValue:(id)value
 {
     if ([value isKindOfClass:[NSString class]]) {
-        if ([value isEqualToString:@"CENTIGRADE"])
+        if ([value isEqualToString:@"c"])
             return SENSensorUnitDegreeCentigrade;
-        else if ([value isEqualToString:@"PPM"])
+        else if ([value isEqualToString:@"ppm"])
             return SENSensorUnitPartsPerMillion;
-        else if ([value isEqualToString:@"PERCENT"])
+        else if ([value isEqualToString:@"%"])
             return SENSensorUnitPercent;
     } else if ([value respondsToSelector:@selector(integerValue)]) {
         return [value integerValue];
