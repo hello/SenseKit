@@ -20,16 +20,18 @@ NSString* const SENAPIAccountUpdateEndpoint = @"account/update";
 + (void)createAccountWithName:(NSString*)name emailAddress:(NSString*)emailAddress password:(NSString*)password completion:(SENAPIDataBlock)completionBlock
 {
     NSMutableDictionary* params = [[NSMutableDictionary alloc] initWithCapacity:5];
-    params[SENAPIAccountPropertyTimezone] = @([[NSTimeZone localTimeZone] secondsFromGMT] * 1000);
-    params[SENAPIAccountPropertySignature] = @"xxx";
+
     if (password)
         params[SENAPIAccountPropertyPassword] = password;
-    if (name)
-        params[SENAPIAccountPropertyName] = name;
     if (emailAddress)
         params[SENAPIAccountPropertyEmailAddress] = emailAddress;
+    if (name)
+        params[SENAPIAccountPropertyName] = name;
+    params[SENAPIAccountPropertyTimezone] = @([[NSTimeZone localTimeZone] secondsFromGMT] * 1000);
 
-    [[SENAPIClient HTTPSessionManager] POST:SENAPIAccountCreateEndpoint parameters:params success:^(NSURLSessionDataTask* task, id responseObject) {
+    NSString* URLPath = [NSString stringWithFormat:@"%@?sig=%@", SENAPIAccountCreateEndpoint, @"xxx"];
+
+    [[SENAPIClient HTTPSessionManager] POST:URLPath parameters:params success:^(NSURLSessionDataTask* task, id responseObject) {
         completionBlock(responseObject, task.error);
     } failure:^(NSURLSessionDataTask* task, NSError* error) {
         completionBlock(nil, error);

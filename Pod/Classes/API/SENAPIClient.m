@@ -14,8 +14,8 @@ static AFHTTPSessionManager* sessionManager = nil;
 {
     if (!sessionManager) {
         sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[self baseURL]];
-        sessionManager.requestSerializer = [[AFHTTPRequestSerializer alloc] init];
-        [sessionManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        sessionManager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
+        //        [sessionManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     }
     return sessionManager;
 }

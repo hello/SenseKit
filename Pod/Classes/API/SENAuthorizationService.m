@@ -26,8 +26,7 @@ static NSString* const SENAuthorizationServiceAuthorizationHeaderKey = @"Authori
                               @"password" : password ?: @"" };
 
     NSURL* url = [[SENAPIClient baseURL] URLByAppendingPathComponent:SENAuthorizationServiceTokenPath];
-    NSMutableURLRequest* request = [[[SENAPIClient HTTPSessionManager] requestSerializer] requestWithMethod:@"POST" URLString:[url absoluteString] parameters:params error:nil];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    NSMutableURLRequest* request = [[self requestSerializer] requestWithMethod:@"POST" URLString:[url absoluteString] parameters:params error:nil];
 
     AFHTTPRequestOperation* operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation* operation, id responseObject) {
@@ -39,6 +38,17 @@ static NSString* const SENAuthorizationServiceAuthorizationHeaderKey = @"Authori
             block(error);
     }];
     [[AFHTTPRequestOperationManager manager].operationQueue addOperation:operation];
+}
+
++ (AFHTTPRequestSerializer*)requestSerializer
+{
+    static AFHTTPRequestSerializer* serializer;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        serializer = [[AFHTTPRequestSerializer alloc] init];
+        [serializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    });
+    return serializer;
 }
 
 + (void)deauthorize
