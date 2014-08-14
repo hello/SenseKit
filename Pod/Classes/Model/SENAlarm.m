@@ -33,6 +33,11 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
     return alarm;
 }
 
++ (void)clearSavedAlarms
+{
+    [SENKeyedArchiver setObjects:nil forKey:SENAlarmArchiveKey];
+}
+
 + (NSString*)localizedValueForTime:(struct SENAlarmTime)time
 {
     long adjustedHour = time.hour;

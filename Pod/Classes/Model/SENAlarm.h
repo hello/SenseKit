@@ -9,11 +9,16 @@ struct SENAlarmTime {
 @interface SENAlarm : NSObject <NSCoding>
 
 /**
- *  An array of all persisted alarms
+ *  A persisted alarms
  *
- *  @return the array
+ *  @return the alarm
  */
 + (SENAlarm*)savedAlarm;
+
+/**
+ *  Remove all cached alarm data
+ */
++ (void)clearSavedAlarms;
 
 /**
  *  Presents a time in a locale-specific representation

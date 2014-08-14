@@ -7,6 +7,11 @@
 extern NSString* const SENSensorUpdatedNotification;
 
 /**
+ *  Notification sent when all sensors have been updated
+ */
+extern NSString* const SENSensorsUpdatedNotification;
+
+/**
  *  Notification sent when a sensor update fails
  */
 extern NSString* const SENSensorUpdateFailedNotification;
@@ -35,6 +40,11 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
 + (NSArray*)sensors;
 
 /**
+ *  Remove all cached sensor data
+ */
++ (void)clearCachedSensors;
+
+/**
  *  Sends a request to the API for the latest environmental sensor values and
  *  updates the cache
  */
@@ -49,6 +59,15 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
  *  @return a localized string
  */
 + (NSString*)formatValue:(NSNumber*)value withUnit:(SENSensorUnit)unit;
+
+/**
+ *  Discovers the unit for a particular string value
+ *
+ *  @param value a unit format string, like 'ppm' or 'c'
+ *
+ *  @return the matching unit or SENSensorUnitUnknown
+ */
++ (SENSensorUnit)unitFromValue:(id)value;
 
 - (instancetype)initWithDictionary:(NSDictionary*)dict;
 

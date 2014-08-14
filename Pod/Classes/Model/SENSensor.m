@@ -5,6 +5,7 @@
 #import "SENSettings.h"
 
 NSString* const SENSensorUpdatedNotification = @"SENSensorUpdatedNotification";
+NSString* const SENSensorsUpdatedNotification = @"SENSensorsUpdatedNotification";
 NSString* const SENSensorUpdateFailedNotification = @"SENSensorUpdateFailedNotification";
 
 NSString* const SENSensorArchiveKey = @"Sensors";
@@ -22,6 +23,12 @@ NSString* const SENSensorUnitKey = @"unit";
     return [[SENKeyedArchiver objectsForKey:SENSensorArchiveKey] allObjects];
 }
 
++ (void)clearCachedSensors
+{
+    [SENKeyedArchiver setObjects:nil forKey:SENSensorArchiveKey];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SENSensorsUpdatedNotification object:nil];
+}
+
 + (void)refreshCachedSensors
 {
     [SENAPIRoom currentWithCompletion:^(NSDictionary* data, NSError* error) {
@@ -29,15 +36,17 @@ NSString* const SENSensorUnitKey = @"unit";
             [[NSNotificationCenter defaultCenter] postNotificationName:SENSensorUpdateFailedNotification object:nil];
             return;
         }
-        [SENKeyedArchiver setObjects:nil forKey:SENSensorArchiveKey];
+        NSMutableArray* sensors = [[NSMutableArray alloc] initWithCapacity:[data count]];
         [data enumerateKeysAndObjectsUsingBlock:^(NSString* key, NSDictionary* obj, BOOL *stop) {
             NSMutableDictionary* values = [obj mutableCopy];
             values[SENSensorNameKey] = key;
             SENSensor* sensor = [[SENSensor alloc] initWithDictionary:values];
             if (sensor) {
-                [sensor save];
+                [sensors addObject:sensor];
             }
         }];
+        [SENKeyedArchiver setObjects:[NSSet setWithArray:sensors] forKey:SENSensorArchiveKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SENSensorsUpdatedNotification object:sensors];
     }];
 }
 
