@@ -9,14 +9,14 @@ describe(@"SENSensor", ^{
     describe(@"-initWithDictionary:", ^{
         
         __block SENSensor* sensor;
-        NSTimeInterval sensorTimestamp = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval sensorTimestamp = [[NSDate date] timeIntervalSince1970]*1000;
         NSDictionary* sensorValues = @{
                                        @"name":@"temperature",
                                        @"value": @(22.8),
-                                       @"unit": @"CENTIGRADE",
+                                       @"unit": @"c",
                                        @"message": @"It's pretty cold in here.",
                                        @"condition": @"WARNING",
-                                       @"last_updated": @(sensorTimestamp)};
+                                       @"last_updated_utc": @(sensorTimestamp)};
 
         beforeEach(^{
             sensor = [[SENSensor alloc] initWithDictionary:sensorValues];
@@ -43,7 +43,8 @@ describe(@"SENSensor", ^{
         });
         
         it(@"sets the updated date", ^{
-            [[@(sensor.lastUpdated.timeIntervalSince1970) should] equal:@(sensorTimestamp)];
+            NSNumber* timestamp = @(sensorTimestamp);
+            [[@(sensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp floatValue] /1000)];
         });
     });
 });

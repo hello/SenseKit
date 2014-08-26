@@ -24,7 +24,7 @@
 		8922E005A80B4B62B0C1043A /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 		8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */; };
 		8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */; };
-		8AB29B88197069F4004BE34E /* SENDateUtilsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B87197069F4004BE34E /* SENDateUtilsSpec.m */; };
+		BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */; };
 		E162942B93134909B1227FE9 /* libPods-SenseKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D611FB683D84137898FB644 /* libPods-SenseKit.a */; };
 /* End PBXBuildFile section */
 
@@ -65,7 +65,7 @@
 		8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAlarmSpec.m; sourceTree = "<group>"; };
 		8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSensorSpec.m; sourceTree = "<group>"; };
 		8AB29B7F196DFD8C004BE34E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
-		8AB29B87197069F4004BE34E /* SENDateUtilsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENDateUtilsSpec.m; sourceTree = "<group>"; };
+		BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseManagerSpec.m; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1959AD7D9E24415997D4FD4 /* Pods-SenseKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.xcconfig"; path = "Pods/Pods-SenseKit.xcconfig"; sourceTree = "<group>"; };
 		F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SenseKit.podspec; path = ../SenseKit.podspec; sourceTree = "<group>"; tabWidth = 2; };
@@ -162,8 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
-				8AB29B87197069F4004BE34E /* SENDateUtilsSpec.m */,
 				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
+				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -239,7 +239,7 @@
 			attributes = {
 				CLASSPREFIX = SEN;
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Delisa Mason";
+				ORGANIZATIONNAME = "Hello, Inc.";
 				TargetAttributes = {
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
@@ -366,8 +366,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */,
+				BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */,
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
-				8AB29B88197069F4004BE34E /* SENDateUtilsSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
