@@ -1,0 +1,1 @@
+../../../../Pod/Classes/BLE/SENSenseManager.h
