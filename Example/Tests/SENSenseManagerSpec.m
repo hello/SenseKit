@@ -1,6 +1,7 @@
 #import <Kiwi/Kiwi.h>
-#import "SENSenseManager.h"
+#import "SENSenseManager+Private.h"
 #import "SENSense.h"
+#import "SENSenseMessage.pb.h"
 
 SPEC_BEGIN(SENSenseManagerSpec)
 
@@ -45,6 +46,33 @@ describe(@"SENSenseManager", ^{
         
     });
     
+    describe(@"-blePackets:", ^{
+        
+        it(@"packets should be properly formatted", ^{
+            SENSenseManager* manager = [[SENSenseManager alloc] init];
+            
+            SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+            [builder setType:SENSenseMessageTypeSwitchToPairingMode];
+            [builder setVersion:0];
+            
+            SENSenseMessage* message = [builder build];
+            NSArray* packets = [manager blePackets:message];
+            
+            [[@([packets count]) should] equal:@(1)];
+            
+            NSData* data = packets[0];
+            uint8_t packet[[data length]];
+            [data getBytes:&packet length:sizeof(packet)];
+            
+            uint8_t firstByte = packet[0];
+            uint8_t secondByte = packet[1];
+            
+            [[@(firstByte) should] equal:@(0)];
+            [[@(secondByte) should] equal:@(1)];
+            [[@(sizeof(packet)) should] equal:@(6)];
+        });
+        
+    });
     
 });
 
