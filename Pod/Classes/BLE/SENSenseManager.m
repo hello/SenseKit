@@ -14,7 +14,7 @@
 
 #import "SENSenseManager.h"
 #import "SENSense+Protected.h"
-#import "SENPacketUtils.h"
+#import "SENSenseMessage.pb.h"
 
 static CGFloat const kSENSenseDefaultTimeout = 5;
 
@@ -22,6 +22,7 @@ static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
 static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
 static NSString* const kSENSenseCharacteristicInputId = @"BEEB";
 static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
+static NSInteger const BLE_MAX_PACKET_SIZE = 20;
 
 @interface SENSenseManager()
 
@@ -141,13 +142,13 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
 }
 
 /**
- * Send a command to the initialized Sense through the main service.
+ * Send a message to the initialized Sense through the main service.
  * @param command: the command to send
  * @param success: the success callback when command was sent
  * @param failure: the failure callback called when command failed
  */
-- (void)sendCommand:(int8_t)command
-            success:(SENSenseSuccessBlock)sucess
+- (void)sendMessage:(SENSenseMessage*)message
+            success:(SENSenseSuccessBlock)success
             failure:(SENSenseFailureBlock)failure {
     
     __block LGPeripheral* peripheral = [[self sense] peripheral];
@@ -178,33 +179,69 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
             return;
         }
         
-        [writer writeByte:command completion:^(NSError *error) {
-            if (error) {
+        NSData* data = [message data];
+        NSLog(@"sending bytes %ld", (long)[data length]);
+        [writer writeValue:[message data] completion:^(NSError *error) {
+            if (error == nil) {
+                [reader readValueWithBlock:^(NSData *data, NSError *error) {
+                    if (error != nil) {
+                        if (failure) failure (error);
+                    } else {
+                        uint8_t firstPacket[BLE_MAX_PACKET_SIZE];
+                        [data getBytes:&firstPacket length:BLE_MAX_PACKET_SIZE];
+                        
+                        for (NSInteger i = 0; i < BLE_MAX_PACKET_SIZE; i++) {
+                            NSLog(@"byte %d", firstPacket[i]);
+                        }
+                        
+                        SENSenseMessage* response = nil;
+                        if (firstPacket[0] != 0) {
+                            response = [SENSenseMessage parseFromData:data];
+                        }
+                        if (success) success (nil);
+                    }
+                }];
+            } else {
                 if (failure) failure (error);
-                return;
             }
         }];
-        [reader readValueWithBlock:^(NSData *data, NSError *error) {
-            if (error != nil) {
-                if (failure) failure (error);
-                return;
-            }
+        
 
-            struct SENPacket packet;
-            [data getBytes:&packet length:sizeof(struct SENPacket)];
-            // TODO (jimmy): verify packet?
-            if (sucess) sucess( nil );
-        }];
+//        __block NSError* updateError = nil;
+//        __block NSMutableData* fullResponse = [NSMutableData data];
+//        [reader setNotifyValue:YES completion:^(NSError *error) {
+//            SENSenseMessage* message = [SENSenseMessage parseFromData:fullResponse];
+//            if ([message hasError]) {
+//                NSLog(@"encountered error");
+//            } else {
+//                NSLog(@"success");
+//            }
+//        } onUpdate:^(NSData *data, NSError *error) {
+//            if (error != nil && updateError == nil) {
+//                updateError = error;
+//            }
+//            if (updateError == nil) {
+//                [fullResponse appendData:data];
+//            }
+//        }];
     }];
 }
 
-#pragma mark - Paring
+#pragma mark - Pairing
 
 - (void)enablePairingMode:(BOOL)enable
                   success:(SENSenseSuccessBlock)success
                   failure:(SENSenseFailureBlock)failure {
-    int8_t command = enable ? SENSenseCommandEnterPairMode : SENSenseCommandExitPairMode;
-    [self sendCommand:command success:success failure:failure];
+    SENSenseMessageType type
+        = enable
+        ? SENSenseMessageTypeSwitchToPairingMode
+        : SENSenseMessageTypeSwitchToNormalMode;
+    
+    SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+    [builder setType:type];
+    [builder setVersion:1];
+    SENSenseMessage* message = [builder build];
+    [self sendMessage:message success:success failure:failure];
 }
 
 - (void)removePairedUser:(SENSenseCompletionBlock)completion {

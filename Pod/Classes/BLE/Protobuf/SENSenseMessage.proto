@@ -1,0 +1,42 @@
+message WifiEndPoint {
+    optional string name = 1;
+    required string ssid = 2;
+}
+
+message SelectedWifiEndPoint {
+    optional WifiEndPoint endPoint = 1;
+    optional string password = 2;
+}
+
+enum ErrorType {
+    TIME_OUT = 0;              // Internal time out, no implemented yet.
+    NETWORK_ERROR = 1;         // Network not available or unreachable network.
+    DEVICE_ALREADY_PAIRED = 2; // User tries to paired a paired device to another account.
+    INTERNAL_DATA_ERROR = 3;   // Data packets corruption during BLE or SPI transfer
+    DEVICE_DATABASE_FULL = 4;  // No more space for device pairing.
+}
+
+message SENSenseMessage {
+    enum Type {
+        SET_TIME = 0;
+        GET_TIME = 1;
+        SET_WIFI_ENDPOINT = 2;
+        GET_WIFI_ENDPOINT = 3;
+        SET_ALARMS = 4;
+        GET_ALARMS = 5;
+        SWITCH_TO_PAIRING_MODE = 6;
+        SWITCH_TO_NORMAL_MODE = 7;
+        START_WIFISCAN = 8;
+        STOP_WIFISCAN = 9;
+        GET_DEVICE_ID = 10;
+        EREASE_PAIRED_PHONE = 11;
+        PAIR_PILL = 12;
+        ERROR = 13;  // if you receive this, that means something goes wrong.
+    }
+    required int32 version = 1;
+    required Type type = 2;
+    optional SelectedWifiEndPoint selectedWIFIEndPoint = 3;
+    optional bytes deviceId = 4;
+    optional int64 accountId = 5;  // Used by SENSE_COMMAND_PAIRE_PILL
+    optional ErrorType error = 6;  // SENSE_COMMAND_ERROR
+}
