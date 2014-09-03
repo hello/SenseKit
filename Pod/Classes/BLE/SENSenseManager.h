@@ -16,9 +16,13 @@ typedef void(^SENSenseSuccessBlock)(id response);
 typedef void(^SENSenseFailureBlock)(NSError* error);
 
 typedef enum {
-    SENSenseManagerErrorCodeNoDeviceSpecified,
-    SENSenseManagerErrorCodeNoInvalidArgument,
-    SENSenseManagerErrorCodeUnexpectedResponse
+    SENSenseManagerErrorCodeNoDeviceSpecified = -1,
+    SENSenseManagerErrorCodeInvalidArgument = -2,
+    SENSenseManagerErrorCodeUnexpectedResponse = -3,
+    SENSenseManagerErrorCodeTimeout = -4,
+    SENSenseManagerErrorCodeDeviceAlreadyPaired = -5,
+    SENSenseManagerErrorCodeInvalidCommand = -6,
+    SENSenseManagerErrorCodeNone = 0
 } SENSenseManagerErrorCode;
 
 @interface SENSenseManager : NSObject
@@ -71,7 +75,8 @@ typedef enum {
                   success:(SENSenseSuccessBlock)success
                   failure:(SENSenseFailureBlock)failure;
 
-- (void)removePairedUser:(SENSenseCompletionBlock)completion;
+- (void)removeOtherPairedDevices:(SENSenseSuccessBlock)success
+                         failure:(SENSenseFailureBlock)failure;
 
 #pragma mark - Time
 

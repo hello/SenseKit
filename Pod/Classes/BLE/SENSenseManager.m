@@ -14,7 +14,7 @@
 
 #import "SENSenseManager.h"
 #import "SENSense+Protected.h"
-#import "SENPacketUtils.h"
+#import "SENSenseMessage.pb.h"
 
 static CGFloat const kSENSenseDefaultTimeout = 5;
 
@@ -22,6 +22,8 @@ static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
 static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
 static NSString* const kSENSenseCharacteristicInputId = @"BEEB";
 static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
+static NSInteger const kSENSensePacketSize = 20;
+static NSInteger const kSENSenseMessageVersion = 0;
 
 @interface SENSenseManager()
 
@@ -54,6 +56,12 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
                                          for (LGPeripheral* device in peripherals) {
                                              sense = [[SENSense alloc] initWithPeripheral:device];
                                              [senses addObject:sense];
+                                             
+                                             // uncomment the blow code to talk to Pang :)
+//                                             if ([[device name] hasSuffix:@"2D"]) {
+//                                                 sense = [[SENSense alloc] initWithPeripheral:device];
+//                                                 [senses addObject:sense];
+//                                             }
                                          }
                                      }
                                      if (completion) completion(senses);
@@ -88,7 +96,7 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
     if (!completion) return; // even if we do stuff, what would it be for?
     if ([characteristicIds count] == 0) {
         completion (nil, [NSError errorWithDomain:kSENSenseErrorDomain
-                                             code:SENSenseManagerErrorCodeNoInvalidArgument
+                                             code:SENSenseManagerErrorCodeInvalidArgument
                                          userInfo:nil]);
         return;
     }
@@ -140,31 +148,90 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
                   completion:completion];
 }
 
+- (void)failWithBlock:(SENSenseFailureBlock)failure andCode:(SENSenseManagerErrorCode)code {
+    if (failure) {
+        failure ([NSError errorWithDomain:kSENSenseErrorDomain
+                                     code:code
+                                 userInfo:nil]);
+    }
+}
+
+#pragma mark - (Private) Sending Data
+
 /**
- * Send a command to the initialized Sense through the main service.
+ * Format the SENSenseMessage in to HELLO BLE PACKET FORMAT where data is divided
+ * in to packets with max size kSENSensePacketSize.  Each packet is stored in
+ * order in an array and returned.
+ * @param message: a sense message to format
+ * @return a sorted array of hello ble packets
+ */
+- (NSArray*)blePackets:(SENSenseMessage*)message {
+    NSInteger initialPayloadSize = kSENSensePacketSize - 2;
+    NSInteger additionalPacketSize = kSENSensePacketSize - 1;
+    NSData* payload = [message data];
+    NSInteger totalPayloadSize = [payload length];
+    NSInteger addlPacketSize = MAX(0, totalPayloadSize- initialPayloadSize);
+    
+    double packets = ceil((double)addlPacketSize / (additionalPacketSize));
+    uint8_t numberOfPackets = (uint8_t)(1 + packets);
+    
+    NSMutableArray* helloBlePackets = [NSMutableArray array];
+    NSMutableData* packetData = nil;
+    int bytesWritten = 0;
+    
+    for (uint8_t packetNumber = 1; packetNumber <= numberOfPackets; packetNumber++) {
+        packetData = [NSMutableData data];
+        NSInteger payloadSize = additionalPacketSize; // first byte should always be a sequence number
+        
+        if ([helloBlePackets count] == 0) {
+            payloadSize = initialPayloadSize;
+            uint8_t seq = 0;
+            [packetData appendData:[NSData dataWithBytes:&seq
+                                                  length:sizeof(seq)]];
+            [packetData appendData:[NSData dataWithBytes:&numberOfPackets
+                                                  length:sizeof(numberOfPackets)]];
+        } else {
+            [packetData appendData:[NSData dataWithBytes:&packetNumber
+                                                  length:sizeof(packetNumber)]];
+        }
+        
+        uint8_t actualSize = MIN(totalPayloadSize - bytesWritten, payloadSize);
+        uint8_t partial[actualSize];
+        [payload getBytes:&partial range:NSMakeRange(bytesWritten, actualSize)];
+        
+        [packetData appendBytes:partial length:actualSize];
+        [helloBlePackets addObject:packetData];
+        
+        bytesWritten += actualSize;
+    }
+    
+    return helloBlePackets;
+}
+
+/**
+ * Send a message to the initialized Sense through the main service.
  * @param command: the command to send
  * @param success: the success callback when command was sent
  * @param failure: the failure callback called when command failed
  */
-- (void)sendCommand:(int8_t)command
-            success:(SENSenseSuccessBlock)sucess
+- (void)sendMessage:(SENSenseMessage*)message
+            success:(SENSenseSuccessBlock)success
             failure:(SENSenseFailureBlock)failure {
     
     __block LGPeripheral* peripheral = [[self sense] peripheral];
     if (peripheral == nil) {
-        if (failure) {
-            failure ([NSError errorWithDomain:kSENSenseErrorDomain
-                                         code:SENSenseManagerErrorCodeNoDeviceSpecified
-                                     userInfo:nil]);
-        }
-        return;
+        return [self failWithBlock:failure andCode:SENSenseManagerErrorCodeNoDeviceSpecified];
     }
     
+    __weak typeof(self) weakSelf = self;
     [self characteristics:^(id response, NSError *error) {
-        if (error) {
+        if (error != nil) {
             if (failure) failure (error);
             return;
         }
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
 
         NSDictionary* readWrite = response;
         LGCharacteristic* writer = [readWrite valueForKey:kSENSenseCharacteristicInputId];
@@ -172,43 +239,214 @@ static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
         // according to the Pang, every command will send a response back with the same
         // packet that was sent to the device as confirmation
         if (writer == nil || reader == nil) {
-            if (failure) failure ([NSError errorWithDomain:kSENSenseErrorDomain
-                                                      code:SENSenseManagerErrorCodeUnexpectedResponse
-                                                  userInfo:nil]);
-            return;
+            return [strongSelf failWithBlock:failure
+                                     andCode:SENSenseManagerErrorCodeUnexpectedResponse];
         }
         
-        [writer writeByte:command completion:^(NSError *error) {
-            if (error) {
-                if (failure) failure (error);
-                return;
-            }
-        }];
-        [reader readValueWithBlock:^(NSData *data, NSError *error) {
+        NSArray* packets = [strongSelf blePackets:message];
+        
+        if ([packets count] > 0) {
+            [strongSelf sendPackets:packets
+                               from:0
+                             ofType:[message type]
+                      throughWriter:writer
+                         withReader:reader
+                            success:^(id response) {
+                                if (success) success (nil); // do not need to forward response
+                            }
+                            failure:failure];
+        } else {
+            [strongSelf failWithBlock:failure
+                              andCode:SENSenseManagerErrorCodeInvalidCommand];
+        }
+
+    }];
+}
+
+/**
+ * Send all packets, recursively, starting from the specified index in the array.
+ * If an error was encountered, recusion will stop and failure block will be called
+ * right away.
+ *
+ * @param packets: the packets to send
+ * @param from: index of the packet to send in this iteration
+ * @param type: the type of the sense message
+ * @param writer: the input characteristic
+ * @param reader: the output characteristic
+ * @param success: the block to call when all packets have been sent
+ * @param failure: the block to call if any error was encountered along the way
+ */
+- (void)sendPackets:(NSArray*)packets
+               from:(NSInteger)index
+             ofType:(SENSenseMessageType)type
+      throughWriter:(LGCharacteristic*)writer
+         withReader:(LGCharacteristic*)reader
+            success:(SENSenseSuccessBlock)success
+            failure:(SENSenseFailureBlock)failure {
+    
+    if (index < [packets count]) {
+        NSData* data = packets[index];
+        __weak typeof(self) weakSelf = self;
+        [writer writeValue:data completion:^(NSError *error) {
             if (error != nil) {
                 if (failure) failure (error);
                 return;
             }
+            
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf) {
+                [strongSelf sendPackets:packets
+                                   from:index+1
+                                 ofType:type
+                          throughWriter:writer
+                             withReader:reader
+                                success:success
+                                failure:failure];
+            }
 
-            struct SENPacket packet;
-            [data getBytes:&packet length:sizeof(struct SENPacket)];
-            // TODO (jimmy): verify packet?
-            if (sucess) sucess( nil );
         }];
+    } else {
+        __weak typeof(self) weakSelf = self;
+        [self readResponseWith:reader success:^(id response) {
+            SENSenseMessage* senseResponse = response;
+            // it is successful IFF type of response is the same as message type
+            if (senseResponse != nil && [senseResponse type] == type) {
+                if (success) success(nil);
+            } else {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if (strongSelf) {
+                    [strongSelf failWithBlock:failure
+                                      andCode:SENSenseManagerErrorCodeUnexpectedResponse];
+                }
+            }
+        } failure:failure];
+    }
+}
+
+#pragma mark - (Private) Reading Response
+
+- (SENSenseManagerErrorCode)errorCodeFrom:(ErrorType)senseErrorType {
+    SENSenseManagerErrorCode code = SENSenseManagerErrorCodeNone;
+    switch (senseErrorType) {
+        case ErrorTypeTimeOut:
+            code = SENSenseManagerErrorCodeTimeout;
+            break;
+        case ErrorTypeDeviceAlreadyPaired:
+            code = SENSenseManagerErrorCodeDeviceAlreadyPaired;
+            break;
+        default:
+            code = SENSenseManagerErrorCodeUnexpectedResponse;
+            break;
+    }
+    return code;
+}
+
+/**
+ * Parse the data back in to a SENSenseMessage protobuf object, following the
+ * HELLO BLE PACKET FORMAT.
+ * @param data: the raw data returned from the device
+ * @param error: a pointer to an error object that will be set if one encountered.
+ * @return a SENSenseMessage
+ */
+- (SENSenseMessage*)parseData:(NSData*)data error:(NSError**)error {
+    SENSenseMessage* response = nil;
+    SENSenseManagerErrorCode errCode = SENSenseManagerErrorCodeNone;
+    
+    uint8_t firstPacket[kSENSensePacketSize];
+    [data getBytes:&firstPacket length:kSENSensePacketSize];
+    
+    if (firstPacket[0] == 0) {
+        // check to see number of packets
+        uint8_t packets = firstPacket[1];
+        NSMutableData* actualPayload = [NSMutableData data];
+        NSInteger length = [data length];
+        int actualPayloadBytesRead = 0, offset, location = 0, payloadLength;
+        
+        for (uint8_t seq = 0; seq < packets ; seq++) {
+            offset = seq == 0 ? 2 : 1;
+            location = actualPayloadBytesRead + offset + location;
+            payloadLength = kSENSensePacketSize - offset;
+            
+            uint8_t payloadPacket[MIN(payloadLength, length-location)];
+            size_t payloadPacketSize = sizeof(payloadPacket);
+            [data getBytes:payloadPacket range:NSMakeRange(location, payloadPacketSize)];
+            
+            [actualPayload appendBytes:payloadPacket length:payloadPacketSize];
+            actualPayloadBytesRead += payloadPacketSize;
+        }
+        @try {
+            response = [SENSenseMessage parseFromData:actualPayload];
+            if ([response hasError]) {
+                errCode = [self errorCodeFrom:[response error]];
+            }
+        }
+        @catch (NSException *exception) {
+            errCode = SENSenseManagerErrorCodeUnexpectedResponse;
+        }
+    } else {
+        errCode = SENSenseManagerErrorCodeUnexpectedResponse;
+    }
+    
+    if (errCode != SENSenseManagerErrorCodeNone && error != NULL) {
+        *error = [NSError errorWithDomain:kSENSenseErrorDomain
+                                     code:SENSenseManagerErrorCodeUnexpectedResponse
+                                 userInfo:nil];
+    }
+    return response;
+}
+
+/**
+ * Read the response from the characteristic specified.
+ * @param reader: the response characteristic
+ * @param success: the block to call when everything was read correctly
+ * @param failure: the block to call if an error was encountered
+ */
+- (void)readResponseWith:(LGCharacteristic*)reader
+                 success:(SENSenseSuccessBlock)success
+                 failure:(SENSenseFailureBlock)failure {
+    __weak typeof(self) weakSelf = self;
+    [reader readValueWithBlock:^(NSData *data, NSError *error) {
+        if (error != nil) {
+            if (failure) failure (error);
+            return;
+        }
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        
+        NSError* parseError = nil;
+        SENSenseMessage* response = [strongSelf parseData:data error:&parseError];
+        
+        if (parseError != nil) {
+            if (failure) failure (parseError);
+        } else {
+            if (success) success (response);
+        }
     }];
 }
 
-#pragma mark - Paring
+#pragma mark - Pairing
 
 - (void)enablePairingMode:(BOOL)enable
                   success:(SENSenseSuccessBlock)success
                   failure:(SENSenseFailureBlock)failure {
-    int8_t command = enable ? SENSenseCommandEnterPairMode : SENSenseCommandExitPairMode;
-    [self sendCommand:command success:success failure:failure];
+    SENSenseMessageType type
+        = enable
+        ? SENSenseMessageTypeSwitchToPairingMode
+        : SENSenseMessageTypeSwitchToNormalMode;
+    
+    SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+    [builder setType:type];
+    [builder setVersion:kSENSenseMessageVersion];
+    [self sendMessage:[builder build] success:success failure:failure];
 }
 
-- (void)removePairedUser:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
+- (void)removeOtherPairedDevices:(SENSenseSuccessBlock)success
+                         failure:(SENSenseFailureBlock)failure {
+    SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+    [builder setType:SENSenseMessageTypeEreasePairedPhone];
+    [builder setVersion:kSENSenseMessageVersion];
+    [self sendMessage:[builder build] success:success failure:failure];
 }
 
 #pragma mark - Time
