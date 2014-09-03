@@ -75,7 +75,8 @@ typedef enum {
                   success:(SENSenseSuccessBlock)success
                   failure:(SENSenseFailureBlock)failure;
 
-- (void)removePairedUser:(SENSenseCompletionBlock)completion;
+- (void)removeOtherPairedDevices:(SENSenseSuccessBlock)success
+                         failure:(SENSenseFailureBlock)failure;
 
 #pragma mark - Time
 

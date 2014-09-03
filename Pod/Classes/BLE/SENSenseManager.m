@@ -251,7 +251,9 @@ static NSInteger const kSENSenseMessageVersion = 0;
                              ofType:[message type]
                       throughWriter:writer
                          withReader:reader
-                            success:success
+                            success:^(id response) {
+                                if (success) success (nil); // do not need to forward response
+                            }
                             failure:failure];
         } else {
             [strongSelf failWithBlock:failure
@@ -436,14 +438,15 @@ static NSInteger const kSENSenseMessageVersion = 0;
     SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
     [builder setType:type];
     [builder setVersion:kSENSenseMessageVersion];
-    SENSenseMessage* message = [builder build];
-    [self sendMessage:message success:^(id response) {
-        if (success) success (nil); // do not forward the success response back
-    } failure:failure];
+    [self sendMessage:[builder build] success:success failure:failure];
 }
 
-- (void)removePairedUser:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
+- (void)removeOtherPairedDevices:(SENSenseSuccessBlock)success
+                         failure:(SENSenseFailureBlock)failure {
+    SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+    [builder setType:SENSenseMessageTypeEreasePairedPhone];
+    [builder setVersion:kSENSenseMessageVersion];
+    [self sendMessage:[builder build] success:success failure:failure];
 }
 
 #pragma mark - Time
