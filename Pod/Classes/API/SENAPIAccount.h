@@ -8,6 +8,8 @@ typedef NS_ENUM(NSUInteger, SENAPIAccountGender) {
     SENAPIAccountGenderOther,
 };
 
+@class SENAccount;
+
 @interface SENAPIAccount : NSObject
 
 /**
@@ -26,6 +28,8 @@ typedef NS_ENUM(NSUInteger, SENAPIAccountGender) {
 /**
  *  Update the demographic information of the current user. Requires authentication.
  *
+ *  @deprecated use updateAccount:completionBlock instead
+ *
  *  @param age                 age in years
  *  @param gender              gender
  *  @param heightInCentimeters height in centimeters
@@ -37,4 +41,16 @@ typedef NS_ENUM(NSUInteger, SENAPIAccountGender) {
                           height:(NSNumber*)heightInCentimeters
                           weight:(NSNumber*)weightInKilograms
                       completion:(SENAPIDataBlock)completionBlock;
+
+/**
+ * Override the existing account information for the associated user.
+ * 
+ * Requires authentication.
+ *
+ * @param account    existing account for the user
+ * @param completion block invoked when asynchronous call completes
+ */
++ (void)updateAccount:(SENAccount*)account
+      completionBlock:(SENAPIDataBlock)completion;
+
 @end
