@@ -17,7 +17,7 @@
 
 @class PBCodedOutputStream;
 @class PBField;
-@class PBUnknownFieldSetBuilder;
+@class PBUnknownFieldSet_Builder;
 
 @interface PBUnknownFieldSet : NSObject {
 @private
@@ -31,8 +31,8 @@
 + (PBUnknownFieldSet*) setWithFields:(NSMutableDictionary*) fields;
 + (PBUnknownFieldSet*) parseFromData:(NSData*) data;
 
-+ (PBUnknownFieldSetBuilder*) builder;
-+ (PBUnknownFieldSetBuilder*) builderWithUnknownFields:(PBUnknownFieldSet*) other;
++ (PBUnknownFieldSet_Builder*) builder;
++ (PBUnknownFieldSet_Builder*) builderWithUnknownFields:(PBUnknownFieldSet*) other;
 
 - (void) writeAsMessageSetTo:(PBCodedOutputStream*) output;
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
