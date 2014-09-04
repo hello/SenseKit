@@ -16,20 +16,20 @@
 // limitations under the License.
 
 @protocol PBMessage;
-@protocol PBMessageBuilder;
+@protocol PBMessage_Builder;
 @protocol PBExtensionField;
 
 @class PBAbstractMessage;
 @class PBCodedInputStream;
 @class PBCodedOutputStream;
 @class PBConcreteExtensionField;
-@class PBExtendableMessageBuilder;
+@class PBExtendableMessage_Builder;
 @class PBExtendableMessage;
 @class PBExtensionRegistry;
 @class PBField;
 @class PBGeneratedMessage;
-@class PBGeneratedMessageBuilder;
+@class PBGeneratedMessage_Builder;
 @class PBMutableExtensionRegistry;
 @class PBMutableField;
 @class PBUnknownFieldSet;
-@class PBUnknownFieldSetBuilder;
+@class PBUnknownFieldSet_Builder;

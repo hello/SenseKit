@@ -17,7 +17,7 @@
 
 @class PBCodedOutputStream;
 @class PBUnknownFieldSet;
-@protocol PBMessageBuilder;
+@protocol PBMessage_Builder;
 
 /**
  * Abstract interface implemented by Protocol Message objects.
@@ -69,13 +69,13 @@
 /**
  * Constructs a new builder for a message of the same type as this message.
  */
-- (id<PBMessageBuilder>) builder;
+- (id<PBMessage_Builder>) builder;
 
 /**
  * Constructs a builder initialized with the current message.  Use this to
  * derive a new message from the current one.
  */
-- (id<PBMessageBuilder>) toBuilder;
+- (id<PBMessage_Builder>) toBuilder;
 
 /**
  * Returns a string description of the message.
