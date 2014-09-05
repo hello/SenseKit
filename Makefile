@@ -1,5 +1,5 @@
 PROJECT_NAME=SenseKit
-COMPANY_ID=co.hello
+COMPANY_ID=is.hello
 DOCSET_DIR=$(COMPANY_ID).$(PROJECT_NAME)
 DOCSET_BUILD_DIR=docset_build
 DOCTOOL=appledoc --project-name $(PROJECT_NAME) --project-company Hello --company-id $(COMPANY_ID) --index-desc README.md --search-undocumented-doc --keep-undocumented-objects

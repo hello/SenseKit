@@ -20,7 +20,7 @@
 #import "CodedInputStream.h"
 #import "CodedOutputStream.h"
 #import "Field.h"
-#import "UnknownFieldSetBuilder.h"
+#import "UnknownFieldSet_Builder.h"
 
 @interface PBUnknownFieldSet()
 @property (retain) NSDictionary* fields;
@@ -118,12 +118,12 @@ static PBUnknownFieldSet* defaultInstance = nil;
 }
 
 
-+ (PBUnknownFieldSetBuilder*) builder {
-  return [[[PBUnknownFieldSetBuilder alloc] init] autorelease];
++ (PBUnknownFieldSet_Builder*) builder {
+  return [[[PBUnknownFieldSet_Builder alloc] init] autorelease];
 }
 
 
-+ (PBUnknownFieldSetBuilder*) builderWithUnknownFields:(PBUnknownFieldSet*) copyFrom {
++ (PBUnknownFieldSet_Builder*) builderWithUnknownFields:(PBUnknownFieldSet*) copyFrom {
   return [[PBUnknownFieldSet builder] mergeUnknownFields:copyFrom];
 }
 

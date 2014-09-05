@@ -17,7 +17,7 @@
 
 #import "CodedInputStream.h"
 
-#import "MessageBuilder.h"
+#import "Message_Builder.h"
 #import "Utilities.h"
 #import "WireFormat.h"
 
@@ -239,7 +239,7 @@ const long BUFFER_SIZE = 4096;
 
 /** Read a {@code group} field value from the stream. */
 - (void)      readGroup:(long) fieldNumber
-                builder:(id<PBMessageBuilder>) builder
+                builder:(id<PBMessage_Builder>) builder
       extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   if (recursionDepth >= recursionLimit) {
     @throw [NSException exceptionWithName:@"InvalidProtocolBuffer" reason:@"Recursion Limit Exceeded" userInfo:nil];
@@ -256,7 +256,7 @@ const long BUFFER_SIZE = 4096;
  * given {@link PBUnknownFieldSet}.
  */
 - (void) readUnknownGroup:(long) fieldNumber
-                  builder:(PBUnknownFieldSetBuilder*) builder {
+                  builder:(PBUnknownFieldSet_Builder*) builder {
   if (recursionDepth >= recursionLimit) {
     @throw [NSException exceptionWithName:@"InvalidProtocolBuffer" reason:@"Recursion Limit Exceeded" userInfo:nil];
   }
@@ -268,7 +268,7 @@ const long BUFFER_SIZE = 4096;
 
 
 /** Read an embedded message field value from the stream. */
-- (void) readMessage:(id<PBMessageBuilder>) builder
+- (void) readMessage:(id<PBMessage_Builder>) builder
    extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   long length = [self readRawVarint32];
   if (recursionDepth >= recursionLimit) {
