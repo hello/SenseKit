@@ -27,554 +27,21 @@ BOOL ErrorTypeIsValidValue(ErrorType value) {
     case ErrorTypeDeviceAlreadyPaired:
     case ErrorTypeInternalDataError:
     case ErrorTypeDeviceDatabaseFull:
+    case ErrorTypeDeviceNoMemory:
       return YES;
     default:
       return NO;
   }
 }
-@interface WifiEndPoint ()
-@property (strong) NSString* name;
-@property (strong) NSString* ssid;
-@end
-
-@implementation WifiEndPoint
-
-- (BOOL) hasName {
-  return !!hasName_;
-}
-- (void) setHasName:(BOOL) value_ {
-  hasName_ = !!value_;
-}
-@synthesize name;
-- (BOOL) hasSsid {
-  return !!hasSsid_;
-}
-- (void) setHasSsid:(BOOL) value_ {
-  hasSsid_ = !!value_;
-}
-@synthesize ssid;
-- (void) dealloc {
-  self.name = nil;
-  self.ssid = nil;
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.name = @"";
-    self.ssid = @"";
-  }
-  return self;
-}
-static WifiEndPoint* defaultWifiEndPointInstance = nil;
-+ (void) initialize {
-  if (self == [WifiEndPoint class]) {
-    defaultWifiEndPointInstance = [[WifiEndPoint alloc] init];
-  }
-}
-+ (WifiEndPoint*) defaultInstance {
-  return defaultWifiEndPointInstance;
-}
-- (WifiEndPoint*) defaultInstance {
-  return defaultWifiEndPointInstance;
-}
-- (BOOL) isInitialized {
-  if (!self.hasSsid) {
-    return NO;
-  }
-  return YES;
-}
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasName) {
-    [output writeString:1 value:self.name];
-  }
-  if (self.hasSsid) {
-    [output writeString:2 value:self.ssid];
-  }
-  [self.unknownFields writeToCodedOutputStream:output];
-}
-- (long) serializedSize {
-  long size_ = memoizedSerializedSize;
-  if (size_ != -1) {
-    return size_;
-  }
-
-  size_ = 0;
-  if (self.hasName) {
-    size_ += computeStringSize(1, self.name);
-  }
-  if (self.hasSsid) {
-    size_ += computeStringSize(2, self.ssid);
-  }
-  size_ += self.unknownFields.serializedSize;
-  memoizedSerializedSize = size_;
-  return size_;
-}
-+ (WifiEndPoint*) parseFromData:(NSData*) data {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromData:data] build];
-}
-+ (WifiEndPoint*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
-}
-+ (WifiEndPoint*) parseFromInputStream:(NSInputStream*) input {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromInputStream:input] build];
-}
-+ (WifiEndPoint*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (WifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromCodedInputStream:input] build];
-}
-+ (WifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (WifiEndPoint*)[[[WifiEndPoint builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (WifiEndPointBuilder*) builder {
-  return [[WifiEndPointBuilder alloc] init];
-}
-+ (WifiEndPointBuilder*) builderWithPrototype:(WifiEndPoint*) prototype {
-  return [[WifiEndPoint builder] mergeFrom:prototype];
-}
-- (WifiEndPointBuilder*) builder {
-  return [WifiEndPoint builder];
-}
-- (WifiEndPointBuilder*) toBuilder {
-  return [WifiEndPoint builderWithPrototype:self];
-}
-- (void) writeDescriptionTo:(NSMutableString*) output withIndent:(NSString*) indent {
-  if (self.hasName) {
-    [output appendFormat:@"%@%@: %@\n", indent, @"name", self.name];
-  }
-  if (self.hasSsid) {
-    [output appendFormat:@"%@%@: %@\n", indent, @"ssid", self.ssid];
-  }
-  [self.unknownFields writeDescriptionTo:output withIndent:indent];
-}
-- (BOOL) isEqual:(id)other {
-  if (other == self) {
-    return YES;
-  }
-  if (![other isKindOfClass:[WifiEndPoint class]]) {
-    return NO;
-  }
-  WifiEndPoint *otherMessage = other;
-  return
-      self.hasName == otherMessage.hasName &&
-      (!self.hasName || [self.name isEqual:otherMessage.name]) &&
-      self.hasSsid == otherMessage.hasSsid &&
-      (!self.hasSsid || [self.ssid isEqual:otherMessage.ssid]) &&
-      (self.unknownFields == otherMessage.unknownFields || (self.unknownFields != nil && [self.unknownFields isEqual:otherMessage.unknownFields]));
-}
-- (NSUInteger) hash {
-  NSUInteger hashCode = 7;
-  if (self.hasName) {
-    hashCode = hashCode * 31 + [self.name hash];
-  }
-  if (self.hasSsid) {
-    hashCode = hashCode * 31 + [self.ssid hash];
-  }
-  hashCode = hashCode * 31 + [self.unknownFields hash];
-  return hashCode;
-}
-@end
-
-@interface WifiEndPointBuilder()
-@property (strong) WifiEndPoint* result;
-@end
-
-@implementation WifiEndPointBuilder
-@synthesize result;
-- (void) dealloc {
-  self.result = nil;
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.result = [[WifiEndPoint alloc] init];
-  }
-  return self;
-}
-- (PBGeneratedMessage*) internalGetResult {
-  return result;
-}
-- (WifiEndPointBuilder*) clear {
-  self.result = [[WifiEndPoint alloc] init];
-  return self;
-}
-- (WifiEndPointBuilder*) clone {
-  return [WifiEndPoint builderWithPrototype:result];
-}
-- (WifiEndPoint*) defaultInstance {
-  return [WifiEndPoint defaultInstance];
-}
-- (WifiEndPoint*) build {
-  [self checkInitialized];
-  return [self buildPartial];
-}
-- (WifiEndPoint*) buildPartial {
-  WifiEndPoint* returnMe = result;
-  self.result = nil;
-  return returnMe;
-}
-- (WifiEndPointBuilder*) mergeFrom:(WifiEndPoint*) other {
-  if (other == [WifiEndPoint defaultInstance]) {
-    return self;
-  }
-  if (other.hasName) {
-    [self setName:other.name];
-  }
-  if (other.hasSsid) {
-    [self setSsid:other.ssid];
-  }
-  [self mergeUnknownFields:other.unknownFields];
-  return self;
-}
-- (WifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
-  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
-}
-- (WifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  PBUnknownFieldSetBuilder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
-  while (YES) {
-    NSInteger tag = [input readTag];
-    switch (tag) {
-      case 0:
-        [self setUnknownFields:[unknownFields build]];
-        return self;
-      default: {
-        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
-          [self setUnknownFields:[unknownFields build]];
-          return self;
-        }
-        break;
-      }
-      case 10: {
-        [self setName:[input readString]];
-        break;
-      }
-      case 18: {
-        [self setSsid:[input readString]];
-        break;
-      }
-    }
-  }
-}
-- (BOOL) hasName {
-  return result.hasName;
-}
-- (NSString*) name {
-  return result.name;
-}
-- (WifiEndPointBuilder*) setName:(NSString*) value {
-  result.hasName = YES;
-  result.name = value;
-  return self;
-}
-- (WifiEndPointBuilder*) clearName {
-  result.hasName = NO;
-  result.name = @"";
-  return self;
-}
-- (BOOL) hasSsid {
-  return result.hasSsid;
-}
-- (NSString*) ssid {
-  return result.ssid;
-}
-- (WifiEndPointBuilder*) setSsid:(NSString*) value {
-  result.hasSsid = YES;
-  result.ssid = value;
-  return self;
-}
-- (WifiEndPointBuilder*) clearSsid {
-  result.hasSsid = NO;
-  result.ssid = @"";
-  return self;
-}
-@end
-
-@interface SelectedWifiEndPoint ()
-@property (strong) WifiEndPoint* endPoint;
-@property (strong) NSString* password;
-@end
-
-@implementation SelectedWifiEndPoint
-
-- (BOOL) hasEndPoint {
-  return !!hasEndPoint_;
-}
-- (void) setHasEndPoint:(BOOL) value_ {
-  hasEndPoint_ = !!value_;
-}
-@synthesize endPoint;
-- (BOOL) hasPassword {
-  return !!hasPassword_;
-}
-- (void) setHasPassword:(BOOL) value_ {
-  hasPassword_ = !!value_;
-}
-@synthesize password;
-- (void) dealloc {
-  self.endPoint = nil;
-  self.password = nil;
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.endPoint = [WifiEndPoint defaultInstance];
-    self.password = @"";
-  }
-  return self;
-}
-static SelectedWifiEndPoint* defaultSelectedWifiEndPointInstance = nil;
-+ (void) initialize {
-  if (self == [SelectedWifiEndPoint class]) {
-    defaultSelectedWifiEndPointInstance = [[SelectedWifiEndPoint alloc] init];
-  }
-}
-+ (SelectedWifiEndPoint*) defaultInstance {
-  return defaultSelectedWifiEndPointInstance;
-}
-- (SelectedWifiEndPoint*) defaultInstance {
-  return defaultSelectedWifiEndPointInstance;
-}
-- (BOOL) isInitialized {
-  if (self.hasEndPoint) {
-    if (!self.endPoint.isInitialized) {
-      return NO;
-    }
-  }
-  return YES;
-}
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasEndPoint) {
-    [output writeMessage:1 value:self.endPoint];
-  }
-  if (self.hasPassword) {
-    [output writeString:2 value:self.password];
-  }
-  [self.unknownFields writeToCodedOutputStream:output];
-}
-- (long) serializedSize {
-  long size_ = memoizedSerializedSize;
-  if (size_ != -1) {
-    return size_;
-  }
-
-  size_ = 0;
-  if (self.hasEndPoint) {
-    size_ += computeMessageSize(1, self.endPoint);
-  }
-  if (self.hasPassword) {
-    size_ += computeStringSize(2, self.password);
-  }
-  size_ += self.unknownFields.serializedSize;
-  memoizedSerializedSize = size_;
-  return size_;
-}
-+ (SelectedWifiEndPoint*) parseFromData:(NSData*) data {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromData:data] build];
-}
-+ (SelectedWifiEndPoint*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
-}
-+ (SelectedWifiEndPoint*) parseFromInputStream:(NSInputStream*) input {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromInputStream:input] build];
-}
-+ (SelectedWifiEndPoint*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (SelectedWifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromCodedInputStream:input] build];
-}
-+ (SelectedWifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (SelectedWifiEndPoint*)[[[SelectedWifiEndPoint builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (SelectedWifiEndPointBuilder*) builder {
-  return [[SelectedWifiEndPointBuilder alloc] init];
-}
-+ (SelectedWifiEndPointBuilder*) builderWithPrototype:(SelectedWifiEndPoint*) prototype {
-  return [[SelectedWifiEndPoint builder] mergeFrom:prototype];
-}
-- (SelectedWifiEndPointBuilder*) builder {
-  return [SelectedWifiEndPoint builder];
-}
-- (SelectedWifiEndPointBuilder*) toBuilder {
-  return [SelectedWifiEndPoint builderWithPrototype:self];
-}
-- (void) writeDescriptionTo:(NSMutableString*) output withIndent:(NSString*) indent {
-  if (self.hasEndPoint) {
-    [output appendFormat:@"%@%@ {\n", indent, @"endPoint"];
-    [self.endPoint writeDescriptionTo:output
-                         withIndent:[NSString stringWithFormat:@"%@  ", indent]];
-    [output appendFormat:@"%@}\n", indent];
-  }
-  if (self.hasPassword) {
-    [output appendFormat:@"%@%@: %@\n", indent, @"password", self.password];
-  }
-  [self.unknownFields writeDescriptionTo:output withIndent:indent];
-}
-- (BOOL) isEqual:(id)other {
-  if (other == self) {
-    return YES;
-  }
-  if (![other isKindOfClass:[SelectedWifiEndPoint class]]) {
-    return NO;
-  }
-  SelectedWifiEndPoint *otherMessage = other;
-  return
-      self.hasEndPoint == otherMessage.hasEndPoint &&
-      (!self.hasEndPoint || [self.endPoint isEqual:otherMessage.endPoint]) &&
-      self.hasPassword == otherMessage.hasPassword &&
-      (!self.hasPassword || [self.password isEqual:otherMessage.password]) &&
-      (self.unknownFields == otherMessage.unknownFields || (self.unknownFields != nil && [self.unknownFields isEqual:otherMessage.unknownFields]));
-}
-- (NSUInteger) hash {
-  NSUInteger hashCode = 7;
-  if (self.hasEndPoint) {
-    hashCode = hashCode * 31 + [self.endPoint hash];
-  }
-  if (self.hasPassword) {
-    hashCode = hashCode * 31 + [self.password hash];
-  }
-  hashCode = hashCode * 31 + [self.unknownFields hash];
-  return hashCode;
-}
-@end
-
-@interface SelectedWifiEndPointBuilder()
-@property (strong) SelectedWifiEndPoint* result;
-@end
-
-@implementation SelectedWifiEndPointBuilder
-@synthesize result;
-- (void) dealloc {
-  self.result = nil;
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.result = [[SelectedWifiEndPoint alloc] init];
-  }
-  return self;
-}
-- (PBGeneratedMessage*) internalGetResult {
-  return result;
-}
-- (SelectedWifiEndPointBuilder*) clear {
-  self.result = [[SelectedWifiEndPoint alloc] init];
-  return self;
-}
-- (SelectedWifiEndPointBuilder*) clone {
-  return [SelectedWifiEndPoint builderWithPrototype:result];
-}
-- (SelectedWifiEndPoint*) defaultInstance {
-  return [SelectedWifiEndPoint defaultInstance];
-}
-- (SelectedWifiEndPoint*) build {
-  [self checkInitialized];
-  return [self buildPartial];
-}
-- (SelectedWifiEndPoint*) buildPartial {
-  SelectedWifiEndPoint* returnMe = result;
-  self.result = nil;
-  return returnMe;
-}
-- (SelectedWifiEndPointBuilder*) mergeFrom:(SelectedWifiEndPoint*) other {
-  if (other == [SelectedWifiEndPoint defaultInstance]) {
-    return self;
-  }
-  if (other.hasEndPoint) {
-    [self mergeEndPoint:other.endPoint];
-  }
-  if (other.hasPassword) {
-    [self setPassword:other.password];
-  }
-  [self mergeUnknownFields:other.unknownFields];
-  return self;
-}
-- (SelectedWifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
-  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
-}
-- (SelectedWifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  PBUnknownFieldSetBuilder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
-  while (YES) {
-    NSInteger tag = [input readTag];
-    switch (tag) {
-      case 0:
-        [self setUnknownFields:[unknownFields build]];
-        return self;
-      default: {
-        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
-          [self setUnknownFields:[unknownFields build]];
-          return self;
-        }
-        break;
-      }
-      case 10: {
-        WifiEndPointBuilder* subBuilder = [WifiEndPoint builder];
-        if (self.hasEndPoint) {
-          [subBuilder mergeFrom:self.endPoint];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setEndPoint:[subBuilder buildPartial]];
-        break;
-      }
-      case 18: {
-        [self setPassword:[input readString]];
-        break;
-      }
-    }
-  }
-}
-- (BOOL) hasEndPoint {
-  return result.hasEndPoint;
-}
-- (WifiEndPoint*) endPoint {
-  return result.endPoint;
-}
-- (SelectedWifiEndPointBuilder*) setEndPoint:(WifiEndPoint*) value {
-  result.hasEndPoint = YES;
-  result.endPoint = value;
-  return self;
-}
-- (SelectedWifiEndPointBuilder*) setEndPointBuilder:(WifiEndPointBuilder*) builderForValue {
-  return [self setEndPoint:[builderForValue build]];
-}
-- (SelectedWifiEndPointBuilder*) mergeEndPoint:(WifiEndPoint*) value {
-  if (result.hasEndPoint &&
-      result.endPoint != [WifiEndPoint defaultInstance]) {
-    result.endPoint =
-      [[[WifiEndPoint builderWithPrototype:result.endPoint] mergeFrom:value] buildPartial];
-  } else {
-    result.endPoint = value;
-  }
-  result.hasEndPoint = YES;
-  return self;
-}
-- (SelectedWifiEndPointBuilder*) clearEndPoint {
-  result.hasEndPoint = NO;
-  result.endPoint = [WifiEndPoint defaultInstance];
-  return self;
-}
-- (BOOL) hasPassword {
-  return result.hasPassword;
-}
-- (NSString*) password {
-  return result.password;
-}
-- (SelectedWifiEndPointBuilder*) setPassword:(NSString*) value {
-  result.hasPassword = YES;
-  result.password = value;
-  return self;
-}
-- (SelectedWifiEndPointBuilder*) clearPassword {
-  result.hasPassword = NO;
-  result.password = @"";
-  return self;
-}
-@end
-
 @interface SENSenseMessage ()
 @property long version;
 @property SENSenseMessageType type;
-@property (strong) SelectedWifiEndPoint* selectedWifiendPoint;
-@property (strong) NSData* deviceId;
-@property long long accountId;
+@property (strong) NSString* deviceId;
+@property (strong) NSString* accountId;
 @property ErrorType error;
+@property (strong) NSString* wifiName;
+@property (strong) NSString* wifiSsid;
+@property (strong) NSString* wifiPassword;
 @end
 
 @implementation SENSenseMessage
@@ -593,13 +60,6 @@ static SelectedWifiEndPoint* defaultSelectedWifiEndPointInstance = nil;
   hasType_ = !!value_;
 }
 @synthesize type;
-- (BOOL) hasSelectedWifiendPoint {
-  return !!hasSelectedWifiendPoint_;
-}
-- (void) setHasSelectedWifiendPoint:(BOOL) value_ {
-  hasSelectedWifiendPoint_ = !!value_;
-}
-@synthesize selectedWifiendPoint;
 - (BOOL) hasDeviceId {
   return !!hasDeviceId_;
 }
@@ -621,18 +81,44 @@ static SelectedWifiEndPoint* defaultSelectedWifiEndPointInstance = nil;
   hasError_ = !!value_;
 }
 @synthesize error;
+- (BOOL) hasWifiName {
+  return !!hasWifiName_;
+}
+- (void) setHasWifiName:(BOOL) value_ {
+  hasWifiName_ = !!value_;
+}
+@synthesize wifiName;
+- (BOOL) hasWifiSsid {
+  return !!hasWifiSsid_;
+}
+- (void) setHasWifiSsid:(BOOL) value_ {
+  hasWifiSsid_ = !!value_;
+}
+@synthesize wifiSsid;
+- (BOOL) hasWifiPassword {
+  return !!hasWifiPassword_;
+}
+- (void) setHasWifiPassword:(BOOL) value_ {
+  hasWifiPassword_ = !!value_;
+}
+@synthesize wifiPassword;
 - (void) dealloc {
-  self.selectedWifiendPoint = nil;
   self.deviceId = nil;
+  self.accountId = nil;
+  self.wifiName = nil;
+  self.wifiSsid = nil;
+  self.wifiPassword = nil;
 }
 - (id) init {
   if ((self = [super init])) {
     self.version = 0;
     self.type = SENSenseMessageTypeSetTime;
-    self.selectedWifiendPoint = [SelectedWifiEndPoint defaultInstance];
-    self.deviceId = [NSData data];
-    self.accountId = 0L;
+    self.deviceId = @"";
+    self.accountId = @"";
     self.error = ErrorTypeTimeOut;
+    self.wifiName = @"";
+    self.wifiSsid = @"";
+    self.wifiPassword = @"";
   }
   return self;
 }
@@ -655,11 +141,6 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (!self.hasType) {
     return NO;
   }
-  if (self.hasSelectedWifiendPoint) {
-    if (!self.selectedWifiendPoint.isInitialized) {
-      return NO;
-    }
-  }
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
@@ -669,17 +150,23 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (self.hasType) {
     [output writeEnum:2 value:self.type];
   }
-  if (self.hasSelectedWifiendPoint) {
-    [output writeMessage:3 value:self.selectedWifiendPoint];
-  }
   if (self.hasDeviceId) {
-    [output writeData:4 value:self.deviceId];
+    [output writeString:3 value:self.deviceId];
   }
   if (self.hasAccountId) {
-    [output writeInt64:5 value:self.accountId];
+    [output writeString:4 value:self.accountId];
   }
   if (self.hasError) {
-    [output writeEnum:6 value:self.error];
+    [output writeEnum:5 value:self.error];
+  }
+  if (self.hasWifiName) {
+    [output writeString:6 value:self.wifiName];
+  }
+  if (self.hasWifiSsid) {
+    [output writeString:7 value:self.wifiSsid];
+  }
+  if (self.hasWifiPassword) {
+    [output writeString:8 value:self.wifiPassword];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -696,17 +183,23 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (self.hasType) {
     size_ += computeEnumSize(2, self.type);
   }
-  if (self.hasSelectedWifiendPoint) {
-    size_ += computeMessageSize(3, self.selectedWifiendPoint);
-  }
   if (self.hasDeviceId) {
-    size_ += computeDataSize(4, self.deviceId);
+    size_ += computeStringSize(3, self.deviceId);
   }
   if (self.hasAccountId) {
-    size_ += computeInt64Size(5, self.accountId);
+    size_ += computeStringSize(4, self.accountId);
   }
   if (self.hasError) {
-    size_ += computeEnumSize(6, self.error);
+    size_ += computeEnumSize(5, self.error);
+  }
+  if (self.hasWifiName) {
+    size_ += computeStringSize(6, self.wifiName);
+  }
+  if (self.hasWifiSsid) {
+    size_ += computeStringSize(7, self.wifiSsid);
+  }
+  if (self.hasWifiPassword) {
+    size_ += computeStringSize(8, self.wifiPassword);
   }
   size_ += self.unknownFields.serializedSize;
   memoizedSerializedSize = size_;
@@ -749,20 +242,23 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (self.hasType) {
     [output appendFormat:@"%@%@: %d\n", indent, @"type", self.type];
   }
-  if (self.hasSelectedWifiendPoint) {
-    [output appendFormat:@"%@%@ {\n", indent, @"selectedWifiendPoint"];
-    [self.selectedWifiendPoint writeDescriptionTo:output
-                         withIndent:[NSString stringWithFormat:@"%@  ", indent]];
-    [output appendFormat:@"%@}\n", indent];
-  }
   if (self.hasDeviceId) {
     [output appendFormat:@"%@%@: %@\n", indent, @"deviceId", self.deviceId];
   }
   if (self.hasAccountId) {
-    [output appendFormat:@"%@%@: %@\n", indent, @"accountId", [NSNumber numberWithLongLong:self.accountId]];
+    [output appendFormat:@"%@%@: %@\n", indent, @"accountId", self.accountId];
   }
   if (self.hasError) {
     [output appendFormat:@"%@%@: %d\n", indent, @"error", self.error];
+  }
+  if (self.hasWifiName) {
+    [output appendFormat:@"%@%@: %@\n", indent, @"wifiName", self.wifiName];
+  }
+  if (self.hasWifiSsid) {
+    [output appendFormat:@"%@%@: %@\n", indent, @"wifiSsid", self.wifiSsid];
+  }
+  if (self.hasWifiPassword) {
+    [output appendFormat:@"%@%@: %@\n", indent, @"wifiPassword", self.wifiPassword];
   }
   [self.unknownFields writeDescriptionTo:output withIndent:indent];
 }
@@ -779,14 +275,18 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
       (!self.hasVersion || self.version == otherMessage.version) &&
       self.hasType == otherMessage.hasType &&
       (!self.hasType || self.type == otherMessage.type) &&
-      self.hasSelectedWifiendPoint == otherMessage.hasSelectedWifiendPoint &&
-      (!self.hasSelectedWifiendPoint || [self.selectedWifiendPoint isEqual:otherMessage.selectedWifiendPoint]) &&
       self.hasDeviceId == otherMessage.hasDeviceId &&
       (!self.hasDeviceId || [self.deviceId isEqual:otherMessage.deviceId]) &&
       self.hasAccountId == otherMessage.hasAccountId &&
-      (!self.hasAccountId || self.accountId == otherMessage.accountId) &&
+      (!self.hasAccountId || [self.accountId isEqual:otherMessage.accountId]) &&
       self.hasError == otherMessage.hasError &&
       (!self.hasError || self.error == otherMessage.error) &&
+      self.hasWifiName == otherMessage.hasWifiName &&
+      (!self.hasWifiName || [self.wifiName isEqual:otherMessage.wifiName]) &&
+      self.hasWifiSsid == otherMessage.hasWifiSsid &&
+      (!self.hasWifiSsid || [self.wifiSsid isEqual:otherMessage.wifiSsid]) &&
+      self.hasWifiPassword == otherMessage.hasWifiPassword &&
+      (!self.hasWifiPassword || [self.wifiPassword isEqual:otherMessage.wifiPassword]) &&
       (self.unknownFields == otherMessage.unknownFields || (self.unknownFields != nil && [self.unknownFields isEqual:otherMessage.unknownFields]));
 }
 - (NSUInteger) hash {
@@ -797,17 +297,23 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (self.hasType) {
     hashCode = hashCode * 31 + self.type;
   }
-  if (self.hasSelectedWifiendPoint) {
-    hashCode = hashCode * 31 + [self.selectedWifiendPoint hash];
-  }
   if (self.hasDeviceId) {
     hashCode = hashCode * 31 + [self.deviceId hash];
   }
   if (self.hasAccountId) {
-    hashCode = hashCode * 31 + [[NSNumber numberWithLongLong:self.accountId] hash];
+    hashCode = hashCode * 31 + [self.accountId hash];
   }
   if (self.hasError) {
     hashCode = hashCode * 31 + self.error;
+  }
+  if (self.hasWifiName) {
+    hashCode = hashCode * 31 + [self.wifiName hash];
+  }
+  if (self.hasWifiSsid) {
+    hashCode = hashCode * 31 + [self.wifiSsid hash];
+  }
+  if (self.hasWifiPassword) {
+    hashCode = hashCode * 31 + [self.wifiPassword hash];
   }
   hashCode = hashCode * 31 + [self.unknownFields hash];
   return hashCode;
@@ -830,6 +336,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
     case SENSenseMessageTypeEreasePairedPhone:
     case SENSenseMessageTypePairPill:
     case SENSenseMessageTypeError:
+    case SENSenseMessageTypePairSense:
       return YES;
     default:
       return NO;
@@ -882,9 +389,6 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
   if (other.hasType) {
     [self setType:other.type];
   }
-  if (other.hasSelectedWifiendPoint) {
-    [self mergeSelectedWifiendPoint:other.selectedWifiendPoint];
-  }
   if (other.hasDeviceId) {
     [self setDeviceId:other.deviceId];
   }
@@ -893,6 +397,15 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
   }
   if (other.hasError) {
     [self setError:other.error];
+  }
+  if (other.hasWifiName) {
+    [self setWifiName:other.wifiName];
+  }
+  if (other.hasWifiSsid) {
+    [self setWifiSsid:other.wifiSsid];
+  }
+  if (other.hasWifiPassword) {
+    [self setWifiPassword:other.wifiPassword];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -929,29 +442,32 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
         break;
       }
       case 26: {
-        SelectedWifiEndPointBuilder* subBuilder = [SelectedWifiEndPoint builder];
-        if (self.hasSelectedWifiendPoint) {
-          [subBuilder mergeFrom:self.selectedWifiendPoint];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setSelectedWifiendPoint:[subBuilder buildPartial]];
+        [self setDeviceId:[input readString]];
         break;
       }
       case 34: {
-        [self setDeviceId:[input readData]];
+        [self setAccountId:[input readString]];
         break;
       }
       case 40: {
-        [self setAccountId:[input readInt64]];
-        break;
-      }
-      case 48: {
         ErrorType value = (ErrorType)[input readEnum];
         if (ErrorTypeIsValidValue(value)) {
           [self setError:value];
         } else {
-          [unknownFields mergeVarintField:6 value:value];
+          [unknownFields mergeVarintField:5 value:value];
         }
+        break;
+      }
+      case 50: {
+        [self setWifiName:[input readString]];
+        break;
+      }
+      case 58: {
+        [self setWifiSsid:[input readString]];
+        break;
+      }
+      case 66: {
+        [self setWifiPassword:[input readString]];
         break;
       }
     }
@@ -989,66 +505,36 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
   result.type = SENSenseMessageTypeSetTime;
   return self;
 }
-- (BOOL) hasSelectedWifiendPoint {
-  return result.hasSelectedWifiendPoint;
-}
-- (SelectedWifiEndPoint*) selectedWifiendPoint {
-  return result.selectedWifiendPoint;
-}
-- (SENSenseMessageBuilder*) setSelectedWifiendPoint:(SelectedWifiEndPoint*) value {
-  result.hasSelectedWifiendPoint = YES;
-  result.selectedWifiendPoint = value;
-  return self;
-}
-- (SENSenseMessageBuilder*) setSelectedWifiendPointBuilder:(SelectedWifiEndPointBuilder*) builderForValue {
-  return [self setSelectedWifiendPoint:[builderForValue build]];
-}
-- (SENSenseMessageBuilder*) mergeSelectedWifiendPoint:(SelectedWifiEndPoint*) value {
-  if (result.hasSelectedWifiendPoint &&
-      result.selectedWifiendPoint != [SelectedWifiEndPoint defaultInstance]) {
-    result.selectedWifiendPoint =
-      [[[SelectedWifiEndPoint builderWithPrototype:result.selectedWifiendPoint] mergeFrom:value] buildPartial];
-  } else {
-    result.selectedWifiendPoint = value;
-  }
-  result.hasSelectedWifiendPoint = YES;
-  return self;
-}
-- (SENSenseMessageBuilder*) clearSelectedWifiendPoint {
-  result.hasSelectedWifiendPoint = NO;
-  result.selectedWifiendPoint = [SelectedWifiEndPoint defaultInstance];
-  return self;
-}
 - (BOOL) hasDeviceId {
   return result.hasDeviceId;
 }
-- (NSData*) deviceId {
+- (NSString*) deviceId {
   return result.deviceId;
 }
-- (SENSenseMessageBuilder*) setDeviceId:(NSData*) value {
+- (SENSenseMessageBuilder*) setDeviceId:(NSString*) value {
   result.hasDeviceId = YES;
   result.deviceId = value;
   return self;
 }
 - (SENSenseMessageBuilder*) clearDeviceId {
   result.hasDeviceId = NO;
-  result.deviceId = [NSData data];
+  result.deviceId = @"";
   return self;
 }
 - (BOOL) hasAccountId {
   return result.hasAccountId;
 }
-- (long long) accountId {
+- (NSString*) accountId {
   return result.accountId;
 }
-- (SENSenseMessageBuilder*) setAccountId:(long long) value {
+- (SENSenseMessageBuilder*) setAccountId:(NSString*) value {
   result.hasAccountId = YES;
   result.accountId = value;
   return self;
 }
 - (SENSenseMessageBuilder*) clearAccountId {
   result.hasAccountId = NO;
-  result.accountId = 0L;
+  result.accountId = @"";
   return self;
 }
 - (BOOL) hasError {
@@ -1065,6 +551,54 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value) {
 - (SENSenseMessageBuilder*) clearError {
   result.hasError = NO;
   result.error = ErrorTypeTimeOut;
+  return self;
+}
+- (BOOL) hasWifiName {
+  return result.hasWifiName;
+}
+- (NSString*) wifiName {
+  return result.wifiName;
+}
+- (SENSenseMessageBuilder*) setWifiName:(NSString*) value {
+  result.hasWifiName = YES;
+  result.wifiName = value;
+  return self;
+}
+- (SENSenseMessageBuilder*) clearWifiName {
+  result.hasWifiName = NO;
+  result.wifiName = @"";
+  return self;
+}
+- (BOOL) hasWifiSsid {
+  return result.hasWifiSsid;
+}
+- (NSString*) wifiSsid {
+  return result.wifiSsid;
+}
+- (SENSenseMessageBuilder*) setWifiSsid:(NSString*) value {
+  result.hasWifiSsid = YES;
+  result.wifiSsid = value;
+  return self;
+}
+- (SENSenseMessageBuilder*) clearWifiSsid {
+  result.hasWifiSsid = NO;
+  result.wifiSsid = @"";
+  return self;
+}
+- (BOOL) hasWifiPassword {
+  return result.hasWifiPassword;
+}
+- (NSString*) wifiPassword {
+  return result.wifiPassword;
+}
+- (SENSenseMessageBuilder*) setWifiPassword:(NSString*) value {
+  result.hasWifiPassword = YES;
+  result.wifiPassword = value;
+  return self;
+}
+- (SENSenseMessageBuilder*) clearWifiPassword {
+  result.hasWifiPassword = NO;
+  result.wifiPassword = @"";
   return self;
 }
 @end

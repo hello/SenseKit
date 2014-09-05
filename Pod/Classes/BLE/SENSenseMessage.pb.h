@@ -6,10 +6,6 @@
 
 @class SENSenseMessage;
 @class SENSenseMessageBuilder;
-@class SelectedWifiEndPoint;
-@class SelectedWifiEndPointBuilder;
-@class WifiEndPoint;
-@class WifiEndPointBuilder;
 #ifndef __has_feature
   #define __has_feature(x) 0 // Compatibility with non-clang compilers.
 #endif // __has_feature
@@ -28,6 +24,7 @@ typedef enum {
   ErrorTypeDeviceAlreadyPaired = 2,
   ErrorTypeInternalDataError = 3,
   ErrorTypeDeviceDatabaseFull = 4,
+  ErrorTypeDeviceNoMemory = 5,
 } ErrorType;
 
 BOOL ErrorTypeIsValidValue(ErrorType value);
@@ -47,6 +44,7 @@ typedef enum {
   SENSenseMessageTypeEreasePairedPhone = 11,
   SENSenseMessageTypePairPill = 12,
   SENSenseMessageTypeError = 13,
+  SENSenseMessageTypePairSense = 14,
 } SENSenseMessageType;
 
 BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
@@ -58,151 +56,41 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 + (void) registerAllExtensions:(PBMutableExtensionRegistry*) registry;
 @end
 
-@interface WifiEndPoint : PBGeneratedMessage {
-@private
-  BOOL hasName_:1;
-  BOOL hasSsid_:1;
-  NSString* name;
-  NSString* ssid;
-}
-- (BOOL) hasName;
-- (BOOL) hasSsid;
-@property (readonly, strong) NSString* name;
-@property (readonly, strong) NSString* ssid;
-
-+ (WifiEndPoint*) defaultInstance;
-- (WifiEndPoint*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (WifiEndPointBuilder*) builder;
-+ (WifiEndPointBuilder*) builder;
-+ (WifiEndPointBuilder*) builderWithPrototype:(WifiEndPoint*) prototype;
-- (WifiEndPointBuilder*) toBuilder;
-
-+ (WifiEndPoint*) parseFromData:(NSData*) data;
-+ (WifiEndPoint*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (WifiEndPoint*) parseFromInputStream:(NSInputStream*) input;
-+ (WifiEndPoint*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (WifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (WifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface WifiEndPointBuilder : PBGeneratedMessageBuilder {
-@private
-  WifiEndPoint* result;
-}
-
-- (WifiEndPoint*) defaultInstance;
-
-- (WifiEndPointBuilder*) clear;
-- (WifiEndPointBuilder*) clone;
-
-- (WifiEndPoint*) build;
-- (WifiEndPoint*) buildPartial;
-
-- (WifiEndPointBuilder*) mergeFrom:(WifiEndPoint*) other;
-- (WifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (WifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasName;
-- (NSString*) name;
-- (WifiEndPointBuilder*) setName:(NSString*) value;
-- (WifiEndPointBuilder*) clearName;
-
-- (BOOL) hasSsid;
-- (NSString*) ssid;
-- (WifiEndPointBuilder*) setSsid:(NSString*) value;
-- (WifiEndPointBuilder*) clearSsid;
-@end
-
-@interface SelectedWifiEndPoint : PBGeneratedMessage {
-@private
-  BOOL hasPassword_:1;
-  BOOL hasEndPoint_:1;
-  NSString* password;
-  WifiEndPoint* endPoint;
-}
-- (BOOL) hasEndPoint;
-- (BOOL) hasPassword;
-@property (readonly, strong) WifiEndPoint* endPoint;
-@property (readonly, strong) NSString* password;
-
-+ (SelectedWifiEndPoint*) defaultInstance;
-- (SelectedWifiEndPoint*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (SelectedWifiEndPointBuilder*) builder;
-+ (SelectedWifiEndPointBuilder*) builder;
-+ (SelectedWifiEndPointBuilder*) builderWithPrototype:(SelectedWifiEndPoint*) prototype;
-- (SelectedWifiEndPointBuilder*) toBuilder;
-
-+ (SelectedWifiEndPoint*) parseFromData:(NSData*) data;
-+ (SelectedWifiEndPoint*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (SelectedWifiEndPoint*) parseFromInputStream:(NSInputStream*) input;
-+ (SelectedWifiEndPoint*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (SelectedWifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (SelectedWifiEndPoint*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface SelectedWifiEndPointBuilder : PBGeneratedMessageBuilder {
-@private
-  SelectedWifiEndPoint* result;
-}
-
-- (SelectedWifiEndPoint*) defaultInstance;
-
-- (SelectedWifiEndPointBuilder*) clear;
-- (SelectedWifiEndPointBuilder*) clone;
-
-- (SelectedWifiEndPoint*) build;
-- (SelectedWifiEndPoint*) buildPartial;
-
-- (SelectedWifiEndPointBuilder*) mergeFrom:(SelectedWifiEndPoint*) other;
-- (SelectedWifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (SelectedWifiEndPointBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasEndPoint;
-- (WifiEndPoint*) endPoint;
-- (SelectedWifiEndPointBuilder*) setEndPoint:(WifiEndPoint*) value;
-- (SelectedWifiEndPointBuilder*) setEndPointBuilder:(WifiEndPointBuilder*) builderForValue;
-- (SelectedWifiEndPointBuilder*) mergeEndPoint:(WifiEndPoint*) value;
-- (SelectedWifiEndPointBuilder*) clearEndPoint;
-
-- (BOOL) hasPassword;
-- (NSString*) password;
-- (SelectedWifiEndPointBuilder*) setPassword:(NSString*) value;
-- (SelectedWifiEndPointBuilder*) clearPassword;
-@end
-
 @interface SENSenseMessage : PBGeneratedMessage {
 @private
-  BOOL hasAccountId_:1;
   BOOL hasVersion_:1;
-  BOOL hasSelectedWifiendPoint_:1;
   BOOL hasDeviceId_:1;
+  BOOL hasAccountId_:1;
+  BOOL hasWifiName_:1;
+  BOOL hasWifiSsid_:1;
+  BOOL hasWifiPassword_:1;
   BOOL hasType_:1;
   BOOL hasError_:1;
-  long long accountId;
   long version;
-  SelectedWifiEndPoint* selectedWifiendPoint;
-  NSData* deviceId;
+  NSString* deviceId;
+  NSString* accountId;
+  NSString* wifiName;
+  NSString* wifiSsid;
+  NSString* wifiPassword;
   SENSenseMessageType type;
   ErrorType error;
 }
 - (BOOL) hasVersion;
 - (BOOL) hasType;
-- (BOOL) hasSelectedWifiendPoint;
 - (BOOL) hasDeviceId;
 - (BOOL) hasAccountId;
 - (BOOL) hasError;
+- (BOOL) hasWifiName;
+- (BOOL) hasWifiSsid;
+- (BOOL) hasWifiPassword;
 @property (readonly) long version;
 @property (readonly) SENSenseMessageType type;
-@property (readonly, strong) SelectedWifiEndPoint* selectedWifiendPoint;
-@property (readonly, strong) NSData* deviceId;
-@property (readonly) long long accountId;
+@property (readonly, strong) NSString* deviceId;
+@property (readonly, strong) NSString* accountId;
 @property (readonly) ErrorType error;
+@property (readonly, strong) NSString* wifiName;
+@property (readonly, strong) NSString* wifiSsid;
+@property (readonly, strong) NSString* wifiPassword;
 
 + (SENSenseMessage*) defaultInstance;
 - (SENSenseMessage*) defaultInstance;
@@ -249,27 +137,35 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 - (SENSenseMessageBuilder*) setType:(SENSenseMessageType) value;
 - (SENSenseMessageBuilder*) clearType;
 
-- (BOOL) hasSelectedWifiendPoint;
-- (SelectedWifiEndPoint*) selectedWifiendPoint;
-- (SENSenseMessageBuilder*) setSelectedWifiendPoint:(SelectedWifiEndPoint*) value;
-- (SENSenseMessageBuilder*) setSelectedWifiendPointBuilder:(SelectedWifiEndPointBuilder*) builderForValue;
-- (SENSenseMessageBuilder*) mergeSelectedWifiendPoint:(SelectedWifiEndPoint*) value;
-- (SENSenseMessageBuilder*) clearSelectedWifiendPoint;
-
 - (BOOL) hasDeviceId;
-- (NSData*) deviceId;
-- (SENSenseMessageBuilder*) setDeviceId:(NSData*) value;
+- (NSString*) deviceId;
+- (SENSenseMessageBuilder*) setDeviceId:(NSString*) value;
 - (SENSenseMessageBuilder*) clearDeviceId;
 
 - (BOOL) hasAccountId;
-- (long long) accountId;
-- (SENSenseMessageBuilder*) setAccountId:(long long) value;
+- (NSString*) accountId;
+- (SENSenseMessageBuilder*) setAccountId:(NSString*) value;
 - (SENSenseMessageBuilder*) clearAccountId;
 
 - (BOOL) hasError;
 - (ErrorType) error;
 - (SENSenseMessageBuilder*) setError:(ErrorType) value;
 - (SENSenseMessageBuilder*) clearError;
+
+- (BOOL) hasWifiName;
+- (NSString*) wifiName;
+- (SENSenseMessageBuilder*) setWifiName:(NSString*) value;
+- (SENSenseMessageBuilder*) clearWifiName;
+
+- (BOOL) hasWifiSsid;
+- (NSString*) wifiSsid;
+- (SENSenseMessageBuilder*) setWifiSsid:(NSString*) value;
+- (SENSenseMessageBuilder*) clearWifiSsid;
+
+- (BOOL) hasWifiPassword;
+- (NSString*) wifiPassword;
+- (SENSenseMessageBuilder*) setWifiPassword:(NSString*) value;
+- (SENSenseMessageBuilder*) clearWifiPassword;
 @end
 
 
