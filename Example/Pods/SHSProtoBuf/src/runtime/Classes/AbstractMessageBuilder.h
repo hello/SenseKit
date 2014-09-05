@@ -15,26 +15,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "Bootstrap.h"
-
-#import "AbstractMessage.h"
-#import "AbstractMessageBuilder.h"
-#import "CodedInputStream.h"
-#import "CodedOutputStream.h"
-#import "ConcreteExtensionField.h"
-#import "ExtendableMessage.h"
-#import "ExtendableMessageBuilder.h"
-#import "ExtensionField.h"
-#import "ExtensionRegistry.h"
-#import "Field.h"
-#import "GeneratedMessage.h"
-#import "GeneratedMessageBuilder.h"
-#import "Message.h"
 #import "MessageBuilder.h"
-#import "MutableExtensionRegistry.h"
-#import "MutableField.h"
-#import "PBArray.h"
-#import "UnknownFieldSet.h"
-#import "UnknownFieldSetBuilder.h"
-#import "Utilities.h"
-#import "WireFormat.h"
+
+/**
+ * A partial implementation of the {@link Message.Builder} interface which
+ * implements as many methods of that interface as possible in terms of
+ * other methods.
+ */
+@interface PBAbstractMessageBuilder : NSObject<PBMessageBuilder> {
+}
+
+@end

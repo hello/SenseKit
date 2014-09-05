@@ -20,8 +20,8 @@
 #import "AbstractMessage.h"
 #import "CodedInputStream.h"
 #import "CodedOutputStream.h"
-#import "ExtendableMessage_Builder.h"
-#import "Message_Builder.h"
+#import "ExtendableMessageBuilder.h"
+#import "MessageBuilder.h"
 #import "Utilities.h"
 #import "WireFormat.h"
 
@@ -463,7 +463,7 @@ long typeSize(PBExtensionType type) {
 }
 
 - (void) mergeMessageSetExtentionFromCodedInputStream:(PBCodedInputStream*) input
-                                        unknownFields:(PBUnknownFieldSet_Builder*) unknownFields {
+                                        unknownFields:(PBUnknownFieldSetBuilder*) unknownFields {
   @throw [NSException exceptionWithName:@"NYI" reason:@"" userInfo:nil];
 
   // The wire format for MessageSet is:
@@ -547,14 +547,14 @@ long typeSize(PBExtensionType type) {
     case PBExtensionTypeEnum:     return @([input readEnum]);
     case PBExtensionTypeGroup:
     {
-      id<PBMessage_Builder> builder = [messageOrGroupClass builder];
+      id<PBMessageBuilder> builder = [messageOrGroupClass builder];
       [input readGroup:fieldNumber builder:builder extensionRegistry:extensionRegistry];
       return [builder build];
     }
 
     case PBExtensionTypeMessage:
     {
-      id<PBMessage_Builder> builder = [messageOrGroupClass builder];
+      id<PBMessageBuilder> builder = [messageOrGroupClass builder];
       [input readMessage:builder extensionRegistry:extensionRegistry];
       return [builder build];
     }
@@ -565,9 +565,9 @@ long typeSize(PBExtensionType type) {
 
 
 - (void) mergeFromCodedInputStream:(PBCodedInputStream*) input
-                     unknownFields:(PBUnknownFieldSet_Builder*) unknownFields
+                     unknownFields:(PBUnknownFieldSetBuilder*) unknownFields
      extensionRegistry:(PBExtensionRegistry*) extensionRegistry
-    builder:(PBExtendableMessage_Builder*) builder
+    builder:(PBExtendableMessageBuilder*) builder
                                tag:(long) tag {
   if (isPacked) {
     long length = [input readRawVarint32];
