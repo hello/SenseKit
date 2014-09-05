@@ -8,6 +8,11 @@
 
 #import "SENAPIAccount.h"
 
+@class SENAccount;
+
 @interface SENAPIAccount (Private)
+
++ (SENAccount*)accountFromResponse:(id)responseObject;
++ (NSDictionary*)dictionaryValue:(SENAccount*)account;
 
 @end

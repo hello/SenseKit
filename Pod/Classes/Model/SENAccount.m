@@ -10,15 +10,15 @@
 
 @interface SENAccount()
 
-@property (nonatomic, copy, readwrite)   NSString* accountId;
-@property (nonatomic, copy, readwrite)   NSString* lastModified;
+@property (nonatomic, copy, readwrite) NSString* accountId;
+@property (nonatomic, copy, readwrite) NSNumber* lastModified;
 
 @end
 
 @implementation SENAccount
 
 - (instancetype)initWithAccountId:(NSString*)accountId
-                     lastModified:(NSString*)isoLastModDate {
+                     lastModified:(NSNumber*)isoLastModDate {
     self = [super init];
     if (self) {
         [self setAccountId:accountId];

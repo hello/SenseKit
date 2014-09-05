@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
  * The date of which this account was last modified.  Required
  * when making additional updates after account creation
  */
-@property (nonatomic, copy, readonly)    NSString* lastModified;
+@property (nonatomic, copy, readonly)    NSNumber* lastModified;
 
 /**
  * @property name
@@ -51,13 +51,50 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
 /**
  * @property weight
  *
- * The weight
+ * The weight in kilograms of the user
  */
 @property (nonatomic, strong, readwrite) NSNumber* weight; // in kg
+
+/**
+ * @property height
+ * 
+ * The height in centimeters of the user
+ */
 @property (nonatomic, strong, readwrite) NSNumber* height; // in cm
+
+/**
+ * @property birthdate
+ *
+ * The birthdate in ISO date format yyyy-MM-dd of the user
+ *
+ */
 @property (nonatomic, copy, readwrite)   NSString* birthdate;
 
+/**
+ * @property latitude
+ *
+ * The current latitude coordinate of the user used to determine
+ * environmental conditions.
+ */
+@property (nonatomic, strong, readwrite) NSNumber* latitude;
+
+/**
+ * @property longitude
+ *
+ * The current longitude coordinate of the user used to determine
+ * environmental conditions.
+ */
+@property (nonatomic, strong, readwrite) NSNumber* longitude;
+
+/**
+ * Initialize the SENAccount and return the instance with the specified
+ * account id and and lastModifiedDate, which are both not changeable
+ * on the client.
+ *
+ * @param accountId:      the unique identifier of the account
+ * @param isoLateModDate: the last modified date of the account object in milli
+ */
 - (instancetype)initWithAccountId:(NSString*)accountId
-                     lastModified:(NSString*)isoLastModDate;
+                     lastModified:(NSNumber*)isoLastModDate;
 
 @end

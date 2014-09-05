@@ -18,6 +18,8 @@ NSString* const SENAPIAccountPropertyGender = @"gender";
 NSString* const SENAPIAccountPropertyValueGenderOther = @"OTHER";
 NSString* const SENAPIAccountPropertyValueGenderMale = @"MALE";
 NSString* const SENAPIAccountPropertyValueGenderFemale = @"FEMALE";
+NSString* const SENAPIAccountPropertyValueLatitude = @"lat";
+NSString* const SENAPIAccountPropertyValueLongitude = @"lon";
 NSString* const SENAPIAccountEndpoint = @"account";
 
 @implementation SENAPIAccount
@@ -127,6 +129,7 @@ NSString* const SENAPIAccountEndpoint = @"account";
 
 + (NSDictionary*)dictionaryValue:(SENAccount*)account {
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
+    [params setValue:[account accountId] forKey:SENAPIAccountPropertyId];
     [params setValue:[account name] forKey:SENAPIAccountPropertyName];
     [params setValue:[account email] forKey:SENAPIAccountPropertyEmailAddress];
     [params setValue:[account weight] forKey:SENAPIAccountPropertyWeight];
@@ -134,6 +137,8 @@ NSString* const SENAPIAccountEndpoint = @"account";
     [params setValue:[self stringValueOfGender:[account gender]] forKey:SENAPIAccountPropertyGender];
     [params setValue:[account birthdate] forKey:SENAPIAccountPropertyBirthdate];
     [params setValue:[account lastModified] forKey:SENAPIAccountPropertyLastModified];
+    [params setValue:[account latitude] forKey:SENAPIAccountPropertyValueLatitude];
+    [params setValue:[account longitude] forKey:SENAPIAccountPropertyValueLongitude];
     return params;
 }
 
@@ -162,13 +167,15 @@ NSString* const SENAPIAccountEndpoint = @"account";
         // then what is passed but when you try to operate on the value, expecting
         // that's the correct class, it will crash at runtime.
         NSString* accountId = [self object:responseObject[SENAPIAccountPropertyId] mustBe:[NSString class]];
-        NSString* lastModified = [self object:responseObject[SENAPIAccountPropertyLastModified] mustBe:[NSString class]];
+        NSNumber* lastModified = [self object:responseObject[SENAPIAccountPropertyLastModified] mustBe:[NSNumber class]];
         NSString* name = [self object:responseObject[SENAPIAccountPropertyName] mustBe:[NSString class]];
         NSString* gender = [self object:responseObject[SENAPIAccountPropertyGender] mustBe:[NSString class]];
         NSNumber* weight = [self object:responseObject[SENAPIAccountPropertyWeight] mustBe:[NSNumber class]];
         NSNumber* height = [self object:responseObject[SENAPIAccountPropertyHeight] mustBe:[NSNumber class]];
         NSString* email = [self object:responseObject[SENAPIAccountPropertyEmailAddress] mustBe:[NSString class]];
         NSString* birthdate = [self object:responseObject[SENAPIAccountPropertyBirthdate] mustBe:[NSString class]];
+        NSNumber* latitude = [self object:responseObject mustBe:[NSNumber class]];
+        NSNumber* longitude = [self object:responseObject mustBe:[NSNumber class]];
         
         account = [[SENAccount alloc] initWithAccountId:accountId lastModified:lastModified];
         [account setName:name];
@@ -177,6 +184,8 @@ NSString* const SENAPIAccountEndpoint = @"account";
         [account setHeight:height];
         [account setEmail:email];
         [account setBirthdate:birthdate];
+        [account setLatitude:latitude];
+        [account setLongitude:longitude];
     }
     return account;
 }
