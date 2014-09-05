@@ -96,6 +96,91 @@ describe(@"SENSenseManager", ^{
         
     });
     
+    describe(@"-messageFromBlePackets:error:", ^{
+        __block SENSenseManager* manager;
+        __block SENSenseMessageBuilder* builder;
+        
+        beforeEach(^{
+            manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
+            builder = [[SENSenseMessageBuilder alloc] init];
+            [builder setType:SENSenseMessageTypeSwitchToPairingMode];
+            [builder setVersion:0];
+        });
+        
+        it(@"a single properly formatted packet should return a message", ^{
+            NSData* data = [manager blePackets:[builder build]][0];
+            
+            NSError* error = nil;
+            SENSenseMessage* message = [manager messageFromBlePackets:@[data] error:&error];
+            
+            [[error should] beNil];
+            [[message should] beNonNil];
+            [[@([message type]) should] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
+        });
+        
+        it(@"a malformed hello ble packet should erturn an error", ^{
+            SENSenseMessage* input = [builder build];
+            
+            NSError* error = nil;
+            SENSenseMessage* output = [manager messageFromBlePackets:@[[input data]] error:&error];
+            
+            [[error should] beNonNil];
+            [[output should] beNil];
+        });
+        
+    });
+    
+    describe(@"-handleResponseUpdate:error:forMessageType:allPackets:totalPackets:success:failure", ^{
+        __block SENSenseManager* manager;
+        __block NSData* data;
+        __block NSMutableArray* all;
+        __block NSNumber* total;
+        
+        beforeEach(^{
+            manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
+            SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+            [builder setType:SENSenseMessageTypeSwitchToPairingMode];
+            [builder setVersion:0];
+            data = [manager blePackets:[builder build]][0];
+            all = [NSMutableArray array];
+            total = nil;
+        });
+        
+        
+        it(@"handling a response that has only 1 packet should return success", ^{
+            [manager handleResponseUpdate:data
+                                    error:nil
+                           forMessageType:SENSenseMessageTypeSwitchToPairingMode
+                               allPackets:&all
+                             totalPackets:&total
+                                  success:^(id response) {
+                                      [[response should] beKindOfClass:[SENSenseMessage class]];
+                                      
+                                      SENSenseMessage* message = response;
+                                      [[@([message type]) should] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
+                                  } failure:^(NSError *error) {
+                                      fail(@"should not fail");
+                                  }];
+            
+        });
+        
+        it(@"handling a response with error should invoke failure block", ^{
+            [manager handleResponseUpdate:data
+                                    error:[NSError errorWithDomain:@"test"
+                                                              code:-1
+                                                          userInfo:nil]
+                           forMessageType:SENSenseMessageTypeSwitchToPairingMode
+                               allPackets:&all
+                             totalPackets:&total
+                                  success:^(id response) {
+                                      fail(@"fail");
+                                  } failure:^(NSError *error) {
+                                      [[@([error code]) should] equal:@(SENSenseManagerErrorCodeUnexpectedResponse)];
+                                  }];
+        });
+        
+    });
+    
 });
 
 SPEC_END

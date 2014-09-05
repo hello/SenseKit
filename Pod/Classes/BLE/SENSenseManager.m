@@ -441,7 +441,7 @@ static NSInteger const kSENSenseMessageVersion = 0;
     
     uint8_t packet[[data length]];
     [data getBytes:&packet length:kSENSensePacketSize];
-    if (sizeof(packet) > 2) {
+    if (sizeof(packet) > 2 && error == nil) {
         uint8_t seq = packet[0];
         if (seq == 0) {
             *totalPackets = @(packet[1]);
