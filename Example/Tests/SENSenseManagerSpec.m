@@ -181,6 +181,23 @@ describe(@"SENSenseManager", ^{
         
     });
     
+    describe(@"-sendPackets:from:throughWriter:success:failure", ^{
+        
+        it(@"should fail because there's no connection to ble pheripheral", ^{
+            SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
+            [manager sendPackets:@[]
+                            from:0
+                   throughWriter:[[LGCharacteristic alloc] init]
+                         success:^(id response) {
+                             fail(@"should not succeed");
+                         }
+                         failure:^(NSError *error) {
+                             [[@([error code]) should] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
+                         }];
+        });
+        
+    });
+    
 });
 
 SPEC_END

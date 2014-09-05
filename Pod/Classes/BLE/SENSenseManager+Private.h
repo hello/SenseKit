@@ -5,7 +5,7 @@
 //  Created by Jimmy Lu on 9/2/14.
 //
 //
-
+#import <LGBluetooth/LGBluetooth.h>
 #import "SENSenseManager.h"
 #import "SENSenseMessage.pb.h"
 
@@ -22,5 +22,10 @@
                 totalPackets:(NSNumber**)totalPackets
                      success:(SENSenseSuccessBlock)success
                      failure:(SENSenseFailureBlock)failure;
+- (void)sendPackets:(NSArray*)packets
+               from:(NSInteger)index
+      throughWriter:(LGCharacteristic*)writer
+            success:(SENSenseSuccessBlock)success
+            failure:(SENSenseFailureBlock)failure;
 
 @end
