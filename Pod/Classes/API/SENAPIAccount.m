@@ -127,9 +127,19 @@ NSString* const SENAPIAccountEndpoint = @"account";
     return gender;
 }
 
+/**
+ * Convert the account object in to a dictionary that can be used as the parameter
+ * value in updating the account.  Note that not all properties should be passed
+ * back through the API such as the account Id and password.  The password should
+ * be updated by itself.
+ *
+ * only values that are non-nil will be set.
+ *
+ * @param account: the account object to convert to a dictionary.
+ * @return         a dictionary containing non-nil values from the account object.
+ */
 + (NSDictionary*)dictionaryValue:(SENAccount*)account {
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
-    [params setValue:[account accountId] forKey:SENAPIAccountPropertyId];
     [params setValue:[account name] forKey:SENAPIAccountPropertyName];
     [params setValue:[account email] forKey:SENAPIAccountPropertyEmailAddress];
     [params setValue:[account weight] forKey:SENAPIAccountPropertyWeight];

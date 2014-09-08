@@ -53,6 +53,11 @@ describe(@"SENAPIAccount", ^{
             account = [[SENAccount alloc] initWithAccountId:@"0" lastModified:@(123)];
         });
         
+        it(@"make sure account id is not set in the dictionary since it will fail the request", ^{
+            NSDictionary* dict = [SENAPIAccount dictionaryValue:account];
+            [[[dict valueForKey:@"id"] should] beNil];
+        });
+        
         it(@"if value in account object is nil, dictionary does not contain key", ^{
             [account setWeight:@(165)];
             NSDictionary* dict = [SENAPIAccount dictionaryValue:account];
