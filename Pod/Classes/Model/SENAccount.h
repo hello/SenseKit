@@ -97,4 +97,12 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
 - (instancetype)initWithAccountId:(NSString*)accountId
                      lastModified:(NSNumber*)isoLastModDate;
 
+/**
+ * Set the birth date with individual components
+ * @param month: month of the birth month where 1 = january
+ * @param day:   day of the birthdate (1 - 31)
+ * @param year:  year of birth (yyyy)
+ */
+- (void)setBirthMonth:(NSInteger)month day:(NSInteger)day andYear:(NSInteger)year;
+
 @end

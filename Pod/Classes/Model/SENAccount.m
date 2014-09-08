@@ -27,4 +27,16 @@
     return self;
 }
 
+- (void)setBirthMonth:(NSInteger)month day:(NSInteger)day andYear:(NSInteger)year {
+    NSDateComponents* components = [[NSDateComponents alloc] init];
+    [components setDay:day];
+    [components setMonth:month];
+    [components setYear:year];
+    [components setCalendar:[NSCalendar currentCalendar]];
+    
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    [self setBirthdate:[formatter stringFromDate:[components date]]];
+}
+
 @end
