@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.4.0):
+  - AFNetworking (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.4.0):
+  - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.4.0):
+  - AFNetworking/NSURLSession (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.4.0)
-  - AFNetworking/Security (2.4.0)
-  - AFNetworking/Serialization (2.4.0)
-  - AFNetworking/UIKit (2.4.0):
+  - AFNetworking/Reachability (2.4.1)
+  - AFNetworking/Security (2.4.1)
+  - AFNetworking/Serialization (2.4.1)
+  - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - CocoaLumberjack (1.6.5.1):
@@ -65,14 +65,14 @@ EXTERNAL SOURCES:
     :git: https://github.com/hello/protobuf-objc.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 6b4a5f150a93a9d10d57643fe91fad47a661f096
+  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
   FXKeychain: beb642a4218ba783507af08865eda05e9b26a612
   Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
   Nocilla: e573c2bf9113c8d77782b695a2f9362b7bc44e72
   SenseKit: 76482ae3d26cf349b982ade9dd0c1d32c7e47b81
-  SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
+  SHSProtoBuf: e9533f24bc2b75e3cecd070b12785490ec5d8d27
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
 COCOAPODS: 0.33.1

@@ -134,7 +134,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBFileDescriptorSet*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBFileDescriptorSetBuilder : PBGeneratedMessage_Builder {
+@interface PBFileDescriptorSetBuilder : PBGeneratedMessageBuilder {
 @private
   PBFileDescriptorSet* result;
 }
@@ -212,7 +212,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBFileDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBFileDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBFileDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBFileDescriptorProto* result;
 }
@@ -364,7 +364,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBDescriptorProtoExtensionRange*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBDescriptorProtoExtensionRangeBuilder : PBGeneratedMessage_Builder {
+@interface PBDescriptorProtoExtensionRangeBuilder : PBGeneratedMessageBuilder {
 @private
   PBDescriptorProtoExtensionRange* result;
 }
@@ -392,7 +392,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 - (PBDescriptorProtoExtensionRangeBuilder*) clearEnd;
 @end
 
-@interface PBDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBDescriptorProto* result;
 }
@@ -511,7 +511,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBFieldDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBFieldDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBFieldDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBFieldDescriptorProto* result;
 }
@@ -604,7 +604,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBEnumDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBEnumDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBEnumDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBEnumDescriptorProto* result;
 }
@@ -675,7 +675,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBEnumValueDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBEnumValueDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBEnumValueDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBEnumValueDescriptorProto* result;
 }
@@ -743,7 +743,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBServiceDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBServiceDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBServiceDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBServiceDescriptorProto* result;
 }
@@ -818,7 +818,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBMethodDescriptorProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBMethodDescriptorProtoBuilder : PBGeneratedMessage_Builder {
+@interface PBMethodDescriptorProtoBuilder : PBGeneratedMessageBuilder {
 @private
   PBMethodDescriptorProto* result;
 }
@@ -915,7 +915,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBFileOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBFileOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBFileOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBFileOptions* result;
 }
@@ -1013,7 +1013,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBMessageOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBMessageOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBMessageOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBMessageOptions* result;
 }
@@ -1089,7 +1089,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBFieldOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBFieldOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBFieldOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBFieldOptions* result;
 }
@@ -1159,7 +1159,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBEnumOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBEnumOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBEnumOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBEnumOptions* result;
 }
@@ -1209,7 +1209,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBEnumValueOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBEnumValueOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBEnumValueOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBEnumValueOptions* result;
 }
@@ -1259,7 +1259,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBServiceOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBServiceOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBServiceOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBServiceOptions* result;
 }
@@ -1309,7 +1309,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBMethodOptions*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBMethodOptionsBuilder : PBExtendableMessage_Builder {
+@interface PBMethodOptionsBuilder : PBExtendableMessageBuilder {
 @private
   PBMethodOptions* result;
 }
@@ -1413,7 +1413,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBUninterpretedOptionNamePart*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBUninterpretedOptionNamePartBuilder : PBGeneratedMessage_Builder {
+@interface PBUninterpretedOptionNamePartBuilder : PBGeneratedMessageBuilder {
 @private
   PBUninterpretedOptionNamePart* result;
 }
@@ -1441,7 +1441,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 - (PBUninterpretedOptionNamePartBuilder*) clearIsExtension;
 @end
 
-@interface PBUninterpretedOptionBuilder : PBGeneratedMessage_Builder {
+@interface PBUninterpretedOptionBuilder : PBGeneratedMessageBuilder {
 @private
   PBUninterpretedOption* result;
 }
@@ -1551,7 +1551,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 + (PBSourceCodeInfoLocation*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface PBSourceCodeInfoLocationBuilder : PBGeneratedMessage_Builder {
+@interface PBSourceCodeInfoLocationBuilder : PBGeneratedMessageBuilder {
 @private
   PBSourceCodeInfoLocation* result;
 }
@@ -1583,7 +1583,7 @@ BOOL PBFieldOptionsCTypeIsValidValue(PBFieldOptionsCType value);
 - (PBSourceCodeInfoLocationBuilder *)clearSpan;
 @end
 
-@interface PBSourceCodeInfoBuilder : PBGeneratedMessage_Builder {
+@interface PBSourceCodeInfoBuilder : PBGeneratedMessageBuilder {
 @private
   PBSourceCodeInfo* result;
 }
