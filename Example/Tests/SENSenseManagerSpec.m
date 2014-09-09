@@ -26,44 +26,51 @@ describe(@"SENSenseManager", ^{
     describe(@"-enablePairingMode:success:failure", ^{
         
         it(@"should fail with no sense initialized", ^{
+            __block NSError* failError = nil;
             SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:nil];
             [manager enablePairingMode:YES success:^(id response) {
                 fail(@"should not be called");
             } failure:^(NSError *error) {
-                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+                failError = error;
             }];
+            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
         it(@"should fail if sense not initialized properly", ^{
+            __block NSError* failError = nil;
             SENSense* sense = [[SENSense alloc] init];
             SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:sense];
             [manager enablePairingMode:YES success:^(id response) {
                 fail(@"should not be called");
             } failure:^(NSError *error) {
-                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+                failError = error;
             }];
+            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
     });
 
     describe(@"-removeOtherPairedDevices:failure:", ^{
-        
+        __block NSError* failError = nil;
         it(@"should fail with no sense initialized", ^{
             SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:nil];
             [manager removeOtherPairedDevices:^(id response) {
                 fail(@"should not be called");
             } failure:^(NSError *error) {
-                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+                failError = error;
             }];
+            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
         it(@"should fail if sense not initialized properly", ^{
+            __block NSError* failError = nil;
             SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:nil];
             [manager removeOtherPairedDevices:^(id response) {
                 fail(@"should not be called");
             } failure:^(NSError *error) {
-                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+                failError = error;
             }];
+            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
     });
