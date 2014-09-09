@@ -8,6 +8,8 @@
 
 #import "SENAccount.h"
 
+static NSString* kSENAccountDoBFormat = @"yyyy-MM-dd";
+
 @interface SENAccount()
 
 @property (nonatomic, copy, readwrite) NSString* accountId;
@@ -35,8 +37,20 @@
     [components setCalendar:[NSCalendar currentCalendar]];
     
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd"];
+    [formatter setDateFormat:kSENAccountDoBFormat];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
     [self setBirthdate:[formatter stringFromDate:[components date]]];
+}
+
+- (void)setBirthdateInMillis:(NSNumber*)birthdateInMillis {
+    if (birthdateInMillis == nil) return;
+
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:kSENAccountDoBFormat];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+    
+    NSDate* date = [NSDate dateWithTimeIntervalSince1970:[birthdateInMillis longLongValue]/1000];
+    [self setBirthdate:[formatter stringFromDate:date]];
 }
 
 @end

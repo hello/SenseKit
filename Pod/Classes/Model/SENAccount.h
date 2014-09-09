@@ -105,4 +105,10 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
  */
 - (void)setBirthMonth:(NSInteger)month day:(NSInteger)day andYear:(NSInteger)year;
 
+/**
+ * Set the birth date with the milliseconds from January 1, 1970 GMT
+ * @param birthdateInMillis: milliseconds representing the birthdate since Jan 1, 1970
+ */
+- (void)setBirthdateInMillis:(NSNumber*)birthdateInMillis;
+
 @end

@@ -41,6 +41,17 @@ describe(@"SENAPIAccount", ^{
             [[account should] beNonNil];
             [[[account accountId] should] equal:@"0000-00-00000"];
             [[[account name] should] beNil];
+        });
+        
+        it(@"birthdate returned as millis should be properly formatted", ^{
+            NSDictionary* response = @{
+                @"id" : @"0000-00-00000",
+                @"last_modified" : @(1409861723884),
+                @"dob" : @(343440000000)
+            };
+            
+            SENAccount* account = [SENAPIAccount accountFromResponse:response];
+            [[[account birthdate] should] equal:@"1980-11-19"];
             
         });
         
