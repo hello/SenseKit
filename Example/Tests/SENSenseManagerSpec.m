@@ -148,23 +148,27 @@ describe(@"SENSenseManager", ^{
         
         
         it(@"handling a response that has only 1 packet should return success", ^{
+            __block id responseObject = nil;
+            __block SENSenseMessageType type = SENSenseMessageTypeError;
             [manager handleResponseUpdate:data
                                     error:nil
                            forMessageType:SENSenseMessageTypeSwitchToPairingMode
                                allPackets:&all
                              totalPackets:&total
                                   success:^(id response) {
-                                      [[response should] beKindOfClass:[SENSenseMessage class]];
-                                      
-                                      SENSenseMessage* message = response;
-                                      [[@([message type]) should] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
+                                      responseObject = response;
+                                      type = [((SENSenseMessage*)responseObject) type];
                                   } failure:^(NSError *error) {
                                       fail(@"should not fail");
                                   }];
+           
+            [[expectFutureValue(responseObject) shouldEventually] beKindOfClass:[SENSenseMessage class]];
+            [[expectFutureValue(@(type)) shouldEventually] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
             
         });
         
         it(@"handling a response with error should invoke failure block", ^{
+            __block NSError* responseError = nil;
             [manager handleResponseUpdate:data
                                     error:[NSError errorWithDomain:@"test"
                                                               code:-1
@@ -175,8 +179,10 @@ describe(@"SENSenseManager", ^{
                                   success:^(id response) {
                                       fail(@"fail");
                                   } failure:^(NSError *error) {
-                                      [[@([error code]) should] equal:@(SENSenseManagerErrorCodeUnexpectedResponse)];
+                                      responseError = error;
                                   }];
+            
+            [[expectFutureValue(@([responseError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeUnexpectedResponse)];
         });
         
     });
@@ -184,6 +190,7 @@ describe(@"SENSenseManager", ^{
     describe(@"-sendPackets:from:throughWriter:success:failure", ^{
         
         it(@"should fail because there's no connection to ble pheripheral", ^{
+            __block NSError* responseError = nil;
             SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
             [manager sendPackets:@[]
                             from:0
@@ -192,8 +199,9 @@ describe(@"SENSenseManager", ^{
                              fail(@"should not succeed");
                          }
                          failure:^(NSError *error) {
-                             [[@([error code]) should] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
+                             responseError = error;
                          }];
+            [[expectFutureValue(@([responseError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
         });
         
     });

@@ -8,7 +8,6 @@ NSString* const SENAPIAccountPropertyEmailAddress = @"email";
 NSString* const SENAPIAccountPropertyPassword = @"password";
 NSString* const SENAPIAccountPropertyHeight = @"height";
 NSString* const SENAPIAccountPropertyWeight = @"weight";
-NSString* const SENAPIAccountPropertyAge = @"age";
 NSString* const SENAPIAccountPropertyTimezone = @"tz";
 NSString* const SENAPIAccountPropertySignature = @"sig";
 NSString* const SENAPIAccountPropertyId = @"id";
@@ -52,27 +51,6 @@ NSString* const SENAPIAccountEndpoint = @"account";
     }];
 }
 
-+ (void)updateUserAccountWithAge:(NSNumber*)age
-                          gender:(SENAPIAccountGender)gender
-                          height:(NSNumber*)heightInCentimeters
-                          weight:(NSNumber*)weightInKilograms
-                      completion:(SENAPIDataBlock)completionBlock {
-    NSMutableDictionary* params = [[NSMutableDictionary alloc] initWithCapacity:4];
-    params[SENAPIAccountPropertyGender] = [self formattedGenderForValue:gender];
-    if (age)
-        params[SENAPIAccountPropertyAge] = age;
-    if (heightInCentimeters)
-        params[SENAPIAccountPropertyHeight] = heightInCentimeters;
-    if (weightInKilograms)
-        params[SENAPIAccountPropertyWeight] = weightInKilograms;
-
-    [[SENAPIClient HTTPSessionManager] PUT:SENAPIAccountEndpoint parameters:params success:^(NSURLSessionDataTask* task, id responseObject) {
-        completionBlock(responseObject, task.error);
-    } failure:^(NSURLSessionDataTask* task, NSError* error) {
-        completionBlock(nil, error);
-    }];
-}
-
 + (void)updateAccount:(SENAccount*)account completionBlock:(SENAPIDataBlock)completion {
     [[SENAPIClient HTTPSessionManager] PUT:SENAPIAccountEndpoint
                                 parameters:[self dictionaryValue:account]
@@ -85,21 +63,6 @@ NSString* const SENAPIAccountEndpoint = @"account";
 }
 
 #pragma mark - Helpers
-
-+ (NSString*)formattedGenderForValue:(SENAPIAccountGender)gender
-{
-    switch (gender) {
-    case SENAPIAccountGenderFemale:
-        return @"FEMALE";
-
-    case SENAPIAccountGenderMale:
-        return @"MALE";
-
-    case SENAPIAccountGenderOther:
-    default:
-        return @"OTHER";
-    }
-}
 
 + (NSString*)stringValueOfGender:(SENAccountGender)gender {
     NSString* value;

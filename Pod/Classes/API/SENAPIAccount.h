@@ -2,12 +2,6 @@
 #import <Foundation/Foundation.h>
 #import "SENAPIClient.h"
 
-typedef NS_ENUM(NSUInteger, SENAPIAccountGender) {
-    SENAPIAccountGenderFemale,
-    SENAPIAccountGenderMale,
-    SENAPIAccountGenderOther,
-};
-
 @class SENAccount;
 
 @interface SENAPIAccount : NSObject
@@ -24,23 +18,6 @@ typedef NS_ENUM(NSUInteger, SENAPIAccountGender) {
                  emailAddress:(NSString*)emailAddress
                      password:(NSString*)password
                    completion:(SENAPIDataBlock)completionBlock;
-
-/**
- *  Update the demographic information of the current user. Requires authentication.
- *
- *  @deprecated use updateAccount:completionBlock instead
- *
- *  @param age                 age in years
- *  @param gender              gender
- *  @param heightInCentimeters height in centimeters
- *  @param weight              weight in kilograms
- *  @param completionBlock     block invoked when asynchonous call completes
- */
-+ (void)updateUserAccountWithAge:(NSNumber*)age
-                          gender:(SENAPIAccountGender)gender
-                          height:(NSNumber*)heightInCentimeters
-                          weight:(NSNumber*)weightInKilograms
-                      completion:(SENAPIDataBlock)completionBlock;
 
 /**
  * Override the existing account information for the associated user.
