@@ -118,7 +118,7 @@ describe(@"SENSenseManager", ^{
             [[@([message type]) should] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
         });
         
-        it(@"a malformed hello ble packet should erturn an error", ^{
+        it(@"a malformed hello ble packet should return an error", ^{
             SENSenseMessage* input = [builder build];
             
             NSError* error = nil;
