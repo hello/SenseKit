@@ -17,7 +17,7 @@ static NSString* const SENAPITimelineEndpointFormat = @"/timeline/%ld-%ld-%ld";
 
 + (NSString*)timelinePathForDate:(NSDate*)date
 {
-    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSGregorianCalendar];
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSCalendarUnit flags = (NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit);
     NSDateComponents* components = [calendar components:flags fromDate:date];
     return [NSString stringWithFormat:SENAPITimelineEndpointFormat, components.year, components.month, components.day];
