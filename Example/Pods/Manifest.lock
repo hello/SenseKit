@@ -56,13 +56,13 @@ DEPENDENCIES:
   - Kiwi
   - Nocilla
   - SenseKit (from `../`)
-  - SHSProtoBuf (from `https://github.com/hello/protobuf-objc.git`)
+  - SHSProtoBuf (from `git@github.com:hello/protobuf-objc.git`)
 
 EXTERNAL SOURCES:
   SenseKit:
     :path: ../
   SHSProtoBuf:
-    :git: https://github.com/hello/protobuf-objc.git
+    :git: git@github.com:hello/protobuf-objc.git
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
