@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "UnknownFieldSetBuilder.h"
+#import "UnknownFieldSet_Builder.h"
 
 #import "CodedInputStream.h"
 #import "Field.h"
@@ -23,14 +23,14 @@
 #import "UnknownFieldSet.h"
 #import "WireFormat.h"
 
-@interface PBUnknownFieldSetBuilder ()
+@interface PBUnknownFieldSet_Builder ()
 @property (retain) NSMutableDictionary* fields;
 @property long lastFieldNumber;
 @property (retain) PBMutableField* lastField;
 @end
 
 
-@implementation PBUnknownFieldSetBuilder
+@implementation PBUnknownFieldSet_Builder
 
 @synthesize fields;
 @synthesize lastFieldNumber;
@@ -54,8 +54,8 @@
 }
 
 
-+ (PBUnknownFieldSetBuilder*) createBuilder:(PBUnknownFieldSet*) unknownFields {
-  PBUnknownFieldSetBuilder* builder = [[[PBUnknownFieldSetBuilder alloc] init] autorelease];
++ (PBUnknownFieldSet_Builder*) createBuilder:(PBUnknownFieldSet*) unknownFields {
+  PBUnknownFieldSet_Builder* builder = [[[PBUnknownFieldSet_Builder alloc] init] autorelease];
   [builder mergeUnknownFields:unknownFields];
   return builder;
 }
@@ -65,7 +65,7 @@
  * Add a field to the {@code PBUnknownFieldSet}.  If a field with the same
  * number already exists, it is removed.
  */
-- (PBUnknownFieldSetBuilder*) addField:(PBField*) field forNumber:(long) number {
+- (PBUnknownFieldSet_Builder*) addField:(PBField*) field forNumber:(long) number {
   if (number == 0) {
     @throw [NSException exceptionWithName:@"IllegalArgument" reason:@"" userInfo:nil];
   }
@@ -137,7 +137,7 @@
   return [self build];
 }
 
-- (id<PBMessageBuilder>) setUnknownFields:(PBUnknownFieldSet*) unknownFields {
+- (id<PBMessage_Builder>) setUnknownFields:(PBUnknownFieldSet*) unknownFields {
   @throw [NSException exceptionWithName:@"UnsupportedMethod" reason:@"" userInfo:nil];
 }
 
@@ -155,7 +155,7 @@
  * Add a field to the {@code PBUnknownFieldSet}.  If a field with the same
  * number already exists, the two are merged.
  */
-- (PBUnknownFieldSetBuilder*) mergeField:(PBField*) field forNumber:(long) number {
+- (PBUnknownFieldSet_Builder*) mergeField:(PBField*) field forNumber:(long) number {
   if (number == 0) {
     @throw [NSException exceptionWithName:@"IllegalArgument" reason:@"" userInfo:nil];
   }
@@ -172,7 +172,7 @@
 }
 
 
-- (PBUnknownFieldSetBuilder*) mergeUnknownFields:(PBUnknownFieldSet*) other {
+- (PBUnknownFieldSet_Builder*) mergeUnknownFields:(PBUnknownFieldSet*) other {
   if (other != [PBUnknownFieldSet defaultInstance]) {
     for (NSNumber* number in other.fields) {
       PBField* field = [other.fields objectForKey:number];
@@ -183,7 +183,7 @@
 }
 
 
-- (PBUnknownFieldSetBuilder*) mergeFromData:(NSData*) data {
+- (PBUnknownFieldSet_Builder*) mergeFromData:(NSData*) data {
   PBCodedInputStream* input = [PBCodedInputStream streamWithData:data];
   [self mergeFromCodedInputStream:input];
   [input checkLastTagWas:0];
@@ -191,7 +191,7 @@
 }
 
 
-- (PBUnknownFieldSetBuilder*) mergeFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+- (PBUnknownFieldSet_Builder*) mergeFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   PBCodedInputStream* input = [PBCodedInputStream streamWithData:data];
   [self mergeFromCodedInputStream:input extensionRegistry:extensionRegistry];
   [input checkLastTagWas:0];
@@ -199,15 +199,15 @@
 }
 
 
-- (PBUnknownFieldSetBuilder*) mergeFromInputStream:(NSInputStream*) input {
+- (PBUnknownFieldSet_Builder*) mergeFromInputStream:(NSInputStream*) input {
   @throw [NSException exceptionWithName:@"UnsupportedMethod" reason:@"" userInfo:nil];
 }
 
-- (PBUnknownFieldSetBuilder*) mergeFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+- (PBUnknownFieldSet_Builder*) mergeFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   @throw [NSException exceptionWithName:@"UnsupportedMethod" reason:@"" userInfo:nil];
 }
 
-- (PBUnknownFieldSetBuilder*) mergeVarintField:(long) number value:(long) value {
+- (PBUnknownFieldSet_Builder*) mergeVarintField:(long) number value:(long) value {
   if (number == 0) {
     @throw [NSException exceptionWithName:@"IllegalArgument" reason:@"Zero is not a valid field number." userInfo:nil];
   }
@@ -235,7 +235,7 @@
       [[self getFieldBuilder:number] addLengthDelimited:[input readData]];
       return YES;
     case PBWireFormatStartGroup: {
-      PBUnknownFieldSetBuilder* subBuilder = [PBUnknownFieldSet builder];
+      PBUnknownFieldSet_Builder* subBuilder = [PBUnknownFieldSet builder];
       [input readUnknownGroup:number builder:subBuilder];
       [[self getFieldBuilder:number] addGroup:[subBuilder build]];
       return YES;
@@ -255,7 +255,7 @@
  * Parse an entire message from {@code input} and merge its fields into
  * this set.
  */
-- (PBUnknownFieldSetBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+- (PBUnknownFieldSet_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
   while (YES) {
     long tag = [input readTag];
     if (tag == 0 || ![self mergeFieldFrom:tag input:input]) {
@@ -265,11 +265,11 @@
   return self;
 }
 
-- (PBUnknownFieldSetBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+- (PBUnknownFieldSet_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   @throw [NSException exceptionWithName:@"UnsupportedMethod" reason:@"" userInfo:nil];
 }
 
-- (PBUnknownFieldSetBuilder*) clear {
+- (PBUnknownFieldSet_Builder*) clear {
   self.fields = [NSMutableDictionary dictionary];
   self.lastFieldNumber = 0;
   self.lastField = nil;

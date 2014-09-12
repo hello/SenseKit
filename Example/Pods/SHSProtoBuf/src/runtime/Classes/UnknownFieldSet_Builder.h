@@ -15,12 +15,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MessageBuilder.h"
+#import "Message_Builder.h"
 
 @class PBField;
 @class PBMutableField;
 
-@interface PBUnknownFieldSetBuilder : NSObject <PBMessageBuilder> {
+@interface PBUnknownFieldSet_Builder : NSObject <PBMessage_Builder> {
 @private
   NSMutableDictionary* fields;
 
@@ -32,22 +32,22 @@
   PBMutableField* lastField;
 }
 
-+ (PBUnknownFieldSetBuilder*) createBuilder:(PBUnknownFieldSet*) unknownFields;
++ (PBUnknownFieldSet_Builder*) createBuilder:(PBUnknownFieldSet*) unknownFields;
 
 - (PBUnknownFieldSet*) build;
-- (PBUnknownFieldSetBuilder*) mergeUnknownFields:(PBUnknownFieldSet*) other;
+- (PBUnknownFieldSet_Builder*) mergeUnknownFields:(PBUnknownFieldSet*) other;
 
-- (PBUnknownFieldSetBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (PBUnknownFieldSetBuilder*) mergeFromData:(NSData*) data;
-- (PBUnknownFieldSetBuilder*) mergeFromInputStream:(NSInputStream*) input;
+- (PBUnknownFieldSet_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (PBUnknownFieldSet_Builder*) mergeFromData:(NSData*) data;
+- (PBUnknownFieldSet_Builder*) mergeFromInputStream:(NSInputStream*) input;
 
-- (PBUnknownFieldSetBuilder*) mergeVarintField:(long) number value:(long) value;
+- (PBUnknownFieldSet_Builder*) mergeVarintField:(long) number value:(long) value;
 
 - (BOOL) mergeFieldFrom:(long) tag input:(PBCodedInputStream*) input;
 
-- (PBUnknownFieldSetBuilder*) addField:(PBField*) field forNumber:(long) number;
+- (PBUnknownFieldSet_Builder*) addField:(PBField*) field forNumber:(long) number;
 
-- (PBUnknownFieldSetBuilder*) clear;
-- (PBUnknownFieldSetBuilder*) mergeField:(PBField*) field forNumber:(long) number;
+- (PBUnknownFieldSet_Builder*) clear;
+- (PBUnknownFieldSet_Builder*) mergeField:(PBField*) field forNumber:(long) number;
 
 @end

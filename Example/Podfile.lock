@@ -35,13 +35,13 @@ PODS:
     - SenseKit/BLE
     - SenseKit/Model
   - SenseKit/API (0.1.0):
-    - AFNetworking
-    - FXKeychain
+    - AFNetworking (~> 2.4.1)
+    - FXKeychain (~> 1.5.1)
   - SenseKit/BLE (0.1.0):
-    - LGBluetooth
+    - LGBluetooth (~> 1.1.4)
     - SHSProtoBuf
   - SenseKit/Model (0.1.0):
-    - YapDatabase
+    - YapDatabase (~> 2.4.3)
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc
   - SHSProtoBuf/non-arc (0.9)
@@ -71,8 +71,8 @@ SPEC CHECKSUMS:
   Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
   Nocilla: e573c2bf9113c8d77782b695a2f9362b7bc44e72
-  SenseKit: 76482ae3d26cf349b982ade9dd0c1d32c7e47b81
-  SHSProtoBuf: e9533f24bc2b75e3cecd070b12785490ec5d8d27
+  SenseKit: f85c2393e32849e8ccb8ffb89b3126e7e307984b
+  SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
 COCOAPODS: 0.33.1

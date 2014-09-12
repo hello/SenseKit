@@ -15,39 +15,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "AbstractMessageBuilder.h"
+#import "AbstractMessage_Builder.h"
 
 #import "CodedInputStream.h"
 #import "ExtensionRegistry.h"
-#import "MessageBuilder.h"
+#import "Message_Builder.h"
 #import "UnknownFieldSet.h"
-#import "UnknownFieldSetBuilder.h"
+#import "UnknownFieldSet_Builder.h"
 
 
-@implementation PBAbstractMessageBuilder
+@implementation PBAbstractMessage_Builder
 
-- (id<PBMessageBuilder>) clone {
+- (id<PBMessage_Builder>) clone {
   @throw [NSException exceptionWithName:@"ImproperSubclassing" reason:@"" userInfo:nil];
 }
 
 
-- (id<PBMessageBuilder>) clear {
+- (id<PBMessage_Builder>) clear {
   @throw [NSException exceptionWithName:@"ImproperSubclassing" reason:@"" userInfo:nil];
 }
 
 
-- (id<PBMessageBuilder>) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+- (id<PBMessage_Builder>) mergeFromCodedInputStream:(PBCodedInputStream*) input {
   return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
 }
 
 
-- (id<PBMessageBuilder>) mergeFromCodedInputStream:(PBCodedInputStream*) input
+- (id<PBMessage_Builder>) mergeFromCodedInputStream:(PBCodedInputStream*) input
                                   extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   @throw [NSException exceptionWithName:@"ImproperSubclassing" reason:@"" userInfo:nil];
 }
 
 
-- (id<PBMessageBuilder>) mergeUnknownFields:(PBUnknownFieldSet*) unknownFields {
+- (id<PBMessage_Builder>) mergeUnknownFields:(PBUnknownFieldSet*) unknownFields {
   PBUnknownFieldSet* merged =
   [[[PBUnknownFieldSet builderWithUnknownFields:self.unknownFields]
     mergeUnknownFields:unknownFields] build];
@@ -57,7 +57,7 @@
 }
 
 
-- (id<PBMessageBuilder>) mergeFromData:(NSData*) data {
+- (id<PBMessage_Builder>) mergeFromData:(NSData*) data {
   PBCodedInputStream* input = [PBCodedInputStream streamWithData:data];
   [self mergeFromCodedInputStream:input];
   [input checkLastTagWas:0];
@@ -65,7 +65,7 @@
 }
 
 
-- (id<PBMessageBuilder>) mergeFromData:(NSData*) data
+- (id<PBMessage_Builder>) mergeFromData:(NSData*) data
                       extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   PBCodedInputStream* input = [PBCodedInputStream streamWithData:data];
   [self mergeFromCodedInputStream:input extensionRegistry:extensionRegistry];
@@ -74,7 +74,7 @@
 }
 
 
-- (id<PBMessageBuilder>) mergeFromInputStream:(NSInputStream*) input {
+- (id<PBMessage_Builder>) mergeFromInputStream:(NSInputStream*) input {
   PBCodedInputStream* codedInput = [PBCodedInputStream streamWithInputStream:input];
   [self mergeFromCodedInputStream:codedInput];
   [codedInput checkLastTagWas:0];
@@ -82,7 +82,7 @@
 }
 
 
-- (id<PBMessageBuilder>) mergeFromInputStream:(NSInputStream*) input
+- (id<PBMessage_Builder>) mergeFromInputStream:(NSInputStream*) input
                              extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   PBCodedInputStream* codedInput = [PBCodedInputStream streamWithInputStream:input];
   [self mergeFromCodedInputStream:codedInput extensionRegistry:extensionRegistry];
@@ -116,7 +116,7 @@
 }
 
 
-- (id<PBMessageBuilder>) setUnknownFields:(PBUnknownFieldSet*) unknownFields {
+- (id<PBMessage_Builder>) setUnknownFields:(PBUnknownFieldSet*) unknownFields {
   @throw [NSException exceptionWithName:@"ImproperSubclassing" reason:@"" userInfo:nil];
 }
 
