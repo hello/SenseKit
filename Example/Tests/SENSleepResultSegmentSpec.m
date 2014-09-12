@@ -11,24 +11,21 @@ describe(@"SENSleepResultSegment", ^{
         NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
         NSDictionary* json = @{@"id": @94841103,
                                @"duration":@18181000,
-                               @"date":@(timeInterval * 1000),
+                               @"timestamp":@(timeInterval * 1000),
                                @"message": @"there's a disturbance in the force",
-                               @"event_type": @"none",
+                               @"event_type": @"light",
                                @"sleep_depth": @2,
-                               @"sensors" : @{
-                                       @"temperature" : @{
-                                               @"value": @32,
-                                               @"unit": @"c"
-                                               },
-                                       @"humidity": @{
-                                               @"value": @47,
-                                               @"unit": @"%"
-                                               },
-                                       @"particulates": @{
-                                               @"value": @230,
-                                               @"unit": @"ppm"
-                                               }
-                                       }};
+                               @"sensors" : @[
+                                       @{@"name" : @"temperature",
+                                         @"value": @32,
+                                         @"unit": @"c"},
+                                       @{@"name" :@"humidity",
+                                         @"value": @47,
+                                         @"unit": @"%"},
+                                       @{@"name":@"particulates",
+                                         @"value": @230,
+                                         @"unit": @"ppm"}
+                                       ]};
 
         beforeEach(^{
             segment = [[SENSleepResultSegment alloc] initWithDictionary:json];
@@ -71,12 +68,10 @@ describe(@"SENSleepResultSegment", ^{
                                @"message": @"there may have been an earthquake",
                                @"event_type": @"noise",
                                @"date": @(timeInterval * 1000),
-                               @"sensors": @{
-                                       @"temperature" : @{
-                                               @"value": @42,
-                                               @"unit": @"c"
-                                               }
-                                       }};
+                               @"sensors": @[@{@"name": @"temperature",
+                                              @"value": @42,
+                                              @"unit": @"c"
+                                              }]};
 
         beforeEach(^{
             segment = [[SENSleepResultSegment alloc] initWithDictionary:json];
