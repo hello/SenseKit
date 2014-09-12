@@ -1,10 +1,22 @@
-target 'SenseKit', :exclusive => true do
-  pod "SenseKit", :path => "../"
-  pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
-end
+
+pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
+pod "SenseKit", :path => "../"
 
 target 'Tests', :exclusive => true do
-  pod "SenseKit", :path => "../"
   pod 'Kiwi'
-  pod 'Nocilla'
+  pod 'Nocilla', :head
+
+  post_install do |installer|
+    target = installer.project.targets.find { |t| t.to_s == "Pods-Tests-Kiwi" }
+    if (target)
+      target.build_configurations.each do |config|
+        s = config.build_settings['FRAMEWORK_SEARCH_PATHS']
+        s = ['$(inherited)'] if s == nil
+        s << '$(PLATFORM_DIR)/Developer/Library/Frameworks'
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] = s
+      end
+    else
+      puts "WARNING: Pods-Tests-Kiwi target not found"
+    end
+  end
 end

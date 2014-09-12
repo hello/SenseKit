@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
     ss.source_files = 'Pod/Classes/API/*'
     ss.dependency 'FXKeychain', '~> 1.5.1'
     ss.dependency 'AFNetworking', '~> 2.4.1'
+    ss.dependency 'NSJSONSerialization-NSNullRemoval', '~> 1.0.0'
   end
 
   s.subspec "BLE" do |ss|
