@@ -123,6 +123,12 @@
 #define COCOAPODS_VERSION_MINOR_SenseKit_Model 1
 #define COCOAPODS_VERSION_PATCH_SenseKit_Model 0
 
+// SenseKit/Service
+#define COCOAPODS_POD_AVAILABLE_SenseKit_Service
+#define COCOAPODS_VERSION_MAJOR_SenseKit_Service 0
+#define COCOAPODS_VERSION_MINOR_SenseKit_Service 1
+#define COCOAPODS_VERSION_PATCH_SenseKit_Service 0
+
 // YapDatabase
 #define COCOAPODS_POD_AVAILABLE_YapDatabase
 #define COCOAPODS_VERSION_MAJOR_YapDatabase 2
