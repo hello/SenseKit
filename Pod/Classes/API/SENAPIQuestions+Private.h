@@ -8,6 +8,12 @@
 
 #import "SENAPIQuestions.h"
 
+@class SENQuestion;
+
 @interface SENAPIQuestions (Private)
+
++ (SENQuestion*)questionFromDict:(NSDictionary*)questionDict;
++ (NSArray*)answersFromReponseArray:(NSArray*)responesArray;
++ (NSArray*)questionsFromResponse:(id)response;
 
 @end
