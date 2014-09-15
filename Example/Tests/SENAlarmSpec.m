@@ -171,6 +171,53 @@ describe(@"SENAlarm", ^{
             });
         });
     });
+
+    describe(@"+ savedAlarms", ^{
+
+        it(@"is initially empty", ^{
+            [[[SENAlarm savedAlarms] should] haveCountOf:0];
+        });
+
+        context(@"an alarm is saved", ^{
+
+            __block SENAlarm* alarm;
+
+            beforeEach(^{
+                alarm = [[SENAlarm alloc] init];
+                [alarm save];
+            });
+
+            it(@"returns the saved alarm", ^{
+                [[[[SENAlarm savedAlarms] firstObject] should] equal:alarm];
+            });
+
+            context(@"an alarm is saved again", ^{
+
+                beforeEach(^{
+                    [alarm save];
+                });
+
+                it(@"does not save duplicate alarms", ^{
+                    [[[SENAlarm savedAlarms] should] haveCountOf:1];
+                });
+            });
+
+            context(@"a different alarm is saved", ^{
+
+                __block SENAlarm* otherAlarm;
+
+                beforeEach(^{
+                    otherAlarm = [[SENAlarm alloc] init];
+                    [otherAlarm save];
+                });
+
+                it(@"saves separate alarms", ^{
+                    [[[SENAlarm savedAlarms] should] haveCountOf:2];
+                    [[[SENAlarm savedAlarms] should] containObjects:otherAlarm, alarm, nil];
+                });
+            });
+        });
+    });
 });
 
 SPEC_END

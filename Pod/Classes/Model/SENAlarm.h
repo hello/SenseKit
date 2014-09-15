@@ -19,14 +19,21 @@ struct SENAlarmTime {
 @interface SENAlarm : NSObject <NSCoding>
 
 /**
- *  A persisted alarms
+ *  Cached alarm
  *
- *  @return the alarm
+ *  @return the alarms
  */
-+ (SENAlarm*)savedAlarm;
++ (NSArray*)savedAlarms;
 
 /**
- *  Remove all cached alarm data
+ *  Create a new alarm using the default settings
+ *
+ *  @return an alarm
+ */
++ (SENAlarm*)createDefaultAlarm;
+
+/**
+ *  Remove all cached alarms
  */
 + (void)clearSavedAlarms;
 

@@ -26,26 +26,27 @@ static BOOL const SENAlarmDefaultOnState = YES;
 static BOOL const SENAlarmDefaultEditableState = YES;
 static BOOL const SENAlarmDefaultSmartAlarmState = YES;
 
-+ (SENAlarm*)savedAlarm
++ (NSArray*)savedAlarms
 {
-    SENAlarm* alarm = [SENKeyedArchiver objectsForKey:SENAlarmArchiveKey inCollection:NSStringFromClass([self class])];
-    if (!alarm) {
-        NSDictionary* properties = @{
-            SENAlarmSoundNameKey : @"None",
-            SENAlarmHourKey : @7,
-            SENAlarmMinuteKey : @30,
-            SENAlarmOnKey : @YES
-        };
-        alarm = [[SENAlarm alloc] initWithDictionary:properties];
-        [alarm save];
-    }
+    return [SENKeyedArchiver allObjectsInCollection:NSStringFromClass([self class])];
+}
 
-    return alarm;
++ (SENAlarm*)createDefaultAlarm
+{
+    return [[SENAlarm alloc] initWithDictionary:@{
+        SENAlarmSoundNameKey : SENAlarmDefaultSoundName,
+        SENAlarmHourKey : @(SENAlarmDefaultHour),
+        SENAlarmMinuteKey : @(SENAlarmDefaultMinute),
+        SENAlarmOnKey : @(SENAlarmDefaultOnState),
+        SENAlarmEditableKey: @(SENAlarmDefaultEditableState),
+        SENAlarmSmartKey: @(SENAlarmDefaultSmartAlarmState),
+        SENAlarmRepeatKey: @(SENAlarmDefaultRepeatFlags)
+    }];
 }
 
 + (void)clearSavedAlarms
 {
-    [SENKeyedArchiver removeAllObjectsForKey:SENAlarmArchiveKey inCollection:NSStringFromClass([self class])];
+    [SENKeyedArchiver removeAllObjectsInCollection:NSStringFromClass([self class])];
 }
 
 + (NSString*)localizedValueForTime:(struct SENAlarmTime)time
@@ -64,6 +65,12 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
         formatString = @"%ld:%@";
     }
     return [NSString stringWithFormat:formatString, adjustedHour, minuteText];
+}
+
+- (instancetype)init
+{
+    self = [self initWithDictionary:nil];
+    return self;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary*)dict
@@ -180,7 +187,7 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
 
 - (void)save
 {
-    [SENKeyedArchiver setObject:self forKey:SENAlarmArchiveKey inCollection:NSStringFromClass([SENAlarm class])];
+    [SENKeyedArchiver setObject:self forKey:self.identifier inCollection:NSStringFromClass([SENAlarm class])];
 }
 
 - (void)setSoundName:(NSString*)soundName
