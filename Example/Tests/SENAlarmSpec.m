@@ -5,11 +5,16 @@
 SPEC_BEGIN(SENAlarmSpec)
 
 describe(@"SENAlarm", ^{
+    __block SENAlarm* alarm;
+
+    afterEach(^{
+        alarm = nil;
+        [SENAlarm clearSavedAlarms];
+    });
 
     describe(@"-initWithDictionary:", ^{
-        __block SENAlarm* alarm;
         
-        NSDictionary* alarmValues = @{@"on": @YES, @"hour":@22, @"minute":@15, @"sound":@"Bells"};
+        NSDictionary* alarmValues = @{@"on": @YES, @"hour":@22, @"minute":@15, @"sound":@"Bells", @"editable": @YES, @"smart":@YES};
         
         beforeEach(^{
             alarm = [[SENAlarm alloc] initWithDictionary:alarmValues];
@@ -29,6 +34,61 @@ describe(@"SENAlarm", ^{
         
         it(@"sets the sound", ^{
             [[[alarm soundName] should] equal:alarmValues[@"sound"]];
+        });
+
+        it(@"sets the editable state", ^{
+            [[@([alarm isEditable]) should] beYes];
+        });
+
+        it(@"sets the smart alarm state", ^{
+            [[@([alarm isSmartAlarm]) should] beYes];
+        });
+    });
+
+    describe(@"- repeatFlags", ^{
+
+        beforeEach(^{
+            alarm = [[SENAlarm alloc] init];
+        });
+
+        context(@"a single day will be repeated", ^{
+
+            beforeEach(^{
+                alarm.repeatFlags = SENAlarmRepeatThursday;
+            });
+
+            it(@"accepts a single day", ^{
+                [[@(alarm.repeatFlags & SENAlarmRepeatThursday) should] equal:@(SENAlarmRepeatThursday)];
+            });
+
+            it(@"does not include excluded days", ^{
+                [[@(alarm.repeatFlags & SENAlarmRepeatSunday) shouldNot] equal:@(SENAlarmRepeatSunday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatMonday) shouldNot] equal:@(SENAlarmRepeatMonday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatTuesday) shouldNot] equal:@(SENAlarmRepeatTuesday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatWednesday) shouldNot] equal:@(SENAlarmRepeatWednesday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatFriday) shouldNot] equal:@(SENAlarmRepeatFriday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatSaturday) shouldNot] equal:@(SENAlarmRepeatSaturday)];
+            });
+        });
+
+        context(@"multiple days will be repeated", ^{
+
+            beforeEach(^{
+                alarm.repeatFlags = (SENAlarmRepeatFriday | SENAlarmRepeatSaturday | SENAlarmRepeatWednesday);
+            });
+
+            it(@"does not include excluded days", ^{
+                [[@(alarm.repeatFlags & SENAlarmRepeatSunday) shouldNot] equal:@(SENAlarmRepeatSunday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatMonday) shouldNot] equal:@(SENAlarmRepeatMonday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatTuesday) shouldNot] equal:@(SENAlarmRepeatTuesday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatThursday) shouldNot] equal:@(SENAlarmRepeatThursday)];
+            });
+
+            it(@"includes included days", ^{
+                [[@(alarm.repeatFlags & SENAlarmRepeatWednesday) should] equal:@(SENAlarmRepeatWednesday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatFriday) should] equal:@(SENAlarmRepeatFriday)];
+                [[@(alarm.repeatFlags & SENAlarmRepeatSaturday) should] equal:@(SENAlarmRepeatSaturday)];
+            });
         });
     });
     

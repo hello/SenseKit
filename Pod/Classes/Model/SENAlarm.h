@@ -1,6 +1,16 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, SENAlarmRepeatDays) {
+    SENAlarmRepeatSunday = (1UL << 1),
+    SENAlarmRepeatMonday = (1UL << 2),
+    SENAlarmRepeatTuesday = (1UL << 3),
+    SENAlarmRepeatWednesday = (1UL << 4),
+    SENAlarmRepeatThursday = (1UL << 5),
+    SENAlarmRepeatFriday = (1UL << 6),
+    SENAlarmRepeatSaturday = (1UL << 7),
+};
+
 struct SENAlarmTime {
     NSInteger hour;
     NSInteger minute;
@@ -68,7 +78,10 @@ struct SENAlarmTime {
 - (NSString*)localizedValue;
 
 @property (nonatomic, getter=isOn) BOOL on;
-@property (nonatomic) NSInteger hour;
-@property (nonatomic) NSInteger minute;
+@property (nonatomic, readonly, getter=isEditable) BOOL editable;
+@property (nonatomic, getter=isSmartAlarm) BOOL smartAlarm;
+@property (nonatomic) NSUInteger hour;
+@property (nonatomic) NSUInteger minute;
+@property (nonatomic) NSUInteger repeatFlags;
 @property (nonatomic, copy) NSString* soundName;
 @end

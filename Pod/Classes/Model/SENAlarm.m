@@ -3,18 +3,28 @@
 #import "SENSettings.h"
 #import "SENKeyedArchiver.h"
 
-static NSString* const SENAlarmSoundNameKey = @"sound";
-static NSString* const SENAlarmOnKey = @"on";
-static NSString* const SENAlarmHourKey = @"hour";
-static NSString* const SENAlarmMinuteKey = @"minute";
-static NSString* const SENAlarmIdentifierKey = @"identifier";
-static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
-
 @interface SENAlarm ()
 @property (nonatomic, strong) NSString* identifier;
 @end
 
 @implementation SENAlarm
+
+static NSString* const SENAlarmSoundNameKey = @"sound";
+static NSString* const SENAlarmOnKey = @"on";
+static NSString* const SENAlarmSmartKey = @"smart";
+static NSString* const SENAlarmEditableKey = @"editable";
+static NSString* const SENAlarmHourKey = @"hour";
+static NSString* const SENAlarmMinuteKey = @"minute";
+static NSString* const SENAlarmRepeatKey = @"repeat";
+static NSString* const SENAlarmIdentifierKey = @"identifier";
+
+static NSString* const SENAlarmDefaultSoundName = @"None";
+static NSUInteger const SENAlarmDefaultHour   = 7;
+static NSUInteger const SENAlarmDefaultMinute = 30;
+static NSUInteger const SENAlarmDefaultRepeatFlags = 0;
+static BOOL const SENAlarmDefaultOnState = YES;
+static BOOL const SENAlarmDefaultEditableState = YES;
+static BOOL const SENAlarmDefaultSmartAlarmState = YES;
 
 + (SENAlarm*)savedAlarm
 {
@@ -59,11 +69,14 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
 - (instancetype)initWithDictionary:(NSDictionary*)dict
 {
     if (self = [super init]) {
-        _on = [dict[SENAlarmOnKey] boolValue];
-        _hour = [dict[SENAlarmHourKey] integerValue];
-        _minute = [dict[SENAlarmMinuteKey] integerValue];
-        _soundName = dict[SENAlarmSoundNameKey];
+        _editable = [dict[SENAlarmEditableKey] boolValue];
+        _hour = [dict[SENAlarmHourKey] unsignedIntegerValue];
         _identifier = dict[SENAlarmIdentifierKey] ?: [[[NSUUID alloc] init] UUIDString];
+        _minute = [dict[SENAlarmMinuteKey] unsignedIntegerValue];
+        _on = [dict[SENAlarmOnKey] boolValue];
+        _repeatFlags = [dict[SENAlarmRepeatKey] unsignedIntegerValue];
+        _smartAlarm = [dict[SENAlarmSmartKey] boolValue];
+        _soundName = dict[SENAlarmSoundNameKey];
     }
     return self;
 }
@@ -81,11 +94,14 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
 - (id)initWithCoder:(NSCoder*)aDecoder
 {
     if (self = [super init]) {
-        _on = [[aDecoder decodeObjectForKey:SENAlarmOnKey] boolValue];
-        _hour = [[aDecoder decodeObjectForKey:SENAlarmHourKey] integerValue];
-        _minute = [[aDecoder decodeObjectForKey:SENAlarmMinuteKey] integerValue];
-        _soundName = [aDecoder decodeObjectForKey:SENAlarmSoundNameKey];
+        _editable = [[aDecoder decodeObjectForKey:SENAlarmEditableKey] boolValue];
+        _hour = [[aDecoder decodeObjectForKey:SENAlarmHourKey] unsignedIntegerValue];
         _identifier = [aDecoder decodeObjectForKey:SENAlarmSoundNameKey] ?: [[[NSUUID alloc] init] UUIDString];
+        _minute = [[aDecoder decodeObjectForKey:SENAlarmMinuteKey] unsignedIntegerValue];
+        _on = [[aDecoder decodeObjectForKey:SENAlarmOnKey] boolValue];
+        _repeatFlags = [[aDecoder decodeObjectForKey:SENAlarmRepeatKey] unsignedIntegerValue];
+        _smartAlarm = [[aDecoder decodeObjectForKey:SENAlarmSmartKey] boolValue];
+        _soundName = [aDecoder decodeObjectForKey:SENAlarmSoundNameKey];
     }
     return self;
 }
@@ -97,6 +113,9 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
     [aCoder encodeObject:@([self minute]) forKey:SENAlarmMinuteKey];
     [aCoder encodeObject:[self soundName] forKey:SENAlarmSoundNameKey];
     [aCoder encodeObject:[self identifier] forKey:SENAlarmIdentifierKey];
+    [aCoder encodeObject:@([self isEditable]) forKey:SENAlarmEditableKey];
+    [aCoder encodeObject:@([self repeatFlags]) forKey:SENAlarmRepeatKey];
+    [aCoder encodeObject:@([self isSmartAlarm]) forKey:SENAlarmSmartKey];
 }
 
 - (NSUInteger)hash
@@ -176,6 +195,22 @@ static NSString* const SENAlarmArchiveKey = @"SENAlarmArchiveKey";
 {
     if (on != _on) {
         _on = on;
+        [self save];
+    }
+}
+
+- (void)setRepeatFlags:(NSUInteger)repeatFlags
+{
+    if (_repeatFlags != repeatFlags) {
+        _repeatFlags = repeatFlags;
+        [self save];
+    }
+}
+
+- (void)setSmartAlarm:(BOOL)smartAlarm
+{
+    if (_smartAlarm != smartAlarm) {
+        _smartAlarm = smartAlarm;
         [self save];
     }
 }
