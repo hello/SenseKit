@@ -78,6 +78,11 @@ struct SENAlarmTime {
 - (void)save;
 
 /**
+ *  Removes the alarm from the persistent store
+ */
+- (void)delete;
+
+/**
  *  Presents the alarm time in a locale-specific representation
  *
  *  @return a string representing the alarm wake time

@@ -216,6 +216,17 @@ describe(@"SENAlarm", ^{
                     [[[SENAlarm savedAlarms] should] containObjects:otherAlarm, alarm, nil];
                 });
             });
+
+            context(@"an alarm is deleted", ^{
+
+                beforeEach(^{
+                    [alarm delete];
+                });
+
+                it(@"removes the alarm from the store", ^{
+                    [[[SENAlarm savedAlarms] should] haveCountOf:0];
+                });
+            });
         });
     });
 });

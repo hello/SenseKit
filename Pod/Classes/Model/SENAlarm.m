@@ -190,6 +190,11 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
     [SENKeyedArchiver setObject:self forKey:self.identifier inCollection:NSStringFromClass([SENAlarm class])];
 }
 
+- (void)delete
+{
+    [SENKeyedArchiver removeAllObjectsForKey:self.identifier inCollection:NSStringFromClass([SENAlarm class])];
+}
+
 - (void)setSoundName:(NSString*)soundName
 {
     if (![soundName isEqualToString:_soundName]) {
