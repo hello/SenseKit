@@ -33,7 +33,7 @@ describe(@"SENSenseManager", ^{
             } failure:^(NSError *error) {
                 failError = error;
             }];
-            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+            [[expectFutureValue(@([failError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
         it(@"should fail if sense not initialized properly", ^{
@@ -45,7 +45,7 @@ describe(@"SENSenseManager", ^{
             } failure:^(NSError *error) {
                 failError = error;
             }];
-            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+            [[expectFutureValue(@([failError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
     });
@@ -59,7 +59,7 @@ describe(@"SENSenseManager", ^{
             } failure:^(NSError *error) {
                 failError = error;
             }];
-            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+            [[expectFutureValue(@([failError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
         it(@"should fail if sense not initialized properly", ^{
@@ -70,7 +70,7 @@ describe(@"SENSenseManager", ^{
             } failure:^(NSError *error) {
                 failError = error;
             }];
-            [[expectFutureValue(@([failError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
+            [[expectFutureValue(@([failError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeNoDeviceSpecified)];
         });
         
     });
@@ -169,8 +169,8 @@ describe(@"SENSenseManager", ^{
                                       fail(@"should not fail");
                                   }];
            
-            [[expectFutureValue(responseObject) shouldEventually] beKindOfClass:[SENSenseMessage class]];
-            [[expectFutureValue(@(type)) shouldEventually] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
+            [[expectFutureValue(responseObject) shouldSoon] beKindOfClass:[SENSenseMessage class]];
+            [[expectFutureValue(@(type)) shouldSoon] equal:@(SENSenseMessageTypeSwitchToPairingMode)];
             
         });
         
@@ -189,7 +189,7 @@ describe(@"SENSenseManager", ^{
                                       responseError = error;
                                   }];
             
-            [[expectFutureValue(@([responseError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeUnexpectedResponse)];
+            [[expectFutureValue(@([responseError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeUnexpectedResponse)];
         });
         
     });
@@ -208,7 +208,7 @@ describe(@"SENSenseManager", ^{
                          failure:^(NSError *error) {
                              responseError = error;
                          }];
-            [[expectFutureValue(@([responseError code])) shouldEventually] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
+            [[expectFutureValue(@([responseError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
         });
         
     });
