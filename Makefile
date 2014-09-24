@@ -1,4 +1,4 @@
-PROJECT_NAME=SenseKit
+OJECT_NAME=SenseKit
 COMPANY_ID=is.hello
 DOCSET_DIR=$(COMPANY_ID).$(PROJECT_NAME)
 DOCSET_BUILD_DIR=docset_build
@@ -34,3 +34,6 @@ test_coverage:
 
 install_docs:
 		$(DOCTOOL) Classes/
+
+compile_protobuf:
+		protoc --proto_path=./Pod/Classes/BLE/Protobuf/ --objc_out=Pod/Classes/BLE/ Pod/Classes/BLE/Protobuf/SENSenseMessage.proto

@@ -24,6 +24,7 @@ message SENSenseMessage {
         PAIR_PILL = 12;
         ERROR = 13;  // if you receive this, that means something goes wrong.
         PAIR_SENSE = 14;
+        UNPAIR_PILL = 15;
     }
     required int32 version = 1;
     required Type type = 2;
