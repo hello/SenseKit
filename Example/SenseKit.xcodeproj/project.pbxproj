@@ -25,6 +25,7 @@
 		8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
 		8A3ADECD19AD0CA100ED06EE /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
+		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
 		8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */; };
 		8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */; };
 		8AF2CFD619B63A1D00D09600 /* SENSleepResultSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */; };
@@ -75,6 +76,7 @@
 		8A22235319B67CE000C3480D /* SENSleepResultSegmentSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSegmentSensorSpec.m; sourceTree = "<group>"; };
 		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPINotificationSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
+		8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAuthorizationServiceSpec.m; sourceTree = "<group>"; };
 		8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAlarmSpec.m; sourceTree = "<group>"; };
 		8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSensorSpec.m; sourceTree = "<group>"; };
 		8AB29B7F196DFD8C004BE34E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */,
 				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
 				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
+				8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */,
 				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
 				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
 				BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */,
@@ -407,6 +410,7 @@
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */,
+				8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
