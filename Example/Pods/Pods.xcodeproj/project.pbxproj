@@ -433,6 +433,8 @@
 		BE62A8F3513E4ED1B0A9476F /* KWMatchVerifier.h in Headers */ = {isa = PBXBuildFile; fileRef = E96BED4B21BF4B56B0D17A86 /* KWMatchVerifier.h */; };
 		BE97620C91E448F7AE153224 /* PBArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CD910A48F8F4418917F976A /* PBArray.h */; };
 		BEADED18529349E19855402B /* KiwiBlockMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 163E18496B26479DAD46F40F /* KiwiBlockMacros.h */; };
+		BF965A1219CCE56600429512 /* SENDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = BF965A1119CCE56600429512 /* SENDevice.m */; };
+		BF965A1519CCE85B00429512 /* SENAPIDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = BF965A1419CCE85B00429512 /* SENAPIDevice.m */; };
 		BFC3102D650D4F07AC2E202C /* KWStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E2C9D83F544BD29258B2D0 /* KWStub.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		C01436A60D484B6D8BB602BB /* SENAPITimeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A16729BA7454F559D6F3B10 /* SENAPITimeline.h */; };
 		C0B2F4DF85BE4043A1658507 /* KWContextNode.h in Headers */ = {isa = PBXBuildFile; fileRef = CC4EE2E7BA174916A290FEC8 /* KWContextNode.h */; };
@@ -1135,6 +1137,10 @@
 		BE751240BE354EB9AF7F915E /* Pods-Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		BEA21B96254B46A69F868A79 /* YapCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YapCache.m; path = YapDatabase/Internal/YapCache.m; sourceTree = "<group>"; };
 		BF6A93DCC46349B791C20B1F /* YapDatabaseFilteredViewConnection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YapDatabaseFilteredViewConnection.m; path = YapDatabase/Extensions/FilteredViews/YapDatabaseFilteredViewConnection.m; sourceTree = "<group>"; };
+		BF965A1019CCE56600429512 /* SENDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SENDevice.h; path = Pod/Classes/Model/SENDevice.h; sourceTree = "<group>"; };
+		BF965A1119CCE56600429512 /* SENDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SENDevice.m; path = Pod/Classes/Model/SENDevice.m; sourceTree = "<group>"; };
+		BF965A1319CCE85B00429512 /* SENAPIDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SENAPIDevice.h; path = Pod/Classes/API/SENAPIDevice.h; sourceTree = "<group>"; };
+		BF965A1419CCE85B00429512 /* SENAPIDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SENAPIDevice.m; path = Pod/Classes/API/SENAPIDevice.m; sourceTree = "<group>"; };
 		C04D2C4240F147A3A9A58867 /* NSObject+KiwiMockAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+KiwiMockAdditions.h"; path = "Classes/Mocking/NSObject+KiwiMockAdditions.h"; sourceTree = "<group>"; };
 		C0584F8178CF4A7DA3E67A16 /* SENQuestion.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SENQuestion.m; path = Pod/Classes/Model/SENQuestion.m; sourceTree = "<group>"; };
 		C082A787CC1B4D64B89263DC /* YapDatabaseRelationshipOptions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YapDatabaseRelationshipOptions.h; path = YapDatabase/Extensions/Relationships/YapDatabaseRelationshipOptions.h; sourceTree = "<group>"; };
@@ -1805,6 +1811,8 @@
 				70A92CEA53A84D9EAB64E4F9 /* SENSettings.m */,
 				D7ADB45041CB438798859C00 /* SENSleepResult.h */,
 				D772BCAD56C04B8EA5E6422D /* SENSleepResult.m */,
+				BF965A1019CCE56600429512 /* SENDevice.h */,
+				BF965A1119CCE56600429512 /* SENDevice.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1938,6 +1946,8 @@
 				2A40274804474F089A31676F /* SENAuthorizationService.m */,
 				8A28CB0019CBA5220044A27D /* SENAPINotification.h */,
 				8A28CB0119CBA5220044A27D /* SENAPINotification.m */,
+				BF965A1319CCE85B00429512 /* SENAPIDevice.h */,
+				BF965A1419CCE85B00429512 /* SENAPIDevice.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -3098,6 +3108,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A28CB0219CBA5220044A27D /* SENAPINotification.m in Sources */,
+				BF965A1519CCE85B00429512 /* SENAPIDevice.m in Sources */,
+				BF965A1219CCE56600429512 /* SENDevice.m in Sources */,
 				B8B7B9C0C1734D94934E651B /* Pods-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
