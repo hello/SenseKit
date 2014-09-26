@@ -34,6 +34,7 @@
 		BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */; };
 		BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */; };
 		BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */; };
+		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
 		C59505E51C324DF5A72B929C /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceQuestionsSpec.m; sourceTree = "<group>"; };
 		BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseManagerSpec.m; sourceTree = "<group>"; };
 		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAccountSpec.m; sourceTree = "<group>"; };
+		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1959AD7D9E24415997D4FD4 /* Pods-SenseKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.xcconfig"; path = "Pods/Pods-SenseKit.xcconfig"; sourceTree = "<group>"; };
 		F567B2B7C8E6429891E89AFC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,6 +197,7 @@
 				8A22235319B67CE000C3480D /* SENSleepResultSegmentSensorSpec.m */,
 				8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */,
 				8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */,
+				BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -399,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */,
 				BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */,
 				8AF2CFD619B63A1D00D09600 /* SENSleepResultSpec.m in Sources */,
 				8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */,
