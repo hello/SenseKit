@@ -8,6 +8,11 @@
 
 #import "SENAPIDevice.h"
 
+@class SENDevice;
+
 @interface SENAPIDevice (Private)
+
++ (SENDevice*)deviceFromRawResponse:(id)rawResponse;
++ (NSArray*)devicesFromRawResponse:(id)rawResponse;
 
 @end
