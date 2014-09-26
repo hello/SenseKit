@@ -34,3 +34,6 @@ test_coverage:
 
 install_docs:
 		$(DOCTOOL) Classes/
+
+compile_protobuf:
+		protoc --proto_path=./Pod/Classes/BLE/Protobuf/ --objc_out=Pod/Classes/BLE/ Pod/Classes/BLE/Protobuf/SENSenseMessage.proto
