@@ -67,12 +67,6 @@ typedef enum {
  */
 - (instancetype)initWithSense:(SENSense*)sense;
 
-/**
- * Disconnect from Sense, if connected.  This will not trigger a callback to
- * observers of unexpected disconnects.
- */
-- (void)disconnectFromSense;
-
 #pragma mark - Pairing
 
 /**
@@ -144,6 +138,24 @@ typedef enum {
 - (void)unpairPill:(NSString*)pillId
            success:(SENSenseSuccessBlock)success
            failure:(SENSenseFailureBlock)failure;
+
+#pragma mark - Signal Strengths / RSSI
+
+/**
+ * Get the current RSSI value for the initialized SENSense object.  The device
+ * must be near as this will try to connect to the device, if not already.
+ * @param success: the block to invoke when rssi value is retrieved
+ * @param failure: the block to invoke if any any problems were encountered.
+ */
+- (void)currentRSSI:(SENSenseSuccessBlock)success failure:(SENSenseFailureBlock)failure;
+
+#pragma mark - Connections
+
+/**
+ * Disconnect from Sense, if connected.  This will not trigger a callback to
+ * observers of unexpected disconnects.
+ */
+- (void)disconnectFromSense;
 
 /**
  * Observe any unexpected disconnects that may occur, which will invoke the block

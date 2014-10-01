@@ -629,7 +629,33 @@ static NSInteger const kSENSenseMessageVersion = 0;
     // TODO (jimmy): Firmware not yet implemented
 }
 
-#pragma mark - Disconnects
+#pragma mark - Signal Strength / RSSI
+
+- (void)currentRSSI:(SENSenseSuccessBlock)success
+            failure:(SENSenseFailureBlock)failure {
+    __weak typeof(self) weakSelf = self;
+    [self connectThen:^(NSError *error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (error) {
+            if (failure) failure (error);
+        } else if (strongSelf) {
+            [strongSelf readPeripheralRSSI:success failure:failure];
+        }
+    }];
+}
+
+- (void)readPeripheralRSSI:(SENSenseSuccessBlock)success
+                   failure:(SENSenseFailureBlock)failure {
+    [[[self sense] peripheral] readRSSIValueCompletion:^(NSNumber *RSSI, NSError *error) {
+        if (error) {
+            if (failure) failure (error);
+        } else if (success) {
+            success (RSSI);
+        }
+    }];
+}
+
+#pragma mark - Connections
 
 - (void)disconnectFromSense {
     if  ([self isConnected]) {
