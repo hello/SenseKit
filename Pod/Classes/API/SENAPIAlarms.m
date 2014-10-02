@@ -6,29 +6,6 @@
 
 static NSString* const SENAPIAlarmsEndpoint = @"alarms";
 static NSString* const SENAPIAlarmsUpdateEndpointFormat = @"alarms/%f";
-static NSUInteger SENAPIAlarmsMonday = 1;
-static NSUInteger SENAPIAlarmsTuesday = 2;
-static NSUInteger SENAPIAlarmsWednesday = 3;
-static NSUInteger SENAPIAlarmsThursday = 4;
-static NSUInteger SENAPIAlarmsFriday = 5;
-static NSUInteger SENAPIAlarmsSaturday = 6;
-static NSUInteger SENAPIAlarmsSunday = 7;
-
-static SENAPIDataBlock (^alarmProcessingBlock)(SENAPIDataBlock) = ^SENAPIDataBlock(SENAPIDataBlock completion) {
-    return ^(NSArray* data, NSError* error) {
-        if (error) {
-            completion(nil, error);
-            return;
-        }
-        NSMutableArray* alarms = [[NSMutableArray alloc] initWithCapacity:data.count];
-        for (NSDictionary* alarmData in data) {
-            SENAlarm* alarm = [[SENAlarm alloc] initWithDictionary:alarmData];
-            if (alarm)
-                [alarms addObject:alarm];
-        }
-        completion(alarms, nil);
-    };
-};
 
 + (void)alarmsWithCompletion:(SENAPIDataBlock)completion
 {
@@ -36,7 +13,19 @@ static SENAPIDataBlock (^alarmProcessingBlock)(SENAPIDataBlock) = ^SENAPIDataBlo
         return;
     [SENAPIClient GET:SENAPIAlarmsEndpoint
            parameters:nil
-           completion:alarmProcessingBlock(completion)];
+           completion:^(NSArray* data, NSError* error) {
+               if (error) {
+                   completion(nil, error);
+                   return;
+               }
+               NSMutableArray* alarms = [[NSMutableArray alloc] initWithCapacity:data.count];
+               for (NSDictionary* alarmData in data) {
+                   SENAlarm* alarm = [[SENAlarm alloc] initWithDictionary:alarmData];
+                   if (alarm)
+                       [alarms addObject:alarm];
+               }
+               completion(alarms, nil);
+           }];
 }
 
 + (void)updateAlarms:(NSArray*)alarms completion:(SENAPIDataBlock)completion
@@ -45,7 +34,7 @@ static SENAPIDataBlock (^alarmProcessingBlock)(SENAPIDataBlock) = ^SENAPIDataBlo
     NSArray* alarmData = [self parameterArrayForAlarms:alarms];
     [SENAPIClient POST:[NSString stringWithFormat:SENAPIAlarmsUpdateEndpointFormat, clientTimeUTC]
             parameters:@{ @"alarms" : alarmData }
-            completion:alarmProcessingBlock(completion)];
+            completion:completion];
 }
 
 + (NSArray*)parameterArrayForAlarms:(NSArray*)alarms
@@ -75,19 +64,19 @@ static SENAPIDataBlock (^alarmProcessingBlock)(SENAPIDataBlock) = ^SENAPIDataBlo
     if (repeated) {
         NSMutableSet* repeatDays = [[NSMutableSet alloc] initWithCapacity:7];
         if ((alarm.repeatFlags & SENAlarmRepeatMonday) == SENAlarmRepeatMonday)
-            [repeatDays addObject:@(SENAPIAlarmsMonday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDayMonday)];
         if ((alarm.repeatFlags & SENAlarmRepeatTuesday) == SENAlarmRepeatTuesday)
-            [repeatDays addObject:@(SENAPIAlarmsTuesday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDayTuesday)];
         if ((alarm.repeatFlags & SENAlarmRepeatWednesday) == SENAlarmRepeatWednesday)
-            [repeatDays addObject:@(SENAPIAlarmsWednesday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDayWednesday)];
         if ((alarm.repeatFlags & SENAlarmRepeatThursday) == SENAlarmRepeatThursday)
-            [repeatDays addObject:@(SENAPIAlarmsThursday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDayThursday)];
         if ((alarm.repeatFlags & SENAlarmRepeatFriday) == SENAlarmRepeatFriday)
-            [repeatDays addObject:@(SENAPIAlarmsFriday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDayFriday)];
         if ((alarm.repeatFlags & SENAlarmRepeatSaturday) == SENAlarmRepeatSaturday)
-            [repeatDays addObject:@(SENAPIAlarmsSaturday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDaySaturday)];
         if ((alarm.repeatFlags & SENAlarmRepeatSunday) == SENAlarmRepeatSunday)
-            [repeatDays addObject:@(SENAPIAlarmsSunday)];
+            [repeatDays addObject:@(SENAPIAlarmsRepeatDaySunday)];
         alarmRepresentation[@"day_of_week"] = repeatDays;
     }
     return alarmRepresentation;

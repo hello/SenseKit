@@ -2,6 +2,16 @@
 #import <Foundation/Foundation.h>
 #import "SENAPIClient.h"
 
+typedef NS_ENUM(NSUInteger, SENAPIAlarmsRepeatDay) {
+    SENAPIAlarmsRepeatDayMonday = 1,
+    SENAPIAlarmsRepeatDayTuesday = 2,
+    SENAPIAlarmsRepeatDayWednesday = 3,
+    SENAPIAlarmsRepeatDayThursday = 4,
+    SENAPIAlarmsRepeatDayFriday = 5,
+    SENAPIAlarmsRepeatDaySaturday = 6,
+    SENAPIAlarmsRepeatDaySunday = 7,
+};
+
 @interface SENAPIAlarms : NSObject
 
 /**
