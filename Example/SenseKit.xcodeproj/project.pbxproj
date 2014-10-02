@@ -26,6 +26,7 @@
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
 		8A3ADECD19AD0CA100ED06EE /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
+		8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */; };
 		8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */; };
 		8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */; };
 		8AF2CFD619B63A1D00D09600 /* SENSleepResultSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */; };
@@ -50,8 +51,8 @@
 
 /* Begin PBXFileReference section */
 		0D611FB683D84137898FB644 /* libPods-SenseKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SenseKit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1904D99140FF4B9BA86ADBA1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		44827E09C3D44C24B1B38881 /* Pods-Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.xcconfig"; path = "Pods/Pods-Tests.xcconfig"; sourceTree = "<group>"; };
+		39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* SenseKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SenseKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -73,22 +74,24 @@
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		7947F1071D0449D58162C4F5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSegmentSpec.m; sourceTree = "<group>"; };
 		8A22235319B67CE000C3480D /* SENSleepResultSegmentSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSegmentSensorSpec.m; sourceTree = "<group>"; };
 		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPINotificationSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
 		8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAuthorizationServiceSpec.m; sourceTree = "<group>"; };
+		8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAlarmsSpec.m; sourceTree = "<group>"; };
 		8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAlarmSpec.m; sourceTree = "<group>"; };
 		8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSensorSpec.m; sourceTree = "<group>"; };
 		8AB29B7F196DFD8C004BE34E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
 		8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSpec.m; sourceTree = "<group>"; };
+		BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIQuestionsSpec.m; sourceTree = "<group>"; };
 		BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceQuestionsSpec.m; sourceTree = "<group>"; };
 		BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseManagerSpec.m; sourceTree = "<group>"; };
 		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAccountSpec.m; sourceTree = "<group>"; };
 		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1959AD7D9E24415997D4FD4 /* Pods-SenseKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.xcconfig"; path = "Pods/Pods-SenseKit.xcconfig"; sourceTree = "<group>"; };
 		F567B2B7C8E6429891E89AFC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SenseKit.podspec; path = ../SenseKit.podspec; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
@@ -127,9 +130,7 @@
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
-				F1959AD7D9E24415997D4FD4 /* Pods-SenseKit.xcconfig */,
-				44827E09C3D44C24B1B38881 /* Pods-Tests.xcconfig */,
-				1904D99140FF4B9BA86ADBA1 /* Pods.xcconfig */,
+				6A30AF198F2D38FD990B2CE0 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -187,6 +188,7 @@
 			children = (
 				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
 				BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */,
+				8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */,
 				8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */,
 				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
 				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
@@ -221,6 +223,17 @@
 				7947F1071D0449D58162C4F5 /* README.md */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		6A30AF198F2D38FD990B2CE0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */,
+				BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */,
+				8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */,
+				432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,7 +350,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-Tests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D18FF329A03342899A990024 /* Check Pods Manifest.lock */ = {
@@ -367,7 +380,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F59D15D8C16B46BEBDEA3249 /* Check Pods Manifest.lock */ = {
@@ -414,6 +427,7 @@
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */,
+				8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */,
 				8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -538,7 +552,7 @@
 		};
 		6003F5C0195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1904D99140FF4B9BA86ADBA1 /* Pods.xcconfig */;
+			baseConfigurationReference = 39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -553,7 +567,7 @@
 		};
 		6003F5C1195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1904D99140FF4B9BA86ADBA1 /* Pods.xcconfig */;
+			baseConfigurationReference = BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -568,7 +582,7 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 44827E09C3D44C24B1B38881 /* Pods-Tests.xcconfig */;
+			baseConfigurationReference = 8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SenseKit.app/SenseKit";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -593,7 +607,7 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 44827E09C3D44C24B1B38881 /* Pods-Tests.xcconfig */;
+			baseConfigurationReference = 432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SenseKit.app/SenseKit";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
