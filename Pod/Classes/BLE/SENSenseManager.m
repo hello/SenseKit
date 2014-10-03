@@ -17,6 +17,7 @@
 #import "SENSenseMessage.pb.h"
 
 static CGFloat const kSENSenseDefaultTimeout = 30;
+static CGFloat const kSENSenseRescanTimeout = 8;
 
 static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
 static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
@@ -111,7 +112,7 @@ static NSInteger const kSENSenseMessageVersion = 0;
 
 - (void)rediscoverToConnectThen:(void(^)(NSError* error))completion {
     __weak typeof(self) weakSelf = self;
-    [[self class] scanForSenseWithTimeout:8 completion:^(NSArray *senses) {
+    [[self class] scanForSenseWithTimeout:kSENSenseRescanTimeout completion:^(NSArray *senses) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             BOOL foundAgain = NO;
