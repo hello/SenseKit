@@ -23,6 +23,7 @@ typedef enum {
     SENSenseManagerErrorCodeDeviceAlreadyPaired = -5,
     SENSenseManagerErrorCodeInvalidCommand = -6,
     SENSenseManagerErrorCodeConnectionFailed = -7,
+    SENSenseManagerErrorCodeInvalidated = -8,
     SENSenseManagerErrorCodeNone = 0
 } SENSenseManagerErrorCode;
 
@@ -53,8 +54,20 @@ typedef enum {
 + (void)stopScan;
 
 /**
- * Check to see if bluetooth on the device is on or not
+ * Check to see if manager is currently scanning for senses
+ * @return YES if scanning, NO otherwise
+ */
++ (BOOL)isScanning;
+
+/**
+ * Check to see if Central is ready to go
  * @return YES if on, NO otherwise
+ */
++ (BOOL)isReady;
+
+/**
+ * Check to see if bluetooth on the device is powered on or not
+ * @return YES if powered on, NO otherwise
  */
 + (BOOL)isBluetoothOn;
 
