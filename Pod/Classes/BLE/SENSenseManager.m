@@ -16,7 +16,7 @@
 #import "SENSense+Protected.h"
 #import "SENSenseMessage.pb.h"
 
-static CGFloat const kSENSenseDefaultTimeout = 30;
+static CGFloat const kSENSenseDefaultTimeout = 20;
 static CGFloat const kSENSenseRescanTimeout = 8;
 
 static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
