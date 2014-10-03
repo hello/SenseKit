@@ -31,14 +31,22 @@
 
 - (void)processDeviceId {
     NSDictionary* data = [[self peripheral] advertisingData];
-    NSString* serviceData = data[CBAdvertisementDataServiceDataKey];
-    NSMutableString* deviceIdInHex = [[NSMutableString alloc] init];
-    if (serviceData) {
-        const char* utf8 = [serviceData UTF8String];
-        while ( *utf8 ) {
-            [deviceIdInHex appendFormat:@"%02X" , *utf8++ & 0x00FF];
+    NSDictionary* serviceData = data[CBAdvertisementDataServiceDataKey];
+    NSMutableString* deviceIdInHex = nil;
+    
+    if ([serviceData count] == 1) {
+        NSData* deviceIdData = [serviceData allValues][0];
+        const unsigned char* dataBuffer = (const unsigned char*)[deviceIdData bytes];
+        if (dataBuffer) {
+            NSInteger len = [deviceIdData length];
+            deviceIdInHex = [[NSMutableString alloc] initWithCapacity:len];
+            
+            for (int i = 0; i < len; i++) {
+                [deviceIdInHex appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)dataBuffer[i]]];
+            }
         }
     }
+    
     [self setDeviceId:deviceIdInHex];
 }
 
@@ -46,12 +54,8 @@
     return [[self peripheral] name];
 }
 
-- (NSString*)uuid {
-    return [[self peripheral] UUIDString];
-}
-
 - (NSString*)description {
-    return [NSString stringWithFormat:@"Sense: %@, uuid: %@", [self name], [self uuid]];
+    return [NSString stringWithFormat:@"Sense: %@", [self name]];
 }
 
 @end
