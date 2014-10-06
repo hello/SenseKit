@@ -12,9 +12,15 @@ describe(@"SENAlarm", ^{
         [SENAlarm clearSavedAlarms];
     });
 
+    describe(@"+createDefaultAlarm", ^{
+        it(@"creates a valid alarm", ^{
+            [[[SENAlarm createDefaultAlarm] should] beKindOfClass:[SENAlarm class]];
+        });
+    });
+
     describe(@"-initWithDictionary:", ^{
         
-        NSDictionary* alarmValues = @{@"on": @YES, @"hour":@22, @"minute":@15, @"sound":@"Bells", @"editable": @YES, @"smart":@YES};
+        NSDictionary* alarmValues = @{@"on": @YES, @"hour":@22, @"minute":@15, @"sound":@"Bells", @"editable": @YES, @"smart":@YES, @"day_of_week":@[@1,@5,@6]};
         
         beforeEach(^{
             alarm = [[SENAlarm alloc] initWithDictionary:alarmValues];
@@ -42,6 +48,10 @@ describe(@"SENAlarm", ^{
 
         it(@"sets the smart alarm state", ^{
             [[@([alarm isSmartAlarm]) should] beYes];
+        });
+
+        it(@"sets the repeat days", ^{
+            [[@([alarm repeatFlags]) should] equal:@(SENAlarmRepeatMonday | SENAlarmRepeatFriday | SENAlarmRepeatSaturday)];
         });
     });
 
