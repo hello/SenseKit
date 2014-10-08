@@ -66,6 +66,57 @@ describe(@"SENAPIDevice", ^{
         
     });
     
+    describe(@"+ unregisterPill:completion", ^{
+        
+        beforeAll(^{
+            [[LSNocilla sharedInstance] start];
+            stubRequest(@"DELETE", @".*".regex).andReturn(204).withHeader(@"Content-Type", @"application/json");
+        });
+        
+        afterAll(^{
+            [[LSNocilla sharedInstance] stop];
+        });
+        
+        it(@"should return error with invalid argument error", ^{
+            
+            __block NSError* apiError = nil;
+            SENDevice* device = [[SENDevice alloc] init];
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIDeviceErrorInvalidParam)];
+            
+            device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                    type:SENDeviceTypeSense
+                                                   state:SENDeviceStateNormal
+                                         firmwareVersion:@"1"
+                                                lastSeen:[NSDate date]];
+            
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIDeviceErrorInvalidParam)];
+            
+        });
+        
+        it(@"should return with no error", ^{
+            
+            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                               type:SENDeviceTypePill
+                                                              state:SENDeviceStateNormal
+                                                    firmwareVersion:@"1"
+                                                           lastSeen:[NSDate date]];
+            
+            __block NSError* apiError = nil;
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(apiError) shouldEventually] beNil];
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
