@@ -17,6 +17,8 @@ NSString* const SENAPIDevicePropertyTypeValuePill = @"PILL";
 NSString* const SENAPIDevicePropertyState = @"state";
 NSString* const SENAPIDevicePropertyStateValueNormal = @"NORMAL";
 NSString* const SENAPIDevicePropertyStateValueLowBattery = @"LOW_BATTERY";
+NSString* const SENAPIDevicePropertyFirmwareVersion = @"firmware_version";
+NSString* const SENAPIDevicePropertyLastSeen = @"last_updated";
 
 @implementation SENAPIDevice
 
@@ -39,18 +41,36 @@ NSString* const SENAPIDevicePropertyStateValueLowBattery = @"LOW_BATTERY";
     return state;
 }
 
++ (NSDate*)dateFromObject:(id)dateObject {
+    NSDate* lastSeen = nil;
+    // jimmy: strangely, last_updated is converted to a string...  is it too big
+    // for a NSNUmber?
+    if ([dateObject respondsToSelector:@selector(doubleValue)]) {
+        lastSeen = [NSDate dateWithTimeIntervalSince1970:[dateObject doubleValue] / 1000];
+    }
+    return lastSeen;
+}
+
 + (SENDevice*)deviceFromRawResponse:(id)rawResponse {
     SENDevice* device = nil;
     if ([rawResponse isKindOfClass:[NSDictionary class]]) {
         id deviceIdObj = [rawResponse valueForKey:SENAPIDevicePropertyDeviceId];
         id typeObj = [rawResponse valueForKey:SENAPIDevicePropertyType];
         id stateObj = [rawResponse valueForKey:SENAPIDevicePropertyState];
+        id firmwareVerObj = [rawResponse valueForKey:SENAPIDevicePropertyFirmwareVersion];
+        id lastSeenObj = [rawResponse valueForKey:SENAPIDevicePropertyLastSeen];
         
         NSString* deviceId = [deviceIdObj isKindOfClass:[NSString class]] ? deviceIdObj : nil;
+        NSString* version = [firmwareVerObj isKindOfClass:[NSString class]] ? firmwareVerObj : nil;
         SENDeviceType type  = [self typeFromString:typeObj];
         SENDeviceState state = [self stateFromString:stateObj];
+        NSDate* lastSeen = [self dateFromObject:lastSeenObj];
         
-        device = [[SENDevice alloc] initWithDeviceId:deviceId type:type state:state];
+        device = [[SENDevice alloc] initWithDeviceId:deviceId
+                                                type:type
+                                               state:state
+                                     firmwareVersion:version
+                                            lastSeen:lastSeen];
     }
     return device;
 }

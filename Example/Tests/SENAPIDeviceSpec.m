@@ -49,6 +49,21 @@ describe(@"SENAPIDevice", ^{
             [[device should] beKindOfClass:[SENDevice class]];
         });
         
+        it(@"last_updated and firmware version should be set", ^{
+            NSString* version = @"alpha-1";
+            NSArray* deviceResponse = @[
+                @{@"device_id" : @"1",
+                  @"type" : @"SENSE",
+                  @"state" : @"NORMAL",
+                  @"firmware_version" : version,
+                  @"last_updated" : @"1412730626330"}
+            ];
+            
+            SENDevice* device = [SENAPIDevice devicesFromRawResponse:deviceResponse][0];
+            [[[device lastSeen] should] beKindOfClass:[NSDate class]];
+            [[[device firmwareVersion] should] equal:version];
+        });
+        
     });
     
 });
