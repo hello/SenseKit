@@ -20,7 +20,7 @@ static NSString* const SENKeyedArchiverStoreName = @"SENKeyedArchiverStore";
 + (NSString*)datastorePath
 {
     NSURL* url = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:SENKeyedArchiverGroupId];
-    return [[url path] stringByAppendingString:[NSString stringWithFormat:@"/%@", SENKeyedArchiverStoreName]];
+    return [[url path] stringByAppendingPathComponent:SENKeyedArchiverStoreName];
 }
 
 + (YapDatabaseConnection*)mainConnection
