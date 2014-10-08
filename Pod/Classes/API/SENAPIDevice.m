@@ -114,7 +114,7 @@ NSString* const SENAPIDevicePropertyLastSeen = @"last_updated";
         return;
     }
     
-    NSString* path = [SENAPIDeviceEndpoint stringByAppendingFormat:@"%@/%@",
+    NSString* path = [SENAPIDeviceEndpoint stringByAppendingFormat:@"/%@/%@",
                       SENAPIDevicePathPill, [device deviceId]];
     [SENAPIClient DELETE:path parameters:nil completion:completion];
 }
