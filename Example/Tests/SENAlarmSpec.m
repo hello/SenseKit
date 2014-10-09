@@ -1,11 +1,20 @@
 
 #import <Kiwi/Kiwi.h>
-#import "SENAlarm.h"
+#import <SenseKit/SENAlarm.h>
+#import <SenseKit/SENKeyedArchiver.h>
+#import <YapDatabase/YapDatabase.h>
 
 SPEC_BEGIN(SENAlarmSpec)
 
 describe(@"SENAlarm", ^{
     __block SENAlarm* alarm;
+
+    beforeEach(^{
+        NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+        YapDatabase* database = [[YapDatabase alloc] initWithPath:path];
+        id connection = [database newConnection];
+        [SENKeyedArchiver stub:@selector(mainConnection) andReturn:connection];
+    });
 
     afterEach(^{
         alarm = nil;
@@ -178,6 +187,43 @@ describe(@"SENAlarm", ^{
             
             it(@"updates the hour", ^{
                 [[@([alarm hour]) should] equal:@1];
+            });
+        });
+    });
+
+    describe(@"- isSaved", ^{
+        __block SENAlarm* alarm;
+
+        beforeEach(^{
+            alarm = [[SENAlarm alloc] init];
+        });
+
+        context(@"an alarm is unsaved", ^{
+
+            it(@"is false", ^{
+                [[@([alarm isSaved]) should] beNo];
+            });
+        });
+
+        context(@"an alarm is saved", ^{
+
+            beforeEach(^{
+                [alarm save];
+            });
+
+            it(@"is true", ^{
+                [[@([alarm isSaved]) should] beYes];
+            });
+
+            context(@"an alarm is deleted", ^{
+
+                beforeEach(^{
+                    [alarm delete];
+                });
+
+                it(@"is false", ^{
+                    [[@([alarm isSaved]) should] beNo];
+                });
             });
         });
     });
