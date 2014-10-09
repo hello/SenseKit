@@ -190,21 +190,9 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
-				BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */,
-				8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */,
-				8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */,
-				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
-				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
-				8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */,
-				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
-				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
-				BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */,
-				8A22235319B67CE000C3480D /* SENSleepResultSegmentSensorSpec.m */,
-				8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */,
-				8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */,
-				BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */,
-				BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */,
+				8AFE76F519E718520000F881 /* API */,
+				8AFE76F619E718550000F881 /* Model */,
+				8AFE76F719E718820000F881 /* Service */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -239,6 +227,42 @@
 				432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8AFE76F519E718520000F881 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */,
+				8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */,
+				8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */,
+				BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */,
+				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
+				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
+				8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		8AFE76F619E718550000F881 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
+				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
+				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
+				8A22235319B67CE000C3480D /* SENSleepResultSegmentSensorSpec.m */,
+				8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */,
+				8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */,
+				BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		8AFE76F719E718820000F881 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
