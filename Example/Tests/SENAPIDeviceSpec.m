@@ -49,6 +49,72 @@ describe(@"SENAPIDevice", ^{
             [[device should] beKindOfClass:[SENDevice class]];
         });
         
+        it(@"last_updated and firmware version should be set", ^{
+            NSString* version = @"alpha-1";
+            NSArray* deviceResponse = @[
+                @{@"device_id" : @"1",
+                  @"type" : @"SENSE",
+                  @"state" : @"NORMAL",
+                  @"firmware_version" : version,
+                  @"last_updated" : @"1412730626330"}
+            ];
+            
+            SENDevice* device = [SENAPIDevice devicesFromRawResponse:deviceResponse][0];
+            [[[device lastSeen] should] beKindOfClass:[NSDate class]];
+            [[[device firmwareVersion] should] equal:version];
+        });
+        
+    });
+    
+    describe(@"+ unregisterPill:completion", ^{
+        
+        beforeAll(^{
+            [[LSNocilla sharedInstance] start];
+            stubRequest(@"DELETE", @".*".regex).andReturn(204).withHeader(@"Content-Type", @"application/json");
+        });
+        
+        afterAll(^{
+            [[LSNocilla sharedInstance] stop];
+        });
+        
+        it(@"should return error with invalid argument error", ^{
+            
+            __block NSError* apiError = nil;
+            SENDevice* device = [[SENDevice alloc] init];
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIDeviceErrorInvalidParam)];
+            
+            device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                    type:SENDeviceTypeSense
+                                                   state:SENDeviceStateNormal
+                                         firmwareVersion:@"1"
+                                                lastSeen:[NSDate date]];
+            
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIDeviceErrorInvalidParam)];
+            
+        });
+        
+        it(@"should return with no error", ^{
+            
+            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                               type:SENDeviceTypePill
+                                                              state:SENDeviceStateNormal
+                                                    firmwareVersion:@"1"
+                                                           lastSeen:[NSDate date]];
+            
+            __block NSError* apiError = nil;
+            [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[expectFutureValue(apiError) shouldEventually] beNil];
+            
+        });
+        
     });
     
 });
