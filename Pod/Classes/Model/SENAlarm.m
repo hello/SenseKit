@@ -13,7 +13,7 @@
 static NSString* const SENAlarmSoundKey = @"sound";
 static NSString* const SENAlarmSoundNameKey = @"name";
 static NSString* const SENAlarmSoundIDKey = @"id";
-static NSString* const SENAlarmOnKey = @"on";
+static NSString* const SENAlarmOnKey = @"enabled";
 static NSString* const SENAlarmSmartKey = @"smart";
 static NSString* const SENAlarmEditableKey = @"editable";
 static NSString* const SENAlarmHourKey = @"hour";
