@@ -10,7 +10,9 @@
 
 @implementation SENAlarm
 
-static NSString* const SENAlarmSoundNameKey = @"sound";
+static NSString* const SENAlarmSoundKey = @"sound";
+static NSString* const SENAlarmSoundNameKey = @"name";
+static NSString* const SENAlarmSoundIDKey = @"id";
 static NSString* const SENAlarmOnKey = @"on";
 static NSString* const SENAlarmSmartKey = @"smart";
 static NSString* const SENAlarmEditableKey = @"editable";
@@ -58,10 +60,12 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
         formatString = time.hour > 11 ? @"%ld:%@pm" : @"%ld:%@am";
         if (time.hour > 12) {
             adjustedHour = (long)(time.hour - 12);
-        } else if (time.hour == 0) {
+        }
+        else if (time.hour == 0) {
             adjustedHour = 12;
         }
-    } else {
+    }
+    else {
         formatString = @"%ld:%@";
     }
     return [NSString stringWithFormat:formatString, adjustedHour, minuteText];
@@ -83,7 +87,8 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
         _on = [dict[SENAlarmOnKey] boolValue];
         _repeatFlags = [self repeatFlagsFromDays:dict[SENAlarmRepeatKey]];
         _smartAlarm = [dict[SENAlarmSmartKey] boolValue];
-        _soundName = dict[SENAlarmSoundNameKey];
+        _soundName = dict[SENAlarmSoundKey][SENAlarmSoundNameKey];
+        _soundID = dict[SENAlarmSoundKey][SENAlarmSoundIDKey];
     }
     return self;
 }
