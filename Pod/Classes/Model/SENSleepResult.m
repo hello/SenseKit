@@ -28,11 +28,6 @@ static NSString* const SENSleepResultSegmentSensorName = @"name";
 - (NSString*)retrievalKey;
 @end
 
-@interface SENSleepResultSensorInsight ()
-
-- (instancetype)initWithName:(NSString*)name andAttributes:(NSDictionary*)properties;
-@end
-
 @implementation SENSleepResult
 
 static NSString* const SENSleepResultDate = @"date";
@@ -74,7 +69,7 @@ static NSString* const SENSleepResultRetrievalKeyFormat = @"SleepResult-%ld-%ld-
         _score = sleepData[SENSleepResultScore];
         _message = sleepData[SENSleepResultMessage];
         _segments = [self parseSegmentsFromArray:sleepData[SENSleepResultSegments]];
-        _sensorInsights = [self parseSensorInsightsFromDictionary:sleepData[SENSleepResultSensorInsights]];
+        _sensorInsights = [self parseSensorInsightsFromArray:sleepData[SENSleepResultSensorInsights]];
     }
     return self;
 }
@@ -107,7 +102,7 @@ static NSString* const SENSleepResultRetrievalKeyFormat = @"SleepResult-%ld-%ld-
     if (data[SENSleepResultSegments])
         self.segments = [self parseSegmentsFromArray:data[SENSleepResultSegments]];
     if (data[SENSleepResultSensorInsights])
-        self.sensorInsights = [self parseSensorInsightsFromDictionary:data[SENSleepResultSensorInsights]];
+        self.sensorInsights = [self parseSensorInsightsFromArray:data[SENSleepResultSensorInsights]];
 }
 
 - (NSString*)retrievalKey
@@ -126,14 +121,14 @@ static NSString* const SENSleepResultRetrievalKeyFormat = @"SleepResult-%ld-%ld-
     return segments;
 }
 
-- (NSArray*)parseSensorInsightsFromDictionary:(NSDictionary*)insightData
+- (NSArray*)parseSensorInsightsFromArray:(NSArray*)insightData
 {
     __block NSMutableArray* insights = [[NSMutableArray alloc] initWithCapacity:insightData.count];
-    [insightData enumerateKeysAndObjectsUsingBlock:^(NSString* sensorName, NSDictionary* insightData, BOOL* stop) {
-        SENSleepResultSensorInsight* insight = [[SENSleepResultSensorInsight alloc] initWithName:sensorName andAttributes:insightData];
+    for (NSDictionary* data in insightData) {
+        SENSleepResultSensorInsight* insight = [[SENSleepResultSensorInsight alloc] initWithDictionary:data];
         if (insight)
             [insights addObject:insight];
-    }];
+    }
     return insights;
 }
 
@@ -209,7 +204,7 @@ static NSString* const SENSleepResultSegmentSleepDepth = @"sleep_depth";
 
 @implementation SENSleepResultSensorInsight
 
-static NSString* const SENSleepResultSensorInsightName = @"name";
+static NSString* const SENSleepResultSensorInsightName = @"sensor";
 static NSString* const SENSleepResultSensorInsightMessage = @"message";
 static NSString* const SENSleepResultSensorInsightCondition = @"condition";
 
@@ -219,16 +214,6 @@ static NSString* const SENSleepResultSensorInsightCondition = @"condition";
         _name = data[SENSleepResultSensorInsightName];
         _message = data[SENSleepResultSensorInsightMessage];
         _condition = [SENSensor conditionFromValue:data[SENSleepResultSensorInsightCondition]];
-    }
-    return self;
-}
-
-- (instancetype)initWithName:(NSString*)name andAttributes:(NSDictionary*)properties
-{
-    if (self = [super init]) {
-        _name = name;
-        _message = properties[SENSleepResultSensorInsightMessage];
-        _condition = [SENSensor conditionFromValue:properties[SENSleepResultSensorInsightCondition]];
     }
     return self;
 }

@@ -52,11 +52,7 @@ describe(@"SENSleepResultSegment", ^{
         NSDictionary* json = @{@"id": @448917,
                                @"message": @"there may have been an earthquake",
                                @"event_type": @"noise",
-                               @"date": @(timeInterval * 1000),
-                               @"sensors": @[@{@"name": @"temperature",
-                                              @"value": @42,
-                                              @"unit": @"c"
-                                              }]};
+                               @"date": @(timeInterval * 1000)};
 
         beforeEach(^{
             segment = [[SENSleepResultSegment alloc] initWithDictionary:json];

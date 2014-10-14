@@ -17,16 +17,18 @@ describe(@"SENSleepResult", ^{
                                        @{@"id": @33421},
                                        @{@"id": @32995},
                                 ],
-                               @"insights": @{
-                                       @"temperature": @{
-                                               @"condition": @"IDEAL",
-                                               @"message": @"its not too cold in here"
-                                               },
-                                       @"light": @{
-                                               @"condition": @"WARNING",
-                                               @"message": @"it was persistently too bright during the night"
-                                               },
-                                       }};
+                               @"insights":@[
+                                       @{
+                                           @"sensor":@"temperature",
+                                           @"condition": @"ALERT",
+                                           @"message": @"I'm freezing"
+                                           },
+                                       @{
+                                           @"sensor":@"light",
+                                           @"condition": @"WARNING",
+                                           @"message": @"it was persistently too bright during the night"
+                                           },
+                                       ]};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -59,12 +61,13 @@ describe(@"SENSleepResult", ^{
 
         NSDictionary* json = @{@"score": @23,
                                @"message": @"should've gone to bed earlier",
-                               @"insights":@{
-                                       @"temperature": @{
-                                               @"condition": @"ALERT",
-                                               @"message": @"I'm freezing"
-                                        },
-                                }};
+                               @"insights":@[
+                                       @{
+                                           @"sensor":@"temperature",
+                                           @"condition": @"ALERT",
+                                           @"message": @"I'm freezing"
+                                           },
+                                       ]};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -88,12 +91,13 @@ describe(@"SENSleepResult", ^{
 
         NSDictionary* json = @{@"message": @"Not bad", @"score": @78};
         NSDictionary* updatedData = @{@"score": @64,
-                                      @"insights":@{
-                                              @"temperature": @{
-                                                      @"condition": @"ALERT",
-                                                      @"message": @"I'm freezing"
-                                                      },
-                                              }};
+                                      @"insights":@[
+                                              @{
+                                                  @"sensor":@"temperature",
+                                                  @"condition": @"ALERT",
+                                                  @"message": @"I'm freezing"
+                                                },
+                                              ]};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];

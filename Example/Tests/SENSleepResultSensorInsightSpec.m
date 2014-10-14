@@ -14,7 +14,7 @@ SPEC_BEGIN(SENSleepResultSensorInsightSpec)
 describe(@"SENSleepResultSensorInsight", ^{
 
     __block SENSleepResultSensorInsight* sensor;
-    NSDictionary* insightData = @{@"name":@"temperature",
+    NSDictionary* insightData = @{@"sensor":@"temperature",
                                   @"condition": @"WARNING",
                                   @"message":@"I see popsicles in here."};
 
@@ -76,7 +76,7 @@ describe(@"SENSleepResultSensorInsight", ^{
         });
 
         it(@"does not override fields missing from a dictionary", ^{
-            [[sensor.name should] equal:insightData[@"name"]];
+            [[sensor.name should] equal:insightData[@"sensor"]];
         });
     });
 });
