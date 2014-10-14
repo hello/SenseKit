@@ -78,6 +78,14 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
     return [NSString stringWithFormat:format, formattedValue];
 }
 
++ (NSNumber*)value:(NSNumber*)value inPreferredUnit:(SENSensorUnit)unit
+{
+    if (unit == SENSensorUnitDegreeCentigrade) {
+        return @([SENSensor temperatureValueInPreferredUnit:[value doubleValue]]);
+    }
+    return value;
+}
+
 + (double)temperatureValueInPreferredUnit:(double)value
 {
     if ([SENSettings temperatureFormat] == SENTemperatureFormatFahrenheit) {
@@ -141,10 +149,7 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
 
 - (NSNumber*)valueInPreferredUnit
 {
-    if (self.unit == SENSensorUnitDegreeCentigrade) {
-        return @([SENSensor temperatureValueInPreferredUnit:[self.value doubleValue]]);
-    }
-    return self.value;
+    return [[self class] value:self.value inPreferredUnit:self.unit];
 }
 
 - (NSUInteger)hash
