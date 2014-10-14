@@ -14,18 +14,7 @@ describe(@"SENSleepResultSegment", ^{
                                @"timestamp":@(timeInterval * 1000),
                                @"message": @"there's a disturbance in the force",
                                @"event_type": @"light",
-                               @"sleep_depth": @2,
-                               @"sensors" : @[
-                                       @{@"name" : @"temperature",
-                                         @"value": @32,
-                                         @"unit": @"c"},
-                                       @{@"name" :@"humidity",
-                                         @"value": @47,
-                                         @"unit": @"%"},
-                                       @{@"name":@"particulates",
-                                         @"value": @230,
-                                         @"unit": @"ppm"}
-                                       ]};
+                               @"sleep_depth": @2};
 
         beforeEach(^{
             segment = [[SENSleepResultSegment alloc] initWithDictionary:json];
@@ -53,10 +42,6 @@ describe(@"SENSleepResultSegment", ^{
 
         it(@"sets the sleep depth", ^{
             [[@([segment sleepDepth]) should] equal:json[@"sleep_depth"]];
-        });
-
-        it(@"sets the sensors", ^{
-            [[segment.sensors should] haveCountOf:3];
         });
     });
 
@@ -101,10 +86,6 @@ describe(@"SENSleepResultSegment", ^{
 
         it(@"has the same sleep depth after serialization", ^{
             [[@(serializedSegment.sleepDepth) should] equal:@(segment.sleepDepth)];
-        });
-
-        it(@"has the same sensor data after serialization", ^{
-            [[serializedSegment.sensors should] haveCountOf:segment.sensors.count];
         });
     });
 

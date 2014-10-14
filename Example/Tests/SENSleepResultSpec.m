@@ -16,7 +16,17 @@ describe(@"SENSleepResult", ^{
                                @"segments" : @[
                                        @{@"id": @33421},
                                        @{@"id": @32995},
-                                ]};
+                                ],
+                               @"insights": @{
+                                       @"temperature": @{
+                                               @"condition": @"IDEAL",
+                                               @"message": @"its not too cold in here"
+                                               },
+                                       @"light": @{
+                                               @"condition": @"WARNING",
+                                               @"message": @"it was persistently too bright during the night"
+                                               },
+                                       }};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -37,13 +47,24 @@ describe(@"SENSleepResult", ^{
         it(@"sets the segments", ^{
             [[[result segments] should] haveCountOf:2];
         });
+
+        it(@"sets the insights", ^{
+            [[[result sensorInsights] should] haveCountOf:2];
+        });
     });
 
     describe(@"serialization", ^{
         __block SENSleepResult* result = nil;
         __block SENSleepResult* serializedResult = nil;
 
-        NSDictionary* json = @{@"score": @23, @"message": @"should've gone to bed earlier"};
+        NSDictionary* json = @{@"score": @23,
+                               @"message": @"should've gone to bed earlier",
+                               @"insights":@{
+                                       @"temperature": @{
+                                               @"condition": @"ALERT",
+                                               @"message": @"I'm freezing"
+                                        },
+                                }};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -66,7 +87,13 @@ describe(@"SENSleepResult", ^{
         __block SENSleepResult* result = nil;
 
         NSDictionary* json = @{@"message": @"Not bad", @"score": @78};
-        NSDictionary* updatedData = @{@"score": @64};
+        NSDictionary* updatedData = @{@"score": @64,
+                                      @"insights":@{
+                                              @"temperature": @{
+                                                      @"condition": @"ALERT",
+                                                      @"message": @"I'm freezing"
+                                                      },
+                                              }};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -79,6 +106,10 @@ describe(@"SENSleepResult", ^{
 
         it(@"does not override fields missing from a dictionary", ^{
             [[[result message] should] equal:json[@"message"]];
+        });
+
+        it(@"updates all insights", ^{
+            [[[result sensorInsights] should] haveCountOf:1];
         });
     });
 });

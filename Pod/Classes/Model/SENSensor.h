@@ -69,6 +69,15 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
  */
 + (SENSensorUnit)unitFromValue:(id)value;
 
+/**
+ *  Identifies a matching sensor condition from a value
+ * 
+ *  @param value a condition format string, like 'ALERT'
+ *
+ *  @return the matching condition or SENSensorConditionUnknown
+ */
++ (SENSensorCondition)conditionFromValue:(id)value;
+
 - (instancetype)initWithDictionary:(NSDictionary*)dict;
 
 /**
