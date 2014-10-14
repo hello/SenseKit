@@ -18,6 +18,13 @@ NSString* const SENSensorUnitKey = @"unit";
 
 @implementation SENSensor
 
+static NSString* const SENSensorUnitCentigradeSymbol = @"c";
+static NSString* const SENSensorUnitPPMSymbol = @"ppm";
+static NSString* const SENSensorUnitPercentSymbol = @"%";
+static NSString* const SENSensorConditionIdealSymbol = @"IDEAL";
+static NSString* const SENSensorConditionAlertSymbol = @"ALERT";
+static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
+
 + (NSArray*)sensors
 {
     return [SENKeyedArchiver allObjectsInCollection:NSStringFromClass([self class])];
@@ -60,7 +67,8 @@ NSString* const SENSensorUnitKey = @"unit";
     if (prefix) {
         NSString* localizationKey = [NSString stringWithFormat:@"%@format", prefix];
         format = NSLocalizedString(localizationKey, nil);
-    } else {
+    }
+    else {
         format = @"%.0f";
     }
 
@@ -185,13 +193,14 @@ NSString* const SENSensorUnitKey = @"unit";
 + (SENSensorUnit)unitFromValue:(id)value
 {
     if ([value isKindOfClass:[NSString class]]) {
-        if ([value isEqualToString:@"c"])
+        if ([value isEqualToString:SENSensorUnitCentigradeSymbol])
             return SENSensorUnitDegreeCentigrade;
-        else if ([value isEqualToString:@"ppm"])
+        else if ([value isEqualToString:SENSensorUnitPPMSymbol])
             return SENSensorUnitPartsPerMillion;
-        else if ([value isEqualToString:@"%"])
+        else if ([value isEqualToString:SENSensorUnitPercentSymbol])
             return SENSensorUnitPercent;
-    } else if ([value respondsToSelector:@selector(integerValue)]) {
+    }
+    else if ([value respondsToSelector:@selector(integerValue)]) {
         return [value integerValue];
     }
     return SENSensorUnitUnknown;
@@ -200,13 +209,15 @@ NSString* const SENSensorUnitKey = @"unit";
 + (SENSensorCondition)conditionFromValue:(id)value
 {
     if ([value isKindOfClass:[NSString class]]) {
-        if ([value isEqualToString:@"ALERT"])
+        NSString* normalizedValue = [(NSString*)value uppercaseString];
+        if ([normalizedValue isEqualToString:SENSensorConditionAlertSymbol])
             return SENSensorConditionAlert;
-        else if ([value isEqualToString:@"WARNING"])
+        else if ([normalizedValue isEqualToString:SENSensorConditionWarningSymbol])
             return SENSensorConditionWarning;
-        else if ([value isEqualToString:@"IDEAL"])
+        else if ([normalizedValue isEqualToString:SENSensorConditionIdealSymbol])
             return SENSensorConditionIdeal;
-    } else if ([value respondsToSelector:@selector(integerValue)]) {
+    }
+    else if ([value respondsToSelector:@selector(integerValue)]) {
         return [value integerValue];
     }
     return SENSensorConditionUnknown;

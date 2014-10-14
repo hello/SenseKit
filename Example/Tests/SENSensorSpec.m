@@ -15,7 +15,7 @@ describe(@"SENSensor", ^{
                                        @"value": @(22.8),
                                        @"unit": @"c",
                                        @"message": @"It's pretty cold in here.",
-                                       @"condition": @"WARNING",
+                                       @"condition": @"warning",
                                        @"last_updated_utc": @(sensorTimestamp)};
 
         beforeEach(^{
