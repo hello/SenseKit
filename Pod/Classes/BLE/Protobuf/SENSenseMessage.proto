@@ -5,6 +5,7 @@ enum ErrorType {
     INTERNAL_DATA_ERROR = 3;   // Data packets corruption during BLE or SPI transfer
     DEVICE_DATABASE_FULL = 4;  // No more space for device pairing.
     DEVICE_NO_MEMORY = 5;
+    INTERNAL_OPERATION_FAILED = 6;
 }
 
 message SENSenseMessage {
@@ -25,6 +26,10 @@ message SENSenseMessage {
         ERROR = 13;  // if you receive this, that means something goes wrong.
         PAIR_SENSE = 14;
         UNPAIR_PILL = 15;
+        DFU_BEGIN = 16;
+        PILL_DATA = 17;
+        PILL_HEARTBEAT = 18;
+        PILL_DFU_BEGIN = 19;
     }
     required int32 version = 1;
     required Type type = 2;
@@ -34,4 +39,9 @@ message SENSenseMessage {
     optional string wifiName = 6;
     optional string wifiSSID = 7;
     optional string wifiPassword = 8;
+    optional int32 batteryLevel = 9;
+    optional int32 uptime = 10;
+    optional int32 motionData = 11;
+    optional bytes motionDataEncrypted = 12;
+    optional int32 firmwareVersion = 13;
 }
