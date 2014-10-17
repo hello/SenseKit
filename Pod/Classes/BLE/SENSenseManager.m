@@ -18,7 +18,7 @@
 
 static CGFloat const kSENSenseDefaultTimeout = 20.0f;
 static CGFloat const kSENSenseRescanTimeout = 8.0f;
-static CGFloat const kSENSenseSetWifiTimeout = 45.0f;
+static CGFloat const kSENSenseSetWifiTimeout = 60.0f; // firmware suggestion
 
 static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
 static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
