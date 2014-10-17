@@ -1,7 +1,27 @@
 #import <Kiwi/Kiwi.h>
-#import "SENSenseManager+Private.h"
+#import <LGBluetooth/LGBluetooth.h>
+#import "SENSenseManager.h"
 #import "SENSense.h"
 #import "SENSenseMessage.pb.h"
+
+@interface SENSenseManager (Private)
+
+- (NSArray*)blePackets:(SENSenseMessage*)message;
+- (SENSenseMessage*)messageFromBlePackets:(NSArray*)packets error:(NSError**)error;
+- (void)handleResponseUpdate:(NSData*)data
+                       error:(NSError*)error
+              forMessageType:(SENSenseMessageType)type
+                  allPackets:(NSMutableArray**)allPackets
+                totalPackets:(NSNumber**)totalPackets
+                     success:(SENSenseSuccessBlock)success
+                     failure:(SENSenseFailureBlock)failure;
+- (void)sendPackets:(NSArray*)packets
+               from:(NSInteger)index
+      throughWriter:(LGCharacteristic*)writer
+            success:(SENSenseSuccessBlock)success
+            failure:(SENSenseFailureBlock)failure;
+
+@end
 
 SPEC_BEGIN(SENSenseManagerSpec)
 

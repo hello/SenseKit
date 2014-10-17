@@ -4,6 +4,12 @@
 #import <SenseKit/SENAPIClient.h>
 #import <AFNetworking/AFHTTPSessionManager.h>
 
+@interface SENAPIClient (Private)
+
++ (NSString*)urlEncode:(NSString*)URLString;
+
+@end
+
 SPEC_BEGIN(SENAPIClientSpec)
 
 describe(@"SENAPIClient", ^{
@@ -43,6 +49,22 @@ describe(@"SENAPIClient", ^{
 
     afterAll(^{
         [[LSNocilla sharedInstance] stop];
+    });
+    
+    describe(@"+urlEncode:", ^{
+        
+        it(@"url encoding encodes spaces", ^{
+            NSString* path = @"devices/my device id";
+            NSString* encoding = [SENAPIClient urlEncode:path];
+            [[@([encoding containsString:@" "]) should] equal:@(0)];
+        });
+        
+        it(@"url encoding does not destroy ? and &", ^{
+            NSString* path = @"questions?date=1900-01-01&test=true";
+            NSString* encoding = [SENAPIClient urlEncode:path];
+            [[encoding should] equal:path];
+        });
+        
     });
 
     describe(@"Making HTTP requests", ^{

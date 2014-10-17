@@ -7,9 +7,18 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "SENAPIQuestions+Private.h"
+
+#import "SENAPIQuestions.h"
 #import "SENQuestion.h"
 #import "SENAnswer.h"
+
+@interface SENAPIQuestions (Private)
+
++ (SENQuestion*)questionFromDict:(NSDictionary*)questionDict;
++ (NSArray*)answersFromReponseArray:(NSArray*)responesArray;
++ (NSArray*)questionsFromResponse:(id)response;
+
+@end
 
 SPEC_BEGIN(SENAPIQuestionsSpec)
 
@@ -72,6 +81,26 @@ describe(@"SENAPIQuestionsSpec", ^{
             
         });
         
+    });
+    
+    describe(@"+skipQuestion:completion", ^{
+        
+        it(@"should callback with an error of invalid argument with no question passed", ^{
+            __block NSError* apiErrror = nil;
+            [SENAPIQuestions skipQuesetion:nil completion:^(id data, NSError *error) {
+                apiErrror = error;
+            }];
+            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+        });
+        
+        it(@"should callback with an error of invalid argument with no question id set", ^{
+            __block NSError* apiErrror = nil;
+            [SENAPIQuestions skipQuesetion:[[SENQuestion alloc] init] completion:^(id data, NSError *error) {
+                apiErrror = error;
+            }];
+            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+        });
+
     });
     
 });

@@ -7,8 +7,15 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "SENapiAccount+Private.h"
+#import "SENapiAccount.h"
 #import "SENAccount.h"
+
+@interface SENAPIAccount (Private)
+
++ (SENAccount*)accountFromResponse:(id)responseObject;
++ (NSDictionary*)dictionaryValue:(SENAccount*)account;
+
+@end
 
 SPEC_BEGIN(SENAPIaccountSpec)
 
