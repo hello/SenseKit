@@ -44,7 +44,7 @@ NSString* const SENAPIAccountEndpoint = @"account";
 
     [SENAPIClient POST:URLPath parameters:params completion:^(id responseObject, NSError *error) {
         SENAccount* account = nil;
-        if (error != nil && [responseObject isKindOfClass:[NSDictionary class]]) {
+        if (error == nil && [responseObject isKindOfClass:[NSDictionary class]]) {
             account = [self accountFromResponse:responseObject];
             if (account != nil) {
                 NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
