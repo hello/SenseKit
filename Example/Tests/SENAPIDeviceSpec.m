@@ -1,7 +1,14 @@
 #import <Kiwi/Kiwi.h>
 #import <Nocilla/Nocilla.h>
-#import <SenseKit/SENAPIDevice+Private.h>
 #import <SenseKit/SENDevice.h>
+#import <SenseKit/SENAPIDevice.h>
+
+@interface SENAPIDevice (Private)
+
++ (SENDevice*)deviceFromRawResponse:(id)rawResponse;
++ (NSArray*)devicesFromRawResponse:(id)rawResponse;
+
+@end
 
 SPEC_BEGIN(SENAPIDeviceSpec)
 

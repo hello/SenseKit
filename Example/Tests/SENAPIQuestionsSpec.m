@@ -7,9 +7,17 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "SENAPIQuestions+Private.h"
+#import "SENAPIQuestions.h"
 #import "SENQuestion.h"
 #import "SENAnswer.h"
+
+@interface SENAPIQuestions (Private)
+
++ (SENQuestion*)questionFromDict:(NSDictionary*)questionDict;
++ (NSArray*)answersFromReponseArray:(NSArray*)responesArray;
++ (NSArray*)questionsFromResponse:(id)response;
+
+@end
 
 SPEC_BEGIN(SENAPIQuestionsSpec)
 
