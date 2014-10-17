@@ -46,6 +46,6 @@ typedef NS_ENUM(NSInteger, SENAPIQuestionError) {
  * @param question:   the question to mark as skipped
  * @param completion: the block to invoke when question has been marked as skipped
  */
-+ (void)skipQuesetion:(SENQuestion*)question completion:(SENAPIDataBlock)completion;
++ (void)skipQuestion:(SENQuestion*)question completion:(SENAPIDataBlock)completion;
 
 @end

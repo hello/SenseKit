@@ -175,7 +175,7 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
           completion:(void(^)(NSError* error))completion {
     // Let the API to fail with callback if question parameter is insuffcient
     __weak typeof (self) weakSelf = self;
-    [SENAPIQuestions skipQuesetion:question completion:^(id data, NSError *error) {
+    [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
         __strong typeof (weakSelf) strongSelf = weakSelf;
         if (strongSelf && [error code] != SENAPIQuestionErrorInvalidParameter) {
             // set questionas as asked for today unless error exists and it's

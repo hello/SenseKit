@@ -133,7 +133,7 @@ static NSString* const kSENAPIQuestionTypeChoice = @"CHOICE";
 
 #pragma mark - SKIPPING QUESTIONS
 
-+ (void)skipQuesetion:(SENQuestion*)question completion:(SENAPIDataBlock)completion {
++ (void)skipQuestion:(SENQuestion*)question completion:(SENAPIDataBlock)completion {
     if (question == nil || [question questionId] == nil) {
         if (completion) completion (nil, [self invalidParameterError]);
         return;
