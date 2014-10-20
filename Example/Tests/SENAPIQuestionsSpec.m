@@ -87,7 +87,7 @@ describe(@"SENAPIQuestionsSpec", ^{
         
         it(@"should callback with an error of invalid argument with no question passed", ^{
             __block NSError* apiErrror = nil;
-            [SENAPIQuestions skipQuesetion:nil completion:^(id data, NSError *error) {
+            [SENAPIQuestions skipQuestion:nil completion:^(id data, NSError *error) {
                 apiErrror = error;
             }];
             [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
@@ -95,14 +95,14 @@ describe(@"SENAPIQuestionsSpec", ^{
         
         it(@"should callback with an error of invalid argument with no question id set", ^{
             __block NSError* apiErrror = nil;
-            [SENAPIQuestions skipQuesetion:[[SENQuestion alloc] init] completion:^(id data, NSError *error) {
+            [SENAPIQuestions skipQuestion:[[SENQuestion alloc] init] completion:^(id data, NSError *error) {
                 apiErrror = error;
             }];
             [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
         });
 
     });
-    
+
 });
 
 SPEC_END
