@@ -26,7 +26,7 @@ PODS:
   - CocoaLumberjack/Core (1.6.5.1)
   - CocoaLumberjack/Extensions (1.6.5.1):
     - CocoaLumberjack/Core
-  - FXKeychain (1.5.1)
+  - FXKeychain (1.5.2)
   - Kiwi (2.3.0)
   - LGBluetooth (1.1.4)
   - Nocilla (HEAD based on 0.8.1)
@@ -71,7 +71,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
-  FXKeychain: beb642a4218ba783507af08865eda05e9b26a612
+  FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
   Nocilla: e573c2bf9113c8d77782b695a2f9362b7bc44e72
@@ -80,4 +80,4 @@ SPEC CHECKSUMS:
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
-COCOAPODS: 0.34.1
+COCOAPODS: 0.34.4

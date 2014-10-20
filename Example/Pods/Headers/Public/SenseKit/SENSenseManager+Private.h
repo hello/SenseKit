@@ -1,1 +1,0 @@
-../../../../../Pod/Classes/BLE/SENSenseManager+Private.h
