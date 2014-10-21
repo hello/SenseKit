@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - Amplitude-iOS (2.1.1)
   - CocoaLumberjack (1.6.5.1):
     - CocoaLumberjack/Core
     - CocoaLumberjack/Extensions
@@ -32,10 +33,13 @@ PODS:
   - Nocilla (HEAD based on 0.8.1)
   - NSJSONSerialization-NSNullRemoval (1.0.0)
   - SenseKit (0.1.0):
+    - SenseKit/Analytics
     - SenseKit/API
     - SenseKit/BLE
     - SenseKit/Model
     - SenseKit/Service
+  - SenseKit/Analytics (0.1.0):
+    - Amplitude-iOS
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.4.1)
     - FXKeychain (~> 1.5.1)
@@ -70,13 +74,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
+  Amplitude-iOS: e72b65479dc035ef671a57e34e1a981767224318
   CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
   FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   Kiwi: 54bece5b35564d9b8e03c608d926f1a22fcfc589
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
   Nocilla: e573c2bf9113c8d77782b695a2f9362b7bc44e72
   NSJSONSerialization-NSNullRemoval: e12839c3f5c406708ef388ded9021884bc00f3b9
-  SenseKit: c750e05ab043e05b9da2a3d6cadf9fc253a519b7
+  SenseKit: 32d3efa3ca8d03ae0250b0b88d9a541b72062dc1
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
