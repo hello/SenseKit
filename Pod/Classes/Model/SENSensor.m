@@ -19,7 +19,7 @@ NSString* const SENSensorUnitKey = @"unit";
 @implementation SENSensor
 
 static NSString* const SENSensorUnitCentigradeSymbol = @"c";
-static NSString* const SENSensorUnitPPMSymbol = @"ppm";
+static NSString* const SENSensorUnitMicrogCubicMeterSymbol = @"µg/m3";
 static NSString* const SENSensorUnitPercentSymbol = @"%";
 static NSString* const SENSensorConditionIdealSymbol = @"IDEAL";
 static NSString* const SENSensorConditionAlertSymbol = @"ALERT";
@@ -69,7 +69,7 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
         format = NSLocalizedString(localizationKey, nil);
     }
     else {
-        format = @"%.0f";
+        format = @"%.02f";
     }
 
     double formattedValue = (unit == SENSensorUnitDegreeCentigrade)
@@ -100,8 +100,8 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
     case SENSensorUnitDegreeCentigrade:
         return @"measurement.temperature.";
 
-    case SENSensorUnitPartsPerMillion:
-        return @"measurement.ppm.";
+    case SENSensorUnitMicrogramPerCubicMeter:
+        return @"measurement.particle.";
 
     case SENSensorUnitPercent:
         return @"measurement.percentage.";
@@ -200,8 +200,8 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
     if ([value isKindOfClass:[NSString class]]) {
         if ([value isEqualToString:SENSensorUnitCentigradeSymbol])
             return SENSensorUnitDegreeCentigrade;
-        else if ([value isEqualToString:SENSensorUnitPPMSymbol])
-            return SENSensorUnitPartsPerMillion;
+        else if ([value isEqualToString:SENSensorUnitMicrogCubicMeterSymbol])
+            return SENSensorUnitMicrogramPerCubicMeter;
         else if ([value isEqualToString:SENSensorUnitPercentSymbol])
             return SENSensorUnitPercent;
     }
