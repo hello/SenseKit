@@ -56,7 +56,7 @@ describe(@"SENAPIClient", ^{
         it(@"url encoding encodes spaces", ^{
             NSString* path = @"devices/my device id";
             NSString* encoding = [SENAPIClient urlEncode:path];
-            [[@([encoding containsString:@" "]) should] equal:@(0)];
+            [[@([encoding rangeOfString:@" "].location) should] equal:@(NSNotFound)];
         });
         
         it(@"url encoding does not destroy ? and &", ^{
