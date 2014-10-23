@@ -734,16 +734,6 @@ static NSInteger const kSENSenseMessageVersion = 0;
               failure:failure];
 }
 
-#pragma mark - Time
-
-- (void)setTime:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
-}
-
-- (void)getTime:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
-}
-
 #pragma mark - Wifi
 
 - (void)setWiFi:(NSString*)ssid
@@ -760,16 +750,16 @@ static NSInteger const kSENSenseMessageVersion = 0;
               failure:failure];
 }
 
-- (void)getWifiEndPoint:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
-}
+#pragma mark - Factory Reset
 
-- (void)scanForWifi:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
-}
-
-- (void)stopWifiScan:(SENSenseCompletionBlock)completion {
-    // TODO (jimmy): Firmware not yet implemented
+- (void)resetToFactoryState:(SENSenseSuccessBlock)success
+                    failure:(SENSenseFailureBlock)failure {
+    SENSenseMessageType type = SENSenseMessageTypeFactoryReset;
+    SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
+    [self sendMessage:[builder build]
+              timeout:kSENSenseDefaultTimeout
+              success:success
+              failure:failure];
 }
 
 #pragma mark - Signal Strength / RSSI

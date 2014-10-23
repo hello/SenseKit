@@ -190,11 +190,6 @@ typedef enum {
  */
 - (void)removeUnexpectedDisconnectObserver:(NSString*)observerId;
 
-#pragma mark - Time
-
-- (void)setTime:(SENSenseCompletionBlock)completion;
-- (void)getTime:(SENSenseCompletionBlock)completion;
-
 #pragma mark - Wifi
 
 /**
@@ -212,8 +207,16 @@ typedef enum {
         success:(SENSenseSuccessBlock)success
         failure:(SENSenseFailureBlock)failure;
 
-- (void)getWifiEndPoint:(SENSenseCompletionBlock)completion;
-- (void)scanForWifi:(SENSenseCompletionBlock)completion;
-- (void)stopWifiScan:(SENSenseCompletionBlock)completion;
+#pragma mark - Factory Reset
+
+/**
+ * Reset Sense back to factory state, which will erase the device from Sense and
+ * clear WiFi credentials that have been set, if any.
+ * 
+ * @param success:  the block to call when the command succeeded
+ * @param failure:  the block to call if the command encountered an er
+ */
+- (void)resetToFactoryState:(SENSenseSuccessBlock)success
+                    failure:(SENSenseFailureBlock)failure;
 
 @end
