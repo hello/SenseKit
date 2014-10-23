@@ -30,6 +30,7 @@ message SENSenseMessage {
         PILL_DATA = 17;
         PILL_HEARTBEAT = 18;
         PILL_DFU_BEGIN = 19;
+        FACTORY_RESET = 20;
     }
     required int32 version = 1;
     required Type type = 2;
