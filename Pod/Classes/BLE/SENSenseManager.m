@@ -539,6 +539,18 @@ static NSInteger const kSENSenseMessageVersion = 0;
         case ErrorTypeDeviceAlreadyPaired:
             code = SENSenseManagerErrorCodeDeviceAlreadyPaired;
             break;
+        case ErrorTypeInternalOperationFailed:
+            code = SENSenseManagerErrorCodeInternalFailure;
+            break;
+        case ErrorTypeDeviceNoMemory:
+            code = SENSenseManagerErrorCodeDeviceOutOfMemory;
+            break;
+        case ErrorTypeDeviceDatabaseFull:
+            code = SENSenseManagerErrorCodeDeviceDbFull;
+            break;
+        case ErrorTypeNetworkError:
+            code = SENSenseManagerErrorCodeDeviceNetworkError;
+            break;
         default:
             code = SENSenseManagerErrorCodeUnexpectedResponse;
             break;
