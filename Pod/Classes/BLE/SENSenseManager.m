@@ -595,12 +595,16 @@ static NSInteger const kSENSenseMessageVersion = 0;
         if ([*totalPackets intValue] == 1 || [*totalPackets intValue] - 1 == seq) {
             NSError* parseError = nil;
             SENSenseMessage* responseMsg = [self messageFromBlePackets:*allPackets error:&parseError];
-            if (parseError != nil || [responseMsg type] != type) {
-                [self failWithBlock:failure andCode:SENSenseManagerErrorCodeUnexpectedResponse];
+            if (parseError != nil || [responseMsg type] != type || [responseMsg hasError]) {
+                NSInteger code
+                    = parseError != nil
+                    ? [parseError code]
+                    : SENSenseManagerErrorCodeUnexpectedResponse;
+                [self failWithBlock:failure andCode:code];
             } else {
                 if (success) success (responseMsg);
             }
-        }
+        } // else, wait for next update
     } else {
         [self failWithBlock:failure andCode:SENSenseManagerErrorCodeUnexpectedResponse];
     }
@@ -640,7 +644,7 @@ static NSInteger const kSENSenseMessageVersion = 0;
     
     if (errCode != SENSenseManagerErrorCodeNone && error != NULL) {
         *error = [NSError errorWithDomain:kSENSenseErrorDomain
-                                     code:SENSenseManagerErrorCodeUnexpectedResponse
+                                     code:errCode
                                  userInfo:nil];
     }
     return response;
@@ -671,6 +675,11 @@ static NSInteger const kSENSenseMessageVersion = 0;
                                                    andCode:SENSenseManagerErrorCodeUnexpectedResponse];
                       }
                       
+                      NSString* cbKey = [strongSelf cacheMessageCallbacks:success failureBlock:failure];
+                      [strongSelf performSelector:@selector(sendMessageTimeoutWithCbKey:)
+                                       withObject:cbKey
+                                       afterDelay:kSENSenseDefaultTimeout];
+                      
                       [reader setNotifyValue:YES completion:^(NSError *error) {
                           __strong typeof(reader) strongReader = reader;
                           if (!strongReader) return;
@@ -678,9 +687,9 @@ static NSInteger const kSENSenseMessageVersion = 0;
                           [strongReader setNotifyValue:NO completion:nil];
                           
                           if (error != nil) {
-                              if (failure) failure (error);
+                              [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
                           } else {
-                              if (success) success (nil);
+                              [strongSelf fireSuccessMsgCbWithCbKey:cbKey andResponse:nil];
                           }
 
                       }];

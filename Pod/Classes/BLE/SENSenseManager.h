@@ -15,7 +15,7 @@ typedef void(^SENSenseCompletionBlock)(id response, NSError* error);
 typedef void(^SENSenseSuccessBlock)(id response);
 typedef void(^SENSenseFailureBlock)(NSError* error);
 
-typedef enum {
+typedef NS_ENUM (NSInteger, SENSenseManagerErrorCode) {
     SENSenseManagerErrorCodeNone = 0,
     SENSenseManagerErrorCodeNoDeviceSpecified = -1,
     SENSenseManagerErrorCodeInvalidArgument = -2,
@@ -29,7 +29,7 @@ typedef enum {
     SENSenseManagerErrorCodeDeviceOutOfMemory = -10,
     SENSenseManagerErrorCodeDeviceDbFull = -11,
     SENSenseManagerErrorCodeDeviceNetworkError = -12
-} SENSenseManagerErrorCode;
+};
 
 @interface SENSenseManager : NSObject
 
