@@ -7,7 +7,7 @@
 @interface SENAPIClient (Private)
 
 + (NSString*)urlEncode:(NSString*)URLString;
-
++ (AFHTTPSessionManager*)HTTPSessionManager;
 @end
 
 SPEC_BEGIN(SENAPIClientSpec)
@@ -40,7 +40,7 @@ describe(@"SENAPIClient", ^{
     });
 
     beforeEach(^{
-        sessionManager = [[SENAPIClient class] performSelector:@selector(HTTPSessionManager)];
+        sessionManager = [SENAPIClient HTTPSessionManager];
     });
 
     afterEach(^{
