@@ -6,6 +6,22 @@ enum ErrorType {
     DEVICE_DATABASE_FULL = 4;  // No more space for device pairing.
     DEVICE_NO_MEMORY = 5;
     INTERNAL_OPERATION_FAILED = 6;
+    NO_ENDPOINT_IN_RANGE = 7;
+    WLAN_CONNECTION_ERROR = 8;
+    FAIL_TO_OBTAIN_IP = 9;
+}
+
+message SENWifiEndpoint {
+    enum SecurityType {
+        OPEN = 0;
+        WEP = 1;
+        WPA = 2;
+        WPA2 = 3;
+    }
+    required string ssid = 1;
+    optional bytes bssid = 2;
+    required int32 rssi = 4;
+    required SecurityType security = 5;
 }
 
 message SENSenseMessage {
@@ -45,4 +61,5 @@ message SENSenseMessage {
     optional int32 motionData = 11;
     optional bytes motionDataEncrypted = 12;
     optional int32 firmwareVersion = 13;
+    repeated SENWifiEndpoint wifisDetected = 14; 
 }
