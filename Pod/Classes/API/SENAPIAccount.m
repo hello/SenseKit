@@ -25,6 +25,10 @@ NSString* const SENAPIAccountEndpoint = @"account";
 
 @implementation SENAPIAccount
 
++ (NSNumber*)currentTimezoneInMillis {
+    return @([[NSTimeZone localTimeZone] secondsFromGMT] * 1000);
+}
+
 + (void)createAccountWithName:(NSString*)name
                  emailAddress:(NSString*)emailAddress
                      password:(NSString*)password
@@ -38,7 +42,7 @@ NSString* const SENAPIAccountEndpoint = @"account";
         params[SENAPIAccountPropertyEmailAddress] = emailAddress;
     if (name)
         params[SENAPIAccountPropertyName] = name;
-    params[SENAPIAccountPropertyTimezone] = @([[NSTimeZone localTimeZone] secondsFromGMT] * 1000);
+    params[SENAPIAccountPropertyTimezone] = [self currentTimezoneInMillis];
 
     NSString* URLPath = [NSString stringWithFormat:@"%@?sig=%@", SENAPIAccountEndpoint, @"xxx"];
 
@@ -57,6 +61,9 @@ NSString* const SENAPIAccountEndpoint = @"account";
 }
 
 + (void)updateAccount:(SENAccount*)account completionBlock:(SENAPIDataBlock)completion {
+    NSMutableDictionary* accountDict = [self dictionaryValue:account];
+    accountDict[SENAPIAccountPropertyTimezone] = [self currentTimezoneInMillis];
+    
     [SENAPIClient PUT:SENAPIAccountEndpoint
            parameters:[self dictionaryValue:account]
            completion:completion];
@@ -113,7 +120,7 @@ NSString* const SENAPIAccountEndpoint = @"account";
  * @param account: the account object to convert to a dictionary.
  * @return         a dictionary containing non-nil values from the account object.
  */
-+ (NSDictionary*)dictionaryValue:(SENAccount*)account {
++ (NSMutableDictionary*)dictionaryValue:(SENAccount*)account {
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
     [params setValue:[account name] forKey:SENAPIAccountPropertyName];
     [params setValue:[account email] forKey:SENAPIAccountPropertyEmailAddress];
