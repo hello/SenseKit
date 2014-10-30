@@ -64,9 +64,7 @@ NSString* const SENAPIAccountEndpoint = @"account";
     NSMutableDictionary* accountDict = [self dictionaryValue:account];
     accountDict[SENAPIAccountPropertyTimezone] = [self currentTimezoneInMillis];
     
-    [SENAPIClient PUT:SENAPIAccountEndpoint
-           parameters:[self dictionaryValue:account]
-           completion:completion];
+    [SENAPIClient PUT:SENAPIAccountEndpoint parameters:accountDict completion:completion];
 }
 
 + (void)getAccount:(SENAPIDataBlock)completion {
