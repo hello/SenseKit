@@ -601,7 +601,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     
     uint8_t packet[[data length]];
     [data getBytes:&packet length:kSENSensePacketSize];
-    if (sizeof(packet) > 2 && error == nil) {
+    if (sizeof(packet) >= 2 && error == nil) {
         uint8_t seq = packet[0];
         if (seq == 0) {
             *totalPackets = @(packet[1]);
