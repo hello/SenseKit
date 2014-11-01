@@ -446,8 +446,7 @@
 		BDAE3D63F3602F45BE82F2C8 /* KWStringPrefixMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = A9384E49A881D4CEF8F6B2E9 /* KWStringPrefixMatcher.h */; };
 		BE339698013753C19B4CFE76 /* KWStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 5247D532408CB6CA9B470C0B /* KWStub.h */; };
 		BEE197EA56A8D6A042EE3759 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43F709993E7483A25D603D3B /* AFHTTPRequestOperation.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		BF1E2E751A031DDF00DDD0D0 /* SENAPIInsight.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E741A031DDF00DDD0D0 /* SENAPIInsight.m */; };
-		BF1E2E761A031DE900DDD0D0 /* SENAPIInsight.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E741A031DDF00DDD0D0 /* SENAPIInsight.m */; };
+		BF1E2E761A031DE900DDD0D0 /* SENAPIInsight.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E741A031DDF00DDD0D0 /* SENAPIInsight.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		BF1E2E771A031DEE00DDD0D0 /* SENAPIInsight.h in Headers */ = {isa = PBXBuildFile; fileRef = BF1E2E731A031DDF00DDD0D0 /* SENAPIInsight.h */; };
 		BFD5EE1428BD2C29769CF675 /* SENDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B62E33BB3B9032F55619D9D /* SENDevice.h */; };
 		C1625C565979D1D564DD0023 /* KWCaptureSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 564F107413B29500E4C0F4B7 /* KWCaptureSpy.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
@@ -3150,7 +3149,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF1E2E751A031DDF00DDD0D0 /* SENAPIInsight.m in Sources */,
 				2C748E00DA4E9D266B4A4D82 /* Pods-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
