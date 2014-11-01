@@ -61,5 +61,6 @@ message SENSenseMessage {
     optional int32 motionData = 11;
     optional bytes motionDataEncrypted = 12;
     optional int32 firmwareVersion = 13;
-    repeated SENWifiEndpoint wifisDetected = 14; 
+    repeated SENWifiEndpoint wifisDetected = 14;
+    optional SENWifiEndpoint.SecurityType securityType = 15;
 }
