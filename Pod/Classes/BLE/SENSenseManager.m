@@ -832,6 +832,25 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
               failure:failure];
 }
 
+- (void)getConfiguredWiFi:(SENSenseSuccessBlock)success failure:(SENSenseFailureBlock)failure {
+    if (!success) {
+        if (failure) failure ([NSError errorWithDomain:kSENSenseErrorDomain
+                                                  code:SENSenseManagerErrorCodeInvalidArgument
+                                              userInfo:nil]);
+        return;
+    }
+    
+    SENSenseMessageType type = SENSenseMessageTypeGetWifiEndpoint;
+    SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
+    [self sendMessage:[builder build]
+              timeout:kSENSenseDefaultTimeout
+               update:nil
+              success:^(SENSenseMessage* response) {
+                  success ([response wifiSsid]);
+              }
+              failure:failure];
+}
+
 #pragma mark - Factory Reset
 
 - (void)resetToFactoryState:(SENSenseSuccessBlock)success
