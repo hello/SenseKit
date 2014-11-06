@@ -6,6 +6,8 @@
 
 @class SENSenseMessage;
 @class SENSenseMessageBuilder;
+@class SENSenseMessagePillData;
+@class SENSenseMessagePillDataBuilder;
 @class SENWifiEndpoint;
 @class SENWifiEndpointBuilder;
 #ifndef __has_feature
@@ -165,6 +167,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
   BOOL hasWifiName_:1;
   BOOL hasWifiSsid_:1;
   BOOL hasWifiPassword_:1;
+  BOOL hasPillData_:1;
   BOOL hasMotionDataEncrypted_:1;
   BOOL hasType_:1;
   BOOL hasError_:1;
@@ -179,6 +182,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
   NSString* wifiName;
   NSString* wifiSsid;
   NSString* wifiPassword;
+  SENSenseMessagePillData* pillData;
   NSData* motionDataEncrypted;
   SENSenseMessageType type;
   ErrorType error;
@@ -199,6 +203,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 - (BOOL) hasMotionDataEncrypted;
 - (BOOL) hasFirmwareVersion;
 - (BOOL) hasSecurityType;
+- (BOOL) hasPillData;
 @property (readonly) long version;
 @property (readonly) SENSenseMessageType type;
 @property (readonly, strong) NSString* deviceId;
@@ -214,6 +219,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 @property (readonly) long firmwareVersion;
 @property (readonly, strong) PBArray * wifisDetected;
 @property (readonly) SENWifiEndpointSecurityType securityType;
+@property (readonly, strong) SENSenseMessagePillData* pillData;
 - (SENWifiEndpoint*)wifisDetectedAtIndex:(NSUInteger)index;
 
 + (SENSenseMessage*) defaultInstance;
@@ -232,6 +238,91 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 + (SENSenseMessage*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 + (SENSenseMessage*) parseFromCodedInputStream:(PBCodedInputStream*) input;
 + (SENSenseMessage*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface SENSenseMessagePillData : PBGeneratedMessage {
+@private
+  BOOL hasBatteryLevel_:1;
+  BOOL hasUptime_:1;
+  BOOL hasFirmwareVersion_:1;
+  BOOL hasDeviceId_:1;
+  BOOL hasMotionDataEntrypted_:1;
+  long batteryLevel;
+  long uptime;
+  long firmwareVersion;
+  NSString* deviceId;
+  NSData* motionDataEntrypted;
+}
+- (BOOL) hasDeviceId;
+- (BOOL) hasBatteryLevel;
+- (BOOL) hasUptime;
+- (BOOL) hasMotionDataEntrypted;
+- (BOOL) hasFirmwareVersion;
+@property (readonly, strong) NSString* deviceId;
+@property (readonly) long batteryLevel;
+@property (readonly) long uptime;
+@property (readonly, strong) NSData* motionDataEntrypted;
+@property (readonly) long firmwareVersion;
+
++ (SENSenseMessagePillData*) defaultInstance;
+- (SENSenseMessagePillData*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (SENSenseMessagePillDataBuilder*) builder;
++ (SENSenseMessagePillDataBuilder*) builder;
++ (SENSenseMessagePillDataBuilder*) builderWithPrototype:(SENSenseMessagePillData*) prototype;
+- (SENSenseMessagePillDataBuilder*) toBuilder;
+
++ (SENSenseMessagePillData*) parseFromData:(NSData*) data;
++ (SENSenseMessagePillData*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (SENSenseMessagePillData*) parseFromInputStream:(NSInputStream*) input;
++ (SENSenseMessagePillData*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (SENSenseMessagePillData*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (SENSenseMessagePillData*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface SENSenseMessagePillDataBuilder : PBGeneratedMessageBuilder {
+@private
+  SENSenseMessagePillData* result;
+}
+
+- (SENSenseMessagePillData*) defaultInstance;
+
+- (SENSenseMessagePillDataBuilder*) clear;
+- (SENSenseMessagePillDataBuilder*) clone;
+
+- (SENSenseMessagePillData*) build;
+- (SENSenseMessagePillData*) buildPartial;
+
+- (SENSenseMessagePillDataBuilder*) mergeFrom:(SENSenseMessagePillData*) other;
+- (SENSenseMessagePillDataBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (SENSenseMessagePillDataBuilder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasDeviceId;
+- (NSString*) deviceId;
+- (SENSenseMessagePillDataBuilder*) setDeviceId:(NSString*) value;
+- (SENSenseMessagePillDataBuilder*) clearDeviceId;
+
+- (BOOL) hasBatteryLevel;
+- (long) batteryLevel;
+- (SENSenseMessagePillDataBuilder*) setBatteryLevel:(long) value;
+- (SENSenseMessagePillDataBuilder*) clearBatteryLevel;
+
+- (BOOL) hasUptime;
+- (long) uptime;
+- (SENSenseMessagePillDataBuilder*) setUptime:(long) value;
+- (SENSenseMessagePillDataBuilder*) clearUptime;
+
+- (BOOL) hasMotionDataEntrypted;
+- (NSData*) motionDataEntrypted;
+- (SENSenseMessagePillDataBuilder*) setMotionDataEntrypted:(NSData*) value;
+- (SENSenseMessagePillDataBuilder*) clearMotionDataEntrypted;
+
+- (BOOL) hasFirmwareVersion;
+- (long) firmwareVersion;
+- (SENSenseMessagePillDataBuilder*) setFirmwareVersion:(long) value;
+- (SENSenseMessagePillDataBuilder*) clearFirmwareVersion;
 @end
 
 @interface SENSenseMessageBuilder : PBGeneratedMessageBuilder {
@@ -327,6 +418,13 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 - (SENWifiEndpointSecurityType) securityType;
 - (SENSenseMessageBuilder*) setSecurityType:(SENWifiEndpointSecurityType) value;
 - (SENSenseMessageBuilder*) clearSecurityType;
+
+- (BOOL) hasPillData;
+- (SENSenseMessagePillData*) pillData;
+- (SENSenseMessageBuilder*) setPillData:(SENSenseMessagePillData*) value;
+- (SENSenseMessageBuilder*) setPillDataBuilder:(SENSenseMessagePillDataBuilder*) builderForValue;
+- (SENSenseMessageBuilder*) mergePillData:(SENSenseMessagePillData*) value;
+- (SENSenseMessageBuilder*) clearPillData;
 @end
 
 

@@ -63,4 +63,12 @@ message SENSenseMessage {
     optional int32 firmwareVersion = 13;
     repeated SENWifiEndpoint wifisDetected = 14;
     optional SENWifiEndpoint.SecurityType securityType = 15;
+    message PillData {
+        optional string deviceId = 1;
+        optional int32 batteryLevel = 2;
+        optional int32 uptime = 3;
+        optional bytes motionDataEntrypted = 4;
+        optional int32 firmwareVersion = 5;
+    }
+    optional PillData pillData = 16;
 }
