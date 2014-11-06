@@ -383,7 +383,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                 if (failure) failure (error);
                 [blockReader setNotifyValue:NO completion:nil];
             }];
-            [self scheduleMessageTimeOut:timeout withKey:cbKey];
+            [strongSelf scheduleMessageTimeOut:timeout withKey:cbKey];
             
             [reader setNotifyValue:YES completion:^(NSError *error) {
                 if (error != nil) {
@@ -721,7 +721,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                           
                           if (failure) failure (error);
                       }];
-                      [self scheduleMessageTimeOut:kSENSenseDefaultTimeout withKey:cbKey];
+                      [strongSelf scheduleMessageTimeOut:kSENSenseDefaultTimeout withKey:cbKey];
                       
                       [reader setNotifyValue:YES completion:^(NSError *error) {
                           __strong typeof(reader) strongReader = reader;
@@ -962,10 +962,8 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 #pragma mark - Cleanup
 
 - (void)dealloc {
-    if ([[self messageTimeoutTimers] count] > 0) {
-        for (NSTimer* timer in [[self messageTimeoutTimers] allValues]) {
-            [timer invalidate];
-        }
+    for (NSTimer* timer in [[self messageTimeoutTimers] allValues]) {
+        [timer invalidate];
     }
     
     if ([self isConnected]) {
