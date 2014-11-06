@@ -20,6 +20,10 @@
       throughWriter:(LGCharacteristic*)writer
             success:(SENSenseSuccessBlock)success
             failure:(SENSenseFailureBlock)failure;
+- (void)scheduleMessageTimeOut:(NSTimeInterval)timeOutInSecs withKey:(NSString*)key;
+- (void)timedOut:(NSTimer*)timer;
+- (NSMutableDictionary*)messageTimeoutTimers;
+- (NSMutableDictionary*)messageSuccessCallbacks;
 
 @end
 
@@ -231,6 +235,36 @@ describe(@"SENSenseManager", ^{
             [[expectFutureValue(@([responseError code])) shouldSoon] equal:@(SENSenseManagerErrorCodeConnectionFailed)];
         });
         
+    });
+    
+    describe(@"time outs", ^{
+        
+        __block NSString* key = nil;
+        __block SENSenseManager* manager = nil;
+        
+        beforeAll(^{
+            key = @"1";
+            manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
+            [manager scheduleMessageTimeOut:1.0f withKey:key];
+        });
+        
+        it(@"should cache the timer so that it can be cancelled", ^{
+            
+            [[[[manager messageTimeoutTimers] objectForKey:key] should] beNonNil];
+        });
+        
+        it(@"when timer fires, calling timedOut:, timer and callbacks should be nil", ^{
+            [[[[manager messageTimeoutTimers] objectForKey:key] should] beNonNil];
+            
+            [[manager messageSuccessCallbacks] setValue:^{} forKey:key];
+            [manager timedOut:[NSTimer timerWithTimeInterval:1.0f target:manager
+                                                     selector:@selector(timedOut:)
+                                                     userInfo:key
+                                                     repeats:NO]];
+            
+            [[[[manager messageTimeoutTimers] objectForKey:key] should] beNil];
+            [[[[manager messageSuccessCallbacks] objectForKey:key] should] beNil];
+        });
     });
     
 });
