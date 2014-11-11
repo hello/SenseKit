@@ -38,6 +38,15 @@ typedef enum {
 BOOL ErrorTypeIsValidValue(ErrorType value);
 
 typedef enum {
+  WiFiStateNoWlanConnected = 0,
+  WiFiStateWlanConnecting = 1,
+  WiFiStateWlanConnected = 2,
+  WiFiStateIpObtained = 3,
+} WiFiState;
+
+BOOL WiFiStateIsValidValue(WiFiState value);
+
+typedef enum {
   SENWifiEndpointSecurityTypeOpen = 0,
   SENWifiEndpointSecurityTypeWep = 1,
   SENWifiEndpointSecurityTypeWpa = 2,
@@ -172,6 +181,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
   BOOL hasType_:1;
   BOOL hasError_:1;
   BOOL hasSecurityType_:1;
+  BOOL hasWifiState_:1;
   long version;
   long batteryLevel;
   long uptime;
@@ -187,6 +197,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
   SENSenseMessageType type;
   ErrorType error;
   SENWifiEndpointSecurityType securityType;
+  WiFiState wifiState;
   PBAppendableArray * wifisDetectedArray;
 }
 - (BOOL) hasVersion;
@@ -204,6 +215,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 - (BOOL) hasFirmwareVersion;
 - (BOOL) hasSecurityType;
 - (BOOL) hasPillData;
+- (BOOL) hasWifiState;
 @property (readonly) long version;
 @property (readonly) SENSenseMessageType type;
 @property (readonly, strong) NSString* deviceId;
@@ -220,6 +232,7 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 @property (readonly, strong) PBArray * wifisDetected;
 @property (readonly) SENWifiEndpointSecurityType securityType;
 @property (readonly, strong) SENSenseMessagePillData* pillData;
+@property (readonly) WiFiState wifiState;
 - (SENWifiEndpoint*)wifisDetectedAtIndex:(NSUInteger)index;
 
 + (SENSenseMessage*) defaultInstance;
@@ -425,6 +438,11 @@ BOOL SENSenseMessageTypeIsValidValue(SENSenseMessageType value);
 - (SENSenseMessageBuilder*) setPillDataBuilder:(SENSenseMessagePillDataBuilder*) builderForValue;
 - (SENSenseMessageBuilder*) mergePillData:(SENSenseMessagePillData*) value;
 - (SENSenseMessageBuilder*) clearPillData;
+
+- (BOOL) hasWifiState;
+- (WiFiState) wifiState;
+- (SENSenseMessageBuilder*) setWifiState:(WiFiState) value;
+- (SENSenseMessageBuilder*) clearWifiState;
 @end
 
 
