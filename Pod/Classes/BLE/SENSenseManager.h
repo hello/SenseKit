@@ -65,7 +65,7 @@ typedef NS_ENUM (NSInteger, SENSenseManagerErrorCode) {
     SENSenseManagerErrorCodeFailToObtainIP = -15
 };
 
-typedef NS_ENUM(NSUInteger, SENWiFiConnectionState) {
+typedef NS_ENUM(NSInteger, SENWiFiConnectionState) {
     SENWiFiConnectionStateUnknown = -1,
     SENWiFiConnectionStateConnected = 0,
     SENWiFiConnectionStateConnecting = 1,
