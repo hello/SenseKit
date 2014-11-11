@@ -37,6 +37,17 @@ BOOL ErrorTypeIsValidValue(ErrorType value) {
       return NO;
   }
 }
+BOOL WiFiStateIsValidValue(WiFiState value) {
+  switch (value) {
+    case WiFiStateNoWlanConnected:
+    case WiFiStateWlanConnecting:
+    case WiFiStateWlanConnected:
+    case WiFiStateIpObtained:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface SENWifiEndpoint ()
 @property (strong) NSString* ssid;
 @property (strong) NSData* bssid;
@@ -424,6 +435,7 @@ BOOL SENWifiEndpointSecurityTypeIsValidValue(SENWifiEndpointSecurityType value) 
 @property (strong) PBAppendableArray * wifisDetectedArray;
 @property SENWifiEndpointSecurityType securityType;
 @property (strong) SENSenseMessagePillData* pillData;
+@property WiFiState wifiState;
 @end
 
 @implementation SENSenseMessage
@@ -535,6 +547,13 @@ BOOL SENWifiEndpointSecurityTypeIsValidValue(SENWifiEndpointSecurityType value) 
   hasPillData_ = !!value_;
 }
 @synthesize pillData;
+- (BOOL) hasWifiState {
+  return !!hasWifiState_;
+}
+- (void) setHasWifiState:(BOOL) value_ {
+  hasWifiState_ = !!value_;
+}
+@synthesize wifiState;
 - (void) dealloc {
   self.deviceId = nil;
   self.accountId = nil;
@@ -562,6 +581,7 @@ BOOL SENWifiEndpointSecurityTypeIsValidValue(SENWifiEndpointSecurityType value) 
     self.firmwareVersion = 0;
     self.securityType = SENWifiEndpointSecurityTypeOpen;
     self.pillData = [SENSenseMessagePillData defaultInstance];
+    self.wifiState = WiFiStateNoWlanConnected;
   }
   return self;
 }
@@ -646,6 +666,9 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   if (self.hasPillData) {
     [output writeMessage:16 value:self.pillData];
   }
+  if (self.hasWifiState) {
+    [output writeEnum:17 value:self.wifiState];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (long) serializedSize {
@@ -702,6 +725,9 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   }
   if (self.hasPillData) {
     size_ += computeMessageSize(16, self.pillData);
+  }
+  if (self.hasWifiState) {
+    size_ += computeEnumSize(17, self.wifiState);
   }
   size_ += self.unknownFields.serializedSize;
   memoizedSerializedSize = size_;
@@ -792,6 +818,9 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
                          withIndent:[NSString stringWithFormat:@"%@  ", indent]];
     [output appendFormat:@"%@}\n", indent];
   }
+  if (self.hasWifiState) {
+    [output appendFormat:@"%@%@: %d\n", indent, @"wifiState", self.wifiState];
+  }
   [self.unknownFields writeDescriptionTo:output withIndent:indent];
 }
 - (BOOL) isEqual:(id)other {
@@ -834,6 +863,8 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
       (!self.hasSecurityType || self.securityType == otherMessage.securityType) &&
       self.hasPillData == otherMessage.hasPillData &&
       (!self.hasPillData || [self.pillData isEqual:otherMessage.pillData]) &&
+      self.hasWifiState == otherMessage.hasWifiState &&
+      (!self.hasWifiState || self.wifiState == otherMessage.wifiState) &&
       (self.unknownFields == otherMessage.unknownFields || (self.unknownFields != nil && [self.unknownFields isEqual:otherMessage.unknownFields]));
 }
 - (NSUInteger) hash {
@@ -885,6 +916,9 @@ static SENSenseMessage* defaultSENSenseMessageInstance = nil;
   }
   if (self.hasPillData) {
     hashCode = hashCode * 31 + [self.pillData hash];
+  }
+  if (self.hasWifiState) {
+    hashCode = hashCode * 31 + self.wifiState;
   }
   hashCode = hashCode * 31 + [self.unknownFields hash];
   return hashCode;
@@ -1403,6 +1437,9 @@ static SENSenseMessagePillData* defaultSENSenseMessagePillDataInstance = nil;
   if (other.hasPillData) {
     [self mergePillData:other.pillData];
   }
+  if (other.hasWifiState) {
+    [self setWifiState:other.wifiState];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1508,6 +1545,15 @@ static SENSenseMessagePillData* defaultSENSenseMessagePillDataInstance = nil;
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self setPillData:[subBuilder buildPartial]];
+        break;
+      }
+      case 136: {
+        WiFiState value = (WiFiState)[input readEnum];
+        if (WiFiStateIsValidValue(value)) {
+          [self setWifiState:value];
+        } else {
+          [unknownFields mergeVarintField:17 value:value];
+        }
         break;
       }
     }
@@ -1790,6 +1836,22 @@ static SENSenseMessagePillData* defaultSENSenseMessagePillDataInstance = nil;
 - (SENSenseMessageBuilder*) clearPillData {
   result.hasPillData = NO;
   result.pillData = [SENSenseMessagePillData defaultInstance];
+  return self;
+}
+- (BOOL) hasWifiState {
+  return result.hasWifiState;
+}
+- (WiFiState) wifiState {
+  return result.wifiState;
+}
+- (SENSenseMessageBuilder*) setWifiState:(WiFiState) value {
+  result.hasWifiState = YES;
+  result.wifiState = value;
+  return self;
+}
+- (SENSenseMessageBuilder*) clearWifiState {
+  result.hasWifiState = NO;
+  result.wifiState = WiFiStateNoWlanConnected;
   return self;
 }
 @end

@@ -11,6 +11,13 @@ enum ErrorType {
     FAIL_TO_OBTAIN_IP = 9;
 }
 
+enum WiFiState {
+    NO_WLAN_CONNECTED = 0;
+    WLAN_CONNECTING = 1;
+    WLAN_CONNECTED = 2;
+    IP_OBTAINED = 3;
+}
+
 message SENWifiEndpoint {
     enum SecurityType {
         OPEN = 0;
@@ -71,4 +78,5 @@ message SENSenseMessage {
         optional int32 firmwareVersion = 5;
     }
     optional PillData pillData = 16;
+    optional WiFiState wifiState = 17;
 }
