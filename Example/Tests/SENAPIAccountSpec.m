@@ -54,7 +54,7 @@ describe(@"SENAPIAccount", ^{
             NSDictionary* response = @{
                 @"id" : @"0000-00-00000",
                 @"last_modified" : @(1409861723884),
-                @"dob" : @(343440000000)
+                @"dob" : @"1980-11-19"
             };
             
             SENAccount* account = [SENAPIAccount accountFromResponse:response];
