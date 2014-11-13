@@ -24,7 +24,7 @@
                               timeScope:(NSString*)scope
                              completion:(SENAPIDataBlock)completion
 {
-    NSTimeZone* zone = [NSTimeZone systemTimeZone];
+    NSTimeZone* zone = [NSTimeZone localTimeZone];
     NSTimeInterval seconds = [[NSDate date] timeIntervalSince1970] + [zone secondsFromGMT];
     NSString* timestamp = [NSString stringWithFormat:@"%.0f", seconds * 1000];
     NSString* path = [NSString stringWithFormat:@"room/%@/%@", sensorName, scope];
