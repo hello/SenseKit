@@ -51,8 +51,8 @@
 // Amplitude-iOS
 #define COCOAPODS_POD_AVAILABLE_Amplitude_iOS
 #define COCOAPODS_VERSION_MAJOR_Amplitude_iOS 2
-#define COCOAPODS_VERSION_MINOR_Amplitude_iOS 1
-#define COCOAPODS_VERSION_PATCH_Amplitude_iOS 1
+#define COCOAPODS_VERSION_MINOR_Amplitude_iOS 2
+#define COCOAPODS_VERSION_PATCH_Amplitude_iOS 2
 
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack
@@ -94,7 +94,7 @@
 #define COCOAPODS_POD_AVAILABLE_NSJSONSerialization_NSNullRemoval
 #define COCOAPODS_VERSION_MAJOR_NSJSONSerialization_NSNullRemoval 1
 #define COCOAPODS_VERSION_MINOR_NSJSONSerialization_NSNullRemoval 0
-#define COCOAPODS_VERSION_PATCH_NSJSONSerialization_NSNullRemoval 0
+#define COCOAPODS_VERSION_PATCH_NSJSONSerialization_NSNullRemoval 1
 
 // SHSProtoBuf
 #define COCOAPODS_POD_AVAILABLE_SHSProtoBuf

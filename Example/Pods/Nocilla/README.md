@@ -1,4 +1,5 @@
-# Nocilla [![](https://api.travis-ci.org/luisobo/Nocilla.png?branch=master)](https://travis-ci.org/luisobo/Nocilla)
+# Nocilla [![CI Status](http://img.shields.io/travis/luisobo/Nocilla.svg?style=flat&branch=master)](https://travis-ci.org/luisobo/Nocilla)[![Version](https://img.shields.io/cocoapods/v/Nocilla.svg?style=flat)](http://cocoadocs.org/docsets/Nocilla)[![License](https://img.shields.io/cocoapods/l/Nocilla.svg?style=flat)](http://cocoadocs.org/docsets/Nocilla)[![Platform](https://img.shields.io/cocoapods/p/Nocilla.svg?style=flat)](http://cocoadocs.org/docsets/Nocilla)
+
 Stunning HTTP stubbing for iOS and OS X. Testing HTTP requests has never been easier.
 
 This library was inspired by [WebMock](https://github.com/bblimke/webmock) and it's using [this approach](http://www.infinite-loop.dk/blog/2011/09/using-nsurlprotocol-for-injecting-test-data/) to stub the requests.
@@ -13,15 +14,6 @@ This library was inspired by [WebMock](https://github.com/bblimke/webmock) and i
 * Fast.
 * Extendable to support more HTTP libraries.
 
-```ruby
-pod 'Nocilla', :podspec => 'https://raw.github.com/luisobo/Nocilla/master/Nocilla.podspec'
-```
-
-```objc
-[[LSNocilla sharedInstance] registerHook:[[LSASIHTTPRequestHook alloc] init]];
-[[LSNocilla sharedInstance] start];
-```
-
 ## Installation
 ### As a [CocoaPod](http://cocoapods.org/)
 Just add this to your Podfile
@@ -35,7 +27,7 @@ pod 'Nocilla'
 ## Usage
 _Yes, the following code is valid Objective-C, or at least, it should be_
 
-The following examples are described using [Kiwi](https://github.com/allending/Kiwi)
+The following examples are described using [Kiwi](https://github.com/kiwi-bdd/Kiwi)
 
 ### Common parts
 Until Nocilla can hook directly into Kiwi, you will have to include the following snippet in the specs you want to use Nocilla:
@@ -106,6 +98,14 @@ withHeaders(@{@"Accept": @"application/json", @"X-CUSTOM-HEADER": @"abcf2fbc6abg
 withBody([@"foo" dataUsingEncoding:NSUTF8StringEncoding]);
 ```
 
+It even works with regular expressions!
+
+```objc
+stubRequest(@"POST", @"https://api.example.com/dogs.json").
+withHeaders(@{@"Accept": @"application/json", @"X-CUSTOM-HEADER": @"abcf2fbc6abgf"}).
+withBody(@"^The body start with this".regex);
+```
+
 #### Returning a specific status code
 ```objc
 stubRequest(@"GET", @"http://www.google.com").andReturn(404);
@@ -168,6 +168,15 @@ andFailWithError([NSError errorWithDomain:@"foo" code:123 userInfo:nil]);
 ### Unexpected requests
 If some request is made but it wasn't stubbed, Nocilla won't let that request hit the real world. In that case your test should fail.
 At this moment Nocilla will raise an exception with a meaningful message about the error and how to solve it, including a snippet of code on how to stub the unexpected request.
+
+## Who uses Nocilla.
+
+### Submit a PR to add your company here!
+
+- [Groupon](http://www.groupon.com)
+- [Pixable](http://www.pixable.com)
+- [Jackthreads](https://www.jackthreads.com)
+- [ShopKeep](http://www.shopkeep.com)
 
 ## Other alternatives
 * [ILTesting](https://github.com/InfiniteLoopDK/ILTesting)
