@@ -158,12 +158,18 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
     [[self callbacksByObserver] removeObjectForKey:listener];
 }
 
-- (void)submitAnswer:(SENAnswer*)answer completion:(void(^)(NSError* error))completion {
+- (void)submitAnswer:(SENAnswer*)answer
+         forQuestion:(SENQuestion*)question
+          completion:(void(^)(NSError* error))completion {
     // Let the API to fail with callback if answer parameter is insuffcient
     __weak typeof (self) weakSelf = self;
-    [SENAPIQuestions sendAnswer:answer completion:^(id data, NSError *error) {
+    [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
         __strong typeof (weakSelf) strongSelf = weakSelf;
         if (strongSelf && !error) {
+            // note that by answering one question, doesn't necessarily mean we
+            // all questions have been asked.  For the sake of user experience,
+            // we will not annoy the user with more questions.  Same applies to
+            // skipping a question
             [strongSelf setQuestionsAskedToday];
         }
         if (completion) completion (error);
