@@ -166,10 +166,11 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
     [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
         __strong typeof (weakSelf) strongSelf = weakSelf;
         if (strongSelf && !error) {
-            // note that by answering one question, doesn't necessarily mean we
-            // all questions have been asked.  For the sake of user experience,
-            // we will not annoy the user with more questions.  Same applies to
-            // skipping a question
+            // note that by answering one question, we aren't neccessarily saying
+            // we have asked all the questions for the day, but for user experience
+            // sake we will not annoy the user with more questions.  Same applies to
+            // skipping a question.  This is why we will mark all questions as
+            // asked today, even if only one in the set is asked / answered
             [strongSelf setQuestionsAskedToday];
         }
         if (completion) completion (error);
