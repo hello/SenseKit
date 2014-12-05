@@ -15,6 +15,6 @@
 // Nocilla
 #define COCOAPODS_POD_AVAILABLE_Nocilla
 #define COCOAPODS_VERSION_MAJOR_Nocilla 0
-#define COCOAPODS_VERSION_MINOR_Nocilla 8
-#define COCOAPODS_VERSION_PATCH_Nocilla 1
+#define COCOAPODS_VERSION_MINOR_Nocilla 9
+#define COCOAPODS_VERSION_PATCH_Nocilla 0
 
