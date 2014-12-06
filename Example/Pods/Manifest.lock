@@ -32,7 +32,7 @@ PODS:
   - FXKeychain (1.5.2)
   - Kiwi (2.3.1)
   - LGBluetooth (1.1.4)
-  - Nocilla (HEAD based on 0.8.1)
+  - Nocilla (HEAD based on 0.9.0)
   - NSJSONSerialization-NSNullRemoval (1.0.1)
   - SenseKit (0.1.0):
     - SenseKit/Analytics
@@ -83,7 +83,7 @@ SPEC CHECKSUMS:
   FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   Kiwi: 73e1400209055ee9c8ba78c6012b6b642d0fb9f7
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
-  Nocilla: e573c2bf9113c8d77782b695a2f9362b7bc44e72
+  Nocilla: 4d713c56e7357fd0cac0363854d4a58021ad3f41
   NSJSONSerialization-NSNullRemoval: b3f02955f898d01205567e3f1292e4aae3ad547e
   SenseKit: b1eb6058e7ab9ce8d38fd5c3f9b8f400a03cfb91
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
