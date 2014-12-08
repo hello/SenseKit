@@ -73,7 +73,7 @@ describe(@"SENAPIFeedback", ^{
             });
 
             it(@"does not send the wakeup time", ^{
-                [[requestParams[@"time"] should] beNil];
+                [[requestParams[@"hour"] should] beNil];
             });
 
             it(@"sends good == true", ^{
@@ -92,7 +92,7 @@ describe(@"SENAPIFeedback", ^{
             });
 
             it(@"does not send the wakeup time", ^{
-                [[requestParams[@"time"] should] beNil];
+                [[requestParams[@"hour"] should] beNil];
             });
 
             it(@"sends good == true", ^{
@@ -115,7 +115,7 @@ describe(@"SENAPIFeedback", ^{
             });
 
             it(@"sends the accurate wakeup time", ^{
-                [[expectFutureValue(requestParams[@"time"]) shouldSoon] equal:@"07:15"];
+                [[expectFutureValue(requestParams[@"hour"]) shouldSoon] equal:@"07:15"];
             });
         });
     });
