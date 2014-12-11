@@ -32,6 +32,28 @@ describe(@"SENSense", ^{
             
             [[[sense deviceId] should] beNonNil];
             [[@([sense mode]) should] equal:@(SENSenseModePairing)];
+            
+            deviceIdWithMode = [rawId stringByAppendingString:@"0"];
+            advertisementData = @{
+                CBAdvertisementDataServiceDataKey : @{@"data" : [deviceIdWithMode dataUsingEncoding:NSUTF8StringEncoding]}
+            };
+            
+            [sense processAdvertisementData:advertisementData];
+            
+            [[[sense deviceId] should] beNonNil];
+            [[@([sense mode]) should] equal:@(SENSenseModeNormal)];
+        });
+        
+        it(@"mode should be unknown when not set", ^{
+            NSString* rawId = @"EEF54712354EEF99";
+            NSDictionary* advertisementData = @{
+                CBAdvertisementDataServiceDataKey : @{@"data" : [rawId dataUsingEncoding:NSUTF8StringEncoding]}
+            };
+            SENSense* sense = [[SENSense alloc] init];
+            [sense processAdvertisementData:advertisementData];
+            
+            [[[sense deviceId] should] beNonNil];
+            [[@([sense mode]) should] equal:@(SENSenseModeUnknown)];
         });
 
         
