@@ -20,18 +20,20 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Amplitude-iOS (2.2.2)
-  - CocoaLumberjack (2.0.0-beta4):
+  - CocoaLumberjack (2.0.0-rc):
     - CocoaLumberjack/Default
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (2.0.0-beta4)
-  - CocoaLumberjack/Default (2.0.0-beta4):
+  - CocoaLumberjack/Core (2.0.0-rc)
+  - CocoaLumberjack/Default (2.0.0-rc):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-beta4):
+  - CocoaLumberjack/Extensions (2.0.0-rc):
     - CocoaLumberjack/Default
   - FXKeychain (1.5.2)
   - Kiwi (2.3.1)
   - LGBluetooth (1.1.4)
+  - Mixpanel (2.6.2):
+    - Mixpanel/MPCategoryHelpers
+  - Mixpanel/MPCategoryHelpers (2.6.2)
   - Nocilla (HEAD based on 0.9.0)
   - NSJSONSerialization-NSNullRemoval (1.0.1)
   - SenseKit (0.1.0):
@@ -41,8 +43,8 @@ PODS:
     - SenseKit/Model
     - SenseKit/Service
   - SenseKit/Analytics (0.1.0):
-    - Amplitude-iOS
     - CocoaLumberjack
+    - Mixpanel
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.4.1)
     - FXKeychain (~> 1.5.1)
@@ -78,14 +80,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  Amplitude-iOS: cc96a1aca607fc37ff31613d3e8bddcdf670a398
-  CocoaLumberjack: 24153b24b17d853d7182b22b128971fb98e8cb18
+  CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
   FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   Kiwi: 73e1400209055ee9c8ba78c6012b6b642d0fb9f7
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
+  Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
   Nocilla: 4d713c56e7357fd0cac0363854d4a58021ad3f41
   NSJSONSerialization-NSNullRemoval: b3f02955f898d01205567e3f1292e4aae3ad547e
-  SenseKit: b1eb6058e7ab9ce8d38fd5c3f9b8f400a03cfb91
+  SenseKit: a98e7d0a4684f8585741b5a038b5a281da92b078
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 

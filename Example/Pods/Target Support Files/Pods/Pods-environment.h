@@ -48,12 +48,6 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 4
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 1
 
-// Amplitude-iOS
-#define COCOAPODS_POD_AVAILABLE_Amplitude_iOS
-#define COCOAPODS_VERSION_MAJOR_Amplitude_iOS 2
-#define COCOAPODS_VERSION_MINOR_Amplitude_iOS 2
-#define COCOAPODS_VERSION_PATCH_Amplitude_iOS 2
-
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack
 #define COCOAPODS_VERSION_MAJOR_CocoaLumberjack 2
@@ -89,6 +83,18 @@
 #define COCOAPODS_VERSION_MAJOR_LGBluetooth 1
 #define COCOAPODS_VERSION_MINOR_LGBluetooth 1
 #define COCOAPODS_VERSION_PATCH_LGBluetooth 4
+
+// Mixpanel
+#define COCOAPODS_POD_AVAILABLE_Mixpanel
+#define COCOAPODS_VERSION_MAJOR_Mixpanel 2
+#define COCOAPODS_VERSION_MINOR_Mixpanel 6
+#define COCOAPODS_VERSION_PATCH_Mixpanel 2
+
+// Mixpanel/MPCategoryHelpers
+#define COCOAPODS_POD_AVAILABLE_Mixpanel_MPCategoryHelpers
+#define COCOAPODS_VERSION_MAJOR_Mixpanel_MPCategoryHelpers 2
+#define COCOAPODS_VERSION_MINOR_Mixpanel_MPCategoryHelpers 6
+#define COCOAPODS_VERSION_PATCH_Mixpanel_MPCategoryHelpers 2
 
 // NSJSONSerialization-NSNullRemoval
 #define COCOAPODS_POD_AVAILABLE_NSJSONSerialization_NSNullRemoval
