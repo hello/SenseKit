@@ -34,13 +34,6 @@ typedef NS_ENUM(NSUInteger, SENServiceQuestionsErrorCode) {
 - (BOOL)isUpdating;
 
 /**
- * Inform the service that the questions have been presented
- * to the user, which will stop any further actions until the
- * next cycle
- */
-- (void)setQuestionsAskedToday;
-
-/**
  * Update questions, if any.
  *
  * @param completion: called upon completion of updating questions.

@@ -17,8 +17,6 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
 
 @interface SENServiceQuestions()
 
-@property (nonatomic, strong) NSDate* lastDateAsked;
-@property (nonatomic, strong) NSDate* today;
 @property (nonatomic, strong) NSDate* dateQuestionsPulled;
 @property (nonatomic, copy)   NSArray* todaysQuestions;
 @property (nonatomic, assign, getter=isUpdating) BOOL updating;
@@ -40,32 +38,16 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
     return [self sharedService];
 }
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        [self restore];
-    }
-    return self;
-}
-
-#pragma mark - SENService Override
-
-- (void)serviceBecameActive {
-    [self restore];
-}
-
-- (void)serviceWillBecomeInactive {
-    [self save];
-}
-
 #pragma mark - Helpers
 
 - (void)updateQuestions:(SENServiceQuestionBlock)completion {
-    if ([self haveAskedQuestionsForToday] || ![SENAuthorizationService isAuthorized]) {
+    if (![SENAuthorizationService isAuthorized]) {
         if (completion) completion (nil, nil);
         return;
     }
-    if ([self todaysQuestions] != nil && [self isToday:[self dateQuestionsPulled]]) {
+    
+    // if there are questions for today still left, return those
+    if ([[self todaysQuestions] count] > 0 && [self isToday:[self dateQuestionsPulled]]) {
         if (completion) completion ([self todaysQuestions], nil);
         return;
     }
@@ -77,31 +59,18 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
         return;
     }
     
+    NSDate* today = [self todayWithoutTime];
     [self setUpdating:YES];
     __weak typeof(self) weakSelf = self;
-    [SENAPIQuestions getQuestionsFor:[self today] completion:^(NSArray* questions, NSError *error) {
+    [SENAPIQuestions getQuestionsFor:today completion:^(NSArray* questions, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             [strongSelf setTodaysQuestions:questions];
-            [strongSelf setDateQuestionsPulled:[strongSelf today]];
+            [strongSelf setDateQuestionsPulled:today];
             [strongSelf setUpdating:NO];
             if (completion) completion (questions, error);
         }
     }];
-}
-
-- (void)restore {
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    [self setLastDateAsked:[defaults objectForKey:kSENServiceQuestionsKeyDate]];
-    [self setToday:[self todayWithoutTime]];
-}
-
-- (void)save {
-    if ([self lastDateAsked] != nil) {
-        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:[self lastDateAsked] forKey:kSENServiceQuestionsKeyDate];
-        [defaults synchronize];
-    }
 }
 
 - (NSDate*)todayWithoutTime {
@@ -120,21 +89,18 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
 }
 
 - (BOOL)isToday:(NSDate*)date {
-    return date != nil ? [[self today] compare:date] == NSOrderedSame : NO;
+    return date != nil ? [[self todayWithoutTime] compare:date] == NSOrderedSame : NO;
 }
 
-- (BOOL)haveAskedQuestionsForToday {
-    return [self lastDateAsked] != nil
-    && [self isToday:[self lastDateAsked]];
+- (void)removeQuestion:(SENQuestion*)question {
+    if (question == nil) return;
+    
+    NSMutableArray* questions = [[self todaysQuestions] mutableCopy];
+    [questions removeObject:question];
+    [self setTodaysQuestions:questions];
 }
 
 #pragma mark - Public
-
-- (void)setQuestionsAskedToday {
-    [self setLastDateAsked:[self today]];
-    [self setTodaysQuestions:nil];
-    [self save];
-}
 
 - (void)submitAnswer:(SENAnswer*)answer
          forQuestion:(SENQuestion*)question
@@ -147,16 +113,12 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
            completion:(void(^)(NSError* error))completion {
     
     // Let the API to fail with callback if answer parameter is insuffcient
+    __block SENQuestion* questionToUpdate = question;
     __weak typeof (self) weakSelf = self;
     [SENAPIQuestions sendAnswers:answers forQuestion:question completion:^(id data, NSError *error) {
         __strong typeof (weakSelf) strongSelf = weakSelf;
         if (strongSelf && !error) {
-            // note that by answering one question, we aren't neccessarily saying
-            // we have asked all the questions for the day, but for user experience
-            // sake we will not annoy the user with more questions.  Same applies to
-            // skipping a question.  This is why we will mark all questions as
-            // asked today, even if only one in the set is asked / answered
-            [strongSelf setQuestionsAskedToday];
+            [strongSelf removeQuestion:questionToUpdate];
         }
         if (completion) completion (error);
     }];
@@ -166,14 +128,12 @@ static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.quest
 - (void)skipQuestion:(SENQuestion*)question
           completion:(void(^)(NSError* error))completion {
     // Let the API to fail with callback if question parameter is insuffcient
+    __block SENQuestion* questionToUpdate = question;
     __weak typeof (self) weakSelf = self;
     [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
         __strong typeof (weakSelf) strongSelf = weakSelf;
         if (strongSelf && [error code] != SENAPIQuestionErrorInvalidParameter) {
-            // set questionas as asked for today unless error exists and it's
-            // an invalid parameter.  If error returned from any other reason,
-            // we will simply just not ask again for today.
-            [strongSelf setQuestionsAskedToday];
+            [strongSelf removeQuestion:questionToUpdate];
         }
         if (completion) completion (error);
     }];

@@ -37,27 +37,11 @@ describe(@"SENServiceQuestionsSpec", ^{
         
     });
     
-    describe(@"-setQuestionsAskedToday", ^{
-        
-        it(@"should set key in NSUserDefaults to", ^{
-            
-            SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            [service setQuestionsAskedToday];
-            
-            NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-            id object = [defaults objectForKey:@"kSENServiceQuestionsKeyDate"];
-            [[object should] beNonNil];
-            
-        });
-        
-    });
-    
     describe(@"-updateQuestions:", ^{
         
-        it(@"should return nil for questions if already asked", ^{
+        it(@"should return nil for questions if not authorized", ^{
             
             SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            [service setQuestionsAskedToday];
             
             __block NSArray* fakeQuestions = nil;
             __block NSError* noError = nil;
