@@ -8,6 +8,15 @@
 
 #import <Kiwi/Kiwi.h>
 #import "SENServiceQuestions.h"
+#import "SENQuestion.h"
+
+@interface SENServiceQuestions()
+
+@property (nonatomic, strong) NSDate* lastDateAsked;
+@property (nonatomic, copy)   NSArray* todaysQuestions;
+@property (nonatomic, strong) NSDate* dateQuestionsPulled;
+
+@end
 
 SPEC_BEGIN(SENServiceQuestionsSpec)
 
@@ -28,49 +37,21 @@ describe(@"SENServiceQuestionsSpec", ^{
         
     });
     
-    describe(@"-setQuestionsAskedToday", ^{
+    describe(@"-updateQuestions:", ^{
         
-        it(@"should set key in NSUserDefaults to", ^{
+        it(@"should return nil for questions if not authorized", ^{
             
             SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            [service setQuestionsAskedToday];
             
-            NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-            id object = [defaults objectForKey:@"kSENServiceQuestionsKeyDate"];
-            [[object should] beNonNil];
+            __block NSArray* fakeQuestions = nil;
+            __block NSError* noError = nil;
+            [service updateQuestions:^(NSArray *questions, NSError *error) {
+                fakeQuestions = questions;
+                noError = error;
+            }];
             
-        });
-        
-    });
-    
-    describe(@"-listenForNewQuestions:", ^{
-        
-        it(@"if callback is nil / null, should not return observer", ^{
-            
-            SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            id observer = [service listenForNewQuestions:nil];
-            [[observer should] beNil];
-            
-        });
-        
-        it(@"if callback is not nil, observer should not be nil either", ^{
-            
-            SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            id observer = [service listenForNewQuestions:^(NSArray *questions) {}];
-            [[observer should] beNonNil];
-            
-        });
-        
-    });
-    
-    describe(@"-stopListening:", ^{
-        
-        it(@"passing nil should still be OK", ^{
-            
-            SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            [[theBlock(^{
-                [service stopListening:nil];
-            }) shouldNot] raise];
+            [[expectFutureValue(fakeQuestions) shouldEventually] beNil];
+            [[expectFutureValue(noError) shouldEventually] beNil];
             
         });
         
