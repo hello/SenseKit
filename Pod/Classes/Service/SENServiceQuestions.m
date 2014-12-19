@@ -13,6 +13,7 @@
 #import "SENQuestion.h"
 
 static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDate";
+static NSString* const SENServiceQuestionsErrorDomain = @"is.hello.service.questions";
 
 @interface SENServiceQuestions()
 
@@ -20,7 +21,6 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
 @property (nonatomic, strong) NSDate* today;
 @property (nonatomic, strong) NSDate* dateQuestionsPulled;
 @property (nonatomic, copy)   NSArray* todaysQuestions;
-@property (nonatomic, strong) NSMutableDictionary* callbacksByObserver;
 @property (nonatomic, assign, getter=isUpdating) BOOL updating;
 
 @end
@@ -44,7 +44,6 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
     self = [super init];
     if (self) {
         [self restore];
-        [self updateQuestions];
     }
     return self;
 }
@@ -53,7 +52,6 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
 
 - (void)serviceBecameActive {
     [self restore];
-    [self updateQuestions];
 }
 
 - (void)serviceWillBecomeInactive {
@@ -62,30 +60,34 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
 
 #pragma mark - Helpers
 
-- (void)updateQuestions {
-    if (![self haveAskedQuestionsForToday] && [SENAuthorizationService isAuthorized]) {
-        if ([self todaysQuestions] != nil && [self isToday:[self dateQuestionsPulled]]) {
-            // just tell the observer there are questions to be asked to the user
-            [self notifyObserversOfQuestions];
-            return;
-        }
-        
-        if ([self isUpdating]) {
-            return;
-        }
-        
-        [self setUpdating:YES];
-        __weak typeof(self) weakSelf = self;
-        [SENAPIQuestions getQuestionsFor:[self today] completion:^(NSArray* questions, NSError *error) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf) {
-                [strongSelf setTodaysQuestions:questions];
-                [strongSelf setDateQuestionsPulled:[strongSelf today]];
-                [strongSelf notifyObserversOfQuestions];
-                [strongSelf setUpdating:NO];
-            }
-        }];
+- (void)updateQuestions:(SENServiceQuestionBlock)completion {
+    if ([self haveAskedQuestionsForToday] || ![SENAuthorizationService isAuthorized]) {
+        if (completion) completion (nil, nil);
+        return;
     }
+    if ([self todaysQuestions] != nil && [self isToday:[self dateQuestionsPulled]]) {
+        if (completion) completion ([self todaysQuestions], nil);
+        return;
+    }
+    
+    if ([self isUpdating]) {
+        if (completion) completion (nil, [NSError errorWithDomain:SENServiceQuestionsErrorDomain
+                                                             code:SENServiceQuestionsErrorCodeUpdateInProgress
+                                                         userInfo:nil]);
+        return;
+    }
+    
+    [self setUpdating:YES];
+    __weak typeof(self) weakSelf = self;
+    [SENAPIQuestions getQuestionsFor:[self today] completion:^(NSArray* questions, NSError *error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            [strongSelf setTodaysQuestions:questions];
+            [strongSelf setDateQuestionsPulled:[strongSelf today]];
+            [strongSelf setUpdating:NO];
+            if (completion) completion (questions, error);
+        }
+    }];
 }
 
 - (void)restore {
@@ -99,13 +101,6 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:[self lastDateAsked] forKey:kSENServiceQuestionsKeyDate];
         [defaults synchronize];
-    }
-}
-
-- (void)notifyObserversOfQuestions {
-    for (NSString* key in [self callbacksByObserver]) {
-        SENServiceQuestionBlock callback = [[self callbacksByObserver] objectForKey:key];
-        callback([self todaysQuestions]);
     }
 }
 
@@ -139,23 +134,6 @@ static NSString* const kSENServiceQuestionsKeyDate = @"kSENServiceQuestionsKeyDa
     [self setLastDateAsked:[self today]];
     [self setTodaysQuestions:nil];
     [self save];
-}
-
-- (id)listenForNewQuestions:(void(^)(NSArray* questions))callback {
-    if (callback == nil || callback == NULL) return nil;
-    
-    if ([self callbacksByObserver] == nil) {
-        [self setCallbacksByObserver:[NSMutableDictionary dictionary]];
-    }
-    
-    NSString* uuid = [[NSUUID UUID] UUIDString];
-    [[self callbacksByObserver] setValue:[callback copy] forKey:uuid];
-    return uuid;
-}
-
-- (void)stopListening:(id)listener {
-    if (listener == nil || listener == NULL) return;
-    [[self callbacksByObserver] removeObjectForKey:listener];
 }
 
 - (void)submitAnswer:(SENAnswer*)answer
