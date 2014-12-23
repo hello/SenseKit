@@ -1021,6 +1021,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
        success:(SENSenseSuccessBlock)success
        failure:(SENSenseFailureBlock)failure {
     
+    DDLogVerbose(@"setting LED to state %ld", (long)state);
     SENSenseMessageType type = [self commandForLEDState:state];
     SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
     
