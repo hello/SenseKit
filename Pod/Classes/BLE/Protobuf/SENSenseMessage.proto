@@ -31,6 +31,19 @@ message SENWifiEndpoint {
     required SecurityType security = 5;
 }
 
+message PillData {
+    optional string deviceId = 1;
+    optional int32 batteryLevel = 2;
+    optional int32 uptime = 3;
+    optional bytes motionDataEntrypted = 4;
+    optional int32 firmwareVersion = 5;
+}
+
+message BatchedPillData {
+    repeated PillData pills = 1;
+    required string device_id = 2;
+}
+
 message SENSenseMessage {
     enum Type {
         SET_TIME = 0;
@@ -54,6 +67,12 @@ message SENSenseMessage {
         PILL_HEARTBEAT = 18;
         PILL_DFU_BEGIN = 19;
         FACTORY_RESET = 20;
+        LED_BUSY = 25;
+        LED_TRIPPY = 26;
+        LED_OFF = 27;
+        SCAN_WIFI = 28;
+        GET_NEXT_WIFI_AP = 29;
+        LED_SUCCESS = 30;
     }
     required int32 version = 1;
     required Type type = 2;
@@ -70,13 +89,6 @@ message SENSenseMessage {
     optional int32 firmwareVersion = 13;
     repeated SENWifiEndpoint wifisDetected = 14;
     optional SENWifiEndpoint.SecurityType securityType = 15;
-    message PillData {
-        optional string deviceId = 1;
-        optional int32 batteryLevel = 2;
-        optional int32 uptime = 3;
-        optional bytes motionDataEntrypted = 4;
-        optional int32 firmwareVersion = 5;
-    }
     optional PillData pillData = 16;
     optional WiFiState wifiState = 17;
 }
