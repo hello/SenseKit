@@ -33,10 +33,45 @@ describe(@"SENServiceAccountSpec", ^{
     
     describe(@"-changePassword:toNewPassword:completion", ^{
         
-        it(@"should call api", ^{
+        it(@"should return error if passwords are not provided", ^{
             
-            [[SENAPIAccount should] receive:@selector(changePassword:toNewPassword:completionBlock:)];
-            [[SENServiceAccount sharedService] changePassword:@"test" toNewPassword:@"test123" completion:nil];
+            __block NSError* invalidError = nil;
+            [[SENServiceAccount sharedService] changePassword:nil toNewPassword:@"test123" completion:^(NSError *error) {
+                invalidError = error;
+            }];
+            
+            [[expectFutureValue(invalidError) should] beNonNil];
+            [[expectFutureValue(@([invalidError code])) should] equal:@(SENServiceAccountErrorInvalidArg)];
+        });
+        
+        it(@"should call refreshAccount:", ^{
+            
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [[service should] receive:@selector(refreshAccount:)];
+            [service changePassword:@"test" toNewPassword:@"test123" completion:nil];
+            
+        });
+        
+    });
+    
+    describe(@"-changeEmail:completion", ^{
+        
+        it(@"should return error if email not provided", ^{
+            
+            __block NSError* invalidError = nil;
+            [[SENServiceAccount sharedService] changeEmail:nil completion:^(NSError *error) {
+                invalidError = error;
+            }];
+            
+            [[expectFutureValue(invalidError) should] beNonNil];
+            [[expectFutureValue(@([invalidError code])) should] equal:@(SENServiceAccountErrorInvalidArg)];
+        });
+        
+        it(@"should call refreshAccount:", ^{
+            
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [[service should] receive:@selector(refreshAccount:)];
+            [service changeEmail:@"test@test.com" completion:nil];
             
         });
         
