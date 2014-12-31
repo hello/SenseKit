@@ -73,6 +73,7 @@ message SENSenseMessage {
         SCAN_WIFI = 28;
         GET_NEXT_WIFI_AP = 29;
         LED_SUCCESS = 30;
+        PUSH_DATA = 31;
     }
     required int32 version = 1;
     required Type type = 2;
