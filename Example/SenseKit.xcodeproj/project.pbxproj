@@ -43,6 +43,7 @@
 		BF781E4519DF216C00B68EBC /* SENSettingsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */; };
 		BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */; };
 		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
+		BFF03EC61A533D1E00BD65D4 /* SENServiceDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */; };
 		C59505E51C324DF5A72B929C /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +107,7 @@
 		BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSettingsSpec.m; sourceTree = "<group>"; };
 		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAccountSpec.m; sourceTree = "<group>"; };
 		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; };
+		BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceDeviceSpec.m; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F567B2B7C8E6429891E89AFC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SenseKit.podspec; path = ../SenseKit.podspec; sourceTree = "<group>"; tabWidth = 2; };
@@ -279,6 +281,7 @@
 			children = (
 				BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */,
 				BF0E53961A327F76002FB083 /* SENServiceAccountSpec.m */,
+				BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -493,6 +496,7 @@
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
 				BF05C8F71A3BA262002A1307 /* SENAnalyticsLoggerSpec.m in Sources */,
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
+				BFF03EC61A533D1E00BD65D4 /* SENServiceDeviceSpec.m in Sources */,
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */,
 				8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */,
