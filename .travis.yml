@@ -3,4 +3,5 @@ cache: bundler
 install:
 - make install
 script:
+- set -o pipefail
 - make ci

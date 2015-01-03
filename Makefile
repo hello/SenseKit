@@ -13,7 +13,7 @@ clean:
 		$(MAKE) -C Example clean
 
 test:
-		set -o pipefail && $(MAKE) -C Example test | xcpretty -c
+		$(MAKE) -C Example test | xcpretty -c
 
 install:
 		# gem install docstat --no-ri --no-rdoc
