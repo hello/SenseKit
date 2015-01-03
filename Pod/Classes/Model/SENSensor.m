@@ -15,6 +15,23 @@ NSString* const SENSensorMessageKey = @"message";
 NSString* const SENSensorConditionKey = @"condition";
 NSString* const SENSensorLastUpdatedKey = @"last_updated_utc";
 NSString* const SENSensorUnitKey = @"unit";
+@implementation SENSensorDataPoint
+
+static NSString* const SENSensorDataPointValueKey = @"value";
+static NSString* const SENSensorDataPointDateKey = @"datetime";
+static NSString* const SENSensorDataPointDateOffsetKey = @"offset_millis";
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict
+{
+    if (self = [super init]) {
+        _value = dict[SENSensorDataPointValueKey];
+        _dateOffset = dict[SENSensorDataPointDateOffsetKey];
+        _date = [NSDate dateWithTimeIntervalSince1970:([dict[SENSensorDataPointDateKey] doubleValue])/1000];
+    }
+    return self;
+}
+
+@end
 
 @implementation SENSensor
 
