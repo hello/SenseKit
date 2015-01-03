@@ -1,8 +1,4 @@
 language: objective-c
 cache: bundler
-install:
-- make install
-script:
-- set -ev
-- set -o pipefail
-- make ci
+install: make install
+script: make ci

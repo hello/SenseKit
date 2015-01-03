@@ -15,7 +15,7 @@ clean:
 	$(DEFAULT_TASK) clean
 
 test:
-	$(DEFAULT_TASK) test | tee xcodebuild.log
+	set -o pipefail && $(DEFAULT_TASK) test | xcpretty -c
 
 install:
 	gem install xcpretty  --no-ri --no-rdoc
