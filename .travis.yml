@@ -1,6 +1,4 @@
 language: objective-c
 cache: bundler
-install:
-- make install
-script:
-- make ci
+install: make install
+script: make ci
