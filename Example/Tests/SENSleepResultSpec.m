@@ -39,7 +39,7 @@ describe(@"SENSleepResult", ^{
         });
 
         it(@"sets the date", ^{
-            [[@([[result date] timeIntervalSince1970]) should] equal:@(timeInterval)];
+            [[@([[result date] timeIntervalSince1970] - timeInterval) should] beLessThan:@1];
         });
 
         it(@"sets the score", ^{
