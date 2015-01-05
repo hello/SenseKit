@@ -17,7 +17,7 @@ typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
 - (void)setSenseInfo:(SENDevice*)device;
 - (void)setPillInfo:(SENDevice*)device;
 - (void)checkSenseWiFiState:(void(^)(SENServiceDeviceState state))completion;
-- (void)checkSystemState;
+- (void)checkDevicesState;
 - (void)whenPairedSenseIsReadyDo:(void(^)(NSError* error))completion;
 
 @end
@@ -54,7 +54,7 @@ describe(@"SENServiceDeviceSpec", ^{
             
             it(@"Sense Not Paired", ^{
 
-                [service checkSystemState];
+                [service checkDevicesState];
                 [[@([service deviceState]) should] equal:@(SENServiceDeviceStateSenseNotPaired)];
                 
             });
@@ -67,34 +67,8 @@ describe(@"SENServiceDeviceSpec", ^{
                                                         firmwareVersion:@"1"
                                                                lastSeen:[NSDate date]];
                 [service setSenseInfo:device];
-                [service checkSystemState];
+                [service checkDevicesState];
                 [[@([service deviceState]) should] equal:@(SENServiceDeviceStateSenseNoData)];
-                
-            });
-            
-            it(@"Sense No Data", ^{
-                
-                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                                   type:SENDeviceTypeSense
-                                                                  state:SENDeviceStateNoData
-                                                        firmwareVersion:@"1"
-                                                               lastSeen:[NSDate date]];
-                [service setSenseInfo:device];
-                [service checkSystemState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStateSenseNoData)];
-                
-            });
-            
-            it(@"No WiFi", ^{
-                
-                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                                   type:SENDeviceTypeSense
-                                                                  state:SENDeviceStateNormal
-                                                        firmwareVersion:@"1"
-                                                               lastSeen:[NSDate date]];
-                [service setSenseInfo:device];
-                [service checkSystemState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStateNotConnectedToWiFi)];
                 
             });
             
@@ -123,7 +97,7 @@ describe(@"SENServiceDeviceSpec", ^{
             });
            
             it(@"Pill Not Paired", ^{
-                [service checkSystemState];
+                [service checkDevicesState];
                 [[@([service deviceState]) should] equal:@(SENServiceDeviceStatePillNotPaired)];
             });
             
@@ -136,7 +110,7 @@ describe(@"SENServiceDeviceSpec", ^{
                                                                  lastSeen:[NSDate date]];
                 
                 [service setPillInfo:fakePill];
-                [service checkSystemState];
+                [service checkDevicesState];
                 [[@([service deviceState]) should] equal:@(SENServiceDeviceStatePillLowBattery)];
             });
             
