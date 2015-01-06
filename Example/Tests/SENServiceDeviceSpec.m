@@ -141,7 +141,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 senseError = error;
             }];
             
-            [[expectFutureValue(@([senseError code])) shouldEventually] equal:@(SENServiceDeviceErrorSenseNotPaired)];
+            [[expectFutureValue(@([senseError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseNotPaired)];
         });
         
         it(@"Will fail with sense not available", ^{
@@ -157,7 +157,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 senseError = error;
             }];
             
-            [[expectFutureValue(@([senseError code])) shouldEventually] equal:@(SENServiceDeviceErrorSenseUnavailable)];
+            [[expectFutureValue(@([senseError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseUnavailable)];
             
         });
         
