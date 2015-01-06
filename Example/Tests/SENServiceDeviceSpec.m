@@ -72,6 +72,18 @@ describe(@"SENServiceDeviceSpec", ^{
                 
             });
             
+            it(@"WiFi check is skipped, when NO BLE", ^{
+                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                   type:SENDeviceTypeSense
+                                                                  state:SENDeviceStateNormal
+                                                        firmwareVersion:@"1"
+                                                               lastSeen:[NSDate date]];
+                [service setSenseInfo:device];
+                
+                [[service shouldNotEventually] receive:@selector(getConfiguredWiFi:)];
+                [service checkDevicesState];
+            });
+            
         });
         
         context(@"After Sense, (WiFi cannot be checked), Pill is checked", ^{
