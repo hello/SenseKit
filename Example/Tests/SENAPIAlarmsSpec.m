@@ -171,27 +171,26 @@ describe(@"SENAPIAlarms", ^{
 
         context(@"the API call fails", ^{
 
+            __block NSInteger errorCode = 0;
+            __block BOOL callbackInvoked = NO;
+
             beforeEach(^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
                     block(nil, [NSError errorWithDomain:@"is.hello" code:500 userInfo:nil]);
                     return nil;
                 }];
+                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                    errorCode = error.code;
+                }];
             });
 
             it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
-                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
-                    callbackInvoked = YES;
-                }];
                 [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
 
             it(@"sets the completion block error parameter", ^{
-                __block NSInteger errorCode = 0;
-                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
-                    errorCode = error.code;
-                }];
                 [[expectFutureValue(@(errorCode)) shouldSoon] equal:@500];
             });
         });
@@ -206,24 +205,29 @@ describe(@"SENAPIAlarms", ^{
 
         context(@"the API call succeeds", ^{
 
+            __block BOOL callbackInvoked = NO;
+
             beforeEach(^{
                 [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
                     block(nil, nil);
                     return nil;
                 }];
-            });
-
-            it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
                 [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
+
+            });
+
+            it(@"invokes the completion block", ^{
                 [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
         context(@"the API call fails", ^{
+
+            __block NSInteger errorCode = 0;
+            __block BOOL callbackInvoked = NO;
 
             beforeEach(^{
                 [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
@@ -231,21 +235,17 @@ describe(@"SENAPIAlarms", ^{
                     block(nil, [NSError errorWithDomain:@"is.hello" code:500 userInfo:nil]);
                     return nil;
                 }];
+                [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                    errorCode = error.code;
+                }];
             });
 
             it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
-                [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
-                    callbackInvoked = YES;
-                }];
                 [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
 
             it(@"sets the completion block error parameter", ^{
-                __block NSInteger errorCode = 0;
-                [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
-                    errorCode = error.code;
-                }];
                 [[expectFutureValue(@(errorCode)) shouldSoon] equal:@500];
             });
         });

@@ -4,6 +4,10 @@
 #import <SenseKit/SENKeyedArchiver.h>
 #import <YapDatabase/YapDatabase.h>
 
+@interface SENKeyedArchiver ()
++ (YapDatabaseConnection*)mainConnection;
+@end
+
 SPEC_BEGIN(SENAlarmSpec)
 
 describe(@"SENAlarm", ^{
@@ -22,6 +26,7 @@ describe(@"SENAlarm", ^{
     });
 
     describe(@"+createDefaultAlarm", ^{
+
         it(@"creates a valid alarm", ^{
             [[[SENAlarm createDefaultAlarm] should] beKindOfClass:[SENAlarm class]];
         });
