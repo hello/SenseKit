@@ -1,5 +1,6 @@
 #import <Kiwi/Kiwi.h>
 #import <LGBluetooth/LGBluetooth.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 #import "SENSenseManager.h"
 #import "SENSense.h"
 #import "SENSenseMessage.pb.h"
@@ -48,17 +49,56 @@ describe(@"SENSenseManager", ^{
     });
     
     describe(@"+whenBleStateAvailable:", ^{
-        
-        it(@"should be off during tests, but callback made", ^{
-            
-            __block BOOL poweredOn = YES; // should change to NO
-            [SENSenseManager whenBleStateAvailable:^(BOOL on) {
-                poweredOn = on;
-            }];
-            
-            [[expectFutureValue(@(poweredOn)) shouldSoon] beNo];
+
+        __block BOOL poweredOn = NO;
+
+        context(@"Bluetooth is on", ^{
+
+            beforeEach(^{
+                poweredOn = NO;
+                CBCentralManager* manager = [[LGCentralManager sharedInstance] manager];
+                [manager stub:@selector(state) andReturn:theValue(CBCentralManagerStatePoweredOn)];
+                [SENSenseManager whenBleStateAvailable:^(BOOL on) {
+                    poweredOn = on;
+                }];
+            });
+
+            it(@"invokes the completion block with true", ^{
+                [[expectFutureValue(@(poweredOn)) shouldSoon] beYes];
+            });
         });
-        
+
+        context(@"Bluetooth is off", ^{
+
+            beforeEach(^{
+                poweredOn = YES;
+                CBCentralManager* manager = [[LGCentralManager sharedInstance] manager];
+                [manager stub:@selector(state) andReturn:theValue(CBCentralManagerStatePoweredOff)];
+                [SENSenseManager whenBleStateAvailable:^(BOOL on) {
+                    poweredOn = on;
+                }];
+            });
+
+            it(@"invokes the completion block with false", ^{
+                [[expectFutureValue(@(poweredOn)) shouldSoon] beNo];
+            });
+        });
+
+        context(@"Bluetooth is unavailable", ^{
+
+            beforeEach(^{
+                poweredOn = YES;
+                CBCentralManager* manager = [[LGCentralManager sharedInstance] manager];
+                [manager stub:@selector(state) andReturn:theValue(CBCentralManagerStateUnsupported)];
+                [SENSenseManager whenBleStateAvailable:^(BOOL on) {
+                    poweredOn = on;
+                }];
+            });
+
+            it(@"invokes the completion block with false", ^{
+                [[expectFutureValue(@(poweredOn)) shouldSoon] beNo];
+            });
+        });
     });
     
     describe(@"-enablePairingMode:success:failure", ^{
