@@ -10,6 +10,7 @@
 #import <Nocilla/Nocilla.h>
 #import <SenseKit/SENAPIAlarms.h>
 #import <SenseKit/SENAlarm.h>
+#import <SenseKit/SENSound.h>
 
 SPEC_BEGIN(SENAPIAlarmsSpec)
 
@@ -25,6 +26,80 @@ describe(@"SENAPIAlarms", ^{
 
     afterAll(^{
         [[LSNocilla sharedInstance] stop];
+    });
+
+    describe(@"+availableSoundsWithCompletion:", ^{
+
+        it(@"makes a GET request", ^{
+            [[SENAPIClient should] receive:@selector(GET:parameters:completion:)];
+            [SENAPIAlarms availableSoundsWithCompletion:^(id data, NSError *error) {}];
+        });
+
+        context(@"the API request succeeds", ^{
+
+            NSArray* soundData = @[
+                @{@"name":@"Lilt",@"id":@"FILE002",@"url":@"http://example.com/sounds/lilt.mp3"},
+                @{@"name":@"Bounce",@"id":@"FILE003",@"url":@"http://example.com/sounds/bounce.mp3"}];
+            __block BOOL callbackInvoked = NO;
+            __block NSArray* parsedData = nil;
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(soundData, nil);
+                    return nil;
+                }];
+                [SENAPIAlarms availableSoundsWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                    parsedData = data;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+
+            it(@"formats the sounds an an array", ^{
+                [[expectFutureValue(parsedData) shouldSoon] beKindOfClass:[NSArray class]];
+                [[expectFutureValue(parsedData) shouldSoon] haveCountOf:2];
+            });
+
+            it(@"sets the properties of the sound objects", ^{
+                SENSound* sound1 = [parsedData firstObject];
+                SENSound* sound2 = [parsedData lastObject];
+                [[sound2.displayName should] equal:@"Bounce"];
+                [[sound2.identifier should] equal:@"FILE003"];
+                [[sound2.URLPath should] equal:@"http://example.com/sounds/bounce.mp3"];
+                [[sound1.displayName should] equal:@"Lilt"];
+                [[sound1.identifier should] equal:@"FILE002"];
+                [[sound1.URLPath should] equal:@"http://example.com/sounds/lilt.mp3"];
+            });
+        });
+
+        context(@"the API request fails", ^{
+            __block BOOL callbackInvoked = NO;
+            __block NSError* parsedError = nil;
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, [NSError errorWithDomain:@"is.hello.test" code:500 userInfo:nil]);
+                    return nil;
+                }];
+                [SENAPIAlarms availableSoundsWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                    parsedError = error;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+
+            it(@"passes the error to the completion block", ^{
+                [[expectFutureValue([parsedError domain]) shouldSoon] equal:@"is.hello.test"];
+            });
+        });
     });
 
     describe(@"+alarmsWithCompletion:", ^{
