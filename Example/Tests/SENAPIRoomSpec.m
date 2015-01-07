@@ -7,12 +7,25 @@
 //
 
 #import <Kiwi/Kiwi.h>
+#import <Nocilla/Nocilla.h>
 #import <SenseKit/SENAPIRoom.h>
 #import <SenseKit/SENAPIClient.h>
 #import <SenseKit/SENSensor.h>
 #import <SenseKit/SENSettings.h>
 
 SPEC_BEGIN(SENAPIRoomSpec)
+
+beforeAll(^{
+    [[LSNocilla sharedInstance] start];
+});
+
+afterEach(^{
+    [[LSNocilla sharedInstance] clearStubs];
+});
+
+afterAll(^{
+    [[LSNocilla sharedInstance] stop];
+});
 
 describe(@"SENAPIRoom", ^{
 
