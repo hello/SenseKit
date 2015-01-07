@@ -34,7 +34,10 @@ describe(@"SENAlarm", ^{
 
     describe(@"-initWithDictionary:", ^{
         
-        NSDictionary* alarmValues = @{@"enabled": @YES, @"hour":@22, @"minute":@15, @"sound":@{@"name":@"Bells",@"id":@78}, @"editable": @YES, @"smart":@YES, @"day_of_week":@[@1,@5,@6]};
+        NSDictionary* alarmValues = @{
+                                      @"enabled": @YES, @"hour":@22, @"minute":@15,
+                                      @"sound":@{@"name":@"Bells",@"id":@78},
+                                      @"editable": @YES, @"smart":@YES, @"day_of_week":@[@1,@5,@6]};
         
         beforeEach(^{
             alarm = [[SENAlarm alloc] initWithDictionary:alarmValues];
@@ -56,7 +59,7 @@ describe(@"SENAlarm", ^{
             [[[alarm soundName] should] equal:alarmValues[@"sound"][@"name"]];
         });
 
-        it(@"sets the sound name", ^{
+        it(@"sets the sound ID", ^{
             [[[alarm soundID] should] equal:alarmValues[@"sound"][@"id"]];
         });
 

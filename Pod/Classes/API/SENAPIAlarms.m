@@ -80,10 +80,10 @@ static NSString* const SENAPIAlarmsUpdateEndpointFormat = @"alarms/%.0f";
     NSDateComponents* alarmDateComponents = [self dateComponentsForAlarm:alarm];
     properties[@"editable"] = @([alarm isEditable]);
     properties[@"enabled"] = @([alarm isOn]);
-    if (alarm.soundName.length > 0)
-        properties[@"sound"] = @{ @"name" : alarm.soundName };
-    else
-        properties[@"sound"] = @{};
+    properties[@"sound"] = @{
+        @"name" : alarm.soundName ?: @"",
+        @"id" : alarm.soundID ?: @""
+    };
     properties[@"hour"] = @(alarmDateComponents.hour);
     properties[@"minute"] = @(alarmDateComponents.minute);
     properties[@"repeated"] = @(repeated);
