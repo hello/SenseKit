@@ -14,6 +14,7 @@
 
 extern NSString* const SENServiceDeviceNotificationFactorySettingsRestored;
 extern NSString* const SENServiceDeviceNotificationWarning;
+extern NSString* const SENServiceDeviceErrorDomain;
 
 typedef NS_ENUM(NSUInteger, SENServiceDeviceState) {
     SENServiceDeviceStateUnknown = 0,

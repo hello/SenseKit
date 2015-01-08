@@ -16,8 +16,7 @@
 
 NSString* const SENServiceDeviceNotificationFactorySettingsRestored = @"sense.restored";
 NSString* const SENServiceDeviceNotificationWarning = @"sense.warning";
-
-static NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
+NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
 
 @interface SENServiceDevice()
 
