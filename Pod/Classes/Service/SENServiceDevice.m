@@ -482,8 +482,11 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         
         NSError* deviceError = nil;
         
-        if (error != nil && strongSelf) {
+        if (error != nil) {
             deviceError = [strongSelf errorWithType:SENServiceDeviceErrorUnlinkPillFromAccount];
+        } else {
+            [strongSelf setSenseInfo:nil];
+            [strongSelf setSenseManager:nil];
         }
         
         if (completion) completion (deviceError);
