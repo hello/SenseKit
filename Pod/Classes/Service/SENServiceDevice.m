@@ -401,6 +401,10 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
                     break;
                 }
             }
+        } else {
+            // if another scan was issued and we now no longer find a sense, we
+            // need to make sure this service reflects this condition
+            [strongSelf setSenseManager:nil];
         }
         
         if (completion) {
