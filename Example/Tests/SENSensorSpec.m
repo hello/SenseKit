@@ -91,6 +91,70 @@ describe(@"SENSensor", ^{
             });
         });
     });
+
+    describe(@"-unit", ^{
+
+        __block SENSensor* sensor;
+
+        afterEach(^{
+            sensor = nil;
+        });
+
+        context(@"sensor represents temperature", ^{
+
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"c"}];
+            });
+
+            it(@"is centigrade", ^{
+                [[@(sensor.unit) should] equal:@(SENSensorUnitDegreeCentigrade)];
+            });
+        });
+
+        context(@"sensor represents light", ^{
+
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"lux"}];
+            });
+
+            it(@"is lux", ^{
+                [[@(sensor.unit) should] equal:@(SENSensorUnitLux)];
+            });
+        });
+
+        context(@"sensor represents sound", ^{
+
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"db"}];
+            });
+
+            it(@"is decibel", ^{
+                [[@(sensor.unit) should] equal:@(SENSensorUnitDecibel)];
+            });
+        });
+
+        context(@"sensor represents humidity", ^{
+
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"%"}];
+            });
+
+            it(@"is centigrade", ^{
+                [[@(sensor.unit) should] equal:@(SENSensorUnitPercent)];
+            });
+        });
+
+        context(@"sensor represents particulates", ^{
+
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"AQI"}];
+            });
+
+            it(@"is AQI", ^{
+                [[@(sensor.unit) should] equal:@(SENSensorUnitAQI)];
+            });
+        });
+    });
 });
 
 SPEC_END
