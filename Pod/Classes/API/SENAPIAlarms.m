@@ -87,6 +87,7 @@ static NSString* const SENAPIAlarmsUpdateEndpointFormat = @"alarms/%.0f";
     properties[@"hour"] = @(alarmDateComponents.hour);
     properties[@"minute"] = @(alarmDateComponents.minute);
     properties[@"repeated"] = @(repeated);
+    properties[@"smart"] = @([alarm isSmartAlarm]);
     properties[@"day_of_week"] = [self repeatDaysForAlarm:alarm];
 
     if (!repeated) {
