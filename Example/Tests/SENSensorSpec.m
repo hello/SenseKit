@@ -125,7 +125,7 @@ describe(@"SENSensor", ^{
         context(@"sensor represents sound", ^{
 
             beforeEach(^{
-                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"db"}];
+                sensor = [[SENSensor alloc] initWithDictionary:@{@"unit":@"dB"}];
             });
 
             it(@"is decibel", ^{
