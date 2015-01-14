@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11B7BA23C423B83221983933 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -23,10 +24,12 @@
 		8A22235219B66A4700C3480D /* SENSleepResultSegmentSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */; };
 		8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */; };
 		8A32B1B61A328F3900061C76 /* SENAPIFeedbackSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A32B1B51A328F3900061C76 /* SENAPIFeedbackSpec.m */; };
+		8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */; };
+		8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
-		8A3ADECD19AD0CA100ED06EE /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
 		8A4B669719ED9CE900445883 /* SENSleepResultSensorInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */; };
+		8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */; };
 		8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */; };
 		8A9266971A5741CF00D908EC /* SENAPIRoomSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9266961A5741CF00D908EC /* SENAPIRoomSpec.m */; };
 		8A9266A11A5CC11F00D908EC /* SENSoundSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */; };
@@ -46,7 +49,6 @@
 		BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */; };
 		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
 		BFF03EC61A533D1E00BD65D4 /* SENServiceDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */; };
-		C59505E51C324DF5A72B929C /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,9 +90,12 @@
 		8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSegmentSpec.m; sourceTree = "<group>"; };
 		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPINotificationSpec.m; sourceTree = "<group>"; };
 		8A32B1B51A328F3900061C76 /* SENAPIFeedbackSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIFeedbackSpec.m; sourceTree = "<group>"; };
+		8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendSpec.m; sourceTree = "<group>"; };
+		8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendDataPointSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
 		8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAuthorizationServiceSpec.m; sourceTree = "<group>"; };
 		8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSensorInsightSpec.m; sourceTree = "<group>"; };
+		8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITrendsSpec.m; sourceTree = "<group>"; };
 		8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAlarmsSpec.m; sourceTree = "<group>"; };
 		8A9266961A5741CF00D908EC /* SENAPIRoomSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIRoomSpec.m; sourceTree = "<group>"; };
 		8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSoundSpec.m; sourceTree = "<group>"; };
@@ -133,10 +138,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A3ADECD19AD0CA100ED06EE /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				C59505E51C324DF5A72B929C /* libPods-Tests.a in Frameworks */,
+				11B7BA23C423B83221983933 /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +266,7 @@
 				BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */,
 				8A32B1B51A328F3900061C76 /* SENAPIFeedbackSpec.m */,
 				8A9266961A5741CF00D908EC /* SENAPIRoomSpec.m */,
+				8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -271,13 +276,15 @@
 			children = (
 				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
 				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
+				BF05C8DD1A392032002A1307 /* SENSenseSpec.m */,
 				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
 				BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */,
 				8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */,
 				8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */,
 				8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */,
-				BF05C8DD1A392032002A1307 /* SENSenseSpec.m */,
 				8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */,
+				8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */,
+				8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -495,6 +502,7 @@
 				8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */,
 				BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */,
 				BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */,
+				8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */,
 				BF0E53971A327F76002FB083 /* SENServiceAccountSpec.m in Sources */,
 				BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */,
 				8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */,
@@ -505,10 +513,12 @@
 				BF05C8F71A3BA262002A1307 /* SENAnalyticsLoggerSpec.m in Sources */,
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
 				BFF03EC61A533D1E00BD65D4 /* SENServiceDeviceSpec.m in Sources */,
+				8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */,
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */,
 				8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */,
 				8A32B1B61A328F3900061C76 /* SENAPIFeedbackSpec.m in Sources */,
+				8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */,
 				8A4B669719ED9CE900445883 /* SENSleepResultSensorInsightSpec.m in Sources */,
 				8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */,
 			);
