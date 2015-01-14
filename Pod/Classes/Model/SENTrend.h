@@ -38,8 +38,8 @@ typedef NS_ENUM(NSUInteger, SENTrendDataPointQuality) {
 - (instancetype)initWithDictionary:(NSDictionary*)dict;
 
 @property (nonatomic, strong, readonly) NSDate* date;
-@property (nonatomic, readonly) CGFloat xValue;
-@property (nonatomic, readonly) CGFloat yValue;
-@property (nonatomic, readonly) CGFloat millisecondsOffset;
+@property (nonatomic, readonly) double xValue;
+@property (nonatomic, readonly) double yValue;
+@property (nonatomic, readonly) double millisecondsOffset;
 @property (nonatomic, readonly) SENTrendDataPointQuality quality;
 @end
