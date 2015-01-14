@@ -418,8 +418,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
             __block typeof(reader) blockReader = reader;
             
             NSString* cbKey = [self cacheMessageCallbacks:update success:success failureBlock:^(NSError *error) {
-                if (failure) failure (error);
-                [blockReader setNotifyValue:NO completion:nil];
+                [blockReader setNotifyValue:NO completion:^(NSError *error) {
+                    if (failure) failure (error);
+                }];
             }];
             [strongSelf scheduleMessageTimeOut:timeout withKey:cbKey];
             
@@ -434,8 +435,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                                 success:nil
                                 failure:^(NSError *error) {
                                     DDLogVerbose(@"message failed to send unsuccessfully with error %@, unsubscribing", error);
-                                    [blockReader setNotifyValue:NO completion:nil];
-                                    [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
+                                    [blockReader setNotifyValue:NO completion:^(NSError *error) {
+                                        [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
+                                    }];
                                 }];
             } onUpdate:^(NSData *data, NSError *error) {
                 [strongSelf handleResponseUpdate:data
@@ -448,8 +450,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                                              // if there's no update block or there is one and block tells us to finish
                                              if (!updateBlock || (updateBlock && updateBlock(response))) {
                                                  DDLogVerbose(@"message response received, unsubscribing");
-                                                 [blockReader setNotifyValue:NO completion:nil];
-                                                 [strongSelf fireSuccessMsgCbWithCbKey:cbKey andResponse:response];
+                                                 [blockReader setNotifyValue:NO completion:^(NSError *error) {
+                                                     [strongSelf fireSuccessMsgCbWithCbKey:cbKey andResponse:response];
+                                                 }];
                                              } else {
                                                  DDLogVerbose(@"partial message response received, waiting for next set");
                                                  // cannot nil out the allPackets array b/c that will deallocate the instance
@@ -459,8 +462,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                                              }
                                          } failure:^(NSError *error) {
                                              DDLogVerbose(@"handling message response encountered error %@, unsubscribing", error);
-                                             [blockReader setNotifyValue:NO completion:nil];
-                                             [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
+                                             [blockReader setNotifyValue:NO completion:^(NSError *error) {
+                                                 [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
+                                             }];
                                          }];
             }];
 
@@ -493,6 +497,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 }
 
 - (void)clearAllMessageCallbacks {
+    DDLogVerbose(@"clearing all message call backs");
     for (NSTimer* timer in [[self messageTimeoutTimers] allValues]) {
         [timer invalidate];
     }
@@ -758,15 +763,18 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 
 - (void)timedOut:(NSTimer*)timer {
     NSString* cbKey = [timer userInfo];
+    DDLogVerbose(@"Sense operation timed out");
     if (cbKey != nil) {
-        DDLogVerbose(@"Sense operation timed out");
         [self cancelMessageTimeOutWithCbKey:cbKey];
         
         SENSenseFailureBlock failureCb = [[self messageFailureCallbacks] valueForKey:cbKey];
         if (failureCb) {
+            DDLogVerbose(@"firing timeout message");
             failureCb ([NSError errorWithDomain:kSENSenseErrorDomain
                                            code:SENSenseManagerErrorCodeTimeout
                                        userInfo:nil]);
+        } else {
+            DDLogVerbose(@"failure block not defined for time out");
         }
         
         [self clearMessageCallbacksForKey:cbKey];
