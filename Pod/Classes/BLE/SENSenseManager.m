@@ -480,8 +480,8 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         __block BOOL called = NO;
         void(^call)(id result) = ^(id result) {
             if (!called) {
-                callback(result);
                 called = YES;
+                callback(result);
             }
         };
         
