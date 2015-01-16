@@ -78,6 +78,63 @@ describe(@"SENAPIInsight", ^{
         
     });
     
+    describe(@"+getInfoForInsight:", ^{
+        
+        beforeAll(^{
+            [[LSNocilla sharedInstance] start];
+            stubRequest(@"GET", @".*".regex).andReturn(200).withBody(@"[]").withHeader(@"Content-Type", @"application/json");
+        });
+        
+        afterEach(^{
+            [[LSNocilla sharedInstance] clearStubs];
+        });
+        
+        afterAll(^{
+            [[LSNocilla sharedInstance] stop];
+        });
+        
+        it(@"callback made with no error if insight specified", ^{
+            
+            SENInsight* insight = [[SENInsight alloc] initWithDictionary:@{@"title" : @"test",
+                                                                           @"category" : @"LIGHT",
+                                                                           @"message" : @"testing",
+                                                                           @"timestamp" : @(1421280960988)}];
+            __block NSError* returnedError = nil;
+            [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
+                returnedError = error;
+            }];
+            [[expectFutureValue(returnedError) shouldEventually] beNil];
+            
+        });
+        
+        it(@"callback made with error if no insight specified", ^{
+            
+            __block NSError* returnedError = nil;
+            [SENAPIInsight getInfoForInsight:nil completion:^(id data, NSError *error) {
+                returnedError = error;
+            }];
+            [[expectFutureValue(returnedError) shouldEventually] beNonNil];
+            [[expectFutureValue(@([returnedError code])) shouldEventually] equal:@(SENAPIInsightErrorInvalidArgument)];
+            
+        });
+        
+        it(@"callback made with error if insight category is missing", ^{
+            
+            SENInsight* insight = [[SENInsight alloc] initWithDictionary:@{@"title" : @"test",
+                                                                           @"message" : @"testing",
+                                                                           @"timestamp" : @(1421280960988)}];
+            
+            __block NSError* returnedError = nil;
+            [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
+                returnedError = error;
+            }];
+            [[expectFutureValue(returnedError) shouldEventually] beNonNil];
+            [[expectFutureValue(@([returnedError code])) shouldEventually] equal:@(SENAPIInsightErrorInvalidArgument)];
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
