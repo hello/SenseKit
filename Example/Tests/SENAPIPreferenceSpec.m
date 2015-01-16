@@ -26,7 +26,7 @@ describe(@"SENAPIPreferencesSpec", ^{
         [[LSNocilla sharedInstance] stop];
     });
     
-    context(@"+updatePreference:completion", ^{
+    describe(@"+updatePreference:completion", ^{
         
         it(@"invokes the completion block with data returned", ^{
             [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {

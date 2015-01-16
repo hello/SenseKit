@@ -47,8 +47,8 @@ static NSString* const SENPreferenceEnable = @"enabled";
 - (instancetype)initWithType:(SENPreferenceType)type enable:(BOOL)enable {
     self = [super init];
     if (self) {
-        [self setType:type];
-        [self setEnabled:enable];
+        _type = type;
+        _enabled = enable;
     }
     return self;
 }

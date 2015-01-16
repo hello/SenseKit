@@ -13,7 +13,7 @@ SPEC_BEGIN(SENPreferenceSpec)
 
 describe(@"SENPreference", ^{
     
-    context(@"-initWithDictionary", ^{
+    describe(@"-initWithDictionary", ^{
         
         it(@"should have a type of unknown if not recognized", ^{
             
@@ -50,7 +50,7 @@ describe(@"SENPreference", ^{
         
     });
     
-    context(@"-initWithType:enable:", ^{
+    describe(@"-initWithType:enable:", ^{
         
         it(@"instance should be properly initialized", ^{
             
@@ -63,7 +63,7 @@ describe(@"SENPreference", ^{
     });
     
     
-    context(@"-dictionaryValue", ^{
+    describe(@"-dictionaryValue", ^{
         
         it(@"should always return a dictionary", ^{
             
