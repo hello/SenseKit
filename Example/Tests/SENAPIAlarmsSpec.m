@@ -56,12 +56,11 @@ describe(@"SENAPIAlarms", ^{
             });
 
             it(@"invokes the completion block", ^{
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"formats the sounds an an array", ^{
-                [[expectFutureValue(parsedData) shouldSoon] beKindOfClass:[NSArray class]];
-                [[expectFutureValue(parsedData) shouldSoon] haveCountOf:2];
+                [[parsedData should] haveCountOf:2];
             });
 
             it(@"sets the properties of the sound objects", ^{
@@ -93,11 +92,11 @@ describe(@"SENAPIAlarms", ^{
             });
 
             it(@"invokes the completion block", ^{
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"passes the error to the completion block", ^{
-                [[expectFutureValue([parsedError domain]) shouldSoon] equal:@"is.hello.test"];
+                [[[parsedError domain] should] equal:@"is.hello.test"];
             });
         });
     });
@@ -123,20 +122,12 @@ describe(@"SENAPIAlarms", ^{
                 }];
             });
 
-            it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
-                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
-                    callbackInvoked = YES;
-                }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
-            });
-
             it(@"formats alarm data as an array", ^{
                 __block NSArray* alarms = nil;
                 [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
                     alarms = data;
                 }];
-                [[expectFutureValue(alarms) shouldSoon] haveCountOf:2];
+                [[alarms should] haveCountOf:2];
             });
 
             it(@"preserves the ordering of alarms", ^{
@@ -145,8 +136,8 @@ describe(@"SENAPIAlarms", ^{
                     firstAlarm = [data firstObject];
                     lastAlarm = [data lastObject];
                 }];
-                [[expectFutureValue(@(firstAlarm.hour)) shouldSoon] equal:@6];
-                [[expectFutureValue(@(lastAlarm.hour)) shouldSoon] equal:@16];
+                [[@(firstAlarm.hour) should] equal:@6];
+                [[@(lastAlarm.hour) should] equal:@16];
             });
 
             it(@"sets repeat days", ^{
@@ -155,7 +146,7 @@ describe(@"SENAPIAlarms", ^{
                     lastAlarm = [data lastObject];
                 }];
                 NSNumber* repeatFlags = @(SENAlarmRepeatMonday | SENAlarmRepeatWednesday | SENAlarmRepeatFriday);
-                [[expectFutureValue(@(lastAlarm.repeatFlags)) shouldSoon] equal:repeatFlags];
+                [[@(lastAlarm.repeatFlags) should] equal:repeatFlags];
             });
 
             it(@"sets editable", ^{
@@ -164,8 +155,8 @@ describe(@"SENAPIAlarms", ^{
                     firstAlarm = [data firstObject];
                     lastAlarm = [data lastObject];
                 }];
-                [[expectFutureValue(@([firstAlarm isEditable])) shouldSoon] beYes];
-                [[expectFutureValue(@([lastAlarm isEditable])) shouldSoon] beNo];
+                [[@([firstAlarm isEditable]) should] beYes];
+                [[@([lastAlarm isEditable]) should] beNo];
             });
         });
 
@@ -187,11 +178,11 @@ describe(@"SENAPIAlarms", ^{
             });
 
             it(@"invokes the completion block", ^{
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"sets the completion block error parameter", ^{
-                [[expectFutureValue(@(errorCode)) shouldSoon] equal:@500];
+                [[@(errorCode) should] equal:@500];
             });
         });
     });
@@ -216,11 +207,10 @@ describe(@"SENAPIAlarms", ^{
                 [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-
             });
 
             it(@"invokes the completion block", ^{
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -242,11 +232,11 @@ describe(@"SENAPIAlarms", ^{
             });
 
             it(@"invokes the completion block", ^{
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"sets the completion block error parameter", ^{
-                [[expectFutureValue(@(errorCode)) shouldSoon] equal:@500];
+                [[@(errorCode) should] equal:@500];
             });
         });
     });

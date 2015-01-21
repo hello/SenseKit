@@ -1,7 +1,7 @@
 
 #import <Kiwi/Kiwi.h>
 #import <Nocilla/Nocilla.h>
-#import <SenseKit/SENAuthorizationService.h>
+#import <SenseKit/API.h>
 #import <AFNetworking/AFURLSessionManager.h>
 
 SPEC_BEGIN(SENAuthorizationServiceSpec)

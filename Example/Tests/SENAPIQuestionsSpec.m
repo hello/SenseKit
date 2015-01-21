@@ -7,7 +7,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-
+#import <Nocilla/Nocilla.h>
 #import "SENAPIQuestions.h"
 #import "SENQuestion.h"
 #import "SENAnswer.h"
@@ -24,30 +24,43 @@
 SPEC_BEGIN(SENAPIQuestionsSpec)
 
 describe(@"SENAPIQuestionsSpec", ^{
+
+    beforeAll(^{
+        [[LSNocilla sharedInstance] start];
+    });
+
+    afterEach(^{
+        [[LSNocilla sharedInstance] clearStubs];
+    });
+
+    afterAll(^{
+        [[LSNocilla sharedInstance] stop];
+    });
     
     describe(@"+questionFromDict:", ^{
-        
-        it(@"proper question dict should create a proper SENQuestion object", ^{
-            
+
+        context(@"response object is valid", ^{
             NSDictionary* dict = @{@"id" : @(123),
                                    @"text" : @"some question",
                                    @"type" : @"CHOICE",
                                    @"choices" : @[@{@"id" : @(321),
                                                     @"text" : @"YUP",
                                                     @"question_id" : @(123)}]};
-            SENQuestion* question = [SENAPIQuestions questionFromDict:dict];
-            [[question should] beNonNil];
-            [[[question text] should] equal:[dict objectForKey:@"text"]];
-            [[@([[question choices] count]) should] equal:@(1)];
-            [[[question questionId] should] equal:[dict objectForKey:@"id"]];
-            
+
+
+            it(@"creates a proper SENQuestion object", ^{
+                SENQuestion* question = [SENAPIQuestions questionFromDict:dict];
+                [[question should] beNonNil];
+                [[[question text] should] equal:[dict objectForKey:@"text"]];
+                [[@([[question choices] count]) should] equal:@(1)];
+                [[[question questionId] should] equal:[dict objectForKey:@"id"]];
+            });
         });
-        
     });
     
     describe(@"+answersFromReponseArray:", ^{
         
-        it(@"an array of choices from the server should return an array of SENAnswer objects", ^{
+        it(@"returns an array of SENAnswer objects", ^{
             
             NSArray* rawAnswers = @[@{@"id" : @(321),
                                       @"text" : @"YUP",
@@ -65,7 +78,7 @@ describe(@"SENAPIQuestionsSpec", ^{
     
     describe(@"+questionsFromResponse:", ^{
         
-        it(@"an array of questions from server should generate an array of SENQuestion objects", ^{
+        it(@"generates an array of SENQuestion objects", ^{
             
             NSArray* rawQuestions = @[@{@"id" : @(123),
                                         @"text" : @"some question",
@@ -86,7 +99,7 @@ describe(@"SENAPIQuestionsSpec", ^{
     
     describe(@"+dictionaryValueForAnswer:", ^{
         
-        it(@"should contain at least id and question id", ^{
+        it(@"contains at least id and question id", ^{
             SENAnswer* answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:@(1)];
             NSDictionary* dict = [SENAPIQuestions dictionaryValueForAnswer:answer];
             NSNumber* answerId = dict[@"id"];
@@ -98,103 +111,179 @@ describe(@"SENAPIQuestionsSpec", ^{
     });
     
     describe(@"+skipQuestion:completion", ^{
-        
-        it(@"should callback with an error of invalid argument with no question passed", ^{
-            __block NSError* apiErrror = nil;
-            [SENAPIQuestions skipQuestion:nil completion:^(id data, NSError *error) {
-                apiErrror = error;
+
+        __block NSError* apiError = nil;
+        __block SENQuestion* question = nil;
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
             }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
-        });
-        
-        it(@"should callback with an error of invalid argument with no question id set", ^{
-            __block NSError* apiErrror = nil;
-            [SENAPIQuestions skipQuestion:[[SENQuestion alloc] init] completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
-        });
-        
-        it(@"should callback with an error of invalid argument with no question account id set", ^{
-            __block NSError* apiErrror = nil;
-            SENQuestion* question = [[SENQuestion alloc] initWithId:@(0)
-                                                  questionAccountId:nil
-                                                           question:@""
-                                                               type:SENQuestionTypeChoice choices:@[]];
-            [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
         });
 
+        afterEach(^{
+            question = nil;
+            apiError = nil;
+        });
+
+        context(@"question is nil", ^{
+
+            beforeEach(^{
+                question = nil;
+            });
+
+            it(@"calls back with an error of invalid argument", ^{
+                [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                [[@([apiError code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
+        });
+        
+        context(@"question has no ID", ^{
+
+            beforeEach(^{
+                question = [SENQuestion new];
+            });
+
+            it(@"calls back with an error of invalid argument", ^{
+                [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                [[@([apiError code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
+        });
+
+        context(@"question has no account ID set", ^{
+
+            beforeEach(^{
+                question = [[SENQuestion alloc] initWithId:@(0)
+                                         questionAccountId:nil
+                                                  question:@""
+                                                      type:SENQuestionTypeChoice choices:@[]];
+            });
+
+            it(@"calls back with an error of invalid argument", ^{
+                [SENAPIQuestions skipQuestion:question completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                [[@([apiError code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
+        });
     });
     
     describe(@"+sendAnswer:forQuestion:completion:", ^{
-        
-        it(@"should callback with an error of invalid argument with no answer passed", ^{
-            SENQuestion* question = [[SENQuestion alloc] initWithId:@(0)
-                                                  questionAccountId:@(1)
-                                                           question:@""
-                                                               type:SENQuestionTypeChoice choices:@[]];
-            
-            __block NSError* apiErrror = nil;
-            [SENAPIQuestions sendAnswer:nil forQuestion:question completion:^(id data, NSError *error) {
-                apiErrror = error;
+
+        __block SENAnswer* answer = nil;
+        __block SENQuestion* question = nil;
+        __block NSError* apiErrror = nil;
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
             }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
         });
-        
-        it(@"should callback with an error of invalid argument with no question passed", ^{
-            __block NSError* apiErrror = nil;
-            SENAnswer* answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:@(0)];
-            [SENAPIQuestions sendAnswer:answer forQuestion:nil completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+
+        afterEach(^{
+            answer = nil;
+            question = nil;
+            apiErrror = nil;
         });
-        
-        it(@"should callback with an error of invalid argument with no question account id set", ^{
-            __block NSError* apiErrror = nil;
-            SENAnswer* answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:@(0)];
-            SENQuestion* question = [[SENQuestion alloc] initWithId:@(0)
-                                                  questionAccountId:nil
-                                                           question:@""
-                                                               type:SENQuestionTypeChoice choices:@[]];
-            [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+
+        context(@"answer is nil", ^{
+
+            beforeEach(^{
+                answer = nil;
+                question = [[SENQuestion alloc] initWithId:@(0)
+                                         questionAccountId:@(1)
+                                                  question:@""
+                                                      type:SENQuestionTypeChoice choices:@[]];
+            });
+
+            it(@"calls back with an invalid argument error", ^{
+                [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
+                    apiErrror = error;
+                }];
+                [[@([apiErrror code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
         });
-        
-        it(@"should callback with an error of invalid argument with no questionid set in answer", ^{
-            __block NSError* apiErrror = nil;
-            SENAnswer* answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:nil];
-            SENQuestion* question = [[SENQuestion alloc] initWithId:@(0)
-                                                  questionAccountId:@(1)
-                                                           question:@""
-                                                               type:SENQuestionTypeChoice choices:@[]];
-            [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+
+        context(@"question is nil", ^{
+
+            beforeEach(^{
+                answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:@(0)];
+            });
+
+            it(@"calls back with an invalid argument error", ^{
+                [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
+                    apiErrror = error;
+                }];
+                [[@([apiErrror code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
         });
-        
+
+        context(@"question ID is not set", ^{
+
+            beforeEach(^{
+                answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:@(0)];
+                question = [[SENQuestion alloc] initWithId:@(0)
+                                         questionAccountId:nil
+                                                  question:@""
+                                                      type:SENQuestionTypeChoice choices:@[]];
+            });
+
+            it(@"calls back with an invalid argument error", ^{
+                [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
+                    apiErrror = error;
+                }];
+                [[@([apiErrror code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
+        });
+
+        context(@"question ID is nil in answer", ^{
+
+            beforeEach(^{
+                answer = [[SENAnswer alloc] initWithId:@(0) answer:@"" questionId:nil];
+                question = [[SENQuestion alloc] initWithId:@(0)
+                                         questionAccountId:@(1)
+                                                  question:@""
+                                                      type:SENQuestionTypeChoice choices:@[]];
+            });
+
+            it(@"calls back with an invalid argument error", ^{
+                [SENAPIQuestions sendAnswer:answer forQuestion:question completion:^(id data, NSError *error) {
+                    apiErrror = error;
+                }];
+                [[@([apiErrror code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
+        });
     });
     
     describe(@"+sendAnswers:forQuestion:completion:", ^{
-        
-        it(@"should callback with an error of invalid argument with empty list", ^{
-            SENQuestion* question = [[SENQuestion alloc] initWithId:@(0)
-                                                  questionAccountId:@(1)
-                                                           question:@""
-                                                               type:SENQuestionTypeChoice choices:@[]];
-            __block NSError* apiErrror = nil;
-            [SENAPIQuestions sendAnswers:@[] forQuestion:question completion:^(id data, NSError *error) {
-                apiErrror = error;
-            }];
-            [[expectFutureValue(@([apiErrror code])) shouldEventually] equal:@(SENAPIQuestionErrorInvalidParameter)];
+
+        __block NSError* apiErrror = nil;
+        __block SENQuestion* question = nil;
+
+        context(@"answers is empty list", ^{
+
+            beforeEach(^{
+                question = [[SENQuestion alloc] initWithId:@(0)
+                                         questionAccountId:@(1)
+                                                  question:@""
+                                                      type:SENQuestionTypeChoice choices:@[]];
+            });
+
+            it(@"calls back with an invalid argument error", ^{
+                [SENAPIQuestions sendAnswers:@[] forQuestion:question completion:^(id data, NSError *error) {
+                    apiErrror = error;
+                }];
+                [[@([apiErrror code]) should] equal:@(SENAPIQuestionErrorInvalidParameter)];
+            });
         });
-        
     });
 
 });

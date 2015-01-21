@@ -106,6 +106,20 @@ struct SENAlarmTime {
  */
 - (BOOL)isIdenticalToAlarm:(SENAlarm*)alarm;
 
+/**
+ * Check whether the alarm is being repeated on any day
+ *
+ * @return YES if this alarm will sound more than once
+ */
+- (BOOL)isRepeated;
+
+/**
+ * Check whether the alarm is being repeated on specific days
+ *
+ * @return YES if this alarm will sound on any of the selected days
+ */
+- (BOOL)isRepeatedOn:(SENAlarmRepeatDays)days;
+
 @property (nonatomic, getter=isOn) BOOL on;
 @property (nonatomic, readonly, getter=isEditable) BOOL editable;
 @property (nonatomic, getter=isSmartAlarm) BOOL smartAlarm;

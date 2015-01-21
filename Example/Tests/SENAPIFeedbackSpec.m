@@ -23,12 +23,23 @@ SPEC_BEGIN(SENAPIFeedbackSpec)
 
 describe(@"SENAPIFeedback", ^{
 
+    __block NSDictionary* requestParams = nil;
+
     beforeAll(^{
         [[LSNocilla sharedInstance] start];
     });
 
+    beforeEach(^{
+        [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+            requestParams = params[1];
+            SENAPIErrorBlock block = [params lastObject];
+            block(nil);
+            return nil;
+        }];
+    });
+
     afterEach(^{
-        [[LSNocilla sharedInstance] clearStubs];
+        requestParams = nil;
     });
 
     afterAll(^{
@@ -37,35 +48,17 @@ describe(@"SENAPIFeedback", ^{
 
     describe(@"sendAccurateWakeupTime:detectedWakeupTime:forNightOfSleep:completion:", ^{
 
-        __block NSDictionary* requestParams = nil;
-
-        void (^stubParams)() = ^{
-            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
-                requestParams = params[1];
-                return nil;
-            }];
-        };
-
-        beforeEach(^{
-            stubRequest(@"POST", @".*".regex);
-        });
-
-        afterEach(^{
-            requestParams = nil;
-        });
-
         it(@"invokes the completion block", ^{
             __block BOOL callbackInvoked = NO;
             [SENAPIFeedback sendAccurateWakeupTime:nil detectedWakeupTime:nil forNightOfSleep:nil completion:^(NSError *error) {
                 callbackInvoked = YES;
             }];
-            [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            [[@(callbackInvoked) should] beYes];
         });
 
         context(@"no updated wakeup time is sent", ^{
 
             beforeEach(^{
-                stubParams();
                 [SENAPIFeedback sendAccurateWakeupTime:nil
                                     detectedWakeupTime:dateForTime(6, 40)
                                        forNightOfSleep:[NSDate date]
@@ -84,7 +77,6 @@ describe(@"SENAPIFeedback", ^{
         context(@"the updated wakeup time is the same as the detected time", ^{
 
             beforeEach(^{
-                stubParams();
                 [SENAPIFeedback sendAccurateWakeupTime:dateForTime(6, 40)
                                     detectedWakeupTime:dateForTime(6, 40)
                                        forNightOfSleep:[NSDate date]
@@ -103,7 +95,6 @@ describe(@"SENAPIFeedback", ^{
         context(@"the updated wakeup time differs from the detected time", ^{
 
             beforeEach(^{
-                stubParams();
                 [SENAPIFeedback sendAccurateWakeupTime:dateForTime(7, 15)
                                     detectedWakeupTime:dateForTime(6, 40)
                                        forNightOfSleep:[NSDate date]
@@ -111,11 +102,11 @@ describe(@"SENAPIFeedback", ^{
             });
 
             it(@"sends good == false", ^{
-                [[expectFutureValue(requestParams[@"good"]) shouldSoon] beNo];
+                [[requestParams[@"good"] should] beNo];
             });
 
             it(@"sends the accurate wakeup time", ^{
-                [[expectFutureValue(requestParams[@"hour"]) shouldSoon] equal:@"07:15"];
+                [[requestParams[@"hour"] should] equal:@"07:15"];
             });
         });
     });

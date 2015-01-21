@@ -30,7 +30,7 @@ describe(@"-initWithDictionary:", ^{
         [[@(point.yValue) should] equal:@0];
     });
 
-    it(@"sets x value offset", ^{
+    it(@"sets y value offset", ^{
         point = [[SENTrendDataPoint alloc] initWithDictionary:@{@"y_value":@23}];
         [[@(point.yValue) should] equal:@23];
     });

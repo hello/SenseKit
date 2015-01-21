@@ -20,52 +20,74 @@
 SPEC_BEGIN(SENAPIInsightSpec)
 
 describe(@"SENAPIInsight", ^{
-    
+
+    beforeAll(^{
+        [[LSNocilla sharedInstance] start];
+    });
+
+    afterEach(^{
+        [[LSNocilla sharedInstance] clearStubs];
+    });
+
+    afterAll(^{
+        [[LSNocilla sharedInstance] stop];
+    });
+
     describe(@"+insightsFromResponse:", ^{
-        
-        it(@"returns nil, if response is not an array", ^{
-            
-            NSArray* insights = [SENAPIInsight insightsFromResponse:@{}];
-            [[insights should] beNil];
-            
+
+        __block NSArray* insights;
+
+        afterEach(^{
+            insights = nil;
         });
-        
-        it(@"returns an empty array, if response is an empty array", ^{
-            
-            NSArray* insights = [SENAPIInsight insightsFromResponse:@[]];
-            [[insights should] beKindOfClass:[NSArray class]];
-            [[@([insights count]) should] equal:@(0)];
-            
+
+        context(@"response is not an array", ^{
+
+            beforeEach(^{
+                insights = [SENAPIInsight insightsFromResponse:@{}];
+            });
+
+            it(@"returns nil", ^{
+                [[insights should] beNil];
+            });
         });
-        
-        it(@"returns an array with a SENInsight object, with proper response", ^{
-            
+
+        context(@"response is an empty array", ^{
+
+            beforeEach(^{
+                insights = [SENAPIInsight insightsFromResponse:@[]];
+            });
+
+            it(@"returns an empty array", ^{
+                [[insights should] haveCountOf:0];
+            });
+        });
+
+        context(@"response is a non-empty array", ^{
+
             NSDictionary* response = @{@"title" : @"Lately",
                                        @"message" : @"You've been drinking too much coffee, it's destroying your sleep.",
                                        @"created_utc" : @(1414447740000)};
-            NSArray* insights = [SENAPIInsight insightsFromResponse:@[response]];
-            
-            [[insights should] beKindOfClass:[NSArray class]];
-            [[@([insights count]) should] equal:@(1)];
-            [[insights[0] should] beKindOfClass:[SENInsight class]];
-            
+
+            beforeEach(^{
+                insights = [SENAPIInsight insightsFromResponse:@[response]];
+            });
+
+            it(@"returns an array of SENInsight objects", ^{
+                [[insights should] haveCountOf:1];
+                [[[insights firstObject] should] beKindOfClass:[SENInsight class]];
+            });
         });
-        
     });
     
     describe(@"+getInsights:", ^{
-        
-        beforeAll(^{
-            [[LSNocilla sharedInstance] start];
-            stubRequest(@"GET", @".*".regex).andReturn(200).withBody(@"[]").withHeader(@"Content-Type", @"application/json");
-        });
-        
-        afterEach(^{
-            [[LSNocilla sharedInstance] clearStubs];
-        });
-        
-        afterAll(^{
-            [[LSNocilla sharedInstance] stop];
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
+            }];
         });
         
         it(@"callback should be made", ^{
@@ -73,66 +95,63 @@ describe(@"SENAPIInsight", ^{
             [SENAPIInsight getInsights:^(id data, NSError *error) {
                 callbacked = YES;
             }];
-            [[expectFutureValue(@(callbacked)) shouldEventually] equal:@(YES)];
+            [[@(callbacked) should] beYes];
         });
         
     });
     
     describe(@"+getInfoForInsight:", ^{
-        
-        beforeAll(^{
-            [[LSNocilla sharedInstance] start];
-            stubRequest(@"GET", @".*".regex).andReturn(200).withBody(@"[]").withHeader(@"Content-Type", @"application/json");
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
+            }];
         });
-        
-        afterEach(^{
-            [[LSNocilla sharedInstance] clearStubs];
+
+        context(@"no insight is specified", ^{
+
+            it(@"invokes the callback with an error", ^{
+                __block NSError* returnedError = nil;
+                [SENAPIInsight getInfoForInsight:nil completion:^(id data, NSError *error) {
+                    returnedError = error;
+                }];
+                [[@([returnedError code]) should] equal:@(SENAPIInsightErrorInvalidArgument)];
+            });
         });
-        
-        afterAll(^{
-            [[LSNocilla sharedInstance] stop];
+
+        context(@"category is missing from insight", ^{
+
+            SENInsight* insight = [[SENInsight alloc] initWithDictionary:@{@"title" : @"test",
+                                                                           @"message" : @"testing",
+                                                                           @"timestamp" : @(1421280960988)}];
+
+
+            it(@"calls back with error", ^{
+                __block NSError* returnedError = nil;
+                [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
+                    returnedError = error;
+                }];
+                [[@([returnedError code]) should] equal:@(SENAPIInsightErrorInvalidArgument)];
+            });
         });
-        
-        it(@"callback made with no error if insight specified", ^{
-            
+
+        context(@"insight is valid", ^{
+
             SENInsight* insight = [[SENInsight alloc] initWithDictionary:@{@"title" : @"test",
                                                                            @"category" : @"LIGHT",
                                                                            @"message" : @"testing",
                                                                            @"timestamp" : @(1421280960988)}];
-            __block NSError* returnedError = nil;
-            [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
-                returnedError = error;
-            }];
-            [[expectFutureValue(returnedError) shouldEventually] beNil];
-            
+
+            it(@"calls back with no error", ^{
+                __block NSError* returnedError = nil;
+                [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
+                    returnedError = error;
+                }];
+                [[returnedError should] beNil];
+            });
         });
-        
-        it(@"callback made with error if no insight specified", ^{
-            
-            __block NSError* returnedError = nil;
-            [SENAPIInsight getInfoForInsight:nil completion:^(id data, NSError *error) {
-                returnedError = error;
-            }];
-            [[expectFutureValue(returnedError) shouldEventually] beNonNil];
-            [[expectFutureValue(@([returnedError code])) shouldEventually] equal:@(SENAPIInsightErrorInvalidArgument)];
-            
-        });
-        
-        it(@"callback made with error if insight category is missing", ^{
-            
-            SENInsight* insight = [[SENInsight alloc] initWithDictionary:@{@"title" : @"test",
-                                                                           @"message" : @"testing",
-                                                                           @"timestamp" : @(1421280960988)}];
-            
-            __block NSError* returnedError = nil;
-            [SENAPIInsight getInfoForInsight:insight completion:^(id data, NSError *error) {
-                returnedError = error;
-            }];
-            [[expectFutureValue(returnedError) shouldEventually] beNonNil];
-            [[expectFutureValue(@([returnedError code])) shouldEventually] equal:@(SENAPIInsightErrorInvalidArgument)];
-            
-        });
-        
     });
     
 });

@@ -27,39 +27,48 @@ describe(@"SENAPIPreferencesSpec", ^{
     });
     
     describe(@"+updatePreference:completion", ^{
-        
-        it(@"invokes the completion block with data returned", ^{
-            [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
-                NSDictionary* body = params[1];
-                SENAPIDataBlock block = [params lastObject];
-                block(body, nil);
-                return nil;
-            }];
-            
-            __block SENPreference* updatedPref = nil;
-            SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
-            [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
-                updatedPref = data;
-            }];
-            [[expectFutureValue(updatedPref) shouldSoon] beNonNil];
-            [[expectFutureValue(updatedPref) shouldSoon] beKindOfClass:[SENPreference class]];
+
+        context(@"returned object is not a dictionary", ^{
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@[], nil);
+                    return nil;
+                }];
+            });
+
+            it(@"pref is nil", ^{
+                __block SENPreference* updatedPref = nil;
+                SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
+                [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
+                    updatedPref = data;
+                }];
+                [[updatedPref should] beNil];
+            });
         });
-        
-        it(@"if returned object is not a dictionary, pref is nil", ^{
-            [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(@[], nil);
-                return nil;
-            }];
-            
-            __block SENPreference* updatedPref = nil;
-            SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
-            [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
-                updatedPref = data;
-            }];
-            [[expectFutureValue(updatedPref) shouldSoon] beNil];
+
+        context(@"returned object is valid", ^{
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
+                    NSDictionary* body = params[1];
+                    SENAPIDataBlock block = [params lastObject];
+                    block(body, nil);
+                    return nil;
+                }];
+            });
+
+            it(@"invokes the completion block with data returned", ^{
+                __block SENPreference* updatedPref = nil;
+                SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
+                [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
+                    updatedPref = data;
+                }];
+                [[updatedPref should] beKindOfClass:[SENPreference class]];
+            });
         });
-        
+
     });
     
 });
