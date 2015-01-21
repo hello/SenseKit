@@ -8,12 +8,24 @@ SPEC_BEGIN(SENAPINotificationSpec)
 
 describe(@"SENAPINotification", ^{
 
+    __block NSDictionary* requestParams;
+
     beforeAll(^{
         [[LSNocilla sharedInstance] start];
     });
 
+    beforeEach(^{
+        [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+            requestParams = params[1];
+            SENAPIErrorBlock block = [params lastObject];
+            block(nil);
+            return nil;
+        }];
+    });
+
     afterEach(^{
         [[LSNocilla sharedInstance] clearStubs];
+        requestParams = nil;
     });
 
     afterAll(^{
@@ -22,58 +34,33 @@ describe(@"SENAPINotification", ^{
 
     describe(@"registerForRemoteNotificationsWithTokenData:completion:", ^{
 
-        it(@"sends a POST request", ^{
-            [[SENAPIClient should] receive:@selector(POST:parameters:completion:)];
-            [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:NULL];
-        });
-
         it(@"invokes the completion block", ^{
             __block BOOL callbackInvoked = NO;
-            stubRequest(@"POST", @".*".regex).andReturn(200).withBody(@"{}").withHeader(@"Content-Type", @"application/json");
-            [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:^(NSError *error) {
+            NSData* data = [@"<2342324>" dataUsingEncoding:NSUTF8StringEncoding];
+            [SENAPINotification registerForRemoteNotificationsWithTokenData:data completion:^(NSError *error) {
                 callbackInvoked = YES;
             }];
-            [[expectFutureValue(@(callbackInvoked)) shouldEventuallyBeforeTimingOutAfter(0.5)] beYes];
+            [[@(callbackInvoked) should] beYes];
         });
 
         it(@"includes the OS in the request", ^{
-            __block NSDictionary* requestParams;
-            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
-                requestParams = params[1];
-                return nil;
-            }];
             [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:NULL];
-            [[expectFutureValue([requestParams allKeys]) shouldEventuallyBeforeTimingOutAfter(0.5)] contain:@"os"];
+            [[[requestParams allKeys] should] contain:@"os"];
         });
 
         it(@"includes the OS version in the request", ^{
-            __block NSDictionary* requestParams;
-            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
-                requestParams = params[1];
-                return nil;
-            }];
             [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:NULL];
-            [[expectFutureValue([requestParams allKeys]) shouldEventuallyBeforeTimingOutAfter(0.5)] contain:@"version"];
+            [[[requestParams allKeys] should] contain:@"version"];
         });
 
         it(@"includes the app version in the request", ^{
-            __block NSDictionary* requestParams;
-            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
-                requestParams = params[1];
-                return nil;
-            }];
             [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:NULL];
-            [[expectFutureValue([requestParams allKeys]) shouldEventuallyBeforeTimingOutAfter(0.5)] contain:@"app_version"];
+            [[[requestParams allKeys] should] contain:@"app_version"];
         });
 
         it(@"includes the token in the request", ^{
-            __block NSDictionary* requestParams;
-            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
-                requestParams = params[1];
-                return nil;
-            }];
             [SENAPINotification registerForRemoteNotificationsWithTokenData:[NSData data] completion:NULL];
-            [[expectFutureValue([requestParams allKeys]) shouldEventuallyBeforeTimingOutAfter(0.5)] contain:@"token"];
+            [[[requestParams allKeys] should] contain:@"token"];
         });
     });
 });

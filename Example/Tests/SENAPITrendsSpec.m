@@ -58,21 +58,13 @@ describe(@"+defaultTrendsListWithCompletion:", ^{
             }];
         });
 
-        it(@"invokes the completion block", ^{
-            __block BOOL blockInvoked = NO;
-            [SENAPITrends defaultTrendsListWithCompletion:^(id data, NSError *error) {
-                blockInvoked = YES;
-            }];
-            [[expectFutureValue(@(blockInvoked)) shouldSoon] beYes];
-        });
-
         it(@"creates SENTrend objects", ^{
             __block NSArray* trends = nil;
             [SENAPITrends defaultTrendsListWithCompletion:^(id data, NSError *error) {
                 trends = data;
             }];
-            [[expectFutureValue(trends) shouldSoon] haveCountOf:3];
-            [[expectFutureValue([trends firstObject]) shouldSoon] beKindOfClass:[SENTrend class]];
+            [[trends should] haveCountOf:3];
+            [[[trends firstObject] should] beKindOfClass:[SENTrend class]];
         });
     });
 
@@ -91,7 +83,7 @@ describe(@"+defaultTrendsListWithCompletion:", ^{
             [SENAPITrends defaultTrendsListWithCompletion:^(id data, NSError *blockError) {
                 error = blockError;
             }];
-            [[expectFutureValue(error) shouldNotEventuallyBeforeTimingOutAfter(0.1)] beNil];
+            [[error shouldNot] beNil];
         });
     });
 });
@@ -118,7 +110,7 @@ describe(@"+allTrendsListWithCompletion:", ^{
             [SENAPITrends allTrendsListWithCompletion:^(id data, NSError *error) {
                 blockInvoked = YES;
             }];
-            [[expectFutureValue(@(blockInvoked)) shouldSoon] beYes];
+            [[@(blockInvoked) should] beYes];
         });
 
         it(@"creates SENTrend objects", ^{
@@ -126,8 +118,8 @@ describe(@"+allTrendsListWithCompletion:", ^{
             [SENAPITrends allTrendsListWithCompletion:^(id data, NSError *error) {
                 trends = data;
             }];
-            [[expectFutureValue(trends) shouldSoon] haveCountOf:3];
-            [[expectFutureValue([trends firstObject]) shouldSoon] beKindOfClass:[SENTrend class]];
+            [[trends should] haveCountOf:3];
+            [[[trends firstObject] should] beKindOfClass:[SENTrend class]];
         });
     });
 
@@ -146,7 +138,7 @@ describe(@"+allTrendsListWithCompletion:", ^{
             [SENAPITrends allTrendsListWithCompletion:^(id data, NSError *blockError) {
                 error = blockError;
             }];
-            [[expectFutureValue(error) shouldNotEventuallyBeforeTimingOutAfter(0.1)] beNil];
+            [[error shouldNot] beNil];
         });
     });
 });
@@ -173,8 +165,8 @@ describe(@"+sleepScoreTrendForTimePeriod:completion:", ^{
             [SENAPITrends sleepScoreTrendForTimePeriod:@"2W" completion:^(id data, NSError *error) {
                 trends = data;
             }];
-            [[expectFutureValue(trends) shouldSoon] haveCountOf:3];
-            [[expectFutureValue([trends firstObject]) shouldSoon] beKindOfClass:[SENTrend class]];
+            [[trends should] haveCountOf:3];
+            [[[trends firstObject] should] beKindOfClass:[SENTrend class]];
         });
     });
 
@@ -193,7 +185,7 @@ describe(@"+sleepScoreTrendForTimePeriod:completion:", ^{
             [SENAPITrends sleepScoreTrendForTimePeriod:@"1W" completion:^(id data, NSError *blockError) {
                 error = blockError;
             }];
-            [[expectFutureValue(error) shouldNotEventuallyBeforeTimingOutAfter(0.1)] beNil];
+            [[error shouldNot] beNil];
         });
     });
 });
@@ -220,8 +212,8 @@ describe(@"+sleepDurationTrendForTimePeriod:completion:", ^{
             [SENAPITrends sleepDurationTrendForTimePeriod:@"2W" completion:^(id data, NSError *error) {
                 trends = data;
             }];
-            [[expectFutureValue(trends) shouldSoon] haveCountOf:3];
-            [[expectFutureValue([trends firstObject]) shouldSoon] beKindOfClass:[SENTrend class]];
+            [[trends should] haveCountOf:3];
+            [[[trends firstObject] should] beKindOfClass:[SENTrend class]];
         });
     });
 
@@ -240,7 +232,7 @@ describe(@"+sleepDurationTrendForTimePeriod:completion:", ^{
             [SENAPITrends sleepDurationTrendForTimePeriod:@"1W" completion:^(id data, NSError *blockError) {
                 error = blockError;
             }];
-            [[expectFutureValue(error) shouldNotEventuallyBeforeTimingOutAfter(0.1)] beNil];
+            [[error shouldNot] beNil];
         });
     });
 });

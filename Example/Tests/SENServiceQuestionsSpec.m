@@ -7,6 +7,8 @@
 //
 
 #import <Kiwi/Kiwi.h>
+#import <Nocilla/Nocilla.h>
+#import <SenseKit/SENAuthorizationService.h>
 #import "SENServiceQuestions.h"
 #import "SENQuestion.h"
 
@@ -20,7 +22,19 @@
 
 SPEC_BEGIN(SENServiceQuestionsSpec)
 
-describe(@"SENServiceQuestionsSpec", ^{
+describe(@"SENServiceQuestions", ^{
+
+    beforeAll(^{
+        [[LSNocilla sharedInstance] start];
+    });
+
+    afterEach(^{
+        [[LSNocilla sharedInstance] clearStubs];
+    });
+
+    afterAll(^{
+        [[LSNocilla sharedInstance] stop];
+    });
     
     describe(@"+sharedService", ^{
         
@@ -38,23 +52,27 @@ describe(@"SENServiceQuestionsSpec", ^{
     });
     
     describe(@"-updateQuestions:", ^{
-        
-        it(@"should return nil for questions if not authorized", ^{
-            
+
+        __block NSArray* fakeQuestions = nil;
+        __block NSError* noError = nil;
+
+        context(@"user is unauthorized", ^{
+
             SENServiceQuestions* service = [SENServiceQuestions sharedService];
-            
-            __block NSArray* fakeQuestions = nil;
-            __block NSError* noError = nil;
-            [service updateQuestions:^(NSArray *questions, NSError *error) {
-                fakeQuestions = questions;
-                noError = error;
-            }];
-            
-            [[expectFutureValue(fakeQuestions) shouldEventually] beNil];
-            [[expectFutureValue(noError) shouldEventually] beNil];
-            
+
+            beforeEach(^{
+                [SENAuthorizationService stub:@selector(isAuthorized) andReturn:@(NO)];
+                [service updateQuestions:^(NSArray *questions, NSError *error) {
+                    fakeQuestions = questions;
+                    noError = error;
+                }];
+            });
+
+            it(@"returns nil", ^{
+                [[fakeQuestions should] beNil];
+                [[noError should] beNil];
+            });
         });
-        
     });
     
 });

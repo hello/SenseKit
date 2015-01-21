@@ -21,7 +21,20 @@
 SPEC_BEGIN(SENAPIAccountSpec)
 
 describe(@"SENAPIAccount", ^{
-    
+
+    beforeAll(^{
+        [[LSNocilla sharedInstance] start];
+        stubRequest(@"POST", @".*".regex).andReturn(204).withHeader(@"Content-Type", @"application/json");
+    });
+
+    afterAll(^{
+        [[LSNocilla sharedInstance] stop];
+    });
+
+    afterEach(^{
+        [[LSNocilla sharedInstance] clearStubs];
+    });
+
     describe(@"+accountFromResponse:", ^{
         
         it(@"if response is not a dictionary, should be nil", ^{
@@ -100,44 +113,37 @@ describe(@"SENAPIAccount", ^{
     });
     
     describe(@"+changePassword:toNewPassword:completionBlock:", ^{
-        
-        beforeAll(^{
-            [[LSNocilla sharedInstance] start];
-            stubRequest(@"POST", @".*".regex).andReturn(204).withHeader(@"Content-Type", @"application/json");
-        });
-        
-        afterAll(^{
-            [[LSNocilla sharedInstance] stop];
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
+            }];
         });
         
         it(@"should make a callback", ^{
-            
             __block BOOL calledback = NO;
             [SENAPIAccount changePassword:@"TEST" toNewPassword:@"test123" completionBlock:^(id data, NSError *error) {
                 calledback = YES;
             }];
-            [[expectFutureValue(@(calledback)) shouldEventually] equal:@(YES)];
-            
+            [[@(calledback) should] beYes];
         });
         
         it(@"should return invalid argument error if current password is not set", ^{
-            
             __block NSError* apiError = nil;
             [SENAPIAccount changePassword:@"" toNewPassword:@"TEST" completionBlock:^(id data, NSError *error) {
                 apiError = error;
             }];
-            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIAccountErrorInvalidArgument)];
-            
+            [[@([apiError code]) should] equal:@(SENAPIAccountErrorInvalidArgument)];
         });
         
         it(@"should return invalid argument error if new password is not set", ^{
-            
             __block NSError* apiError = nil;
             [SENAPIAccount changePassword:@"test" toNewPassword:nil completionBlock:^(id data, NSError *error) {
                 apiError = error;
             }];
-            [[expectFutureValue(@([apiError code])) shouldEventually] equal:@(SENAPIAccountErrorInvalidArgument)];
-            
+            [[@([apiError code]) should] equal:@(SENAPIAccountErrorInvalidArgument)];
         });
         
     });

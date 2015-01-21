@@ -90,7 +90,7 @@
 		7947F1071D0449D58162C4F5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSegmentSpec.m; sourceTree = "<group>"; };
-		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPINotificationSpec.m; sourceTree = "<group>"; };
+		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPINotificationSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8A32B1B51A328F3900061C76 /* SENAPIFeedbackSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIFeedbackSpec.m; sourceTree = "<group>"; };
 		8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendSpec.m; sourceTree = "<group>"; };
 		8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendDataPointSpec.m; sourceTree = "<group>"; };
@@ -109,17 +109,17 @@
 		BF05C8DD1A392032002A1307 /* SENSenseSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseSpec.m; sourceTree = "<group>"; };
 		BF05C8F61A3BA262002A1307 /* SENAnalyticsLoggerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAnalyticsLoggerSpec.m; sourceTree = "<group>"; };
 		BF0E53961A327F76002FB083 /* SENServiceAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceAccountSpec.m; sourceTree = "<group>"; };
-		BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIQuestionsSpec.m; sourceTree = "<group>"; };
+		BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIQuestionsSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BF17A1A119C3C92300C4B6CA /* SENServiceQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceQuestionsSpec.m; sourceTree = "<group>"; };
-		BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITimeZoneSpec.m; sourceTree = "<group>"; };
-		BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIInsightSpec.m; sourceTree = "<group>"; };
+		BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPITimeZoneSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIInsightSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BF25061D19E4CA9900CD131A /* SenseKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SenseKit.entitlements; sourceTree = "<group>"; };
 		BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseManagerSpec.m; sourceTree = "<group>"; };
 		BF781E4319DF216C00B68EBC /* SENSettingsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSettingsSpec.m; sourceTree = "<group>"; };
 		BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENPreferenceSpec.m; sourceTree = "<group>"; };
 		BF8E1A971A6898CD009E421F /* SENAPIPreferenceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIPreferenceSpec.m; sourceTree = "<group>"; };
-		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAccountSpec.m; sourceTree = "<group>"; };
-		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; };
+		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIAccountSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceDeviceSpec.m; sourceTree = "<group>"; };
 		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F567B2B7C8E6429891E89AFC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -259,19 +259,19 @@
 		8AFE76F519E718520000F881 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */,
 				BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */,
 				8A6659D719DCD35F00C88E9B /* SENAPIAlarmsSpec.m */,
 				8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */,
 				BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */,
-				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
-				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
-				8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */,
-				BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */,
 				8A32B1B51A328F3900061C76 /* SENAPIFeedbackSpec.m */,
-				8A9266961A5741CF00D908EC /* SENAPIRoomSpec.m */,
-				8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */,
+				BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */,
+				8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */,
 				BF8E1A971A6898CD009E421F /* SENAPIPreferenceSpec.m */,
+				BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */,
+				8A9266961A5741CF00D908EC /* SENAPIRoomSpec.m */,
+				BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */,
+				8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */,
+				8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -280,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
+				BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */,
 				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
 				BF05C8DD1A392032002A1307 /* SENSenseSpec.m */,
 				8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */,
@@ -290,7 +291,6 @@
 				8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */,
 				8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */,
 				8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */,
-				BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";

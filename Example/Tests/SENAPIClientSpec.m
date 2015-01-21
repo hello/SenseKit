@@ -81,7 +81,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient GET:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"invokes the completion block on failure", ^{
@@ -90,7 +90,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient GET:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -106,7 +106,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient POST:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"invokes the completion block on failure", ^{
@@ -115,7 +115,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient POST:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -131,7 +131,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PUT:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"invokes the completion block on failure", ^{
@@ -140,7 +140,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PUT:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -156,7 +156,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PATCH:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"invokes the completion block on failure", ^{
@@ -165,7 +165,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PATCH:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -181,7 +181,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient DELETE:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
 
             it(@"invokes the completion block on failure", ^{
@@ -190,7 +190,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient DELETE:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
     });

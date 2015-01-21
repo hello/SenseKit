@@ -23,15 +23,21 @@ describe(@"SENAPITimeZone", ^{
         afterAll(^{
             [[LSNocilla sharedInstance] stop];
         });
+
+        beforeEach(^{
+            [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, nil);
+                return nil;
+            }];
+        });
         
         it(@"should call completion block", ^{
-            
             __block BOOL calledback = NO;
-            stubRequest(@"POST", @".*".regex).andReturn(200).withBody(@"{}").withHeader(@"Content-Type", @"application/json");
             [SENAPITimeZone setCurrentTimeZone:^(id data, NSError *error) {
                 calledback = YES;
             }];
-            [[expectFutureValue(@(calledback)) shouldEventually] equal:@(YES)];
+            [[@(calledback) should] beYes];
             
         });
         

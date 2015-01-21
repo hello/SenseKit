@@ -2,5 +2,5 @@
 #ifdef __OBJC__
 
     #import <Kiwi/Kiwi.h>
-#define shouldSoon shouldEventuallyBeforeTimingOutAfter(0.05)
+#define shouldSoon shouldEventuallyBeforeTimingOutAfter(0.01)
 #endif

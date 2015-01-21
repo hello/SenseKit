@@ -117,7 +117,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom hourlyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -136,7 +136,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom hourlyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
     });
@@ -175,7 +175,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom dailyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
 
@@ -194,7 +194,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom dailyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) shouldSoon] beYes];
+                [[@(callbackInvoked) should] beYes];
             });
         });
     });

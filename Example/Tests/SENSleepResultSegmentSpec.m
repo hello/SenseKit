@@ -33,7 +33,8 @@ describe(@"SENSleepResultSegment", ^{
         });
 
         it(@"sets the date and time", ^{
-            [[@([[segment date] timeIntervalSince1970]) should] equal:@(timeInterval)];
+            NSTimeInterval diff = ABS([[segment date] timeIntervalSince1970] - timeInterval);
+            [[@(diff) should] beLessThan:@(0.0001)];
         });
 
         it(@"sets the duration", ^{
