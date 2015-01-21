@@ -76,6 +76,78 @@ describe(@"SENAlarm", ^{
         });
     });
 
+    describe(@"- isRepeated", ^{
+
+        beforeEach(^{
+            alarm = [[SENAlarm alloc] init];
+        });
+
+        context(@"the alarm has repeat days set", ^{
+            beforeEach(^{
+                alarm.repeatFlags = (SENAlarmRepeatFriday | SENAlarmRepeatMonday);
+            });
+
+            it(@"is true", ^{
+                [[@([alarm isRepeated]) should] beYes];
+            });
+        });
+
+        context(@"the alarm is not repeating", ^{
+            beforeEach(^{
+                alarm.repeatFlags = 0;
+            });
+
+            it(@"is false", ^{
+                [[@([alarm isRepeated]) should] beNo];
+            });
+        });
+    });
+
+    describe(@"- isRepeatedOn:", ^{
+
+        beforeEach(^{
+            alarm = [[SENAlarm alloc] init];
+        });
+
+        context(@"the alarm has repeat days set", ^{
+
+            beforeEach(^{
+                alarm.repeatFlags = (SENAlarmRepeatFriday | SENAlarmRepeatMonday);
+            });
+
+            context(@"the selected days match all of the repeat days", ^{
+
+                it(@"is true", ^{
+                    [[@([alarm isRepeatedOn:(SENAlarmRepeatFriday | SENAlarmRepeatMonday)]) should] beYes];
+                });
+            });
+
+            context(@"the selected days match one of the repeat days", ^{
+
+                it(@"is true", ^{
+                    [[@([alarm isRepeatedOn:SENAlarmRepeatFriday]) should] beYes];
+                });
+            });
+
+            context(@"the selected days match none of the repeat days", ^{
+
+                it(@"is false", ^{
+                    [[@([alarm isRepeatedOn:SENAlarmRepeatWednesday]) should] beNo];
+                });
+            });
+        });
+
+        context(@"the alarm is not repeating", ^{
+            beforeEach(^{
+                alarm.repeatFlags = 0;
+            });
+
+            it(@"is false", ^{
+                [[@([alarm isRepeated]) should] beNo];
+            });
+        });
+    });
+
     describe(@"- repeatFlags", ^{
 
         beforeEach(^{

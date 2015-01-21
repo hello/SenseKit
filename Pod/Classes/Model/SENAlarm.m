@@ -148,6 +148,16 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
     return repeatFlags;
 }
 
+- (BOOL)isRepeated
+{
+    return self.repeatFlags != 0;
+}
+
+- (BOOL)isRepeatedOn:(SENAlarmRepeatDays)days
+{
+    return (self.repeatFlags & days) != 0;
+}
+
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder*)aDecoder
