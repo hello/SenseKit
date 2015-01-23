@@ -5,7 +5,6 @@ NSString* const SENSettingsAppGroup = @"group.is.hello.sense.settings";
 NSString* const SENSettingsTimeFormat = @"SENSettingsTimeFormat";
 NSString* const SENSettingsTemperatureFormat = @"SENSettingsTemperatureFormat";
 NSString* const SENSettingsDidUpdateNotification = @"SENSettingsDidUpdateNotification";
-NSString* const SENSettingsUpdateTypeKey = @"type";
 NSString* const SENSettingsUpdateTypeTime = @"time";
 NSString* const SENSettingsUpdateTypeTemp = @"temp";
 
@@ -60,26 +59,20 @@ NSString* const SENSettingsUpdateTypeTemp = @"temp";
 + (void)setTemperatureFormat:(SENTemperatureFormat)temperatureFormat
 {
     [[self userDefaults] setInteger:temperatureFormat forKey:SENSettingsTemperatureFormat];
-    [self notifySettingChange:SENSettingsUpdateTypeTemp];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SENSettingsDidUpdateNotification
+                                                        object:SENSettingsUpdateTypeTemp];
 }
 
 + (void)setTimeFormat:(SENTimeFormat)timeFormat
 {
     [[self userDefaults] setInteger:timeFormat forKey:SENSettingsTimeFormat];
-    [self notifySettingChange:SENSettingsUpdateTypeTime];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SENSettingsDidUpdateNotification
+                                                        object:SENSettingsUpdateTypeTime];
 }
 
 + (NSDictionary*)defaults {
     return @{SENSettingsTimeFormat : @([self timeFormat]),
              SENSettingsTemperatureFormat : @([self temperatureFormat])};
-}
-
-+ (void)notifySettingChange:(NSString*)name {
-    NSDictionary* userInfo = @{SENSettingsUpdateTypeKey : name};
-    NSNotification* notification = [NSNotification notificationWithName:SENSettingsDidUpdateNotification
-                                                                 object:nil
-                                                               userInfo:userInfo];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 @end

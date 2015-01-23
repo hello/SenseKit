@@ -88,7 +88,7 @@ static NSString* const SENServiceAccountErrorDomain = @"is.hello.service.account
 }
 
 - (void)updatePreferenceForSetting:(NSNotification*)notification {
-    NSString* settingName = [[notification userInfo] objectForKey:SENSettingsUpdateTypeKey];
+    NSString* settingName = [notification object];
     if ([settingName length] > 0) {
         SENPreference* preference = nil;
         if ([settingName isEqualToString:SENSettingsUpdateTypeTemp]) {
