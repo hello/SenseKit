@@ -44,14 +44,6 @@ describe(@"SENServiceAccountSpec", ^{
             [[expectFutureValue(@([invalidError code])) should] equal:@(SENServiceAccountErrorInvalidArg)];
         });
         
-        it(@"should call refreshAccount:", ^{
-            
-            SENServiceAccount* service = [SENServiceAccount sharedService];
-            [[service should] receive:@selector(refreshAccount:)];
-            [service changePassword:@"test" toNewPassword:@"test123" completion:nil];
-            
-        });
-        
     });
     
     describe(@"-changeEmail:completion", ^{
