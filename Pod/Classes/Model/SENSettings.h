@@ -35,6 +35,22 @@ typedef NS_ENUM(NSUInteger, SENTimeFormat) {
 extern NSString* const SENSettingsDidUpdateNotification;
 
 /**
+ * The key in the notification user info to retrieve the name of the setting
+ * changed.
+ */
+extern NSString* const SENSettingsUpdateTypeKey;
+
+/**
+ * The time setting name found in the userInfo of a notification
+ */
+extern NSString* const SENSettingsUpdateTypeTime;
+
+/**
+ * The temp setting name found in the userInfo of a notification
+ */
+extern NSString* const SENSettingsUpdateTypeTemp;
+
+/**
  * App group name to use when sharing user defaults.
  */
 extern NSString* const SENSettingsAppGroup;

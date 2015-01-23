@@ -16,7 +16,6 @@ typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
 - (void)setSystemState:(SENServiceDeviceState)state;
 - (void)setSenseInfo:(SENDevice*)device;
 - (void)setPillInfo:(SENDevice*)device;
-- (void)checkSenseWiFiState:(void(^)(SENServiceDeviceState state))completion;
 - (void)checkDevicesState;
 - (void)whenPairedSenseIsReadyDo:(void(^)(NSError* error))completion;
 
@@ -96,11 +95,6 @@ describe(@"SENServiceDeviceSpec", ^{
                                                                   state:SENDeviceStateNormal
                                                         firmwareVersion:@"1"
                                                                lastSeen:[NSDate date]];
-                [service stub:@selector(checkSenseWiFiState:) withBlock:^id(NSArray *params) {
-                    SENServiceDeviceCheckBlock block = [params lastObject];
-                    block (SENServiceDeviceStateNormal);
-                    return nil;
-                }];
                 [service setSenseInfo:device];
             });
             
