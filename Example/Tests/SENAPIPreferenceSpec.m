@@ -92,7 +92,7 @@ describe(@"SENAPIPreferencesSpec", ^{
             [SENAPIPreferences getPreferences:^(id data, NSError *error) {
                 response = data;
             }];
-            [[expectFutureValue(response) shouldSoon] beKindOfClass:[NSDictionary class]];
+            [[response should] beKindOfClass:[NSDictionary class]];
             
         });
         
@@ -102,9 +102,9 @@ describe(@"SENAPIPreferencesSpec", ^{
             [SENAPIPreferences getPreferences:^(id data, NSError *error) {
                 preferences = data;
             }];
-            [[expectFutureValue(@([preferences count])) shouldSoon] equal:@(2)];
-            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeEnhancedAudio)]) shouldSoon] beKindOfClass:[SENPreference class]];
-            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeTempCelcius)]) shouldSoon] beKindOfClass:[SENPreference class]];
+            [[@([preferences count]) should] equal:@(2)];
+            [[[preferences objectForKey:@(SENPreferenceTypeEnhancedAudio)] should] beKindOfClass:[SENPreference class]];
+            [[[preferences objectForKey:@(SENPreferenceTypeTempCelcius)] should] beKindOfClass:[SENPreference class]];
             
         });
         
