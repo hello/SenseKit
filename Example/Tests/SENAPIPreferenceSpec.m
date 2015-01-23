@@ -71,6 +71,45 @@ describe(@"SENAPIPreferencesSpec", ^{
 
     });
     
+    describe(@"+getPreferences:", ^{
+        
+        beforeEach(^{
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                NSDictionary* body = @{
+                    @"ENHANCED_AUDIO" : @(true),
+                    @"TEMP_CELCIUS" : @(true),
+                    @"FAKE_PREFERENCE" : @(true)
+                };
+                SENAPIDataBlock block = [params lastObject];
+                block(body, nil);
+                return nil;
+            }];
+        });
+        
+        it(@"response is a dictionary", ^{
+            
+            __block id response = nil;
+            [SENAPIPreferences getPreferences:^(id data, NSError *error) {
+                response = data;
+            }];
+            [[expectFutureValue(response) shouldSoon] beKindOfClass:[NSDictionary class]];
+            
+        });
+        
+        it(@"fake preference is not translated in to a SENPreference and returned", ^{
+            
+            __block NSDictionary* preferences = nil;
+            [SENAPIPreferences getPreferences:^(id data, NSError *error) {
+                preferences = data;
+            }];
+            [[expectFutureValue(@([preferences count])) shouldSoon] equal:@(2)];
+            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeEnhancedAudio)]) shouldSoon] beKindOfClass:[SENPreference class]];
+            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeTemp)]) shouldSoon] beKindOfClass:[SENPreference class]];
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
