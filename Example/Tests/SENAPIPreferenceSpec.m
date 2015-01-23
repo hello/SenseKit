@@ -104,7 +104,7 @@ describe(@"SENAPIPreferencesSpec", ^{
             }];
             [[expectFutureValue(@([preferences count])) shouldSoon] equal:@(2)];
             [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeEnhancedAudio)]) shouldSoon] beKindOfClass:[SENPreference class]];
-            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeTemp)]) shouldSoon] beKindOfClass:[SENPreference class]];
+            [[expectFutureValue([preferences objectForKey:@(SENPreferenceTypeTempCelcius)]) shouldSoon] beKindOfClass:[SENPreference class]];
             
         });
         
