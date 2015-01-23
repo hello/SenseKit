@@ -10,6 +10,8 @@
 #import <Nocilla/Nocilla.h>
 #import "SENServiceAccount.h"
 #import "SENAPIAccount.h"
+#import "SENAPIPreferences.h"
+#import "SENPreference.h"
 #import "SENAuthorizationService.h"
 
 SPEC_BEGIN(SENServiceAccountSpec)
@@ -40,8 +42,8 @@ describe(@"SENServiceAccountSpec", ^{
                 invalidError = error;
             }];
             
-            [[expectFutureValue(invalidError) should] beNonNil];
-            [[expectFutureValue(@([invalidError code])) should] equal:@(SENServiceAccountErrorInvalidArg)];
+            [[expectFutureValue(invalidError) shouldSoon] beNonNil];
+            [[expectFutureValue(@([invalidError code])) shouldSoon] equal:@(SENServiceAccountErrorInvalidArg)];
         });
         
     });
@@ -55,17 +57,101 @@ describe(@"SENServiceAccountSpec", ^{
                 invalidError = error;
             }];
             
-            [[expectFutureValue(invalidError) should] beNonNil];
-            [[expectFutureValue(@([invalidError code])) should] equal:@(SENServiceAccountErrorInvalidArg)];
+            [[expectFutureValue(invalidError) shouldSoon] beNonNil];
+            [[expectFutureValue(@([invalidError code])) shouldSoon] equal:@(SENServiceAccountErrorInvalidArg)];
         });
         
         it(@"should call refreshAccount:", ^{
             
             SENServiceAccount* service = [SENServiceAccount sharedService];
-            [[service should] receive:@selector(refreshAccount:)];
+            [[service shouldSoon] receive:@selector(refreshAccount:)];
             [service changeEmail:@"test@test.com" completion:nil];
             
         });
+        
+    });
+    
+    describe(@"-updateAccount", ^{
+        
+        it(@"should call refreshAccount if account is not yet cached", ^{
+            
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [[service shouldSoon] receive:@selector(refreshAccount:)];
+            [service updateAccount:nil];
+            
+        });
+        
+        context(@"account refreshed", ^{
+            
+            beforeEach(^{
+                
+                SENServiceAccount* service = [SENServiceAccount sharedService];
+                [service stub:@selector(refreshAccount:) withBlock:^id(NSArray *params) {
+                    SENAccountResponseBlock cb = [params firstObject];
+                    cb(nil);
+                    return nil;
+                }];
+                
+            });
+            
+            it(@"should call updateAccount:completionBlock of API", ^{
+                
+                [[SENAPIAccount shouldSoon] receive:@selector(updateAccount:completionBlock:)];
+                [[SENServiceAccount sharedService] updateAccount:nil];
+                
+            });
+            
+            it(@"should make a callback", ^{
+                
+                [SENAPIAccount stub:@selector(updateAccount:completionBlock:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb ([params firstObject], nil);
+                    return nil;
+                }];
+                
+                __block BOOL calledback = NO;
+                [[SENServiceAccount sharedService] updateAccount:^(NSError *error) {
+                    calledback = YES;
+                }];
+                [[expectFutureValue(@(calledback)) shouldSoon] equal:@(YES)];
+                
+            });
+            
+        });
+        
+        describe(@"-updateAccount", ^{
+            
+            __block SENPreference* preference = nil;
+            
+            beforeEach(^{
+                preference = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
+                [SENAPIPreferences stub:@selector(updatePreference:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+            });
+            
+            it(@"should call preference api", ^{
+                
+                SENServiceAccount* service = [SENServiceAccount sharedService];
+                [[SENAPIPreferences shouldSoon] receive:@selector(updatePreference:completion:)];
+                [service updatePreference:preference completion:nil];
+                
+            });
+            
+            it(@"should make a callback", ^{
+                
+                __block BOOL called = NO;
+                [[SENServiceAccount sharedService] updatePreference:preference completion:^(NSError *error) {
+                    called = YES;
+                }];
+                [[expectFutureValue(@(called)) shouldSoon] equal:@(YES)];
+                
+            });
+            
+        });
+        
         
     });
     
