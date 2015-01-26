@@ -55,7 +55,8 @@ PODS:
     - SHSProtoBuf
   - SenseKit/Model (0.1.0):
     - YapDatabase (~> 2.4.3)
-  - SenseKit/Service (0.1.0)
+  - SenseKit/Service (0.1.0):
+    - CocoaLumberjack
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc
   - SHSProtoBuf/non-arc (0.9)
@@ -87,7 +88,7 @@ SPEC CHECKSUMS:
   Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
   Nocilla: 4d713c56e7357fd0cac0363854d4a58021ad3f41
   NSJSONSerialization-NSNullRemoval: b3f02955f898d01205567e3f1292e4aae3ad547e
-  SenseKit: a98e7d0a4684f8585741b5a038b5a281da92b078
+  SenseKit: 50a66f9580a9f950793f50677b02861579689357
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
