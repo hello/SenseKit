@@ -54,7 +54,7 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 }
 
 - (void)configureStore {
-    if (NSStringFromClass([HKHealthStore class]) != nil) {
+    if ([HKHealthStore isHealthDataAvailable]) {
         [self setHkStore:[[HKHealthStore alloc] init]];
     }
 }
@@ -138,11 +138,9 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 }
 
 - (void)sync {
-    if (![self isSupported]) return;
-    
-    if ([self enableWrite]) {
+    if ([self enableWrite] && [self isSupported] && [self canWriteSleepAnalysis]) {
         NSDate* lastNight = [self lastNight];
-        if ([self canWriteSleepAnalysis] && ![self ddedDataPointFor:lastNight]) {
+        if (![self ddedDataPointFor:lastNight]) {
             [self writeSleepAnalysisIfDataAvailableFor:lastNight];
         }
     }
@@ -206,22 +204,21 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 }
 
 - (void)addSleepDataPoints:(SENSleepResult*)sleepReult forDate:(NSDate*)date {
-    if (sleepReult == nil) return;
-    if ([HKHealthStore isHealthDataAvailable]) {
-        NSArray* sleepObjects = [self sleepDataPointsForSleepResult:sleepReult];
-        
-        if ([sleepObjects count] == 0) return;
-        
-        __weak typeof(self) weakSelf = self;
-        [[self hkStore] saveObjects:sleepObjects withCompletion:^(BOOL success, NSError *error) {
-            if (success) {
-                DDLogVerbose(@"saved sleep result to health kit.");
-                [weakSelf saveLastWrittenDate:date];
-            } else {
-                DDLogVerbose(@"failed to save sleep result to health kit with error %@", error);
-            }
-        }];
-    }
+    if (sleepReult == nil || ![self isSupported]) return;
+    
+    NSArray* sleepObjects = [self sleepDataPointsForSleepResult:sleepReult];
+    
+    if ([sleepObjects count] == 0) return;
+    
+    __weak typeof(self) weakSelf = self;
+    [[self hkStore] saveObjects:sleepObjects withCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            DDLogVerbose(@"saved sleep result to health kit.");
+            [weakSelf saveLastWrittenDate:date];
+        } else {
+            DDLogVerbose(@"failed to save sleep result to health kit with error %@", error);
+        }
+    }];
 }
 
 @end
