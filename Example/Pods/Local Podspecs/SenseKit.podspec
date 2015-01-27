@@ -14,14 +14,14 @@ Pod::Spec.new do |s|
   
   s.subspec "Analytics" do |ss|
     ss.source_files = 'Pod/Classes/Analytics/*'
-    ss.dependency 'Mixpanel'
+    ss.dependency 'Mixpanel', '2.4.2'
     ss.dependency 'CocoaLumberjack'
   end
 
   s.subspec "API" do |ss|
     ss.source_files = 'Pod/Classes/API/*'
     ss.dependency 'FXKeychain', '~> 1.5.1'
-    ss.dependency 'AFNetworking', '~> 2.4.1'
+    ss.dependency 'AFNetworking', '~> 2.5.0'
     ss.dependency 'NSJSONSerialization-NSNullRemoval', '~> 1.0.0'
   end
 

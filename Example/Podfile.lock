@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.4.1):
+  - AFNetworking (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.4.1):
+  - AFNetworking/NSURLConnection (2.5.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.4.1):
+  - AFNetworking/NSURLSession (2.5.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.4.1)
-  - AFNetworking/Security (2.4.1)
-  - AFNetworking/Serialization (2.4.1)
-  - AFNetworking/UIKit (2.4.1):
+  - AFNetworking/Reachability (2.5.0)
+  - AFNetworking/Security (2.5.0)
+  - AFNetworking/Serialization (2.5.0)
+  - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - CocoaLumberjack (2.0.0-rc):
@@ -31,9 +31,7 @@ PODS:
   - FXKeychain (1.5.2)
   - Kiwi (2.3.1)
   - LGBluetooth (1.1.4)
-  - Mixpanel (2.6.2):
-    - Mixpanel/MPCategoryHelpers
-  - Mixpanel/MPCategoryHelpers (2.6.2)
+  - Mixpanel (2.4.2)
   - Nocilla (HEAD based on 0.9.0)
   - NSJSONSerialization-NSNullRemoval (1.0.1)
   - SenseKit (0.1.0):
@@ -44,9 +42,9 @@ PODS:
     - SenseKit/Service
   - SenseKit/Analytics (0.1.0):
     - CocoaLumberjack
-    - Mixpanel
+    - Mixpanel (= 2.4.2)
   - SenseKit/API (0.1.0):
-    - AFNetworking (~> 2.4.1)
+    - AFNetworking (~> 2.5.0)
     - FXKeychain (~> 1.5.1)
     - NSJSONSerialization-NSNullRemoval (~> 1.0.0)
   - SenseKit/BLE (0.1.0):
@@ -80,15 +78,15 @@ EXTERNAL SOURCES:
     :git: git@github.com:hello/protobuf-objc.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
+  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
   CocoaLumberjack: 6186e27827fc574b50b16c10102fcc591437f06c
   FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   Kiwi: 73e1400209055ee9c8ba78c6012b6b642d0fb9f7
   LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
-  Mixpanel: c075cedebda3328ce1ee29a18429e265ce967cd8
+  Mixpanel: cd01a5952773eaff12880da334a9776180c5f0a7
   Nocilla: 4d713c56e7357fd0cac0363854d4a58021ad3f41
   NSJSONSerialization-NSNullRemoval: b3f02955f898d01205567e3f1292e4aae3ad547e
-  SenseKit: 50a66f9580a9f950793f50677b02861579689357
+  SenseKit: f8e6951e86dccf42cf0d4099e204b5e8a02ffd59
   SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
