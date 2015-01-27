@@ -84,7 +84,8 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 - (BOOL)canWriteSleepAnalysis {
     if (![self isSupported]) return NO;
     HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
-    return [[self hkStore] authorizationStatusForType:hkSleepCategory] == HKAuthorizationStatusSharingAuthorized;
+    HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
+    return status == HKAuthorizationStatusSharingAuthorized;
 }
 
 - (BOOL)ddedDataPointFor:(NSDate*)date {
@@ -185,9 +186,9 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
     NSDate* sleepDate = nil;
     
     for (SENSleepResultSegment* segment in [sleepResult segments]) {
-        if ([[segment eventType] isEqualToString:SENSleepResultSegmentEventTypeWakeUp]) {
+        if (wakeUpDate == nil && [[segment eventType] isEqualToString:SENSleepResultSegmentEventTypeWakeUp]) {
             wakeUpDate = [segment date];
-        } else if ([[segment eventType] isEqualToString:SENSleepResultSegmentEventTypeSleep]) {
+        } else if (sleepDate == nil && [[segment eventType] isEqualToString:SENSleepResultSegmentEventTypeSleep]) {
             sleepDate = [segment date];
         }
         
@@ -197,6 +198,7 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
                                                                      value:HKCategoryValueSleepAnalysisAsleep
                                                                  startDate:sleepDate
                                                                    endDate:wakeUpDate]];
+            break;
         }
     }
     

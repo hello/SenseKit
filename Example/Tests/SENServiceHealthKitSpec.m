@@ -7,9 +7,14 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import <Nocilla/Nocilla.h>
 #import <HealthKit/HealthKit.h>
 #import "SENServiceHealthKit.h"
+
+@interface SENServiceHealthKit()
+
+@property (nonatomic, strong) HKHealthStore* hkStore;
+
+@end
 
 SPEC_BEGIN(SENServiceHealthKitSpec)
 
@@ -32,11 +37,26 @@ describe(@"SENServiceHealthKitSpec", ^{
 
     describe(@"-isSupported", ^{
         
+        afterEach(^{
+            SENServiceHealthKit* service = [SENServiceHealthKit sharedService];
+            [service clearStubs];
+        });
+        
+        it(@"should return NO if healthstore is unavailable", ^{
+            
+            SENServiceHealthKit* service = [SENServiceHealthKit sharedService];
+            [service setHkStore:nil];
+            BOOL supported = [service isSupported];
+            [[@(supported) should] beNo];
+            
+        });
+        
         it(@"should return YES if healthstore is available", ^{
             
             SENServiceHealthKit* service = [SENServiceHealthKit sharedService];
+            [service setHkStore:[[HKHealthStore alloc] init]];
             BOOL supported = [service isSupported];
-            [[@(supported) should] equal:@([HKHealthStore isHealthDataAvailable])];
+            [[@(supported) should] beYes];
             
         });
         
@@ -44,11 +64,26 @@ describe(@"SENServiceHealthKitSpec", ^{
     
     describe(@"-canWriteSleepAnalysis", ^{
         
-        it(@"should return NO", ^{
+        it(@"should return NO because user (this test) did not authorize healthkit use", ^{
             
+            [HKHealthStore stub:@selector(isHealthDataAvailable) andReturn:@(YES)];
             SENServiceHealthKit* service = [SENServiceHealthKit sharedService];
             BOOL canWrite = [service canWriteSleepAnalysis];
             [[@(canWrite) should] beNo];
+            
+        });
+        
+        it(@"should return YES, if authorization is provided", ^{
+            
+            SENServiceHealthKit* service = [SENServiceHealthKit sharedService];
+            HKHealthStore* store = [[HKHealthStore alloc] init];
+            [store stub:@selector(authorizationStatusForType:) withBlock:^id(NSArray *params) {
+                return theValue(HKAuthorizationStatusSharingAuthorized);
+            }];
+            [service setHkStore:store];
+            
+            BOOL canWrite = [service canWriteSleepAnalysis];
+            [[@(canWrite) should] beYes];
             
         });
         
