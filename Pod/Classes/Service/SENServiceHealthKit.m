@@ -108,11 +108,11 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
         }
         return;
     }
-
+    
     HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
     NSSet* writeTypes = [NSSet setWithObject:hkSleepCategory];
     NSSet* readTypes = [NSSet setWithObject:hkSleepCategory]; // there will be more, soon
-
+    
     [[self hkStore] requestAuthorizationToShareTypes:writeTypes readTypes:readTypes completion:^(BOOL success, NSError *error) {
         NSError* serviceError = error;
         HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
