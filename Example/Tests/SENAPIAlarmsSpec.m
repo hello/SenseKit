@@ -127,7 +127,7 @@ describe(@"SENAPIAlarms", ^{
                 [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
                     alarms = data;
                 }];
-                [[alarms should] haveCountOf:2];
+                [[expectFutureValue(alarms) shouldSoon] haveCountOf:2];
             });
 
             it(@"preserves the ordering of alarms", ^{
@@ -136,8 +136,8 @@ describe(@"SENAPIAlarms", ^{
                     firstAlarm = [data firstObject];
                     lastAlarm = [data lastObject];
                 }];
-                [[@(firstAlarm.hour) should] equal:@6];
-                [[@(lastAlarm.hour) should] equal:@16];
+                [[expectFutureValue(@(firstAlarm.hour)) shouldSoon] equal:@6];
+                [[expectFutureValue(@(lastAlarm.hour)) shouldSoon] equal:@16];
             });
 
             it(@"sets repeat days", ^{
@@ -146,7 +146,7 @@ describe(@"SENAPIAlarms", ^{
                     lastAlarm = [data lastObject];
                 }];
                 NSNumber* repeatFlags = @(SENAlarmRepeatMonday | SENAlarmRepeatWednesday | SENAlarmRepeatFriday);
-                [[@(lastAlarm.repeatFlags) should] equal:repeatFlags];
+                [[expectFutureValue(@(lastAlarm.repeatFlags)) shouldSoon] equal:repeatFlags];
             });
 
             it(@"sets editable", ^{
@@ -155,8 +155,8 @@ describe(@"SENAPIAlarms", ^{
                     firstAlarm = [data firstObject];
                     lastAlarm = [data lastObject];
                 }];
-                [[@([firstAlarm isEditable]) should] beYes];
-                [[@([lastAlarm isEditable]) should] beNo];
+                [[expectFutureValue(@([firstAlarm isEditable])) shouldSoon] beYes];
+                [[expectFutureValue(@([lastAlarm isEditable])) shouldSoon] beNo];
             });
         });
 
