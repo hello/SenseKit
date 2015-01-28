@@ -27,10 +27,17 @@ SENAFFailureBlock (^SENAPIClientRequestFailureBlock)(SENAPIDataBlock) = ^SENAFFa
 SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSuccessBlock(SENAPIDataBlock completion) {
     return ^(NSURLSessionDataTask *task, id responseObject) {
         if (responseObject) {
-            NSData* data = [NSJSONSerialization dataWithJSONObject:responseObject options:0 error:nil];
-            id strippedJSON = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil removingNulls:YES ignoreArrays:NO];
-            if (completion)
-                completion(strippedJSON, nil);
+            // parsing JSON can be an expensive operation so moving this work in the bg thread
+            // frees up some main thread a bit for other things.
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSData* data = [NSJSONSerialization dataWithJSONObject:responseObject options:0 error:nil];
+                id strippedJSON = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil removingNulls:YES ignoreArrays:NO];
+                if (completion) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(strippedJSON, nil);
+                    });
+                }
+            });
             return;
         }
         if (completion)
