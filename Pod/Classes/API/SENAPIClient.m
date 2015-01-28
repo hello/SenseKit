@@ -7,20 +7,47 @@
 
 static NSString* const SENDefaultBaseURLPath = @"https://dev-api.hello.is/v1";
 static NSString* const SENAPIClientBaseURLPathKey = @"SENAPIClientBaseURLPathKey";
+static NSString* const SENAPIErrorLocalizedMessageKey = @"message";
 static AFHTTPSessionManager* sessionManager = nil;
 
 @implementation SENAPIClient
 
 typedef void (^SENAFFailureBlock)(NSURLSessionDataTask *, NSError *);
 typedef void (^SENAFSuccessBlock)(NSURLSessionDataTask *, id responseObject);
+
+static NSError* SENParseErrorForData(NSError* error) {
+    NSData *data = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+    if (data) {
+        id errorData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if ([errorData isKindOfClass:[NSDictionary class]]) {
+            NSString* message = errorData[SENAPIErrorLocalizedMessageKey];
+            if ([message isKindOfClass:[NSString class]] && message.length > 0) {
+                NSMutableDictionary* userInfo = [error.userInfo mutableCopy];
+                userInfo[NSLocalizedDescriptionKey] = message;
+                userInfo[NSUnderlyingErrorKey] = error;
+                return [NSError errorWithDomain:error.domain code:error.code userInfo:userInfo];
+            }
+        }
+    }
+    return error;
+}
+
 SENAFFailureBlock (^SENAPIClientRequestFailureBlock)(SENAPIDataBlock) = ^SENAFFailureBlock(SENAPIDataBlock completion) {
     return ^(NSURLSessionDataTask *task, NSError *error) {
         if ([SENAuthorizationService isAuthorizationError:error]
             && [SENAuthorizationService isAuthorizedRequest:task.originalRequest]) {
             [SENAuthorizationService deauthorize];
         }
-        if (completion)
-            completion(nil, error);
+
+        if (!completion)
+            return;
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError* parsedError = SENParseErrorForData(error);
+             dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, parsedError);
+             });
+        });
     };
 };
 

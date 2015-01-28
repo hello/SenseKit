@@ -90,7 +90,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient GET:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -115,7 +115,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient POST:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -140,7 +140,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PUT:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -165,7 +165,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient PATCH:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -190,7 +190,7 @@ describe(@"SENAPIClient", ^{
                 [SENAPIClient DELETE:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
     });

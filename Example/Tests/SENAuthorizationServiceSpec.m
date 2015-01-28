@@ -21,7 +21,7 @@ describe(@"SENAuthorizationService", ^{
     });
 
     beforeEach(^{
-        stubRequest(@"DELETE", @"https://dev-api.hello.is/v1/oauth2/token");
+        [SENAPIClient stub:@selector(DELETE:parameters:completion:)];
         [SENAuthorizationService deauthorize];
     });
 
