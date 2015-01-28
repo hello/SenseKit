@@ -8,7 +8,8 @@
 
 #import <Kiwi/Kiwi.h>
 #import <Nocilla/Nocilla.h>
-#import "SENapiAccount.h"
+#import <AFNetworking/AFHTTPSessionManager.h>
+#import "SENAPIAccount.h"
 #import "SENAccount.h"
 
 @interface SENAPIAccount (Private)
@@ -144,6 +145,32 @@ describe(@"SENAPIAccount", ^{
                 apiError = error;
             }];
             [[@([apiError code]) should] equal:@(SENAPIAccountErrorInvalidArgument)];
+        });
+        
+    });
+    
+    describe(@"+errorForAPIResponseError", ^{
+        
+        it(@"should properly return an error code for api error response", ^{
+            
+            NSDictionary* serverResponse = @{@"message" : @"PASSWORD_TOO_SHORT",
+                                             @"code" : @(400)};
+            NSData* responseData = [NSJSONSerialization dataWithJSONObject:serverResponse
+                                                                   options:NSJSONWritingPrettyPrinted
+                                                                     error:nil];
+            NSDictionary* userInfo = @{AFNetworkingOperationFailingURLResponseDataErrorKey : responseData};
+            NSError* error = [NSError errorWithDomain:@"is.hello.api" code:400 userInfo:userInfo];
+            SENAPIAccountError errorType = [SENAPIAccount errorForAPIResponseError:error];
+            [[@(errorType) should] equal:@(SENAPIAccountErrorPasswordTooShort)];
+            
+        });
+        
+        it(@"should return error unknown type if no response in error object", ^{
+            
+            NSError* error = [NSError errorWithDomain:@"is.hello.api" code:400 userInfo:nil];
+            SENAPIAccountError errorType = [SENAPIAccount errorForAPIResponseError:error];
+            [[@(errorType) should] equal:@(SENAPIAccountErrorUnknown)];
+            
         });
         
     });

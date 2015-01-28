@@ -13,6 +13,14 @@
 #import "SENAPIPreferences.h"
 #import "SENPreference.h"
 #import "SENAuthorizationService.h"
+#import "SENSettings.h"
+
+@interface SENServiceAccount()
+
+- (void)setPreferences:(NSDictionary*)preferences;
+- (void)updateLocalSettingsWithPreferences;
+
+@end
 
 SPEC_BEGIN(SENServiceAccountSpec)
 
@@ -148,6 +156,21 @@ describe(@"SENServiceAccountSpec", ^{
                 }];
                 [[expectFutureValue(@(called)) shouldSoon] equal:@(YES)];
                 
+            });
+            
+        });
+        
+        describe(@"-updateLocalSettingsWithPreferences", ^{
+            
+            it(@"should update settings based on preferences set", ^{
+                SENPreference* tempPreference = [[SENPreference alloc] initWithType:SENPreferenceTypeTempCelcius enable:YES];
+                SENPreference* timePreference = [[SENPreference alloc] initWithType:SENPreferenceTypeTime24 enable:YES];
+                NSDictionary* preferences = @{@([tempPreference type]) : tempPreference,
+                                              @([timePreference type]) : timePreference};
+                [[SENServiceAccount sharedService] setPreferences:preferences];
+                [[SENServiceAccount sharedService] updateLocalSettingsWithPreferences];
+                [[@([SENSettings temperatureFormat]) should] equal:@(SENTemperatureFormatCentigrade)];
+                [[@([SENSettings timeFormat]) should] equal:@(SENTimeFormat24Hour)];
             });
             
         });
