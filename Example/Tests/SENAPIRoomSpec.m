@@ -83,6 +83,130 @@ describe(@"SENAPIRoom", ^{
         });
     });
 
+    describe(@"historicalConditionsForPastWeekWithCompletion:", ^{
+
+        it(@"sends a GET request", ^{
+            [[SENAPIClient should] receive:@selector(GET:parameters:completion:)];
+            [SENAPIRoom historicalConditionsForPastWeekWithCompletion:^(id data, NSError *error) {}];
+        });
+
+        it(@"sends the date as a parameter", ^{
+            __block NSString* param = nil;
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
+                NSDictionary* params = methodParams[1];
+                param = params[@"from_utc"];
+                return nil;
+            }];
+
+            [SENAPIRoom historicalConditionsForPastWeekWithCompletion:^(id data, NSError *error) {}];
+            [[param shouldNot] beNil];
+        });
+
+        context(@"the request succeeds", ^{
+
+            NSDictionary* responseData = @{
+                @"humidity":@[@{@"value":@22,@"datetime":@([[NSDate date] timeIntervalSince1970] * 1000)}],
+                @"light":@[@{@"value":@13,@"datetime":@([[NSDate date] timeIntervalSince1970] * 1000)}]};
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(responseData, nil);
+                    return nil;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                __block BOOL callbackInvoked = NO;
+                [SENAPIRoom historicalConditionsForPastWeekWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                }];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+        });
+
+        context(@"the request fails", ^{
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, [NSError errorWithDomain:@"is.hello" code:500 userInfo:nil]);
+                    return nil;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                __block BOOL callbackInvoked = NO;
+                [SENAPIRoom historicalConditionsForPastWeekWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                }];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+        });
+    });
+
+    describe(@"historicalConditionsForLast24HoursWithCompletion:", ^{
+
+        it(@"sends a GET request", ^{
+            [[SENAPIClient should] receive:@selector(GET:parameters:completion:)];
+            [SENAPIRoom historicalConditionsForLast24HoursWithCompletion:^(id data, NSError *error) {}];
+        });
+
+        it(@"sends the date as a parameter", ^{
+            __block NSString* param = nil;
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
+                NSDictionary* params = methodParams[1];
+                param = params[@"from_utc"];
+                return nil;
+            }];
+
+            [SENAPIRoom historicalConditionsForLast24HoursWithCompletion:^(id data, NSError *error) {}];
+            [[param shouldNot] beNil];
+        });
+
+        context(@"the request succeeds", ^{
+
+            NSDictionary* responseData = @{
+                @"humidity":@[@{@"value":@22,@"datetime":@([[NSDate date] timeIntervalSince1970] * 1000)}],
+                @"light":@[@{@"value":@13,@"datetime":@([[NSDate date] timeIntervalSince1970] * 1000)}]};
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(responseData, nil);
+                    return nil;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                __block BOOL callbackInvoked = NO;
+                [SENAPIRoom historicalConditionsForLast24HoursWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                }];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+        });
+
+        context(@"the request fails", ^{
+
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, [NSError errorWithDomain:@"is.hello" code:500 userInfo:nil]);
+                    return nil;
+                }];
+            });
+
+            it(@"invokes the completion block", ^{
+                __block BOOL callbackInvoked = NO;
+                [SENAPIRoom historicalConditionsForLast24HoursWithCompletion:^(id data, NSError *error) {
+                    callbackInvoked = YES;
+                }];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
+            });
+        });
+    });
+
     describe(@"hourlyHistoricalDataForSensor:completion:", ^{
 
         it(@"sends a GET request", ^{
@@ -117,7 +241,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom hourlyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -136,7 +260,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom hourlyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
     });
@@ -175,7 +299,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom dailyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
 
@@ -194,7 +318,7 @@ describe(@"SENAPIRoom", ^{
                 [SENAPIRoom dailyHistoricalDataForSensor:sensor completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
-                [[@(callbackInvoked) should] beYes];
+                [[expectFutureValue(@(callbackInvoked)) shouldSoon] beYes];
             });
         });
     });
