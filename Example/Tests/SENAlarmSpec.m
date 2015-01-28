@@ -32,6 +32,50 @@ describe(@"SENAlarm", ^{
         });
     });
 
+    describe(@"+updateSavedAlarmsWithData:", ^{
+
+        context(@"saved alarms exist", ^{
+
+            beforeEach(^{
+                [[[SENAlarm alloc] initWithDictionary:@{@"hour":@6,@"minute":@30}] save];
+            });
+
+            it(@"deletes existing alarms", ^{
+                [SENAlarm updateSavedAlarmsWithData:nil];
+                [[[SENAlarm savedAlarms] should] beEmpty];
+            });
+
+            it(@"creates saves from data", ^{
+                NSArray* alarms = @[@{@"hour":@18,@"minute":@30},@{@"hour":@7,@"minute":@45}];
+                [SENAlarm updateSavedAlarmsWithData:alarms];
+                [[[SENAlarm savedAlarms] should] haveCountOf:2];
+            });
+
+            it(@"returns saved alarms", ^{
+                NSArray* alarmData = @[@{@"hour":@18,@"minute":@30},@{@"hour":@7,@"minute":@45}];
+                NSArray* alarms = [SENAlarm updateSavedAlarmsWithData:alarmData];
+                [[alarms should] haveCountOf:2];
+            });
+        });
+
+        context(@"no saved alarms exist", ^{
+
+            it(@"creates alarms from data", ^{
+                NSArray* alarmData = @[@{@"hour":@22,@"minute":@0},@{@"hour":@8,@"minute":@30}];
+                [SENAlarm updateSavedAlarmsWithData:alarmData];
+                [[[SENAlarm savedAlarms] should] haveCountOf:2];
+            });
+
+            it(@"returns saved alarms", ^{
+                NSArray* alarmData = @[@{@"hour":@22,@"minute":@0},
+                                       @{@"hour":@8,@"minute":@30},
+                                       @{@"hour":@7,@"minute":@45}];
+                NSArray* alarms = [SENAlarm updateSavedAlarmsWithData:alarmData];
+                [[alarms should] haveCountOf:3];
+            });
+        });
+    });
+
     describe(@"-initWithDictionary:", ^{
         
         NSDictionary* alarmValues = @{
