@@ -18,7 +18,8 @@ static NSString* const SENSensorDataPointDateOffsetKey = @"offset_millis";
 - (instancetype)initWithDictionary:(NSDictionary *)dict
 {
     if (self = [super init]) {
-        _value = dict[SENSensorDataPointValueKey];
+        NSNumber* value = dict[SENSensorDataPointValueKey];
+        _value = [value floatValue] == SENSensorSentinelValue ? nil : value;
         _dateOffset = dict[SENSensorDataPointDateOffsetKey];
         _date = [NSDate dateWithTimeIntervalSince1970:([dict[SENSensorDataPointDateKey] doubleValue])/1000];
     }
@@ -144,7 +145,8 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
 {
     if (self = [super init]) {
         _name = dict[SENSensorNameKey];
-        _value = dict[SENSensorValueKey];
+        NSNumber* value = dict[SENSensorValueKey];
+        _value = [value floatValue] == SENSensorSentinelValue ? nil : value;
         _message = dict[SENSensorMessageKey];
         _idealConditionsMessage = dict[SENSensorIdealMessageKey];
         _condition = [SENSensor conditionFromValue:dict[SENSensorConditionKey]];
