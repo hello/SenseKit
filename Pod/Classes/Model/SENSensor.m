@@ -7,6 +7,7 @@
 NSString* const SENSensorUpdatedNotification = @"SENSensorUpdatedNotification";
 NSString* const SENSensorsUpdatedNotification = @"SENSensorsUpdatedNotification";
 NSString* const SENSensorUpdateFailedNotification = @"SENSensorUpdateFailedNotification";
+NSInteger const SENSensorSentinelValue = -1;
 
 @implementation SENSensorDataPoint
 
