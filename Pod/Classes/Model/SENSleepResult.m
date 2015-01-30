@@ -36,13 +36,25 @@ static NSString* const SENSleepResultMessage = @"message";
 static NSString* const SENSleepResultSegments = @"segments";
 static NSString* const SENSleepResultSensorInsights = @"insights";
 static NSString* const SENSleepResultRetrievalKeyFormat = @"SleepResult-%ld-%ld-%ld";
+static NSString* const SENSleepResultDateFormat = @"yyyy-MM-dd";
+
++ (NSDateFormatter*)dateFormatter
+{
+    static NSDateFormatter* formatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [NSDateFormatter new];
+        formatter.dateFormat = SENSleepResultDateFormat;
+    });
+    return formatter;
+}
 
 + (NSString*)retrievalKeyForDate:(NSDate*)date
 {
     if (!date)
         return nil;
 
-    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar* calendar = [NSCalendar currentCalendar];
     NSDateComponents* components = [calendar components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit)
                                                fromDate:date];
     return [NSString stringWithFormat:SENSleepResultRetrievalKeyFormat, (long)components.day, (long)components.month, (long)components.year];
@@ -97,6 +109,8 @@ static NSString* const SENSleepResultRetrievalKeyFormat = @"SleepResult-%ld-%ld-
 
 - (void)updateWithDictionary:(NSDictionary*)data
 {
+    if (data[SENSleepResultDate])
+        self.date = [[[self class] dateFormatter] dateFromString:data[SENSleepResultDate]];
     if (data[SENSleepResultMessage])
         self.message = data[SENSleepResultMessage];
     if (data[SENSleepResultScore])
