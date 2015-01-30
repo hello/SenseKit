@@ -51,7 +51,7 @@ describe(@"SENAPIRoom", ^{
                 unitParam = nil;
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
                     NSDictionary* params = methodParams[1];
-                    unitParam = params[@"temperature_unit"];
+                    unitParam = params[@"temp_unit"];
                     return nil;
                 }];
                 [SENAPIRoom currentWithCompletion:^(id data, NSError *error) {}];
@@ -71,7 +71,7 @@ describe(@"SENAPIRoom", ^{
                 unitParam = nil;
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
                     NSDictionary* params = methodParams[1];
-                    unitParam = params[@"temperature_unit"];
+                    unitParam = params[@"temp_unit"];
                     return nil;
                 }];
                 [SENAPIRoom currentWithCompletion:^(id data, NSError *error) {}];

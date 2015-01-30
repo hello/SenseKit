@@ -49,7 +49,7 @@ describe(@"SENSensor", ^{
         
         it(@"sets the updated date", ^{
             NSNumber* timestamp = @(sensorTimestamp);
-            [[@(sensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp floatValue] /1000)];
+            [[@(sensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp doubleValue] /1000)];
         });
 
         context(@"the sensor is deserialized", ^{
@@ -87,7 +87,7 @@ describe(@"SENSensor", ^{
 
             it(@"sets the updated date", ^{
                 NSNumber* timestamp = @(sensorTimestamp);
-                [[@(decodedSensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp floatValue] /1000)];
+                [[@(decodedSensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp doubleValue] /1000)];
             });
         });
     });
