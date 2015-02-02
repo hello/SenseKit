@@ -8,6 +8,8 @@
 #import <Kiwi/Kiwi.h>
 #import "SENServiceDevice.h"
 #import "SENDevice.h"
+#import "SENSense.h"
+#import "SENSenseManager.h"
 
 typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
 
@@ -152,6 +154,77 @@ describe(@"SENServiceDeviceSpec", ^{
             }];
             
             [[expectFutureValue(@([senseError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseUnavailable)];
+            
+        });
+        
+    });
+    
+    describe(@"-replaceWithNewlyPairedSenseManager:completion", ^{
+        
+        __block NSString* deviceId = nil;
+        __block SENServiceDevice* service = nil;
+        __block SENSense* sense = nil;
+        
+        beforeEach(^{
+            deviceId = @"1";
+            service = [SENServiceDevice sharedService];
+            sense = [[SENSense alloc] init];
+            [sense stub:@selector(deviceId) andReturn:deviceId];
+            [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
+                [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:deviceId
+                                                                     type:SENDeviceTypeSense
+                                                                    state:SENDeviceStateNormal
+                                                          firmwareVersion:@"1"
+                                                                 lastSeen:[NSDate date]]];
+                
+                void(^callback)(NSError* error) = [params firstObject];
+                if (callback) callback (nil);
+                return nil;
+            }];
+        });
+        
+        afterEach(^{
+            [service clearStubs];
+            [sense clearStubs];
+        });
+        
+        it(@"should fail because sense manager not initialized with sense", ^{
+            
+            __block NSError* deviceError = nil;
+            SENSenseManager* manager = [[SENSenseManager alloc] init];
+            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
+                deviceError = error;
+            }];
+            
+            [[expectFutureValue(@([deviceError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseUnavailable)];
+            [[expectFutureValue([service senseManager]) shouldSoon] beNil];
+            
+        });
+        
+        it(@"should fail if sense in manager not matching device info", ^{
+            
+            [sense stub:@selector(deviceId) andReturn:@"notit"];
+            __block NSError* deviceError = nil;
+            SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:sense];
+            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
+                deviceError = error;
+            }];
+            
+            [[expectFutureValue(@([deviceError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseNotMatching)];
+            
+        });
+        
+        it(@"should succeed with an intiialized sense that matches device info", ^{
+            
+            [sense stub:@selector(deviceId) andReturn:deviceId];
+            __block NSError* deviceError = nil;
+            SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:sense];
+            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
+                deviceError = error;
+            }];
+            
+            [[expectFutureValue(deviceError) shouldSoon] beNil];
+            [[expectFutureValue([service senseManager]) shouldSoon] beNonNil];
             
         });
         
