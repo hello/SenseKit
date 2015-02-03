@@ -14,40 +14,89 @@ SPEC_BEGIN(SENPreferenceSpec)
 describe(@"SENPreference", ^{
     
     describe(@"-initWithDictionary", ^{
-        
-        it(@"should have a type of unknown if not recognized", ^{
-            
-            NSDictionary* dict = @{@"pref" : @"VEGETARIAN", @"enabled" : @(YES)};
-            SENPreference* pref = [[SENPreference alloc] initWithDictionary:dict];
-            [[@([pref type]) should] equal:@(SENPreferenceTypeUnknown)];
-            [[@([pref enabled]) should] equal:@(YES)];
-            
+        __block SENPreference* pref = nil;
+
+        afterEach(^{
+            pref = nil;
         });
-        
-        it(@"instance should be nil if dictionary is nil", ^{
-            
-            SENPreference* pref = [[SENPreference alloc] initWithDictionary:nil];
-            [[pref should] beNil];
-            
+
+        context(@"type is not recognized", ^{
+
+            beforeEach(^{
+                NSDictionary* dict = @{@"pref" : @"VEGETARIAN", @"enabled" : @(YES)};
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+            });
+
+            it(@"has a type of unknown", ^{
+                [[@([pref type]) should] equal:@(SENPreferenceTypeUnknown)];
+            });
+
+            it(@"sets the value", ^{
+                [[@([pref enabled]) should] equal:@(YES)];
+            });
         });
-        
-        it(@"instance should be properly initialized with right dictionary", ^{
-            
-            NSDictionary* dict = @{@"pref" : @"ENHANCED_AUDIO", @"enabled" : @(YES)};
-            SENPreference* pref = [[SENPreference alloc] initWithDictionary:dict];
-            [[@([pref type]) should] equal:@(SENPreferenceTypeEnhancedAudio)];
-            
+
+        context(@"dict is nil", ^{
+
+            it(@"is nil", ^{
+                pref = [[SENPreference alloc] initWithDictionary:nil];
+                [[pref should] beNil];
+            });
         });
-        
-        it(@"instance should be properly initialized even with missing properties", ^{
-            
+
+        context(@"value is missing", ^{
             NSDictionary* dict = @{@"pref" : @"ENHANCED_AUDIO"};
-            SENPreference* pref = [[SENPreference alloc] initWithDictionary:dict];
-            [[@([pref type]) should] equal:@(SENPreferenceTypeEnhancedAudio)];
-            [[@([pref enabled]) should] equal:@(NO)];
-            
+
+            it(@"is not enabled", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref enabled]) should] equal:@(NO)];
+            });
         });
         
+        context(@"pref represents enhanced audio", ^{
+            NSDictionary* dict = @{@"pref" : @"ENHANCED_AUDIO", @"enabled" : @(YES)};
+
+            it(@"has a type of enhanced audio", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypeEnhancedAudio)];
+            });
+        });
+
+        context(@"pref represents temperature format", ^{
+            NSDictionary* dict = @{@"pref" : @"TEMP_CELCIUS", @"enabled" : @(YES)};
+
+            it(@"has a type of enhanced audio", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypeTempCelcius)];
+            });
+        });
+
+        context(@"pref represents time format", ^{
+            NSDictionary* dict = @{@"pref" : @"TIME_TWENTY_FOUR_HOUR", @"enabled" : @(YES)};
+
+            it(@"has a type of enhanced audio", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypeTime24)];
+            });
+        });
+
+        context(@"pref represents push notifications for alert conditions", ^{
+            NSDictionary* dict = @{@"pref" : @"PUSH_ALERT_CONDITIONS", @"enabled" : @(YES)};
+
+            it(@"has a type of enhanced audio", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypePushConditions)];
+            });
+        });
+
+        context(@"pref represents push notifications for score", ^{
+            NSDictionary* dict = @{@"pref" : @"PUSH_SCORE", @"enabled" : @(YES)};
+
+            it(@"has a type of enhanced audio", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypePushScore)];
+            });
+        });
     });
     
     describe(@"-initWithType:enable:", ^{

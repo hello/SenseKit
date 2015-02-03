@@ -10,9 +10,26 @@
 
 typedef NS_ENUM(NSUInteger, SENPreferenceType) {
     SENPreferenceTypeUnknown = 0,
+    /**
+     *  Enable support for enhanced audio processing
+     */
     SENPreferenceTypeEnhancedAudio = 1,
+    /**
+     *  Represent time in 24-hour format
+     */
     SENPreferenceTypeTime24 = 2,
-    SENPreferenceTypeTempCelcius = 3
+    /**
+     *  Represent temperature values in Celcius
+     */
+    SENPreferenceTypeTempCelcius = 3,
+    /**
+     *  Receive push notifications for score in the morning
+     */
+    SENPreferenceTypePushScore = 4,
+    /**
+     *  Receive push notifications for poor sleep environment in the evening
+     */
+    SENPreferenceTypePushConditions = 5,
 };
 
 @interface SENPreference : NSObject

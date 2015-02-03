@@ -12,6 +12,8 @@ static NSString* const SENPreferenceName = @"pref";
 static NSString* const SENPreferenceNameEnhancedAudio = @"ENHANCED_AUDIO";
 static NSString* const SENPreferenceNameTemp = @"TEMP_CELCIUS";
 static NSString* const SENPreferenceNameTime = @"TIME_TWENTY_FOUR_HOUR";
+static NSString* const SENPreferenceNamePushScore = @"PUSH_SCORE";
+static NSString* const SENPreferenceNamePushConditions = @"PUSH_ALERT_CONDITIONS";
 static NSString* const SENPreferenceEnable = @"enabled";
 
 @interface SENPreference()
@@ -34,6 +36,10 @@ static NSString* const SENPreferenceEnable = @"enabled";
         type = SENPreferenceTypeTempCelcius;
     } else if ([uppercaseName isEqualToString:SENPreferenceNameTime]) {
         type = SENPreferenceTypeTime24;
+    } else if ([uppercaseName isEqualToString:SENPreferenceNamePushConditions]) {
+        type = SENPreferenceTypePushConditions;
+    } else if ([uppercaseName isEqualToString:SENPreferenceNamePushScore]) {
+        type = SENPreferenceTypePushScore;
     }
     return type;
 }
@@ -50,6 +56,10 @@ static NSString* const SENPreferenceEnable = @"enabled";
         case SENPreferenceTypeTime24:
             name = SENPreferenceNameTime;
             break;
+        case SENPreferenceTypePushScore:
+            name = SENPreferenceNamePushScore;
+        case SENPreferenceTypePushConditions:
+            name = SENPreferenceNamePushConditions;
         default:
             break;
     }
