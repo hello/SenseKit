@@ -224,6 +224,127 @@ describe(@"SENAPIDevice", ^{
         
     });
     
+    describe(@"+getSenseMetaData", ^{
+        
+        afterEach(^{
+            [SENAPIClient clearStubs];
+        });
+        
+        it(@"should return a SENDeviceMetadata object", ^{
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(@{@"sense_id" : @"Sense",
+                        @"paired_accounts" : @(1)}, nil);
+                return nil;
+            }];
+            
+            __block id metadata = nil;
+            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
+                metadata = data;
+            }];
+            [[metadata should] beKindOfClass:[SENDeviceMetadata class]];
+            
+        });
+        
+        it(@"should fail with no metadata", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                return nil;
+            }];
+            
+            __block id metadata = nil;
+            __block NSError* metadataError = nil;
+            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
+                metadata = data;
+                metadataError = error;
+            }];
+            [[metadata should] beNil];
+            [[metadataError should] beNonNil];
+            
+        });
+        
+    });
+    
+    describe(@"+getNumberOfAccountsForPairedSense", ^{
+        
+        __block NSString* senseId;
+        
+        beforeEach(^{
+            senseId = @"123";
+        });
+        
+        afterEach(^{
+            [SENAPIClient clearStubs];
+            [SENAPIDevice clearStubs];
+        });
+        
+        it(@"should succeed when matching senseId and no error", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(@{@"sense_id" : senseId,
+                        @"paired_accounts" : @(1)}, nil);
+                return nil;
+            }];
+            
+            __block NSNumber* accounts = nil;
+            __block NSError* deviceError = nil;
+            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
+                accounts = data;
+                deviceError = error;
+            }];
+            
+            [[accounts should] equal:@(1)];
+            [[deviceError should] beNil];
+            
+        });
+        
+        it(@"should fail if sense id returned from server does not match ", ^{
+            
+            [SENAPIDevice stub:@selector(getSenseMetaData:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block ([[SENDeviceMetadata alloc] initWithDictionary:@{@"sense_id" : @"doesnotexist",
+                                                                       @"paired_accounts" : @(1)}
+                                                            withType:SENDeviceTypeSense], nil);
+                return nil;
+            }];
+            
+            __block NSNumber* accounts = nil;
+            __block NSError* deviceError = nil;
+            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
+                accounts = data;
+                deviceError = error;
+            }];
+            
+            [[accounts should] beNil];
+            [[deviceError should] beNonNil];
+            
+        });
+        
+        it(@"should fail if API client fails ", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                return nil;
+            }];
+            
+            __block NSNumber* accounts = nil;
+            __block NSError* deviceError = nil;
+            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
+                accounts = data;
+                deviceError = error;
+            }];
+            
+            [[accounts should] beNil];
+            [[deviceError should] beNonNil];
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
