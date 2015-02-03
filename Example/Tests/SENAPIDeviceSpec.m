@@ -226,6 +226,10 @@ describe(@"SENAPIDevice", ^{
     
     describe(@"+getSenseMetaData", ^{
         
+        afterEach(^{
+            [SENAPIClient clearStubs];
+        });
+        
         it(@"should return a SENDeviceMetadata object", ^{
             [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                 SENAPIDataBlock block = [params lastObject];
@@ -269,6 +273,11 @@ describe(@"SENAPIDevice", ^{
         
         beforeEach(^{
             senseId = @"123";
+        });
+        
+        afterEach(^{
+            [SENAPIClient clearStubs];
+            [SENAPIDevice clearStubs];
         });
         
         it(@"should succeed when matching senseId and no error", ^{
