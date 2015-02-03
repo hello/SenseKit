@@ -32,6 +32,12 @@ typedef NS_ENUM(NSUInteger, SENPreferenceType) {
     SENPreferenceTypePushConditions = 5,
 };
 
+extern NSString* const SENPreferenceNameEnhancedAudio;
+extern NSString* const SENPreferenceNameTemp;
+extern NSString* const SENPreferenceNameTime;
+extern NSString* const SENPreferenceNamePushScore;
+extern NSString* const SENPreferenceNamePushConditions;
+
 @interface SENPreference : NSObject
 
 @property (nonatomic, assign, readonly) SENPreferenceType type;

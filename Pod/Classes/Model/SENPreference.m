@@ -8,13 +8,11 @@
 
 #import "SENPreference.h"
 
-static NSString* const SENPreferenceName = @"pref";
-static NSString* const SENPreferenceNameEnhancedAudio = @"ENHANCED_AUDIO";
-static NSString* const SENPreferenceNameTemp = @"TEMP_CELCIUS";
-static NSString* const SENPreferenceNameTime = @"TIME_TWENTY_FOUR_HOUR";
-static NSString* const SENPreferenceNamePushScore = @"PUSH_SCORE";
-static NSString* const SENPreferenceNamePushConditions = @"PUSH_ALERT_CONDITIONS";
-static NSString* const SENPreferenceEnable = @"enabled";
+NSString* const SENPreferenceNameEnhancedAudio = @"ENHANCED_AUDIO";
+NSString* const SENPreferenceNameTemp = @"TEMP_CELCIUS";
+NSString* const SENPreferenceNameTime = @"TIME_TWENTY_FOUR_HOUR";
+NSString* const SENPreferenceNamePushScore = @"PUSH_SCORE";
+NSString* const SENPreferenceNamePushConditions = @"PUSH_ALERT_CONDITIONS";
 
 @interface SENPreference()
 
@@ -23,6 +21,9 @@ static NSString* const SENPreferenceEnable = @"enabled";
 @end
 
 @implementation SENPreference
+
+static NSString* const SENPreferenceName = @"pref";
+static NSString* const SENPreferenceEnable = @"enabled";
 
 + (SENPreferenceType)typeFromName:(id)nameObject {
     SENPreferenceType type = SENPreferenceTypeUnknown;
