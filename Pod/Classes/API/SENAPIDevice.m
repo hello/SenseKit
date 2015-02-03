@@ -117,7 +117,8 @@ NSString* const SENAPIDevicePropertySenseId = @"sense_id";
         return;
     }
     
-    [SENAPIClient GET:SENAPIDevicePathMetaData parameters:nil completion:^(id data, NSError *error) {
+    NSString* path = [SENAPIDeviceEndpoint stringByAppendingPathComponent:SENAPIDevicePathMetaData];
+    [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
         NSNumber* numberOfAccounts = nil;
         NSString* senseId = nil;
         
