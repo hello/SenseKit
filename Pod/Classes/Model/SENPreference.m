@@ -94,7 +94,7 @@ static NSString* const SENPreferenceEnable = @"enabled";
 
 - (NSDictionary*)dictionaryValue {
     return @{SENPreferenceName : [[self class] nameFromType:[self type]],
-             SENPreferenceEnable : @([self enabled])};
+             SENPreferenceEnable : @([self isEnabled])};
 }
 
 @end

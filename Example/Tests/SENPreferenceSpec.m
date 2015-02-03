@@ -32,7 +32,7 @@ describe(@"SENPreference", ^{
             });
 
             it(@"sets the value", ^{
-                [[@([pref enabled]) should] equal:@(YES)];
+                [[@([pref isEnabled]) should] equal:@(YES)];
             });
         });
 
@@ -49,7 +49,7 @@ describe(@"SENPreference", ^{
 
             it(@"is not enabled", ^{
                 pref = [[SENPreference alloc] initWithDictionary:dict];
-                [[@([pref enabled]) should] equal:@(NO)];
+                [[@([pref isEnabled]) should] equal:@(NO)];
             });
         });
         
@@ -105,7 +105,7 @@ describe(@"SENPreference", ^{
             
             SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
             [[@([pref type]) should] equal:@(SENPreferenceTypeEnhancedAudio)];
-            [[@([pref enabled]) should] equal:@(YES)];
+            [[@([pref isEnabled]) should] equal:@(YES)];
             
         });
         

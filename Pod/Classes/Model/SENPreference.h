@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger, SENPreferenceType) {
 @interface SENPreference : NSObject
 
 @property (nonatomic, assign, readonly) SENPreferenceType type;
-@property (nonatomic, assign, readwrite) BOOL enabled;
+@property (nonatomic, assign, readwrite, getter = isEnabled) BOOL enabled;
 
 /**
  * @param type: the type of the preference
