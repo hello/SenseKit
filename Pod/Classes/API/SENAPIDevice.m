@@ -14,6 +14,7 @@ NSString* const SENAPIDeviceErrorDomain = @"is.hello.api.device";
 NSString* const SENAPIDeviceEndpoint = @"devices";
 NSString* const SENAPIDevicePathPill = @"pill";
 NSString* const SENAPIDevicePathSense = @"sense";
+NSString* const SENAPIDevicePathMetaData = @"info";
 
 NSString* const SENAPIDevicePropertyDeviceId = @"device_id";
 NSString* const SENAPIDevicePropertyType = @"type";
@@ -24,6 +25,8 @@ NSString* const SENAPIDevicePropertyStateValueNormal = @"NORMAL";
 NSString* const SENAPIDevicePropertyStateValueLowBattery = @"LOW_BATTERY";
 NSString* const SENAPIDevicePropertyFirmwareVersion = @"firmware_version";
 NSString* const SENAPIDevicePropertyLastSeen = @"last_updated";
+NSString* const SENAPIDevicePropertyPairedAccounts = @"paired_accounts";
+NSString* const SENAPIDevicePropertySenseId = @"sense_id";
 
 @implementation SENAPIDevice
 
@@ -103,6 +106,35 @@ NSString* const SENAPIDevicePropertyLastSeen = @"last_updated";
         if (completion) completion ([self devicesFromRawResponse:data], error);
     }];
     
+}
+
++ (void)getNumberOfAccountsForPairedSense:(NSString*)deviceId completion:(SENAPIDataBlock)completion {
+    if (!completion) return;
+    if ([deviceId length] == 0) {
+        completion (nil, [NSError errorWithDomain:SENAPIDeviceErrorDomain
+                                             code:SENAPIDeviceErrorInvalidParam
+                                         userInfo:nil]);
+        return;
+    }
+    
+    [SENAPIClient GET:SENAPIDevicePathMetaData parameters:nil completion:^(id data, NSError *error) {
+        NSNumber* numberOfAccounts = nil;
+        NSString* senseId = nil;
+        
+        if (error == nil && [data isKindOfClass:[NSDictionary  class]]) {
+            senseId = data[SENAPIDevicePropertySenseId];
+            
+            if (![senseId isEqualToString:deviceId]) {
+                error = [NSError errorWithDomain:SENAPIDeviceErrorDomain
+                                            code:SENAPIDeviceErrorUnexpectedResponse
+                                        userInfo:nil];
+            } else {
+                numberOfAccounts = data[SENAPIDevicePropertyPairedAccounts];
+            }
+        }
+        
+        completion (numberOfAccounts, error);
+    }];
 }
 
 #pragma mark - Unregistering Devices
