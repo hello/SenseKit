@@ -25,8 +25,6 @@ NSString* const SENAPIDevicePropertyStateValueNormal = @"NORMAL";
 NSString* const SENAPIDevicePropertyStateValueLowBattery = @"LOW_BATTERY";
 NSString* const SENAPIDevicePropertyFirmwareVersion = @"firmware_version";
 NSString* const SENAPIDevicePropertyLastSeen = @"last_updated";
-NSString* const SENAPIDevicePropertyPairedAccounts = @"paired_accounts";
-NSString* const SENAPIDevicePropertySenseId = @"sense_id";
 
 @implementation SENAPIDevice
 
