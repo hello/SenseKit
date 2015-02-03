@@ -108,6 +108,21 @@ NSString* const SENAPIDevicePropertySenseId = @"sense_id";
     
 }
 
++ (void)getSenseMetaData:(SENAPIDataBlock)completion {
+    if (!completion) return;
+    NSString* path = [SENAPIDeviceEndpoint stringByAppendingPathComponent:SENAPIDevicePathMetaData];
+    [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
+        SENDeviceMetadata* senseMetadata = nil;
+        
+        if (error == nil && [data isKindOfClass:[NSDictionary  class]]) {
+            senseMetadata = [[SENDeviceMetadata alloc] initWithDictionary:data
+                                                                 withType:SENDeviceTypeSense];
+        }
+        
+        completion (senseMetadata, error);
+    }];
+}
+
 + (void)getNumberOfAccountsForPairedSense:(NSString*)deviceId completion:(SENAPIDataBlock)completion {
     if (!completion) return;
     if ([deviceId length] == 0) {
@@ -117,24 +132,17 @@ NSString* const SENAPIDevicePropertySenseId = @"sense_id";
         return;
     }
     
-    NSString* path = [SENAPIDeviceEndpoint stringByAppendingPathComponent:SENAPIDevicePathMetaData];
-    [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
-        NSNumber* numberOfAccounts = nil;
-        NSString* senseId = nil;
-        
-        if (error == nil && [data isKindOfClass:[NSDictionary  class]]) {
-            senseId = data[SENAPIDevicePropertySenseId];
-            
-            if (![senseId isEqualToString:deviceId]) {
-                error = [NSError errorWithDomain:SENAPIDeviceErrorDomain
-                                            code:SENAPIDeviceErrorUnexpectedResponse
-                                        userInfo:nil];
-            } else {
-                numberOfAccounts = data[SENAPIDevicePropertyPairedAccounts];
-            }
+    [self getSenseMetaData:^(SENDeviceMetadata* data, NSError *error) {
+        NSError* metadataError = error;
+        if (error == nil && ![[data deviceId] isEqualToString:deviceId]) {
+            metadataError = [NSError errorWithDomain:SENAPIDeviceErrorDomain
+                                                code:SENAPIDeviceErrorUnexpectedResponse
+                                            userInfo:nil];
+            completion (nil, metadataError);
+        } else {
+            completion ([data pairedAccounts], metadataError);
         }
         
-        completion (numberOfAccounts, error);
     }];
 }
 

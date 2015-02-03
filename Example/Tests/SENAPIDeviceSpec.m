@@ -224,6 +224,45 @@ describe(@"SENAPIDevice", ^{
         
     });
     
+    describe(@"+getSenseMetaData", ^{
+        
+        it(@"should return a SENDeviceMetadata object", ^{
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(@{@"sense_id" : @"Sense",
+                        @"paired_accounts" : @(1)}, nil);
+                return nil;
+            }];
+            
+            __block id metadata = nil;
+            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
+                metadata = data;
+            }];
+            [[metadata should] beKindOfClass:[SENDeviceMetadata class]];
+            
+        });
+        
+        it(@"should fail with no metadata", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock block = [params lastObject];
+                block(nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                return nil;
+            }];
+            
+            __block id metadata = nil;
+            __block NSError* metadataError = nil;
+            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
+                metadata = data;
+                metadataError = error;
+            }];
+            [[metadata should] beNil];
+            [[metadataError should] beNonNil];
+            
+        });
+        
+    });
+    
     describe(@"+getNumberOfAccountsForPairedSense", ^{
         
         __block NSString* senseId;
@@ -255,10 +294,11 @@ describe(@"SENAPIDevice", ^{
         
         it(@"should fail if sense id returned from server does not match ", ^{
             
-            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+            [SENAPIDevice stub:@selector(getSenseMetaData:) withBlock:^id(NSArray *params) {
                 SENAPIDataBlock block = [params lastObject];
-                block(@{@"sense_id" : @"doesnotexist",
-                        @"paired_accounts" : @(1)}, nil);
+                block ([[SENDeviceMetadata alloc] initWithDictionary:@{@"sense_id" : @"doesnotexist",
+                                                                       @"paired_accounts" : @(1)}
+                                                            withType:SENDeviceTypeSense], nil);
                 return nil;
             }];
             
