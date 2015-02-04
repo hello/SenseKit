@@ -15,7 +15,7 @@ static NSString* const SENAlarmEditableKey = @"editable";
 static NSString* const SENAlarmHourKey = @"hour";
 static NSString* const SENAlarmMinuteKey = @"minute";
 static NSString* const SENAlarmRepeatKey = @"day_of_week";
-static NSString* const SENAlarmIdentifierKey = @"identifier";
+static NSString* const SENAlarmIdentifierKey = @"id";
 
 static NSString* const SENAlarmDefaultSoundName = @"None";
 static NSUInteger const SENAlarmDefaultHour = 7;
