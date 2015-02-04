@@ -27,6 +27,7 @@
 		8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */; };
 		8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
+		8A45E66E1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45E66D1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
 		8A4B669719ED9CE900445883 /* SENSleepResultSensorInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */; };
 		8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */; };
@@ -96,6 +97,7 @@
 		8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendSpec.m; sourceTree = "<group>"; };
 		8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendDataPointSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
+		8A45E66D1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultStatisticSpec.m; sourceTree = "<group>"; };
 		8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAuthorizationServiceSpec.m; sourceTree = "<group>"; };
 		8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSensorInsightSpec.m; sourceTree = "<group>"; };
 		8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITrendsSpec.m; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */,
 				8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */,
 				8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */,
+				8A45E66D1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -503,6 +506,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A45E66E1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m in Sources */,
 				BF414CE41A771206006204DE /* SENServiceHealthKitSpec.m in Sources */,
 				BF781E4519DF216C00B68EBC /* SENSettingsSpec.m in Sources */,
 				BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */,

@@ -17,6 +17,11 @@ describe(@"SENSleepResult", ^{
                                        @{@"id": @33421},
                                        @{@"id": @32995},
                                 ],
+                               @"statistics" : @{
+                                       @"total_sleep" : @330,
+                                       @"sound_sleep" : @123,
+                                       @"times_awake" : @1,
+                               },
                                @"insights":@[
                                        @{
                                            @"sensor":@"temperature",
@@ -52,6 +57,10 @@ describe(@"SENSleepResult", ^{
 
         it(@"sets the insights", ^{
             [[[result sensorInsights] should] haveCountOf:2];
+        });
+
+        it(@"sets the statistics", ^{
+            [[[result statistics] should] haveCountOf:3];
         });
     });
 
@@ -97,7 +106,11 @@ describe(@"SENSleepResult", ^{
                                                   @"condition": @"ALERT",
                                                   @"message": @"I'm freezing"
                                                 },
-                                              ]};
+                                              ],
+                                      @"statistics" : @{
+                                              @"total_sleep" : @330,
+                                              @"sound_sleep" : @200,
+                                              },};
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
@@ -114,6 +127,10 @@ describe(@"SENSleepResult", ^{
 
         it(@"updates all insights", ^{
             [[[result sensorInsights] should] haveCountOf:1];
+        });
+
+        it(@"updates all statistics", ^{
+            [[[result statistics] should] haveCountOf:2];
         });
     });
 });
