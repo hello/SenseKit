@@ -4,10 +4,6 @@
 #import "SENSettings.h"
 #import "SENKeyedArchiver.h"
 
-@interface SENAlarm ()
-@property (nonatomic, strong) NSString* identifier;
-@end
-
 @implementation SENAlarm
 
 static NSString* const SENAlarmSoundKey = @"sound";
