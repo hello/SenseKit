@@ -279,16 +279,16 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
         LGPeripheral* peripheral = [[strongSelf sense] peripheral];
-        NSDictionary* characteristics = [self cachedCharacteristicsWithIds:characteristicIds
-                                                            fromPeripheral:peripheral
-                                                              forServiceId:serviceUUID];
+        NSDictionary* characteristics = [strongSelf cachedCharacteristicsWithIds:characteristicIds
+                                                                  fromPeripheral:peripheral
+                                                                    forServiceId:serviceUUID];
         if ([characteristics count] > 0) {
             completion (characteristics, nil);
         } else {
-            [self usePeripheral:peripheral
-                     toDiscover:characteristicIds
-               forServiceWithId:serviceUUID
-                     completion:completion];
+            [strongSelf usePeripheral:peripheral
+                           toDiscover:characteristicIds
+                     forServiceWithId:serviceUUID
+                           completion:completion];
         }
         
     }];
