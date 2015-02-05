@@ -134,7 +134,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 + (BOOL)canScan {
     CBCentralManagerState state = [[[LGCentralManager sharedInstance] manager] state];
     return state != CBCentralManagerStateUnauthorized
-    && state != CBCentralManagerStateUnsupported;
+            && state != CBCentralManagerStateUnsupported;
 }
 
 - (instancetype)initWithSense:(SENSense*)sense {
@@ -377,8 +377,8 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 
 - (void)characteristics:(SENSenseCompletionBlock)completion {
     [self characteristicsFor:[NSMutableSet setWithObjects:kSENSenseCharacteristicInputId,
-                              kSENSenseCharacteristicResponseId,
-                              nil]
+                                                          kSENSenseCharacteristicResponseId,
+                                                          nil]
                   completion:completion];
 }
 
@@ -479,8 +479,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         }
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (!strongSelf) return;
-        
+
         LGCharacteristic* writer = [response valueForKey:kSENSenseCharacteristicInputId];
         LGCharacteristic* reader = [response valueForKey:kSENSenseCharacteristicResponseId];
         if (writer == nil || reader == nil) {
@@ -539,7 +538,6 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                                              [strongSelf fireFailureMsgCbWithCbKey:cbKey andError:error];
                                          }];
             }];
-            
         } else {
             DDLogWarn(@"# of packets from message is 0");
             [strongSelf failWithBlock:failure andCode:SENSenseManagerErrorCodeInvalidCommand];
@@ -805,9 +803,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
             SENSenseMessage* responseMsg = [self messageFromBlePackets:*allPackets error:&parseError];
             if (parseError != nil || [responseMsg hasError]) {
                 NSInteger code
-                = parseError != nil
-                ? [parseError code]
-                : SENSenseManagerErrorCodeUnexpectedResponse;
+                    = parseError != nil
+                    ? [parseError code]
+                    : SENSenseManagerErrorCodeUnexpectedResponse;
                 [self failWithBlock:failure andCode:code];
             } else {
                 if (success) success (responseMsg);
@@ -1218,7 +1216,6 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                          queue:[NSOperationQueue mainQueue]
                     usingBlock:^(NSNotification *note) {
                         __strong typeof(weakSelf) strongSelf = weakSelf;
-                        if (!strongSelf) return;
                         
                         DDLogVerbose(@"Sense disconnected unexpectedly");
                         // if peripheral is disconnected, it is removed from
