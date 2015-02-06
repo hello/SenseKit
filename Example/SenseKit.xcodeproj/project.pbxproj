@@ -292,10 +292,10 @@
 				8A22235119B66A4700C3480D /* SENSleepResultSegmentSpec.m */,
 				8A4B669619ED9CE900445883 /* SENSleepResultSensorInsightSpec.m */,
 				8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */,
+				8A45E66D1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m */,
 				8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */,
 				8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */,
 				8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */,
-				8A45E66D1A819FBB0038AA7A /* SENSleepResultStatisticSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";

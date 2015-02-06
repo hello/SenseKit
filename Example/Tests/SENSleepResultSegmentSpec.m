@@ -62,6 +62,59 @@ describe(@"SENSleepResultSegment", ^{
         });
     });
 
+    describe(@"isEqual:", ^{
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970] - 10000;
+        NSDictionary* json = @{@"id": @448917,
+                               @"message": @"there may have been an earthquake",
+                               @"event_type": @"noise",
+                               @"date": @(timeInterval * 1000),
+                               @"sound": @{
+                                       @"url":@"http://example.com/sound.mkv",
+                                       @"duration_millis":@53112}};
+
+        beforeEach(^{
+            segment = [[SENSleepResultSegment alloc] initWithDictionary:json];
+        });
+
+        context(@"two segments created with same dictionary", ^{
+            __block SENSleepResultSegment* otherSegment;
+
+            beforeEach(^{
+                otherSegment = [[SENSleepResultSegment alloc] initWithDictionary:[json copy]];
+            });
+
+            it(@"is YES", ^{
+                [[segment should] equal:otherSegment];
+            });
+        });
+
+        context(@"other object is not a segment", ^{
+
+            it(@"is NO", ^{
+                [[segment shouldNot] equal:@""];
+            });
+        });
+
+        context(@"other object has different properties", ^{
+            __block SENSleepResultSegment* otherSegment;
+            NSDictionary* json = @{@"id": @448910,
+                                   @"message": @"there may have been an earthquake",
+                                   @"event_type": @"noise",
+                                   @"date": @(timeInterval * 1000),
+                                   @"sound": @{
+                                           @"url":@"http://example.com/sound.mkv",
+                                           @"duration_millis":@53112}};
+
+            beforeEach(^{
+                otherSegment = [[SENSleepResultSegment alloc] initWithDictionary:json];
+            });
+
+            it(@"is NO", ^{
+                [[segment shouldNot] equal:otherSegment];
+            });
+        });
+    });
+
     describe(@"serialization", ^{
         __block SENSleepResultSegment* serializedSegment = nil;
         NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970] - 10000;
@@ -112,13 +165,15 @@ describe(@"SENSleepResultSegment", ^{
         });
     });
 
-    describe(@"updating", ^{
+    describe(@"updateWithDictionary:", ^{
         NSDictionary* json = @{@"id": @9422198, @"duration": @553000};
         NSDictionary* updatedJSON = @{@"duration": @125500};
 
+        __block BOOL changed = NO;
+
         beforeEach(^{
             segment = [[SENSleepResultSegment alloc] initWithDictionary:json];
-            [segment updateWithDictionary:updatedJSON];
+            changed = [segment updateWithDictionary:updatedJSON];
         });
 
         it(@"updates an existing instance with a dictionary", ^{
@@ -127,6 +182,14 @@ describe(@"SENSleepResultSegment", ^{
 
         it(@"does not override fields missing from a dictionary", ^{
             [[[segment serverID] should] equal:json[@"id"]];
+        });
+
+        it(@"returns YES", ^{
+            [[@(changed) should] beYes];
+        });
+
+        it(@"does not update more than once", ^{
+            [[@([segment updateWithDictionary:updatedJSON]) should] beNo];
         });
     });
 });
