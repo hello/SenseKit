@@ -40,6 +40,12 @@ static NSString* const SENSensorDataPointDateOffsetKey = @"offset_millis";
         && ((self.dateOffset && [self.dateOffset isEqualToNumber:object.dateOffset]) || (!self.dateOffset && !object.dateOffset));
 }
 
+- (NSString *)description
+{
+    static NSString* const SENSensorDataPointDescriptionFormat =  @"<SENSensorDataPoint @date=%@ @value=%@>";
+    return [NSString stringWithFormat:SENSensorDataPointDescriptionFormat, self.date, self.value];
+}
+
 @end
 
 @implementation SENSensor
@@ -182,6 +188,12 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
         _lastUpdated = [aDecoder decodeObjectForKey:SENSensorLastUpdatedKey];
     }
     return self;
+}
+
+- (NSString *)description
+{
+    static NSString* const SENSensorDescriptionFormat =  @"<SENSensor @name=%@ @value=%@ @lastUpdated=%@>";
+    return [NSString stringWithFormat:SENSensorDescriptionFormat, self.name, self.value, self.lastUpdated];
 }
 
 - (void)encodeWithCoder:(NSCoder*)aCoder
