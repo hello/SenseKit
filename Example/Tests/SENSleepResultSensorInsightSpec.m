@@ -63,12 +63,14 @@ describe(@"SENSleepResultSensorInsight", ^{
         });
     });
 
-    describe(@"updating", ^{
+    describe(@"updateWithDictionary:", ^{
+
+        __block BOOL changed = NO;
 
         NSDictionary* updatedJSON = @{@"message": @"This reminds me Dairy Queen."};
 
         beforeEach(^{
-            [sensor updateWithDictionary:updatedJSON];
+            changed = [sensor updateWithDictionary:updatedJSON];
         });
 
         it(@"updates an existing instance with a dictionary", ^{
@@ -77,6 +79,14 @@ describe(@"SENSleepResultSensorInsight", ^{
 
         it(@"does not override fields missing from a dictionary", ^{
             [[sensor.name should] equal:insightData[@"sensor"]];
+        });
+
+        it(@"returns YES", ^{
+            [[@(changed) should] beYes];
+        });
+
+        it(@"does not update more than once", ^{
+            [[@([sensor updateWithDictionary:updatedJSON]) should] beNo];
         });
     });
 });

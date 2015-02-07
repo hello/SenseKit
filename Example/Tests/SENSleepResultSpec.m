@@ -95,8 +95,9 @@ describe(@"SENSleepResult", ^{
         });
     });
 
-    describe(@"updating", ^{
+    describe(@"updateWithDictionary:", ^{
         __block SENSleepResult* result = nil;
+        __block BOOL updated = NO;
 
         NSDictionary* json = @{@"message": @"Not bad", @"score": @78};
         NSDictionary* updatedData = @{@"score": @64,
@@ -114,7 +115,7 @@ describe(@"SENSleepResult", ^{
 
         beforeEach(^{
             result = [[SENSleepResult alloc] initWithDictionary:json];
-            [result updateWithDictionary:updatedData];
+            updated = [result updateWithDictionary:updatedData];
         });
 
         it(@"updates an existing instance with a dictionary", ^{
@@ -125,12 +126,20 @@ describe(@"SENSleepResult", ^{
             [[[result message] should] equal:json[@"message"]];
         });
 
+        it(@"returns YES", ^{
+            [[@(updated) should] beYes];
+        });
+
         it(@"updates all insights", ^{
             [[[result sensorInsights] should] haveCountOf:1];
         });
 
         it(@"updates all statistics", ^{
             [[[result statistics] should] haveCountOf:2];
+        });
+
+        it(@"does not update more than once", ^{
+            [[@([result updateWithDictionary:updatedData]) should] beNo];
         });
     });
 });
