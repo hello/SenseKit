@@ -60,6 +60,25 @@ describe(@"-initWithDictionary:", ^{
         [[@(trend.graphType) should] equal:@(SENTrendGraphTypeUnknown)];
     });
 
+    it(@"is equal to a trend with the same properties", ^{
+        NSDictionary* properties = @{@"graph_type":@"HISTOGRAM",
+                                     @"data_points":@[@{@"data_label":@"GOOD",@"y_value":@233,@"x_value":@4}],
+                                     @"title":@"Number of cakes per week"};
+        trend = [[SENTrend alloc] initWithDictionary:properties];
+        SENTrend* other = [[SENTrend alloc] initWithDictionary:properties];
+        [[trend should] equal:other];
+        [[@(trend.hash) should] equal:@(other.hash)];
+    });
+
+    it(@"is not equal to a trend with different properties", ^{
+        NSDictionary* properties = @{@"graph_type":@"HISTOGRAM",
+                                     @"data_points":@[@{@"data_label":@"GOOD",@"y_value":@233,@"x_value":@4}],
+                                     @"title":@"Number of cakes per week"};
+        trend = [[SENTrend alloc] initWithDictionary:properties];
+        SENTrend* other = [[SENTrend alloc] initWithDictionary:@{@"title":@"Number of cakes per week"}];
+        [[trend shouldNot] equal:other];
+    });
+
     context(@"data_points is nil", ^{
 
         it(@"sets an empty array of points", ^{

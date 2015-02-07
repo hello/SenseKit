@@ -60,6 +60,20 @@ describe(@"-initWithDictionary:", ^{
         [[@(point.quality) should] equal:@(SENTrendDataPointQualityUnknown)];
     });
 
+    it(@"is equal to a point with the same properties", ^{
+        NSDictionary* properties = @{@"data_label":@"GOOD",@"y_value":@233,@"x_value":@4};
+        point = [[SENTrendDataPoint alloc] initWithDictionary:properties];
+        SENTrendDataPoint* other = [[SENTrendDataPoint alloc] initWithDictionary:properties];
+        [[point should] equal:other];
+        [[@(point.hash) should] equal:@(other.hash)];
+    });
+
+    it(@"is not equal to a point with different properties", ^{
+        point = [[SENTrendDataPoint alloc] initWithDictionary:@{@"data_label":@"GOOD",@"y_value":@233,@"x_value":@4}];
+        SENTrendDataPoint* other = [[SENTrendDataPoint alloc] initWithDictionary:@{@"data_label":@"BAD",@"y_value":@233,@"x_value":@4}];
+        [[point shouldNot] equal:other];
+    });
+
     context(@"datetime is 0", ^{
 
         it(@"sets the date as nil", ^{
