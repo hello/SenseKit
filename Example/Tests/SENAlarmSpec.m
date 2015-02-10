@@ -78,7 +78,7 @@ describe(@"SENAlarm", ^{
 
     describe(@"-initWithDictionary:", ^{
         
-        NSDictionary* alarmValues = @{
+        NSDictionary* alarmValues = @{@"id":@"abcdef-123456",
                                       @"enabled": @YES, @"hour":@22, @"minute":@15,
                                       @"sound":@{@"name":@"Bells",@"id":@78},
                                       @"editable": @YES, @"smart":@YES, @"day_of_week":@[@1,@5,@6]};
@@ -115,8 +115,25 @@ describe(@"SENAlarm", ^{
             [[@([alarm isSmartAlarm]) should] beYes];
         });
 
+        it(@"sets the identifier", ^{
+            [[alarm.identifier should] equal:alarmValues[@"id"]];
+        });
+
         it(@"sets the repeat days", ^{
             [[@([alarm repeatFlags]) should] equal:@(SENAlarmRepeatMonday | SENAlarmRepeatFriday | SENAlarmRepeatSaturday)];
+        });
+
+        it(@"is equal to an alarm with the same properties", ^{
+            SENAlarm* other = [[SENAlarm alloc] initWithDictionary:alarmValues];
+            [[alarm should] equal:other];
+            [[@(alarm.hash) should] equal:@(other.hash)];
+        });
+
+        it(@"is not equal to an alarm with different properties", ^{
+            NSMutableDictionary* properties = [alarmValues mutableCopy];
+            properties[@"enabled"] = @NO;
+            SENAlarm* other = [[SENAlarm alloc] initWithDictionary:properties];
+            [[alarm shouldNot] equal:other];
         });
     });
 

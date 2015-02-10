@@ -36,6 +36,8 @@
 		8A9266A11A5CC11F00D908EC /* SENSoundSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9266A01A5CC11F00D908EC /* SENSoundSpec.m */; };
 		8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */; };
 		8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */; };
+		8ABA8A2D1A85A6BF00E8B51F /* SENInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA8A2C1A85A6BF00E8B51F /* SENInsightSpec.m */; };
+		8AE8BD711A85ACD0009E257B /* SENInsightInfoSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE8BD701A85ACD0009E257B /* SENInsightInfoSpec.m */; };
 		8AF2CFD619B63A1D00D09600 /* SENSleepResultSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */; };
 		A074E0189DF84269ACBD8754 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F567B2B7C8E6429891E89AFC /* libPods.a */; };
 		BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF05C8DD1A392032002A1307 /* SENSenseSpec.m */; };
@@ -107,6 +109,8 @@
 		8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAlarmSpec.m; sourceTree = "<group>"; };
 		8AB29B7C196DC8C0004BE34E /* SENSensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSensorSpec.m; sourceTree = "<group>"; };
 		8AB29B7F196DFD8C004BE34E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
+		8ABA8A2C1A85A6BF00E8B51F /* SENInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENInsightSpec.m; sourceTree = "<group>"; };
+		8AE8BD701A85ACD0009E257B /* SENInsightInfoSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENInsightInfoSpec.m; sourceTree = "<group>"; };
 		8AF2CFD519B63A1D00D09600 /* SENSleepResultSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepResultSpec.m; sourceTree = "<group>"; };
 		BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BF05C8DD1A392032002A1307 /* SENSenseSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseSpec.m; sourceTree = "<group>"; };
@@ -284,6 +288,8 @@
 			isa = PBXGroup;
 			children = (
 				8AB29B7B196DC8C0004BE34E /* SENAlarmSpec.m */,
+				8AE8BD701A85ACD0009E257B /* SENInsightInfoSpec.m */,
+				8ABA8A2C1A85A6BF00E8B51F /* SENInsightSpec.m */,
 				BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */,
 				BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */,
 				BF05C8DD1A392032002A1307 /* SENSenseSpec.m */,
@@ -524,6 +530,7 @@
 				8A22235219B66A4700C3480D /* SENSleepResultSegmentSpec.m in Sources */,
 				BF1E2E791A031DF900DDD0D0 /* SENAPIInsightSpec.m in Sources */,
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
+				8ABA8A2D1A85A6BF00E8B51F /* SENInsightSpec.m in Sources */,
 				BF05C8F71A3BA262002A1307 /* SENAnalyticsLoggerSpec.m in Sources */,
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
 				BF8E1A951A6893F1009E421F /* SENPreferenceSpec.m in Sources */,
@@ -532,6 +539,7 @@
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				BF17A1A219C3C92300C4B6CA /* SENServiceQuestionsSpec.m in Sources */,
 				8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */,
+				8AE8BD711A85ACD0009E257B /* SENInsightInfoSpec.m in Sources */,
 				8A32B1B61A328F3900061C76 /* SENAPIFeedbackSpec.m in Sources */,
 				BF8E1A981A6898CD009E421F /* SENAPIPreferenceSpec.m in Sources */,
 				8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */,

@@ -52,6 +52,17 @@ describe(@"SENSensor", ^{
             [[@(sensor.lastUpdated.timeIntervalSince1970) should] equal:@([timestamp doubleValue] /1000)];
         });
 
+        it(@"is equal to sensor with the same data", ^{
+            SENSensor* other = [[SENSensor alloc] initWithDictionary:sensorValues];
+            [[sensor should] equal:other];
+            [[@(sensor.hash) should] equal:@(other.hash)];
+        });
+
+        it(@"is not equal to a sensor with different data", ^{
+            SENSensor* other = [[SENSensor alloc] initWithDictionary:@{@"name":@"humidity"}];
+            [[sensor shouldNot] equal:other];
+        });
+
         context(@"the sensor is deserialized", ^{
 
             __block SENSensor* decodedSensor;
