@@ -10,15 +10,6 @@
 #import <SenseKit/SENAPIFeedback.h>
 #import <Nocilla/Nocilla.h>
 
-static NSDate* dateForTime(NSUInteger hour, NSUInteger minute) {
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDateComponents* components = [calendar components:(NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear)
-                                               fromDate:[NSDate date]];
-    components.hour = hour;
-    components.minute = minute;
-    return [calendar dateFromComponents:components];
-}
-
 SPEC_BEGIN(SENAPIFeedbackSpec)
 
 describe(@"SENAPIFeedback", ^{
@@ -48,66 +39,32 @@ describe(@"SENAPIFeedback", ^{
 
     describe(@"sendAccurateWakeupTime:detectedWakeupTime:forNightOfSleep:completion:", ^{
 
-        it(@"invokes the completion block", ^{
-            __block BOOL callbackInvoked = NO;
-            [SENAPIFeedback sendAccurateWakeupTime:nil detectedWakeupTime:nil forNightOfSleep:nil completion:^(NSError *error) {
+        __block BOOL callbackInvoked = NO;
+        NSString* sleepDateText = @"2011-06-13";
+        NSDateFormatter* formatter = [NSDateFormatter new];
+        formatter.dateFormat = @"yyyy-MM-dd";
+
+        beforeEach(^{
+            NSDate* date = [formatter dateFromString:sleepDateText];
+            [SENAPIFeedback updateEvent:@"IN_BED" withHour:7 minute:22 forNightOfSleep:date completion:^(NSError *error) {
                 callbackInvoked = YES;
             }];
+        });
+
+        it(@"invokes the completion block", ^{
             [[@(callbackInvoked) should] beYes];
         });
 
-        context(@"no updated wakeup time is sent", ^{
-
-            beforeEach(^{
-                [SENAPIFeedback sendAccurateWakeupTime:nil
-                                    detectedWakeupTime:dateForTime(6, 40)
-                                       forNightOfSleep:[NSDate date]
-                                            completion:NULL];
-            });
-
-            it(@"does not send the wakeup time", ^{
-                [[requestParams[@"hour"] should] beNil];
-            });
-
-            it(@"sends good == true", ^{
-                [[requestParams[@"good"] should] beYes];
-            });
+        it(@"sends good == false", ^{
+            [[requestParams[@"good"] should] beNo];
         });
 
-        context(@"the updated wakeup time is the same as the detected time", ^{
-
-            beforeEach(^{
-                [SENAPIFeedback sendAccurateWakeupTime:dateForTime(6, 40)
-                                    detectedWakeupTime:dateForTime(6, 40)
-                                       forNightOfSleep:[NSDate date]
-                                            completion:NULL];
-            });
-
-            it(@"does not send the wakeup time", ^{
-                [[requestParams[@"hour"] should] beNil];
-            });
-
-            it(@"sends good == true", ^{
-                [[requestParams[@"good"] should] beYes];
-            });
+        it(@"sends the accurate wakeup time", ^{
+            [[requestParams[@"hour"] should] equal:@"07:22"];
         });
 
-        context(@"the updated wakeup time differs from the detected time", ^{
-
-            beforeEach(^{
-                [SENAPIFeedback sendAccurateWakeupTime:dateForTime(7, 15)
-                                    detectedWakeupTime:dateForTime(6, 40)
-                                       forNightOfSleep:[NSDate date]
-                                            completion:NULL];
-            });
-
-            it(@"sends good == false", ^{
-                [[requestParams[@"good"] should] beNo];
-            });
-
-            it(@"sends the accurate wakeup time", ^{
-                [[requestParams[@"hour"] should] equal:@"07:15"];
-            });
+        it(@"sends the date", ^{
+            [[requestParams[@"day"] should] equal:sleepDateText];
         });
     });
 });
