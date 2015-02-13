@@ -46,7 +46,7 @@ describe(@"SENServiceAccountSpec", ^{
         it(@"should return error if passwords are not provided", ^{
             
             __block NSError* invalidError = nil;
-            [[SENServiceAccount sharedService] changePassword:nil toNewPassword:@"test123" completion:^(NSError *error) {
+            [[SENServiceAccount sharedService] changePassword:nil toNewPassword:@"test123" forUsername:@"test" completion:^(NSError *error) {
                 invalidError = error;
             }];
             

@@ -111,59 +111,6 @@ describe(@"SENAuthorizationService", ^{
             });
         });
     });
-
-    describe(@"+ emailAddressOfAuthorizedUser", ^{
-
-        NSString* emailAddress = @"someguy@example.com";
-
-        it(@"returns nil", ^{
-            [[[SENAuthorizationService emailAddressOfAuthorizedUser] should] beNil];
-        });
-
-        context(@"a user successfully authenticates", ^{
-
-            beforeEach(^{
-                stubRequest(@"POST", @"https://dev-api.hello.is/v1/oauth2/token");
-                [SENAuthorizationService stub:@selector(authorize:password:onCompletion:) withBlock:^id(NSArray *params) {
-                    void(^callback)(NSDictionary* response, NSError* error) = [params lastObject];
-                    if (callback) callback (nil, nil);
-                    return nil;
-                }];
-                [SENAuthorizationService authorizeWithUsername:emailAddress password:@"pass" callback:NULL];
-            });
-
-            it(@"returns the authenticating username", ^{
-                [[expectFutureValue([SENAuthorizationService emailAddressOfAuthorizedUser]) shouldSoon] equal:emailAddress];
-            });
-
-            context(@"a user signs out", ^{
-
-                beforeEach(^{
-                    [SENAuthorizationService deauthorize];
-                });
-
-                it(@"returns nil", ^{
-                    [[[SENAuthorizationService emailAddressOfAuthorizedUser] should] beNil];
-                });
-            });
-        });
-
-        context(@"a user fails to authenticate", ^{
-
-            beforeEach(^{
-                [SENAuthorizationService stub:@selector(authorize:password:onCompletion:) withBlock:^id(NSArray *params) {
-                    void(^callback)(NSDictionary* response, NSError* error) = [params lastObject];
-                    if (callback) callback (nil, [NSError errorWithDomain:@"auth.test" code:-1 userInfo:nil]);
-                    return nil;
-                }];
-                [SENAuthorizationService authorizeWithUsername:emailAddress password:@"pass" callback:NULL];
-            });
-
-            it(@"returns nil", ^{
-                [[[SENAuthorizationService emailAddressOfAuthorizedUser] should] beNil];
-            });
-        });
-    });
     
     describe(@"+ reauthorizeUserWithPassword:callback", ^{
         
@@ -178,20 +125,11 @@ describe(@"SENAuthorizationService", ^{
         it(@"should make a callback", ^{
             
             __block BOOL called = NO;
-            [SENAuthorizationService reauthorizeUserWithPassword:@"newpass" callback:^(NSError *error) {
+            [SENAuthorizationService reauthorizeUser:@"username" password:@"newpass" callback:^(NSError *error) {
                 called = YES;
             }];
             
-            [[expectFutureValue(@(called)) shouldSoon] equal:@(YES)];
-        });
-        
-        it(@"email of user should still be the same as initial authorization", ^{
-            
-            NSString* emailAddress = @"someguy@example.com";
-            [SENAuthorizationService authorizeWithUsername:emailAddress password:@"pass" callback:^(NSError *error) {
-                [SENAuthorizationService reauthorizeUserWithPassword:@"newpass" callback:nil];
-                [[expectFutureValue([SENAuthorizationService emailAddressOfAuthorizedUser]) shouldEventually] equal:emailAddress];
-            }];
+            [[@(called) should] equal:@(YES)];
         });
         
     });
