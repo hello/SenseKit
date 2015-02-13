@@ -68,7 +68,7 @@ describe(@"SENAPIDevice", ^{
         context(@"there is one device", ^{
 
             beforeEach(^{
-                NSArray* deviceResponse = @[@{@"device_id" : @"1", @"type" : @"SENSE", @"state" : @"NORMAL"}];
+                NSArray* deviceResponse = @[@{@"device_id" : @"1", @"type" : @"SENSE", @"state" : @"NORMAL", @"color" : @"BLACK"}];
                 devices = [SENAPIDevice devicesFromRawResponse:deviceResponse];
             });
 
@@ -79,12 +79,14 @@ describe(@"SENAPIDevice", ^{
             });
         });
 
-        context(@"last_updated and firmware version are set", ^{
+        context(@"properties are correct", ^{
             NSString* version = @"alpha-1";
+            NSString* deviceId = @"1";
             NSArray* deviceResponse = @[
-                @{@"device_id" : @"1",
+                @{@"device_id" : deviceId,
                   @"type" : @"SENSE",
                   @"state" : @"NORMAL",
+                  @"color" : @"BLACK",
                   @"firmware_version" : version,
                   @"last_updated" : @"1412730626330"}
             ];
@@ -93,6 +95,10 @@ describe(@"SENAPIDevice", ^{
                 SENDevice* device = [SENAPIDevice devicesFromRawResponse:deviceResponse][0];
                 [[[device lastSeen] should] beKindOfClass:[NSDate class]];
                 [[[device firmwareVersion] should] equal:version];
+                [[@([device color]) should] equal:@(SENDeviceColorBlack)];
+                [[@([device type]) should] equal:@(SENDeviceTypeSense)];
+                [[@([device state]) should] equal:@(SENDeviceStateNormal)];
+                [[[device deviceId] should] equal:deviceId];
             });
 
         });
@@ -138,6 +144,7 @@ describe(@"SENAPIDevice", ^{
                     device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                             type:SENDeviceTypeSense
                                                            state:SENDeviceStateNormal
+                                                           color:SENDeviceColorBlack
                                                  firmwareVersion:@"1"
                                                         lastSeen:[NSDate date]];
                 });
@@ -156,6 +163,7 @@ describe(@"SENAPIDevice", ^{
                     device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                             type:SENDeviceTypePill
                                                            state:SENDeviceStateNormal
+                                                           color:SENDeviceColorBlue
                                                  firmwareVersion:@"1"
                                                         lastSeen:[NSDate date]];
                 });
@@ -191,6 +199,7 @@ describe(@"SENAPIDevice", ^{
                     device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                             type:SENDeviceTypePill
                                                            state:SENDeviceStateNormal
+                                                           color:SENDeviceColorBlue
                                                  firmwareVersion:@"1"
                                                         lastSeen:[NSDate date]];
                 });
@@ -209,6 +218,7 @@ describe(@"SENAPIDevice", ^{
                     device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                             type:SENDeviceTypeSense
                                                            state:SENDeviceStateNormal
+                                                           color:SENDeviceColorWhite
                                                  firmwareVersion:@"1"
                                                         lastSeen:[NSDate date]];
                 });

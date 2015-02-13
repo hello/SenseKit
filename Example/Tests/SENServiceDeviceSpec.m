@@ -65,6 +65,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                                    type:SENDeviceTypeSense
                                                                   state:SENDeviceStateNoData
+                                                                  color:SENDeviceColorBlack
                                                         firmwareVersion:@"1"
                                                                lastSeen:[NSDate date]];
                 [service setSenseInfo:device];
@@ -77,6 +78,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                                    type:SENDeviceTypeSense
                                                                   state:SENDeviceStateNormal
+                                                                  color:SENDeviceColorBlack
                                                         firmwareVersion:@"1"
                                                                lastSeen:[NSDate date]];
                 [service setSenseInfo:device];
@@ -95,6 +97,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
                                                                    type:SENDeviceTypeSense
                                                                   state:SENDeviceStateNormal
+                                                                  color:SENDeviceColorBlack
                                                         firmwareVersion:@"1"
                                                                lastSeen:[NSDate date]];
                 [service setSenseInfo:device];
@@ -114,6 +117,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 SENDevice* fakePill = [[SENDevice alloc] initWithDeviceId:@"2"
                                                                      type:SENDeviceTypePill
                                                                     state:SENDeviceStateLowBattery
+                                                                    color:SENDeviceColorBlue
                                                           firmwareVersion:@"1"
                                                                  lastSeen:[NSDate date]];
                 
@@ -147,6 +151,7 @@ describe(@"SENServiceDeviceSpec", ^{
             [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:@"1"
                                                                  type:SENDeviceTypeSense
                                                                 state:SENDeviceStateNormal
+                                                                color:SENDeviceColorBlack
                                                       firmwareVersion:@"1"
                                                              lastSeen:[NSDate date]]];
             [service whenPairedSenseIsReadyDo:^(NSError *error) {
@@ -174,6 +179,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:deviceId
                                                                      type:SENDeviceTypeSense
                                                                     state:SENDeviceStateNormal
+                                                                    color:SENDeviceColorBlack
                                                           firmwareVersion:@"1"
                                                                  lastSeen:[NSDate date]]];
                 
