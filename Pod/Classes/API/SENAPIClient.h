@@ -4,6 +4,16 @@
 typedef void (^SENAPIDataBlock)(id data, NSError* error);
 typedef void (^SENAPIErrorBlock)(NSError* error);
 
+/**
+ *  Notification sent when Sense API is changed to reachable
+ */
+extern NSString* const SENAPIReachableNotification;
+
+/**
+ *  Notification sent when Sense API is changed to unreachable
+ */
+extern NSString* const SENAPIUnreachableNotification;
+
 @interface SENAPIClient : NSObject
 
 /**
