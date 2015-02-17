@@ -144,6 +144,12 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
     }
 }
 
++ (BOOL)isAPIReachable
+{
+    AFNetworkReachabilityManager* manager = sessionManager.reachabilityManager;
+    return [manager isReachable];
+}
+
 ///-------------------------------
 /// @name HTTP Requests Formatting
 ///-------------------------------

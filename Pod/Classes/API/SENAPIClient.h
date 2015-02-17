@@ -32,6 +32,11 @@ extern NSString* const SENAPIUnreachableNotification;
  */
 + (void)resetToDefaultBaseURL;
 
+/**
+ *  Returns YES if base URL is reachable
+ */
++ (BOOL)isAPIReachable;
+
 ///-------------------------------
 /// @name HTTP Requests Formatting
 ///-------------------------------
