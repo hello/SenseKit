@@ -14,6 +14,7 @@
 #import "SENService+Protected.h"
 #import "SENSleepResult.h"
 #import "SENAPITimeline.h"
+#import "SENLocalPreferences.h"
 
 #ifndef ddLogLevel
 #define ddLogLevel LOG_LEVEL_VERBOSE
@@ -89,15 +90,15 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 }
 
 - (BOOL)ddedDataPointFor:(NSDate*)date {
-    NSDate* lastWrittenDate = [[NSUserDefaults standardUserDefaults] objectForKey:SENServiceHKLastDateWritten];
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    NSDate* lastWrittenDate = [preferences userPreferenceForKey:SENServiceHKLastDateWritten];
     return [lastWrittenDate isEqualToDate:date];
 }
 
 - (void)saveLastWrittenDate:(NSDate*)date {
     if (date == nil) return;
-    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:date forKey:SENServiceHKLastDateWritten];
-    [defaults synchronize];
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    [preferences setUserPreference:date forKey:SENServiceHKLastDateWritten];
 }
 
 - (void)requestAuthorization:(void(^)(NSError* error))completion {
