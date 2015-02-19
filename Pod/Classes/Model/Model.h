@@ -8,7 +8,6 @@
 #import "SENQuestion.h"
 #import "SENSense.h"
 #import "SENSensor.h"
-#import "SENSettings.h"
 #import "SENSleepResult.h"
 #import "SENSound.h"
 #import "SENTrend.h"
