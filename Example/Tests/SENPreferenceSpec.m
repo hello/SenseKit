@@ -63,7 +63,7 @@ describe(@"SENPreference", ^{
         });
 
         context(@"pref represents temperature format", ^{
-            NSDictionary* dict = @{@"pref" : @"TEMP_CELCIUS", @"enabled" : @(YES)};
+            NSDictionary* dict = @{@"pref" : @"TEMP_CELSIUS", @"enabled" : @(YES)};
 
             it(@"has a type of enhanced audio", ^{
                 pref = [[SENPreference alloc] initWithDictionary:dict];

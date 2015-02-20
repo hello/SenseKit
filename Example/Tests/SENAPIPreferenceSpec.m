@@ -77,7 +77,7 @@ describe(@"SENAPIPreferencesSpec", ^{
             [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                 NSDictionary* body = @{
                     @"ENHANCED_AUDIO" : @(true),
-                    @"TEMP_CELCIUS" : @(true),
+                    @"TEMP_CELSIUS" : @(true),
                     @"FAKE_PREFERENCE" : @(true)
                 };
                 SENAPIDataBlock block = [params lastObject];
