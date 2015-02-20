@@ -11,7 +11,7 @@
 #import <SenseKit/SENAPIRoom.h>
 #import <SenseKit/SENAPIClient.h>
 #import <SenseKit/SENSensor.h>
-#import <SenseKit/SENSettings.h>
+#import <SenseKit/SENPreference.h>
 
 SPEC_BEGIN(SENAPIRoomSpec)
 
@@ -47,7 +47,8 @@ describe(@"SENAPIRoom", ^{
             __block NSString* unitParam;
 
             beforeEach(^{
-                [SENSettings setTemperatureFormat:SENTemperatureFormatFahrenheit];
+                 [SENPreference stub:@selector(useCentigrade) andReturn:[KWValue valueWithBool:NO]];
+
                 unitParam = nil;
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
                     NSDictionary* params = methodParams[1];
@@ -67,7 +68,8 @@ describe(@"SENAPIRoom", ^{
             __block NSString* unitParam;
 
             beforeEach(^{
-                [SENSettings setTemperatureFormat:SENTemperatureFormatCentigrade];
+                [SENPreference stub:@selector(useCentigrade) andReturn:[KWValue valueWithBool:YES]];
+                
                 unitParam = nil;
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *methodParams) {
                     NSDictionary* params = methodParams[1];
