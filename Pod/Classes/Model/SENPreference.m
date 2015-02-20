@@ -9,7 +9,7 @@
 #import "SENPreference.h"
 
 NSString* const SENPreferenceNameEnhancedAudio = @"ENHANCED_AUDIO";
-NSString* const SENPreferenceNameTemp = @"TEMP_CELCIUS";
+NSString* const SENPreferenceNameTemp = @"TEMP_CELSIUS";
 NSString* const SENPreferenceNameTime = @"TIME_TWENTY_FOUR_HOUR";
 NSString* const SENPreferenceNamePushScore = @"PUSH_SCORE";
 NSString* const SENPreferenceNamePushConditions = @"PUSH_ALERT_CONDITIONS";
