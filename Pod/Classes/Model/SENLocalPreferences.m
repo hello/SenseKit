@@ -66,6 +66,8 @@ static NSString* const SENLocalPreferenceUserKey = @"$user";
     [userPreferences setValue:preference forKey:key];
     [allPreferences setValue:userPreferences forKey:userId];
     [[self defaults] setObject:allPreferences forKey:SENLocalPreferenceUserKey];
+    
+    [[self defaults] synchronize];
     [self notifyChangeToKey:key];
     
     return YES;
@@ -109,6 +111,7 @@ static NSString* const SENLocalPreferenceUserKey = @"$user";
     } else {
         [[self defaults] setObject:preference forKey:key];
     }
+    [[self defaults] synchronize];
     [self notifyChangeToKey:key];
 }
 
