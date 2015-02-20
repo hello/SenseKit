@@ -22,6 +22,7 @@
 
 static NSString* const SENServiceHKErrorDomain = @"is.hello.service.hk";
 static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastdate";
+static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
 
 @interface SENServiceHealthKit()
 
@@ -140,7 +141,7 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
 }
 
 - (void)sync {
-    if ([self enableWrite] && [self isSupported] && [self canWriteSleepAnalysis]) {
+    if ([self isHealthKitEnabled] && [self isSupported] && [self canWriteSleepAnalysis]) {
         NSDate* lastNight = [self lastNight];
         if (![self ddedDataPointFor:lastNight]) {
             [self writeSleepAnalysisIfDataAvailableFor:lastNight];
@@ -222,6 +223,16 @@ static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastd
             DDLogVerbose(@"failed to save sleep result to health kit with error %@", error);
         }
     }];
+}
+
+- (void)setEnableHealthKit:(BOOL)enable {
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    [preferences setUserPreference:@(enable) forKey:SENSErviceHKEnable];
+}
+
+- (BOOL)isHealthKitEnabled {
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    return [[preferences userPreferenceForKey:SENSErviceHKEnable] boolValue];
 }
 
 @end

@@ -77,7 +77,7 @@ static NSString* const SENPreferenceEnable = @"enabled";
         }
         [pref setUserPreference:@(militaryTimeEnabled) forKey:SENPreferenceNameTime];
     } else {
-        timeFormat = enabled ? SENTimeFormat24Hour : SENTimeFormat12Hour;
+        timeFormat = [enabled boolValue] ? SENTimeFormat24Hour : SENTimeFormat12Hour;
     }
     return timeFormat;
 }
@@ -96,7 +96,7 @@ static NSString* const SENPreferenceEnable = @"enabled";
         }
         [pref setUserPreference:@(celsiusEnabled) forKey:SENPreferenceNameTemp];
     } else {
-        tempFormat = enabled ? SENTemperatureFormatCentigrade : SENTemperatureFormatFahrenheit;
+        tempFormat = [enabled boolValue] ? SENTemperatureFormatCentigrade : SENTemperatureFormatFahrenheit;
     }
     return tempFormat;
 }

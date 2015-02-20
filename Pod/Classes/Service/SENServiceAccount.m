@@ -198,6 +198,9 @@ static NSString* const SENServiceAccountErrorDomain = @"is.hello.service.account
         return;
     }
 
+    // optimistically update the preference locally
+    [preference saveLocally];
+    
     __weak typeof(self) weakSelf = self;
     [SENAPIPreferences updatePreference:preference completion:^(id data, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -206,7 +209,6 @@ static NSString* const SENServiceAccountErrorDomain = @"is.hello.service.account
             if (updatedPref == nil) updatedPref = [NSMutableDictionary dictionary];
             [updatedPref setObject:preference forKey:@([preference type])];
             [strongSelf setPreferences:updatedPref];
-            [preference saveLocally];
         }
         if (completion) completion (error);
     }];
