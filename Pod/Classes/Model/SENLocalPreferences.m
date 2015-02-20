@@ -78,8 +78,8 @@ static NSString* const SENLocalPreferenceUserKey = @"$user";
     
     if (key == nil || userId == nil) return nil;
     
-    NSMutableDictionary* allPreferences = [[[self defaults] dictionaryForKey:SENLocalPreferenceUserKey] mutableCopy];
-    NSMutableDictionary* userPreferences = [[allPreferences objectForKey:userId] mutableCopy];
+    NSDictionary* allPreferences = [[self defaults] dictionaryForKey:SENLocalPreferenceUserKey];
+    NSDictionary* userPreferences = [allPreferences objectForKey:userId];
     return [userPreferences objectForKey:key];
 }
 
@@ -101,7 +101,7 @@ static NSString* const SENLocalPreferenceUserKey = @"$user";
 - (id)sessionPreferenceForKey:(NSString*)key {
     if (key == nil) return nil;
     
-    NSMutableDictionary* transientPreferences = [[[self defaults] dictionaryForKey:SENLocalPreferenceSessionKey] mutableCopy];
+    NSDictionary* transientPreferences = [[self defaults] dictionaryForKey:SENLocalPreferenceSessionKey];
     return [transientPreferences objectForKey:key];
 }
 

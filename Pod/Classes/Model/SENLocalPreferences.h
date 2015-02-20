@@ -26,6 +26,7 @@ extern NSString* const SENLocalPrefDidChangeNotification;
  *
  * @param preference: a preference object that is of a Property Lists data type
  * @param key: the key to reference the object
+ * @return YES if preference was set, NO otherwise (if key is not provided or not signed in)
  */
 - (BOOL)setUserPreference:(id)preference forKey:(NSString*)key;
 
@@ -47,6 +48,7 @@ extern NSString* const SENLocalPrefDidChangeNotification;
  *
  * @param preference: a preference object that is of a Property Lists data type
  * @param key: the key to reference the object
+ * @return YES if preference was set, NO otherwise (if key is not provided)
  *
  * @see @method removeSessionPreferences
  */
