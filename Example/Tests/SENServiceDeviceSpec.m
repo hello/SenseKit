@@ -236,6 +236,67 @@ describe(@"SENServiceDeviceSpec", ^{
         
     });
     
+    describe(@"-shouldWarnAboutLastSeenForDevice:", ^{
+        __block SENServiceDevice* service = nil;
+        
+        beforeEach(^{
+            service = [SENServiceDevice sharedService];
+        });
+        
+        context(@"Sense last seen", ^{
+            
+            it(@"should return NO", ^{
+                SENDevice* sense = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                  type:SENDeviceTypeSense
+                                                                 state:SENDeviceStateNormal
+                                                                 color:SENDeviceColorBlack
+                                                       firmwareVersion:@"1"
+                                                              lastSeen:[NSDate date]];
+                BOOL warn = [service shouldWarnAboutLastSeenForDevice:sense];
+                [[@(warn) should] beNo];
+            });
+            
+            it(@"should return YES", ^{
+                SENDevice* sense = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                  type:SENDeviceTypeSense
+                                                                 state:SENDeviceStateNormal
+                                                                 color:SENDeviceColorBlack
+                                                       firmwareVersion:@"1"
+                                                              lastSeen:[NSDate dateWithTimeIntervalSince1970:0]];
+                BOOL warn = [service shouldWarnAboutLastSeenForDevice:sense];
+                [[@(warn) should] beYes];
+            });
+
+        });
+        
+        context(@"Pill last seen", ^{
+            
+            it(@"should return NO", ^{
+                SENDevice* pill = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                 type:SENDeviceTypePill
+                                                                state:SENDeviceStateNormal
+                                                                color:SENDeviceColorBlack
+                                                      firmwareVersion:@"1"
+                                                             lastSeen:[NSDate date]];
+                BOOL warn = [service shouldWarnAboutLastSeenForDevice:pill];
+                [[@(warn) should] beNo];
+            });
+            
+            it(@"should return YES", ^{
+                SENDevice* pill = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                 type:SENDeviceTypePill
+                                                                state:SENDeviceStateNormal
+                                                                color:SENDeviceColorBlack
+                                                      firmwareVersion:@"1"
+                                                             lastSeen:[NSDate dateWithTimeIntervalSince1970:0]];
+                BOOL warn = [service shouldWarnAboutLastSeenForDevice:pill];
+                [[@(warn) should] beYes];
+            });
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
