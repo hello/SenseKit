@@ -115,7 +115,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
     
     if (deviceState == SENServiceDeviceStateNormal) {
         if ([self shouldWarnAboutSenseLastSeen]) {
-            deviceState = SENServiceDeviceStateSenseLastSeen;
+            deviceState = SENServiceDeviceStateSenseNotSeen;
         }
     }
     
@@ -140,7 +140,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
     
     if (deviceState == SENServiceDeviceStateNormal) {
         if ([self shouldWarnAboutPillLastSeen]) {
-            deviceState = SENServiceDeviceStatePillLastSeen;
+            deviceState = SENServiceDeviceStatePillNotSeen;
         }
     }
     

@@ -23,8 +23,8 @@ typedef NS_ENUM(NSUInteger, SENServiceDeviceState) {
     SENServiceDeviceStateSenseNoData = 3,
     SENServiceDeviceStatePillNotPaired = 4,
     SENServiceDeviceStatePillLowBattery = 5,
-    SENServiceDeviceStateSenseLastSeen = 6,
-    SENServiceDeviceStatePillLastSeen = 7
+    SENServiceDeviceStateSenseNotSeen = 6,
+    SENServiceDeviceStatePillNotSeen = 7
 };
 
 typedef NS_ENUM(NSInteger, SENServiceDeviceError) {
