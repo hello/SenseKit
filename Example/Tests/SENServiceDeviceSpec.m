@@ -293,6 +293,19 @@ describe(@"SENServiceDeviceSpec", ^{
                 [[@(warn) should] beYes];
             });
             
+            it(@"should return NO, if no last seen date yet", ^{
+                
+                SENDevice* pill = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                                 type:SENDeviceTypePill
+                                                                state:SENDeviceStateNormal
+                                                                color:SENDeviceColorBlack
+                                                      firmwareVersion:@"1"
+                                                             lastSeen:nil];
+                BOOL warn = [service shouldWarnAboutLastSeenForDevice:pill];
+                [[@(warn) should] beNo];
+                
+            });
+            
         });
         
     });
