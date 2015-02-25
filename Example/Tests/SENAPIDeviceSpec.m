@@ -355,6 +355,80 @@ describe(@"SENAPIDevice", ^{
         
     });
     
+    describe(@"+removeAssociationsToSense:completion", ^{
+        
+        it(@"fail when no device passed is nil", ^{
+            
+            __block NSError* apiError = nil;
+            [SENAPIDevice removeAssociationsToSense:nil completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[apiError should] beNonNil];
+            
+        });
+        
+        it(@"fail when device is not of Sense", ^{
+            
+            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                               type:SENDeviceTypePill
+                                                              state:SENDeviceStateNormal
+                                                              color:SENDeviceColorBlue
+                                                    firmwareVersion:@"1"
+                                                           lastSeen:nil];
+            
+            __block NSError* apiError = nil;
+            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[apiError should] beNonNil];
+            
+        });
+        
+        it(@"fail when device does not have a device id", ^{
+            
+            SENDevice* device = [[SENDevice alloc] initWithDeviceId:nil
+                                                               type:SENDeviceTypeSense
+                                                              state:SENDeviceStateNormal
+                                                              color:SENDeviceColorBlack
+                                                    firmwareVersion:@"1"
+                                                           lastSeen:[NSDate date]];
+            
+            __block NSError* apiError = nil;
+            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
+                apiError = error;
+            }];
+            [[apiError should] beNonNil];
+            
+        });
+        
+        it(@"succeeds (no error)", ^{
+            
+            [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock callback = [params lastObject];
+                callback (nil, nil);
+                return nil;
+            }];
+            
+            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
+                                                               type:SENDeviceTypeSense
+                                                              state:SENDeviceStateNormal
+                                                              color:SENDeviceColorBlack
+                                                    firmwareVersion:@"1"
+                                                           lastSeen:[NSDate date]];
+            __block BOOL calledBack = NO;
+            __block NSError* apiError = nil;
+            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
+                apiError = error;
+                calledBack = YES;
+            }];
+            
+            [[apiError should] beNil];
+            [[@(calledBack) should] beYes];
+        });
+
+        
+    });
+    
 });
 
 SPEC_END
