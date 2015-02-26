@@ -24,6 +24,18 @@
 SPEC_BEGIN(SENServiceAccountSpec)
 
 describe(@"SENServiceAccountSpec", ^{
+
+    beforeAll(^{
+        [[LSNocilla sharedInstance] start];
+    });
+
+    afterEach(^{
+        [[LSNocilla sharedInstance] clearStubs];
+    });
+
+    afterAll(^{
+        [[LSNocilla sharedInstance] stop];
+    });
     
     describe(@"+sharedService", ^{
         
@@ -53,6 +65,50 @@ describe(@"SENServiceAccountSpec", ^{
             [[expectFutureValue(@([invalidError code])) shouldSoon] equal:@(SENServiceAccountErrorInvalidArg)];
         });
         
+    });
+
+    describe(@"-changeName:completion:", ^{
+
+        context(@"no name is provided", ^{
+
+            it(@"calls the completion block with an error", ^{
+                __block NSError* completionError = nil;
+                [[SENServiceAccount sharedService] changeName:nil completion:^(NSError *error) {
+                    completionError = error;
+                }];
+                [[completionError should] beKindOfClass:[NSError class]];
+            });
+        });
+
+        context(@"empty name is provided", ^{
+
+            it(@"calls the completion block with an error", ^{
+                __block NSError* completionError = nil;
+                [[SENServiceAccount sharedService] changeName:nil completion:^(NSError *error) {
+                    completionError = error;
+                }];
+                [[@(completionError.code) should] equal:@(SENServiceAccountErrorInvalidArg)];
+            });
+        });
+
+        context(@"a valid name is provided", ^{
+
+            beforeEach(^{
+                [SENAPIAccount stub:@selector(updateAccount:completionBlock:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, nil);
+                    return nil;
+                }];
+            });
+
+            it(@"calls the completion block", ^{
+                __block BOOL callbackInvoked = NO;
+                [[SENServiceAccount sharedService] changeName:nil completion:^(NSError *error) {
+                    callbackInvoked = YES;
+                }];
+                [[@(callbackInvoked) should] beYes];
+            });
+        });
     });
     
     describe(@"-changeEmail:completion", ^{
