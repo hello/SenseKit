@@ -19,8 +19,8 @@
 #endif
     
     Mixpanel* mixpanel = [Mixpanel sharedInstanceWithToken:dictionary[kSENAnalyticsProviderToken]];
-    mixpanel.checkForNotificationsOnActive = NO;
-    mixpanel.checkForSurveysOnActive = NO;
+    mixpanel.checkForNotificationsOnActive = YES;
+    mixpanel.checkForSurveysOnActive = YES;
 }
 
 - (void)userWithId:(NSString *)userId didSignupWithProperties:(NSDictionary *)properties {
