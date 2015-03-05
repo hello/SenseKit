@@ -53,7 +53,7 @@
 }
 
 - (void)startEvent:(NSString *)eventName {
-//    [[Mixpanel sharedInstance] timeEvent:eventName];
+    [[Mixpanel sharedInstance] timeEvent:eventName];
 }
 
 - (void)endEvent:(NSString *)eventName {
