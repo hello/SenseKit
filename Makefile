@@ -7,7 +7,8 @@ DOCTOOL=appledoc --project-name $(PROJECT_NAME) --project-company Hello --compan
 
 default: test
 
-ci: test
+ci: 
+		$(MAKE) -C Example travis
 
 clean:
 		$(MAKE) -C Example clean

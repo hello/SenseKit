@@ -17,5 +17,8 @@ clean:
 test:
 	set -o pipefail && $(DEFAULT_TASK) test | xcpretty -c
 
+travis:
+	set -o pipefail && $(DEFAULT_TASK) test | xcpretty -c -f `xcpretty-travis-formatter`	
+
 install:
-	gem install xcpretty  --no-ri --no-rdoc
+	gem install xcpretty xcpretty-travis-formatter --no-ri --no-rdoc
