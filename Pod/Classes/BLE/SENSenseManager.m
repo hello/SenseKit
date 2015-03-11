@@ -54,6 +54,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 @property (nonatomic, strong, readwrite) NSMutableDictionary* messageFailureCallbacks;
 @property (nonatomic, strong, readwrite) NSMutableDictionary* messageUpdateCallbacks;
 @property (nonatomic, strong, readwrite) NSMutableDictionary* messageTimeoutTimers;
+@property (nonatomic, strong, readwrite) NSMutableDictionary* messageTypeForCallbacks;
 
 @end
 
@@ -147,6 +148,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         [self setMessageFailureCallbacks:[NSMutableDictionary dictionary]];
         [self setMessageUpdateCallbacks:[NSMutableDictionary dictionary]];
         [self setMessageTimeoutTimers:[NSMutableDictionary dictionary]];
+        [self setMessageTypeForCallbacks:[NSMutableDictionary dictionary]];
     }
     return self;
 }
@@ -519,7 +521,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
             NSString* cbKey = [self cacheMessageCallbacks:update
                                                   success:success
                                              failureBlock:failure
-                                               subscriber:blockReader];
+                                               subscriber:blockReader
+                                           forMessageType:[message type]];
+            
             [strongSelf scheduleMessageTimeOut:timeout withKey:cbKey];
             
             [reader setNotifyValue:YES completion:^(NSError *error) {
@@ -602,9 +606,12 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 - (NSString*)cacheMessageCallbacks:(SENSenseUpdateBlock)updateBlock
                            success:(SENSenseSuccessBlock)successBlock
                       failureBlock:(SENSenseFailureBlock)failureBlock
-                        subscriber:(LGCharacteristic*)subscriber {
+                        subscriber:(LGCharacteristic*)subscriber
+                    forMessageType:(SENSenseMessageType)type {
     
     NSString* key = [[NSUUID UUID] UUIDString];
+    
+    [[self messageTypeForCallbacks] setValue:@(type) forKey:key];
     
     if (updateBlock) {
         [[self messageUpdateCallbacks] setValue:[updateBlock copy] forKey:key];
@@ -637,6 +644,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     [[self messageFailureCallbacks] removeAllObjects];
     [[self messageSuccessCallbacks] removeAllObjects];
     [[self messageUpdateCallbacks] removeAllObjects];
+    [[self messageTypeForCallbacks] removeAllObjects];
 }
 
 - (void)clearMessageCallbacksForKey:(NSString*)key {
@@ -644,6 +652,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         [[self messageFailureCallbacks] removeObjectForKey:key];
         [[self messageSuccessCallbacks] removeObjectForKey:key];
         [[self messageUpdateCallbacks] removeObjectForKey:key];
+        [[self messageTypeForCallbacks] removeObjectForKey:key];
     }
 }
 
@@ -909,9 +918,14 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         
         SENSenseFailureBlock failureCb = [[self messageFailureCallbacks] valueForKey:cbKey];
         if (failureCb) {
-            DDLogVerbose(@"firing timeout message");
+            NSNumber* messageType = [[self messageTypeForCallbacks] objectForKey:cbKey];
+            NSString* errDesc = [NSString stringWithFormat:@"ble message timed out for type %ld",
+                                 [messageType longValue]];
+            
+            DDLogVerbose(@"%@", errDesc);
+            
             failureCb ( [self errorWithCode:SENSenseManagerErrorCodeTimeout
-                                description:@"ble message timed out"
+                                description:errDesc
                         fromUnderlyingError:nil]);
         } else {
             DDLogVerbose(@"failure block not defined for time out");
@@ -951,7 +965,9 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                       NSString* cbKey = [strongSelf cacheMessageCallbacks:nil
                                                                   success:success
                                                              failureBlock:failure
-                                                               subscriber:reader];
+                                                               subscriber:reader
+                                                           forMessageType:100]; // no message type for pairing
+                      
                       [strongSelf scheduleMessageTimeOut:kSENSenseDefaultTimeout withKey:cbKey];
                       
                       [reader setNotifyValue:YES completion:^(NSError *error) {
