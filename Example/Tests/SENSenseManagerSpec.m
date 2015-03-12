@@ -24,6 +24,9 @@
 - (void)timedOut:(NSTimer*)timer;
 - (NSMutableDictionary*)messageTimeoutTimers;
 - (NSMutableDictionary*)messageSuccessCallbacks;
+- (NSData*)dataValueForWiFiPassword:(NSString*)password
+                   withSecurityType:(SENWifiEndpointSecurityType)type
+                    formattingError:(NSError**)error;
 
 @end
 
@@ -279,6 +282,114 @@ describe(@"SENSenseManager", ^{
             [[[[manager messageTimeoutTimers] objectForKey:key] should] beNil];
             [[[[manager messageSuccessCallbacks] objectForKey:key] should] beNil];
         });
+    });
+    
+    describe(@"setting wifi", ^{
+        
+        context(@"WEP network key validation", ^{
+            
+           it(@"should be invalid if empty string", ^{
+               
+               BOOL valid = [SENSenseManager isWepKeyValid:@""];
+               [[@(valid) should] beNo];
+               
+           });
+            
+            it(@"should be invalid if key has an odd length", ^{
+                
+                BOOL valid = [SENSenseManager isWepKeyValid:@"ABCDEF123"];
+                [[@(valid) should] beNo];
+                
+            });
+
+            it(@"should be invalid, because of TI and Sense limitations, if key has 0", ^{
+                
+                BOOL valid = [SENSenseManager isWepKeyValid:@"ABCDEF0123"];
+                [[@(valid) should] beNo];
+                
+            });
+            
+            it(@"should be valid with 64/40 bit encryption network key", ^{
+                
+                BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD"];
+                [[@(valid) should] beYes];
+                
+            });
+            
+            it(@"should be valid with 128 bit encryption network key", ^{
+                
+                BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD1234567891234567"];
+                [[@(valid) should] beYes];
+                
+            });
+            
+        });
+        
+        context(@"wifi password converstion to data", ^{
+            
+            __block SENSenseManager* manager = nil;
+            
+            beforeAll(^{
+                manager = [[SENSenseManager alloc] initWithSense:[[SENSense alloc] init]];
+            });
+            
+            it(@"open networks should return nil as data", ^{
+                
+                NSError* error = nil;
+                NSData* data = [manager dataValueForWiFiPassword:@"123"
+                                                withSecurityType:SENWifiEndpointSecurityTypeOpen
+                                                 formattingError:&error];
+                [[error should] beNil];
+                [[data should] beNil];
+                
+            });
+            
+            it(@"valid wep network key should return data without error", ^{
+                
+                NSError* error = nil;
+                NSData* data = [manager dataValueForWiFiPassword:@"9436AFD3AD"
+                                                withSecurityType:SENWifiEndpointSecurityTypeWep
+                                                 formattingError:&error];
+                [[error should] beNil];
+                [[data should] beNonNil];
+                
+            });
+            
+            it(@"invalid wep network key should return error, with no data", ^{
+                
+                NSError* error = nil;
+                NSData* data = [manager dataValueForWiFiPassword:@"9436AFD3AD1"
+                                                withSecurityType:SENWifiEndpointSecurityTypeWep
+                                                 formattingError:&error];
+                [[error should] beNonNil];
+                [[data should] beNil];
+                
+            });
+            
+            it(@"WPA2 passwords should return data with no error", ^{
+                
+                NSError* error = nil;
+                NSData* data = [manager dataValueForWiFiPassword:@"password"
+                                                withSecurityType:SENWifiEndpointSecurityTypeWpa2
+                                                 formattingError:&error];
+                [[error should] beNil];
+                [[data should] beNonNil];
+                
+            });
+            
+            it(@"WPA passwords should return data with no error", ^{
+                
+                NSError* error = nil;
+                NSData* data = [manager dataValueForWiFiPassword:@"password"
+                                                withSecurityType:SENWifiEndpointSecurityTypeWpa
+                                                 formattingError:&error];
+                [[error should] beNil];
+                [[data should] beNonNil];
+                
+            });
+            
+        });
+        
     });
     
 });
