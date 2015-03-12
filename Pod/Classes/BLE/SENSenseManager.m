@@ -1042,7 +1042,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 
 + (BOOL)isWepKeyValid:(NSString*)key {
     NSUInteger len = [key length];
-    return len > 0 && len % 2 == 0 && ![key containsString:@"0"];
+    return len > 0 && len % 2 == 0;
 }
 
 /**

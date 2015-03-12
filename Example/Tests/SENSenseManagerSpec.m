@@ -301,13 +301,6 @@ describe(@"SENSenseManager", ^{
                 [[@(valid) should] beNo];
                 
             });
-
-            it(@"should be invalid, because of TI and Sense limitations, if key has 0", ^{
-                
-                BOOL valid = [SENSenseManager isWepKeyValid:@"ABCDEF0123"];
-                [[@(valid) should] beNo];
-                
-            });
             
             it(@"should be valid with 64/40 bit encryption network key", ^{
                 
