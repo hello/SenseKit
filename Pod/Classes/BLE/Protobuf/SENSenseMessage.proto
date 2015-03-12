@@ -82,7 +82,7 @@ message SENSenseMessage {
     optional ErrorType error = 5;  // SENSE_COMMAND_ERROR
     optional string wifiName = 6;
     optional string wifiSSID = 7;
-    optional string wifiPassword = 8;
+    optional bytes wifiPassword = 8;
     optional int32 batteryLevel = 9;
     optional int32 uptime = 10;
     optional int32 motionData = 11;
