@@ -1040,6 +1040,63 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 
 #pragma mark - Wifi
 
++ (BOOL)isWepKeyValid:(NSString*)key {
+    NSUInteger len = [key length];
+    return len > 0 && len % 2 == 0 && ![key containsString:@"0"];
+}
+
+/**
+ * Convert the wep network key (generated from the passphrase) to a base 16 bytes,
+ * which is the only way the firmware will work with WEP security.  If the network
+ * key contains a 0 in the middle of the value, it will also
+ */
+- (NSData*)dataValueForWepNetworkKey:(NSString*)networkKey error:(NSError**)error {
+    DDLogVerbose(@"formatting password for wifi with wep security");
+    
+    NSUInteger len = [networkKey length];
+    
+    if (![[self class] isWepKeyValid:networkKey]) {
+        if (error != NULL) {
+            NSString* errorMsg = @"invalid wep network key";
+            DDLogVerbose(@"%@", errorMsg);
+            *error = [self errorWithCode:SENSenseManagerErrorCodeInvalidArgument
+                             description:errorMsg
+                     fromUnderlyingError:nil];
+        }
+        return nil;
+    }
+    
+    const char* chars = [networkKey cStringUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData* mutableData = [NSMutableData dataWithCapacity:len/2];
+    
+    int i = 0;
+    char bytes[3] = {'\0', '\0', '\0'};
+    unsigned long convertedLong;
+    while (i < len) {
+        bytes[0] = chars[i++];
+        bytes[1] = chars[i++];
+        convertedLong = strtol(bytes, NULL, 16);
+        [mutableData appendBytes:&convertedLong length:1];
+    }
+    
+    return mutableData;
+}
+
+- (NSData*)dataValueForWiFiPassword:(NSString*)password
+                   withSecurityType:(SENWifiEndpointSecurityType)type
+                    formattingError:(NSError**)error {
+    switch (type) {
+        case SENWifiEndpointSecurityTypeWep:
+            return [self dataValueForWepNetworkKey:password error:error];
+        case SENWifiEndpointSecurityTypeOpen:
+            return nil;
+        case SENWifiEndpointSecurityTypeWpa:
+        case SENWifiEndpointSecurityTypeWpa2:
+        default:
+            return [password dataUsingEncoding:NSUTF8StringEncoding];
+    }
+}
+
 - (void)setWiFi:(NSString*)ssid
        password:(NSString*)password
    securityType:(SENWifiEndpointSecurityType)securityType
@@ -1047,11 +1104,24 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         failure:(SENSenseFailureBlock)failure {
     
     DDLogVerbose(@"setting wifi on Sense with ssid %@", ssid);
+    NSError* passwordError = nil;
+    NSData* passwordData = [self dataValueForWiFiPassword:password
+                                         withSecurityType:securityType
+                                          formattingError:&passwordError];
+    
+    if (passwordError != nil) {
+        if (failure) {
+            failure (passwordError);
+        }
+        return;
+    }
+    
     SENSenseMessageType type = SENSenseMessageTypeSetWifiEndpoint;
     SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
     [builder setSecurityType:securityType];
     [builder setWifiSsid:ssid];
-    [builder setWifiPassword:password];
+    [builder setWifiPassword:passwordData];
+    
     [self sendMessage:[builder build]
               timeout:kSENSenseSetWifiTimeout
                update:nil
