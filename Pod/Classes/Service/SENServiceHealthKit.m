@@ -83,7 +83,7 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
     return status == HKAuthorizationStatusSharingAuthorized;
 }
 
-- (BOOL)ddedDataPointFor:(NSDate*)date {
+- (BOOL)addedDataPointFor:(NSDate*)date {
     SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
     NSDate* lastWrittenDate = [preferences userPreferenceForKey:SENServiceHKLastDateWritten];
     return [lastWrittenDate isEqualToDate:date];
@@ -136,7 +136,7 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
 - (void)sync {
     if ([self isHealthKitEnabled] && [self isSupported] && [self canWriteSleepAnalysis]) {
         NSDate* lastNight = [self lastNight];
-        if (![self ddedDataPointFor:lastNight]) {
+        if (![self addedDataPointFor:lastNight]) {
             [self writeSleepAnalysisIfDataAvailableFor:lastNight];
         }
     }
