@@ -196,10 +196,15 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
         
         if (wakeUpDate != nil && sleepDate != nil) {
             DDLogVerbose(@"adding asleep data point");
-            [dataPoints addObject:[HKCategorySample categorySampleWithType:hkSleepCategory
-                                                                     value:HKCategoryValueSleepAnalysisAsleep
-                                                                 startDate:sleepDate
-                                                                   endDate:wakeUpDate]];
+            if ([wakeUpDate compare:sleepDate] > NSOrderedAscending) {
+                [dataPoints addObject:[HKCategorySample categorySampleWithType:hkSleepCategory
+                                                                         value:HKCategoryValueSleepAnalysisAsleep
+                                                                     startDate:sleepDate
+                                                                       endDate:wakeUpDate]];
+            } else {
+                DDLogVerbose(@"wake up time %@ is before sleep time %@", wakeUpDate, sleepDate);
+            }
+            
             break;
         }
     }
