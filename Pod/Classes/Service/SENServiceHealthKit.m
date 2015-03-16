@@ -70,13 +70,6 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
     }
 }
 
-#pragma mark - SENServiceOverrides
-
-- (void)serviceBecameActive {
-    [super serviceBecameActive];
-    [self sync];
-}
-
 #pragma mark -
 
 - (BOOL)isSupported {
