@@ -164,11 +164,15 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
         DDLogVerbose(@"pulling from server since no data is in the cache");
         [SENAPITimeline timelineForDate:date completion:^(NSArray* timelines, NSError* error) {
             if (error == nil) {
-                DDLogVerbose(@"adding sleep data point to health kit for date %@", [result date]);
-                NSDictionary* timeline = [timelines firstObject];
-                [result updateWithDictionary:timeline];
-                [result save];
-                [weakSelf addSleepDataPoints:result forDate:date];
+                if ([[result segments] count] > 0) {
+                    DDLogVerbose(@"adding sleep data point to HealthKit for date %@", [result date]);
+                    NSDictionary* timeline = [timelines firstObject];
+                    [result updateWithDictionary:timeline];
+                    [result save];
+                    [weakSelf addSleepDataPoints:result forDate:date];
+                } else {
+                    DDLogVerbose(@"no sleep data to input to HealthKit");
+                }
             }
         }];
     }
