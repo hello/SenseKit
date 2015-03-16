@@ -98,7 +98,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
     [self checkSenseState:^(SENServiceDeviceState state) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (state == SENServiceDeviceStateNormal) {
-            [strongSelf checkPillPairingState:^(SENServiceDeviceState pillState) {
+            [strongSelf checkPillState:^(SENServiceDeviceState pillState) {
                 [strongSelf finishCheckingDeviceState:pillState];
             }];
         } else {
@@ -132,17 +132,11 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
     completion (deviceState);
 }
 
-- (void)checkPillPairingState:(void(^)(SENServiceDeviceState state))completion {
+- (void)checkPillState:(void(^)(SENServiceDeviceState state))completion {
     SENServiceDeviceState deviceState
         = [self pillInfo] == nil
         ? SENServiceDeviceStatePillNotPaired
         : SENServiceDeviceStateNormal;
-    
-    if (deviceState == SENServiceDeviceStateNormal) {
-        if ([self shouldWarnAboutPillLastSeen]) {
-            deviceState = SENServiceDeviceStatePillNotSeen;
-        }
-    }
     
     if (deviceState == SENServiceDeviceStateNormal) {
         switch ([[self pillInfo] state]) {
@@ -151,6 +145,12 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
                 break;
             default:
                 break;
+        }
+    }
+    
+    if (deviceState == SENServiceDeviceStateNormal) {
+        if ([self shouldWarnAboutPillLastSeen]) {
+            deviceState = SENServiceDeviceStatePillNotSeen;
         }
     }
     
