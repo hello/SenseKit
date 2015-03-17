@@ -10,6 +10,7 @@
 #import "SENDevice.h"
 #import "SENSense.h"
 #import "SENSenseManager.h"
+#import "SENAuthorizationService.h"
 
 typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
 
@@ -18,8 +19,9 @@ typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
 - (void)setSystemState:(SENServiceDeviceState)state;
 - (void)setSenseInfo:(SENDevice*)device;
 - (void)setPillInfo:(SENDevice*)device;
-- (void)checkDevicesState;
+- (void)checkDevicesState:(void (^)(SENServiceDeviceState))completion;
 - (void)whenPairedSenseIsReadyDo:(void(^)(NSError* error))completion;
+- (void)checkSenseAndPillState:(void (^)(SENServiceDeviceState))completion;
 
 @end
 
@@ -44,47 +46,64 @@ describe(@"SENServiceDeviceSpec", ^{
     
     describe(@"-checkSystemState", ^{
         
+        beforeEach(^{
+            [SENAuthorizationService stub:@selector(isAuthorized) andReturn:[KWValue valueWithBool:YES]];
+        });
+        
+        afterEach(^{
+            [SENAuthorizationService clearStubs];
+        });
+        
         context(@"checking sense", ^{
             
             __block SENServiceDevice* service;
             beforeEach(^{
                 service = [SENServiceDevice sharedService];
-                [service setSenseInfo:nil];
-                [service setPillInfo:nil];
+            });
+            
+            afterEach(^{
+                [service clearStubs];
             });
             
             it(@"Sense Not Paired", ^{
+                
+                [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
+                    void(^callback)(NSError* error) = [params firstObject];
+                    if (callback) callback (nil);
+                    return nil;
+                }];
 
-                [service checkDevicesState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStateSenseNotPaired)];
+                __block SENServiceDeviceState deviceState = SENServiceDeviceStateUnknown;
+                [service checkDevicesState:^(SENServiceDeviceState state) {
+                    deviceState = state;
+                }];
+                
+                [[@(deviceState) should] equal:@(SENServiceDeviceStateSenseNotPaired)];
                 
             });
             
             it(@"Sense No Data", ^{
                 
-                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                                   type:SENDeviceTypeSense
-                                                                  state:SENDeviceStateNoData
-                                                                  color:SENDeviceColorBlack
-                                                        firmwareVersion:@"1"
-                                                               lastSeen:[NSDate date]];
-                [service setSenseInfo:device];
-                [service checkDevicesState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStateSenseNoData)];
+                [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
+                    [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:@"1"
+                                                                         type:SENDeviceTypeSense
+                                                                        state:SENDeviceStateNoData
+                                                                        color:SENDeviceColorBlack
+                                                              firmwareVersion:@"1"
+                                                                     lastSeen:[NSDate date]]];
+                    
+                    void(^callback)(NSError* error) = [params firstObject];
+                    if (callback) callback (nil);
+                    return nil;
+                }];
                 
-            });
-            
-            it(@"WiFi check is skipped, when NO BLE", ^{
-                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                                   type:SENDeviceTypeSense
-                                                                  state:SENDeviceStateNormal
-                                                                  color:SENDeviceColorBlack
-                                                        firmwareVersion:@"1"
-                                                               lastSeen:[NSDate date]];
-                [service setSenseInfo:device];
+                __block SENServiceDeviceState deviceState = SENServiceDeviceStateUnknown;
+                [service checkDevicesState:^(SENServiceDeviceState state) {
+                    deviceState = state;
+                }];
                 
-                [[service shouldNotEventually] receive:@selector(getConfiguredWiFi:)];
-                [service checkDevicesState];
+                [[@(deviceState) should] equal:@(SENServiceDeviceStateSenseNoData)];
+                
             });
             
         });
@@ -94,13 +113,18 @@ describe(@"SENServiceDeviceSpec", ^{
             __block SENServiceDevice* service = nil;
             beforeEach(^{
                 service = [SENServiceDevice sharedService];
-                SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                                   type:SENDeviceTypeSense
-                                                                  state:SENDeviceStateNormal
-                                                                  color:SENDeviceColorBlack
-                                                        firmwareVersion:@"1"
-                                                               lastSeen:[NSDate date]];
-                [service setSenseInfo:device];
+                [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
+                    [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:@"1"
+                                                                         type:SENDeviceTypeSense
+                                                                        state:SENDeviceStateNormal
+                                                                        color:SENDeviceColorBlack
+                                                              firmwareVersion:@"1"
+                                                                     lastSeen:[NSDate date]]];
+                    
+                    void(^callback)(NSError* error) = [params firstObject];
+                    if (callback) callback (nil);
+                    return nil;
+                }];
             });
             
             afterEach(^{
@@ -108,8 +132,14 @@ describe(@"SENServiceDeviceSpec", ^{
             });
            
             it(@"Pill Not Paired", ^{
-                [service checkDevicesState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStatePillNotPaired)];
+                
+                __block SENServiceDeviceState deviceState = SENServiceDeviceStateUnknown;
+                [service checkDevicesState:^(SENServiceDeviceState state) {
+                    deviceState = state;
+                }];
+                
+                [[@(deviceState) should] equal:@(SENServiceDeviceStatePillNotPaired)];
+                
             });
             
             it(@"Pill has low battery", ^{
@@ -122,8 +152,12 @@ describe(@"SENServiceDeviceSpec", ^{
                                                                  lastSeen:[NSDate date]];
                 
                 [service setPillInfo:fakePill];
-                [service checkDevicesState];
-                [[@([service deviceState]) should] equal:@(SENServiceDeviceStatePillLowBattery)];
+                __block SENServiceDeviceState deviceState = SENServiceDeviceStateUnknown;
+                [service checkDevicesState:^(SENServiceDeviceState state) {
+                    deviceState = state;
+                }];
+                
+                [[@(deviceState) should] equal:@(SENServiceDeviceStatePillLowBattery)];
             });
             
         });
