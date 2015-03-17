@@ -44,7 +44,7 @@ describe(@"SENServiceDeviceSpec", ^{
         
     });
     
-    describe(@"-checkSystemState", ^{
+    describe(@"-checkDevicesState:", ^{
         
         beforeEach(^{
             [SENAuthorizationService stub:@selector(isAuthorized) andReturn:[KWValue valueWithBool:YES]];
@@ -54,7 +54,7 @@ describe(@"SENServiceDeviceSpec", ^{
             [SENAuthorizationService clearStubs];
         });
         
-        context(@"checking sense", ^{
+        context(@"sense is checked", ^{
             
             __block SENServiceDevice* service;
             beforeEach(^{
@@ -65,7 +65,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 [service clearStubs];
             });
             
-            it(@"Sense Not Paired", ^{
+            it(@"returns sense not paired state", ^{
                 
                 [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
                     void(^callback)(NSError* error) = [params firstObject];
@@ -82,7 +82,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 
             });
             
-            it(@"Sense No Data", ^{
+            it(@"returns sense not paired state", ^{
                 
                 [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
                     [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:@"1"
@@ -108,7 +108,7 @@ describe(@"SENServiceDeviceSpec", ^{
             
         });
         
-        context(@"After Sense, (WiFi cannot be checked), Pill is checked", ^{
+        context(@"pill is checked", ^{
             
             __block SENServiceDevice* service = nil;
             beforeEach(^{
@@ -120,7 +120,7 @@ describe(@"SENServiceDeviceSpec", ^{
                                                                         color:SENDeviceColorBlack
                                                               firmwareVersion:@"1"
                                                                      lastSeen:[NSDate date]]];
-                    
+
                     void(^callback)(NSError* error) = [params firstObject];
                     if (callback) callback (nil);
                     return nil;
@@ -131,7 +131,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 [service clearStubs];
             });
            
-            it(@"Pill Not Paired", ^{
+            it(@"returns pill not paired state", ^{
                 
                 __block SENServiceDeviceState deviceState = SENServiceDeviceStateUnknown;
                 [service checkDevicesState:^(SENServiceDeviceState state) {
@@ -142,7 +142,7 @@ describe(@"SENServiceDeviceSpec", ^{
                 
             });
             
-            it(@"Pill has low battery", ^{
+            it(@"returns pill has low battery state", ^{
                 
                 SENDevice* fakePill = [[SENDevice alloc] initWithDeviceId:@"2"
                                                                      type:SENDeviceTypePill
