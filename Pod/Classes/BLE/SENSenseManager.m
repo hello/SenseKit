@@ -1094,15 +1094,13 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
                    withSecurityType:(SENWifiEndpointSecurityType)type
                     formattingError:(NSError**)error {
     switch (type) {
+        case SENWifiEndpointSecurityTypeOpen:
+            return nil;
         case SENWifiEndpointSecurityTypeWep: {
             if ([self messageVersion] == kSENSensePVTMessageVersion) {
                 return [self dataValueForWepNetworkKey:password error:error];
-            } else {
-                return [password dataUsingEncoding:NSUTF8StringEncoding];
-            }
+            } // else, let it go through to default like all other types
         }
-        case SENWifiEndpointSecurityTypeOpen:
-            return nil;
         case SENWifiEndpointSecurityTypeWpa:
         case SENWifiEndpointSecurityTypeWpa2:
         default:
