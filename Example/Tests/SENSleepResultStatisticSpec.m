@@ -63,6 +63,11 @@ describe(@"initWithName:value:", ^{
         stat = [[SENSleepResultStatistic alloc] initWithName:@"time_to_sleep" value:@300];
         [[@(stat.type) should] equal:@(SENSleepResultStatisticTypeTimeToSleep)];
     });
+
+    it(@"discards sentinel value", ^{
+        stat = [[SENSleepResultStatistic alloc] initWithName:@"time_to_sleep" value:@(SENSleepResultSentinelValue)];
+        [[stat.value should] beNil];
+    });
 });
 
 it(@"is serializible", ^{
