@@ -77,6 +77,67 @@ describe(@"SENAPITimeZone", ^{
         
     });
     
+    describe(@"+ getConfiguredTimeZone", ^{
+        
+        it(@"should return an error, without a timezone", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock cb = [params lastObject];
+                cb (nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                return nil;
+            }];
+            
+            __block NSTimeZone* timeZone = nil;
+            __block NSError* timeZoneError = nil;
+            [SENAPITimeZone getConfiguredTimeZone:^(id data, NSError *error) {
+                timeZone = data;
+                timeZoneError = error;
+            }];
+            
+            [[timeZone should] beNil];
+            [[timeZoneError should] beNonNil];
+            
+        });
+        
+        it(@"should return a NSTimeZone object", ^{
+            
+            NSString* timeZoneId = @"America/Los_Angeles";
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock cb = [params lastObject];
+                cb (@{@"timezone_id" : timeZoneId}, nil);
+                return nil;
+            }];
+            
+            __block NSTimeZone* timeZone = nil;
+            [SENAPITimeZone getConfiguredTimeZone:^(id data, NSError *error) {
+                timeZone = data;
+            }];
+            
+            [[timeZone should] beKindOfClass:[NSTimeZone class]];
+            [[[timeZone name] should] equal:timeZoneId];
+            
+        });
+        
+        it(@"should return an invalid response error", ^{
+            
+            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                SENAPIDataBlock cb = [params lastObject];
+                cb (@{@"haha" : @"what?"}, nil);
+                return nil;
+            }];
+            
+            __block NSError* tzError = nil;
+            [SENAPITimeZone getConfiguredTimeZone:^(id data, NSError *error) {
+                tzError = error;
+            }];
+            
+            [[@([tzError code]) should] equal:@(SENAPITimeZoneErrorInvalidResponse)];
+
+        });
+        
+    });
+    
 });
 
 SPEC_END
