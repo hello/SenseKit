@@ -1,67 +1,65 @@
 PODS:
-  - AFNetworking (2.5.1):
+  - AFNetworking (2.5.2):
+    - AFNetworking/NSURLConnection (= 2.5.2)
+    - AFNetworking/NSURLSession (= 2.5.2)
+    - AFNetworking/Reachability (= 2.5.2)
+    - AFNetworking/Security (= 2.5.2)
+    - AFNetworking/Serialization (= 2.5.2)
+    - AFNetworking/UIKit (= 2.5.2)
+  - AFNetworking/NSURLConnection (2.5.2):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.2):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.2)
+  - AFNetworking/Security (2.5.2)
+  - AFNetworking/Serialization (2.5.2)
+  - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.5.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.1)
-  - AFNetworking/Security (2.5.1)
-  - AFNetworking/Serialization (2.5.1)
-  - AFNetworking/UIKit (2.5.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-  - CocoaLumberjack (2.0.0-rc2):
-    - CocoaLumberjack/Default
-    - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (2.0.0-rc2)
-  - CocoaLumberjack/Default (2.0.0-rc2):
+  - CocoaLumberjack (1.6.3):
+    - CocoaLumberjack/Core (= 1.6.3)
+    - CocoaLumberjack/Extensions (= 1.6.3)
+  - CocoaLumberjack/Core (1.6.3)
+  - CocoaLumberjack/Extensions (1.6.3):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-rc2):
-    - CocoaLumberjack/Default
   - FXKeychain (1.5.2)
   - Kiwi (2.3.1)
   - LGBluetooth (1.1.4)
   - Mixpanel (2.7.2):
-    - Mixpanel/MPCategoryHelpers
+    - Mixpanel/MPCategoryHelpers (= 2.7.2)
   - Mixpanel/MPCategoryHelpers (2.7.2)
   - Nocilla (HEAD based on 0.9.0)
   - NSJSONSerialization-NSNullRemoval (1.0.1)
   - SenseKit (0.1.0):
-    - SenseKit/Analytics
-    - SenseKit/API
-    - SenseKit/BLE
-    - SenseKit/Model
-    - SenseKit/Service
+    - SenseKit/Analytics (= 0.1.0)
+    - SenseKit/API (= 0.1.0)
+    - SenseKit/BLE (= 0.1.0)
+    - SenseKit/Model (= 0.1.0)
+    - SenseKit/Service (= 0.1.0)
   - SenseKit/Analytics (0.1.0):
-    - CocoaLumberjack
+    - CocoaLumberjack (= 1.6.3)
     - Mixpanel (= 2.7.2)
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.5.0)
     - FXKeychain (~> 1.5.1)
     - NSJSONSerialization-NSNullRemoval (~> 1.0.0)
   - SenseKit/BLE (0.1.0):
-    - CocoaLumberjack
-    - LGBluetooth (~> 1.1.4)
+    - CocoaLumberjack (= 1.6.3)
+    - LGBluetooth
     - SHSProtoBuf
   - SenseKit/Model (0.1.0):
     - YapDatabase (~> 2.4.3)
   - SenseKit/Service (0.1.0):
-    - CocoaLumberjack
+    - CocoaLumberjack (= 1.6.3)
   - SHSProtoBuf (0.9):
-    - SHSProtoBuf/non-arc
+    - SHSProtoBuf/non-arc (= 0.9)
   - SHSProtoBuf/non-arc (0.9)
   - YapDatabase (2.4.3):
-    - YapDatabase/standard
+    - YapDatabase/standard (= 2.4.3)
   - YapDatabase/common (2.4.3):
     - CocoaLumberjack (~> 1.6.3)
   - YapDatabase/standard (2.4.3):
@@ -69,27 +67,38 @@ PODS:
 
 DEPENDENCIES:
   - Kiwi
+  - LGBluetooth (from `git@github.com:hello/LGBluetooth.git`)
   - Nocilla (HEAD)
   - SenseKit (from `../`)
   - SHSProtoBuf (from `git@github.com:hello/protobuf-objc.git`)
 
 EXTERNAL SOURCES:
+  LGBluetooth:
+    :git: git@github.com:hello/LGBluetooth.git
   SenseKit:
     :path: ../
   SHSProtoBuf:
     :git: git@github.com:hello/protobuf-objc.git
 
-SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  CocoaLumberjack: 6027cd9a0665203a7df456c526e137f02cd547e1
-  FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
-  Kiwi: 73e1400209055ee9c8ba78c6012b6b642d0fb9f7
-  LGBluetooth: 00f37b8c29cccc1dd44d5f726b2ec4a6e91c74ec
-  Mixpanel: def38b9e600f101686b8d647e05660a72c089c65
-  Nocilla: 4d713c56e7357fd0cac0363854d4a58021ad3f41
-  NSJSONSerialization-NSNullRemoval: b3f02955f898d01205567e3f1292e4aae3ad547e
-  SenseKit: 0db7242d95b6b9c1a516c2ccb18632926149de38
-  SHSProtoBuf: 62a02d425f5dbee00d057bae65d76f0f01737410
-  YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
+CHECKOUT OPTIONS:
+  LGBluetooth:
+    :commit: bb9399161f3231e3bb3dddc89aae99018c77cdad
+    :git: git@github.com:hello/LGBluetooth.git
+  SHSProtoBuf:
+    :commit: e44003540c7b52b8fa29a05a059e43751e25d0d4
+    :git: git@github.com:hello/protobuf-objc.git
 
-COCOAPODS: 0.34.4
+SPEC CHECKSUMS:
+  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  CocoaLumberjack: 79086d1841c6c61383afa50cafc8883b7f44f63c
+  FXKeychain: 1a711bddc04a2bd69850dcfe297b8a43027a9980
+  Kiwi: f038a6c61f7a9e4d7766bff5717aa3b3fdb75f55
+  LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
+  Mixpanel: e9bcb16eb0e2a98fc330ceeb0d8b7f4aec4182ab
+  Nocilla: d7d96e8a11e363f0d7c976d48b320c43d61fb471
+  NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
+  SenseKit: 76ba86681697b32a268a4c91d14e4a6cb3edf7a5
+  SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
+  YapDatabase: 49c927513f7fce1b2e3fd2b237c1dc1921662249
+
+COCOAPODS: 0.36.1
