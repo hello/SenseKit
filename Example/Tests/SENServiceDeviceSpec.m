@@ -71,6 +71,59 @@ describe(@"SENServiceDevice", ^{
 
     });
 
+    describe(@"-loadDeviceInfo:", ^{
+
+        context(@"info is not being loaded already", ^{
+
+            __block SENDevice *sense, *pill;
+
+            beforeEach(^{
+                sense = CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date]);
+                pill = CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, [NSDate date]);
+                [SENAPIDevice stub:@selector(getPairedDevices:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@[sense, pill], nil);
+                    return nil;
+                }];
+            });
+
+            it(@"fetches paired device info from the API", ^{
+                [[SENAPIDevice should] receive:@selector(getPairedDevices:)];
+                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
+            });
+
+            it(@"updates sense info with device metadata", ^{
+                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
+                [[[[SENServiceDevice sharedService] senseInfo] should] equal:sense];
+            });
+
+            it(@"update pill info with device metadata", ^{
+                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
+                [[[[SENServiceDevice sharedService] pillInfo] should] equal:pill];
+            });
+        });
+
+        context(@"info is already being loaded", ^{
+
+            beforeEach(^{
+                [[SENServiceDevice sharedService] setLoadingInfo:YES];
+            });
+
+            it(@"invokes the completion block with an error", ^{
+                __block NSError* loadingError = nil;
+                [[SENServiceDevice sharedService] loadDeviceInfo:^(NSError *error) {
+                    loadingError = error;
+                }];
+                [[@([loadingError code]) should] equal:@(SENServiceDeviceErrorInProgress)];
+            });
+
+            it(@"does not make a request for new device info", ^{
+                [[SENAPIDevice shouldNot] receive:@selector(getPairedDevices:)];
+                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
+            });
+        });
+    });
+
     describe(@"-loadDeviceInfoIfNeeded:", ^{
 
         context(@"device info is not yet loaded", ^{
