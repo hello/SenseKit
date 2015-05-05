@@ -85,6 +85,30 @@ describe(@"SENInsight", ^{
             });
         });
     });
+    
+    describe(@"-isEqual:", ^{
+        
+        it(@"it is equal", ^{
+            
+            NSDictionary* dict = @{@"title" : @"1", @"category":@"SNAZZ", @"info_preview" : @"preview"};
+            insight = [[SENInsight alloc] initWithDictionary:dict];
+            SENInsight* insight2 = [[SENInsight alloc] initWithDictionary:dict];
+            [[insight should] equal:insight2];
+            
+        });
+        
+        it(@"is is not equal", ^{
+            
+            NSDictionary* dict1 = @{@"title" : @"1", @"category":@"SNAZZ", @"info_preview" : @"preview"};
+            NSDictionary* dict2 = @{@"title" : @"1", @"category":@"SNAZZ"};
+            
+            insight = [[SENInsight alloc] initWithDictionary:dict1];
+            SENInsight* insight2 = [[SENInsight alloc] initWithDictionary:dict2];
+            [[insight shouldNot] equal:insight2];
+            
+        });
+        
+    });
 });
 
 SPEC_END
