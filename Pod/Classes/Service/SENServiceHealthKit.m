@@ -110,32 +110,20 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
     
     [[self hkStore] requestAuthorizationToShareTypes:writeTypes readTypes:readTypes completion:^(BOOL success, NSError *error) {
         NSError* serviceError = error;
-        if (success) { // launched request form
-            switch ([error code]) {
-                case HKErrorAuthorizationDenied:
-                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
-                                                       code:SENServiceHealthKitErrorNotAuthorized
-                                                   userInfo:nil];
-                    break;
-                case HKErrorUserCanceled:
-                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
-                                                       code:SENServiceHealthKitErrorCancelledAuthorization
-                                                   userInfo:nil];
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
-            switch (status) {
-                case HKAuthorizationStatusSharingDenied:
-                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
-                                                       code:SENServiceHealthKitErrorNotAuthorized
-                                                   userInfo:nil];
-                    break;
-                default:
-                    break;
-            }
+        HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
+        switch (status) {
+            case HKAuthorizationStatusSharingDenied:
+                serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                   code:SENServiceHealthKitErrorNotAuthorized
+                                               userInfo:nil];
+                break;
+            case HKAuthorizationStatusNotDetermined: // user cancelled form
+                serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                   code:SENServiceHealthKitErrorCancelledAuthorization
+                                               userInfo:nil];
+                break;
+            default:
+                break;
         }
         
         if (completion) {
