@@ -8,9 +8,12 @@
 
 #import "SENService.h"
 
-typedef NS_ENUM(NSUInteger, SENServiceHealthKitError) {
-    SENServiceHealthKitErrorNotAuthorized,
-    SENServiceHealthKitErrorNotSupported
+typedef NS_ENUM(NSInteger, SENServiceHealthKitError) {
+    SENServiceHealthKitErrorNotAuthorized = -1,
+    SENServiceHealthKitErrorNotSupported = -2,
+    SENServiceHealthKitErrorNoDataToWrite = -3,
+    SENServiceHealthKitErrorAlreadySynced = -4,
+    SENServiceHealthKitErrorNotEnabled = -5
 };
 
 @interface SENServiceHealthKit : SENService
@@ -26,8 +29,12 @@ typedef NS_ENUM(NSUInteger, SENServiceHealthKitError) {
  *
  * @discussion
  * Call this to trigger a sync of the Sense sleep data to HealthKit
+ *
+ * @param completion: the block to invoke when sync is completed, whether it's
+ *                    successful or not.  Refer to SENServiceHealthKitError to
+ *                    interpret the code returned if an error is returned
  */
-- (void)sync;
+- (void)sync:(void(^)(NSError* error))completion;
 
 /**
  * Request authorization from the user to read/write from/in to HealthKit
