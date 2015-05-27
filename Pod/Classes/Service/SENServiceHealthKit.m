@@ -110,17 +110,32 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
     
     [[self hkStore] requestAuthorizationToShareTypes:writeTypes readTypes:readTypes completion:^(BOOL success, NSError *error) {
         NSError* serviceError = error;
-        HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
-        
-        if (success && status == HKAuthorizationStatusSharingAuthorized) {
-            DDLogVerbose(@"healthkit authorization granted");
-        } else if (success && status == HKAuthorizationStatusSharingDenied) {
-            DDLogVerbose(@"healthkit authorization was denied");
-            serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
-                                               code:SENServiceHealthKitErrorNotAuthorized
-                                           userInfo:nil];
+        if (success) { // launched request form
+            switch ([error code]) {
+                case HKErrorAuthorizationDenied:
+                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                       code:SENServiceHealthKitErrorNotAuthorized
+                                                   userInfo:nil];
+                    break;
+                case HKErrorUserCanceled:
+                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                       code:SENServiceHealthKitErrorCancelledAuthorization
+                                                   userInfo:nil];
+                    break;
+                default:
+                    break;
+            }
         } else {
-            DDLogVerbose(@"healthkit authorization request failed %@", error);
+            HKAuthorizationStatus status = [[self hkStore] authorizationStatusForType:hkSleepCategory];
+            switch (status) {
+                case HKAuthorizationStatusSharingDenied:
+                    serviceError = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                       code:SENServiceHealthKitErrorNotAuthorized
+                                                   userInfo:nil];
+                    break;
+                default:
+                    break;
+            }
         }
         
         if (completion) {
