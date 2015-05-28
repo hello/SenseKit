@@ -59,7 +59,7 @@ describe(@"SENSenseManager", ^{
                 poweredOn = on;
             }];
             
-            [[expectFutureValue(@(poweredOn)) shouldSoon] beNo];
+            [[@(poweredOn) should] beNo];
         });
         
     });

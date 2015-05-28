@@ -9,11 +9,12 @@
 #import "SENService.h"
 
 typedef NS_ENUM(NSInteger, SENServiceHealthKitError) {
-    SENServiceHealthKitErrorNotAuthorized = -1,
-    SENServiceHealthKitErrorNotSupported = -2,
-    SENServiceHealthKitErrorNoDataToWrite = -3,
-    SENServiceHealthKitErrorAlreadySynced = -4,
-    SENServiceHealthKitErrorNotEnabled = -5
+    SENServiceHealthKitErrorCancelledAuthorization = -1,
+    SENServiceHealthKitErrorNotAuthorized = -2,
+    SENServiceHealthKitErrorNotSupported = -3,
+    SENServiceHealthKitErrorNoDataToWrite = -4,
+    SENServiceHealthKitErrorAlreadySynced = -5,
+    SENServiceHealthKitErrorNotEnabled = -6
 };
 
 @interface SENServiceHealthKit : SENService
