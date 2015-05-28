@@ -16,6 +16,7 @@
 @property (nonatomic, strong) HKHealthStore* hkStore;
 
 - (NSArray*)sleepDataPointsForSleepResult:(SENSleepResult*)sleepResult;
+- (void)writeSleepAnalysisIfDataAvailableFor:(NSDate*)date completion:(void(^)(NSError* error))completion;
 
 @end
 
@@ -219,6 +220,79 @@ describe(@"SENServiceHealthKitSpec", ^{
             
         });
         
+        context(@"sync completes with error", ^{
+           
+            it(@"should return with not enabled error", ^{
+                
+                __block NSError* syncError = nil;
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+                
+                [[syncError shouldNot] beNil];
+                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotEnabled)];
+                
+            });
+            
+            it(@"should return with not supported error", ^{
+                
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:NO]];
+                
+                __block NSError* syncError = nil;
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+                
+                [[syncError shouldNot] beNil];
+                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotSupported)];
+                
+            });
+            
+            it(@"should return with not authorized error", ^{
+                
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
+                
+                __block NSError* syncError = nil;
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+                
+                [[syncError shouldNot] beNil];
+                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotAuthorized)];
+                
+            });
+            
+        });
+        
+        context(@"healthkit is set up and can sync", ^{
+            
+            beforeEach(^{
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(canWriteSleepAnalysis) andReturn:[KWValue valueWithBool:YES]];
+            });
+            
+            it(@"should call writeSleepAnalysisIfDataAvailableFor with no error", ^{
+                
+                [service stub:@selector(writeSleepAnalysisIfDataAvailableFor:completion:) withBlock:^id(NSArray *params) {
+                    void(^callback)(NSError* error) = [params lastObject];
+                    callback(nil);
+                    return nil;
+                }];
+                [[service should] receive:@selector(writeSleepAnalysisIfDataAvailableFor:completion:)];
+
+                __block NSError* syncError = nil;
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+                
+                [[syncError should] beNil];
+                
+            });
+            
+        });
         
     });
     
