@@ -17,6 +17,7 @@
 
 - (NSArray*)sleepDataPointsForSleepResult:(SENSleepResult*)sleepResult;
 - (void)writeSleepAnalysisIfDataAvailableFor:(NSDate*)date completion:(void(^)(NSError* error))completion;
+- (NSDate*)lastNight;
 
 @end
 
@@ -220,8 +221,18 @@ describe(@"SENServiceHealthKitSpec", ^{
             
         });
         
-        context(@"sync completes with error", ^{
-           
+    });
+        
+    describe(@"-sync:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeEach(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        context(@"completes with error", ^{
+            
             it(@"should return with not enabled error", ^{
                 
                 __block NSError* syncError = nil;
@@ -282,7 +293,7 @@ describe(@"SENServiceHealthKitSpec", ^{
                     return nil;
                 }];
                 [[service should] receive:@selector(writeSleepAnalysisIfDataAvailableFor:completion:)];
-
+                
                 __block NSError* syncError = nil;
                 [service sync:^(NSError *error) {
                     syncError = error;
@@ -291,6 +302,46 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[syncError should] beNil];
                 
             });
+            
+        });
+        
+    });
+    
+    describe(@"-lastNight", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeEach(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        it(@"should be 1 day difference", ^{
+            
+            NSDate* lastNight = [service lastNight];
+            NSDate* today = [NSDate date];
+
+            NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+            NSCalendarUnit flags = NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit;
+            NSDateComponents* lastNightComps = [calendar components:flags fromDate:lastNight];
+            NSDateComponents* todayComponents = [calendar components:flags fromDate:today];
+            
+            [[@([lastNightComps day]) should] equal:@([todayComponents day] - 1)];
+            [[@([lastNightComps month]) should] equal:@([todayComponents month])];
+            [[@([lastNightComps year]) should] equal:@([todayComponents year])];
+            
+        });
+        
+        it(@"should not contain any time components", ^{
+            
+            NSDate* lastNight = [service lastNight];
+            
+            NSCalendar* calendar = [NSCalendar autoupdatingCurrentCalendar];
+            NSCalendarUnit unitsWeWant = NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
+            NSDateComponents *components = [calendar components:unitsWeWant fromDate:lastNight];
+            
+            [[@([components hour]) should] equal:@(0)];
+            [[@([components minute]) should] equal:@(0)];
+            [[@([components second]) should] equal:@(0)];
             
         });
         
