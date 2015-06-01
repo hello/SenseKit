@@ -323,11 +323,19 @@ describe(@"SENServiceHealthKitSpec", ^{
             NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
             NSCalendarUnit flags = NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit;
             NSDateComponents* lastNightComps = [calendar components:flags fromDate:lastNight];
-            NSDateComponents* todayComponents = [calendar components:flags fromDate:today];
             
-            [[@([lastNightComps day]) should] equal:@([todayComponents day] - 1)];
-            [[@([lastNightComps month]) should] equal:@([todayComponents month])];
-            [[@([lastNightComps year]) should] equal:@([todayComponents year])];
+            NSDateComponents* adjustedComponents = [[NSDateComponents alloc] init];
+            [adjustedComponents setDay:-1];
+            
+            NSDate* calculatedLastNightDate = [calendar dateByAddingComponents:adjustedComponents
+                                                                        toDate:today
+                                                                       options:0];
+            NSDateComponents* calculatedLastNightComps = [calendar components:flags
+                                                                     fromDate:calculatedLastNightDate];
+            
+            [[@([lastNightComps day]) should] equal:@([calculatedLastNightComps day])];
+            [[@([lastNightComps month]) should] equal:@([calculatedLastNightComps month])];
+            [[@([lastNightComps year]) should] equal:@([calculatedLastNightComps year])];
             
         });
         
