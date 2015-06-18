@@ -50,7 +50,7 @@ static NSString* const kSENAPITimeZoneParamId = @"timezone_id";
         }
     }
     
-    if (timeZone == nil && *error != NULL) {
+    if (timeZone == nil && error != NULL) {
         *error = [NSError errorWithDomain:kSENAPITimeZoneErrorDomain
                                      code:SENAPITimeZoneErrorInvalidResponse
                                  userInfo:nil];
