@@ -50,20 +50,6 @@ describe(@"SENSenseManager", ^{
         
     });
     
-    describe(@"+whenBleStateAvailable:", ^{
-        
-        it(@"should be off during tests, but callback made", ^{
-            
-            __block BOOL poweredOn = YES; // should change to NO
-            [SENSenseManager whenBleStateAvailable:^(BOOL on) {
-                poweredOn = on;
-            }];
-            
-            [[@(poweredOn) should] beNo];
-        });
-        
-    });
-    
     describe(@"-enablePairingMode:success:failure", ^{
         
         it(@"should fail with no sense initialized", ^{
