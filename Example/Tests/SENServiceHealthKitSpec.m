@@ -207,16 +207,17 @@ describe(@"SENServiceHealthKitSpec", ^{
             });
             
             it(@"should return 1 data point", ^{
-                
+                NSNumber* acceptableDelta = @10;
                 NSArray* dataPoints = [service sleepDataPointsForSleepResult:sleepResult];
                 [[dataPoints should] haveCountOf:1];
                 
                 NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:sleepTime];
                 NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:wakeTime];
                 HKCategorySample* sample = dataPoints[0];
-                [[[sample startDate] should] equal:startDate];
-                [[[sample endDate] should] equal:endDate];
-                
+                NSNumber* startDelta = @([[sample startDate] timeIntervalSince1970] - [startDate timeIntervalSince1970]);
+                NSNumber* endDelta = @([[sample endDate] timeIntervalSince1970] - [endDate timeIntervalSince1970]);
+                [[startDelta should] beLessThan:acceptableDelta];
+                [[endDelta should] beLessThan:acceptableDelta];
             });
             
         });
