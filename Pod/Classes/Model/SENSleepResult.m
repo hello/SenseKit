@@ -181,8 +181,7 @@ static NSString* const SENSleepResultDateFormat = @"yyyy-MM-dd";
     return stats;
 }
 
-- (NSArray*)parseSegmentsFromArray:(NSArray*)segmentsData
-{
+- (NSArray *)parseSegmentsFromArray:(NSArray *)segmentsData {
     NSMutableArray *segments = [[NSMutableArray alloc] initWithCapacity:[segmentsData count]];
     SENSleepResultSegment *previousSegment = nil;
     for (NSDictionary *segmentData in segmentsData) {
@@ -192,10 +191,13 @@ static NSString* const SENSleepResultDateFormat = @"yyyy-MM-dd";
             previousSegment.duration =
             [NSNumber numberWithDouble:[segment.duration doubleValue] + [previousSegment.duration doubleValue]];
         } else if (segment != nil) {
+            if (previousSegment)
+                [segments addObject:previousSegment];
             previousSegment = segment;
-            [segments addObject:segment];
         }
     }
+    if (previousSegment)
+        [segments addObject:previousSegment];
     return segments;
 }
 
