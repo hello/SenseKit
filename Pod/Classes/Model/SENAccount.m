@@ -41,7 +41,7 @@ static NSString* kSENAccountDateTimeZone = @"GMT";
     [components setDay:day];
     [components setMonth:month];
     [components setYear:year];
-    [components setCalendar:[NSCalendar currentCalendar]];
+    [components setCalendar:[NSCalendar autoupdatingCurrentCalendar]];
     
     NSDateFormatter* formatter = [self isoDateFormatter];
     [self setBirthdate:[formatter stringFromDate:[components date]]];
