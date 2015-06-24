@@ -79,13 +79,17 @@ static NSString* kSENAccountDateTimeZone = @"GMT";
 - (NSDateComponents*)birthdateComponents {
     if ([self birthdate] == nil) return nil;
     
+    NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
     NSDateFormatter* formatter = [self isoDateFormatter];
-    NSCalendar* calendar = [NSCalendar currentCalendar];
+    [formatter setCalendar:calendar];
+    
     NSDateComponents* components =
         [calendar components:NSCalendarUnitMonth
                              |NSCalendarUnitDay
                              |NSCalendarUnitYear
                     fromDate:[formatter dateFromString:[self birthdate]]];
+    
     return components;
 }
 
