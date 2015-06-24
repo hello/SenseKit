@@ -285,6 +285,69 @@ describe(@"SENAPIQuestionsSpec", ^{
             });
         });
     });
+    
+    describe(@"+getQuestionsFor:completion", ^{
+        
+        __block NSDate* date = nil;
+        __block NSString* dateParam = nil;
+        __block NSCalendar* gregorian = nil;
+        
+        beforeAll(^{
+            gregorian = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+            date = [NSDate date];
+            
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setCalendar:gregorian];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+            [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+            dateParam = [dateFormatter stringFromDate:date];
+        });
+        
+        context(@"buddhist calendar is set", ^{
+            
+            beforeAll(^{
+                NSCalendar* cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierBuddhist];
+                [NSCalendar stub:@selector(currentCalendar) andReturn:cal];
+                [NSCalendar stub:@selector(autoupdatingCurrentCalendar) andReturn:cal];
+            });
+            
+            it(@"should send a date parameter in correct gregorian year", ^{
+                
+                __block NSString* dateString = nil;
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    dateString = [[[params firstObject] pathComponents] lastObject];
+                    return nil;
+                }];
+                [SENAPIQuestions getQuestionsFor:date completion:nil];
+                [[dateString should] equal:[NSString stringWithFormat:@"?date=%@", dateParam]];
+                
+            });
+            
+        });
+        
+        context(@"japanese calendar is set", ^{
+            
+            beforeAll(^{
+                NSCalendar* cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierJapanese];
+                [NSCalendar stub:@selector(currentCalendar) andReturn:cal];
+                [NSCalendar stub:@selector(autoupdatingCurrentCalendar) andReturn:cal];
+            });
+            
+            it(@"should send a date parameter in correct gregorian year", ^{
+                
+                __block NSString* dateString = nil;
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    dateString = [[[params firstObject] pathComponents] lastObject];
+                    return nil;
+                }];
+                [SENAPIQuestions getQuestionsFor:date completion:nil];
+                [[dateString should] equal:[NSString stringWithFormat:@"?date=%@", dateParam]];
+                
+            });
+            
+        });
+        
+    });
 
 });
 
