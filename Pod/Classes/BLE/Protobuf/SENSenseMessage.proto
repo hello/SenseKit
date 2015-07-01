@@ -14,6 +14,7 @@ enum ErrorType {
     FORCE_DATA_PUSH_FAILED = 12;
     PROTOBUF_ENCODE_FAILED = 13;
     PROTOBUF_DECODE_FAILED = 14;
+    SERVER_CONNECTION_TIMEOUT = 15;
 }
 
 enum WiFiState {
@@ -21,6 +22,14 @@ enum WiFiState {
     WLAN_CONNECTING = 1;
     WLAN_CONNECTED = 2;
     IP_OBTAINED = 3;
+    DNS_RESOLVED = 4;
+    SOCKET_CONNECTED = 5;
+    REQUEST_SENT = 6;
+    CONNECTED = 7;
+    SSL_FAIL = 8;
+    HELLO_KEY_FAIL = 9;
+    DNS_FAILED = 10;
+    CONNECT_FAILED = 11;
 }
 
 message SENWifiEndpoint {
@@ -79,6 +88,9 @@ message SENSenseMessage {
         GET_NEXT_WIFI_AP = 29;
         LED_SUCCESS = 30;
         PUSH_DATA = 31;
+        SET_COUNTRY_CODE = 32;
+        SET_SERVER_IP = 33;
+        CONNECTION_STATE = 34;
     }
     required int32 version = 1;
     required Type type = 2;
@@ -97,4 +109,12 @@ message SENSenseMessage {
     optional SENWifiEndpoint.SecurityType securityType = 15;
     optional PillData pillData = 16;
     optional WiFiState wifiState = 17;
+    optional int32 bondCount = 18;
+    optional string countryCode = 19;
+    optional bytes aesKey = 20;
+    optional string topVersion = 21;
+    optional uint32 serverIP = 22;
+    optional uint32 socketErrorCode = 23;
+    optional string httpResponseCode = 24;
+    optional int32 appVersion = 25;
 }
