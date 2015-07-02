@@ -10,6 +10,9 @@
 #import "SENAPIClient.h"
 #import "SENSleepResult.h"
 
+static NSString* const SENAPIFeedbackPath = @"v1/feedback";
+static NSString* const SENAPIFeedbackSleepPath = @"sleep";
+
 @implementation SENAPIFeedback
 
 + (NSDateFormatter*)dateFormatter {
@@ -40,7 +43,9 @@
     calendar.timeZone = segment.timezone;
     NSDateComponents* components = [calendar components:(NSHourCalendarUnit|NSMinuteCalendarUnit) fromDate:segment.date];
     params[@"old_time_of_event"] = [self parameterStringForHour:components.hour minute:components.minute];
-    [SENAPIClient POST:@"feedback/sleep" parameters:params completion:^(id data, NSError *error) {
+    
+    NSString* path = [SENAPIFeedbackPath stringByAppendingPathComponent:SENAPIFeedbackSleepPath];
+    [SENAPIClient POST:path parameters:params completion:^(id data, NSError *error) {
         if (completion)
             completion(error);
     }];

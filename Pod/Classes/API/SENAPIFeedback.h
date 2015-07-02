@@ -28,4 +28,5 @@
                minute:(NSUInteger)minute
       forNightOfSleep:(NSDate*)sleepDate
            completion:(SENAPIErrorBlock)completion;
+
 @end

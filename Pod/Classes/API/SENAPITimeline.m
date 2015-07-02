@@ -4,7 +4,7 @@
 
 @implementation SENAPITimeline
 
-static NSString* const SENAPITimelineEndpointFormat = @"timeline/%ld-%ld-%ld";
+static NSString* const SENAPITimelineEndpointFormat = @"v1/timeline/%ld-%ld-%ld";
 
 + (void)timelineForDate:(NSDate *)date completion:(SENAPIDataBlock)block
 {
