@@ -13,7 +13,7 @@
 
 @interface SENAPITimeline()
 
-+ (NSString*)timelinePathForDate:(NSDate*)date apiVersion:(NSInteger)version;
++ (NSString*)timelinePathForDate:(NSDate*)date;
 
 @end
 
@@ -58,7 +58,7 @@ describe(@"SENAPITimeline", ^{
             });
             
             it(@"should return gregorian date in path", ^{
-                NSString* path = [SENAPITimeline timelinePathForDate:date apiVersion:1];
+                NSString* path = [SENAPITimeline timelinePathForDate:date];
                 NSArray* parts = [path pathComponents];
                 [[[parts lastObject] should] equal:gregorianDatePath];
             });
@@ -78,7 +78,7 @@ describe(@"SENAPITimeline", ^{
             });
             
             it(@"should return gregorian date in path", ^{
-                NSString* path = [SENAPITimeline timelinePathForDate:date apiVersion:1];
+                NSString* path = [SENAPITimeline timelinePathForDate:date];
                 NSArray* parts = [path pathComponents];
                 [[[parts lastObject] should] equal:gregorianDatePath];
             });
@@ -93,9 +93,14 @@ describe(@"SENAPITimeline", ^{
         __block BOOL callbackInvoked = NO;
         __block NSNumber* timestamp = nil;
         __block SENSleepResultSegment* segment = nil;
+        __block NSDate* nightOfSleep = nil;
         
         beforeEach(^{
             [[LSNocilla sharedInstance] start];
+            
+            NSDateFormatter* dateFormatter = [NSDateFormatter new];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
+            nightOfSleep = [dateFormatter dateFromString:@"2011-06-13"];
             
             NSDateFormatter* segmentFormatter = [NSDateFormatter new];
             segmentFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
@@ -132,9 +137,13 @@ describe(@"SENAPITimeline", ^{
             context(@"sleep segment is passed as an argument", ^{
                 
                 beforeEach(^{
-                    [SENAPITimeline amendSleepEvent:segment withHour:@1 andMinutes:@22 completion:^(id data, NSError *error) {
-                        callbackInvoked = YES;
-                    }];
+                    [SENAPITimeline amendSleepEvent:segment
+                                     forDateOfSleep:nightOfSleep
+                                           withHour:@1
+                                         andMinutes:@22
+                                         completion:^(NSError *error) {
+                                             callbackInvoked = YES;
+                                         }];
                     
                 });
                 
@@ -161,9 +170,13 @@ describe(@"SENAPITimeline", ^{
                 it(@"invokes the completion block with an error", ^{
                     
                     __block NSError* apiError = nil;
-                    [SENAPITimeline amendSleepEvent:nil withHour:@1 andMinutes:@22 completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
+                    [SENAPITimeline amendSleepEvent:nil
+                                     forDateOfSleep:nightOfSleep
+                                           withHour:@1
+                                         andMinutes:@22
+                                         completion:^(NSError *error) {
+                                             apiError = error;
+                                         }];
                     
                     [[apiError shouldNot] beNil];
                 });
@@ -192,9 +205,11 @@ describe(@"SENAPITimeline", ^{
                 it(@"invokes the completion block with an error", ^{
                     
                     __block NSError* apiError = nil;
-                    [SENAPITimeline verifySleepEvent:nil completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
+                    [SENAPITimeline verifySleepEvent:nil
+                                      forDateOfSleep:nightOfSleep
+                                          completion:^(NSError *error) {
+                                              apiError = error;
+                                          }];
                     
                     [[apiError shouldNot] beNil];
                 });
@@ -204,9 +219,11 @@ describe(@"SENAPITimeline", ^{
             context(@"sleep segment is passed in", ^{
                 
                 beforeEach(^{
-                    [SENAPITimeline verifySleepEvent:segment completion:^(id data, NSError *error) {
-                        callbackInvoked = YES;
-                    }];
+                    [SENAPITimeline verifySleepEvent:segment
+                                      forDateOfSleep:nightOfSleep
+                                          completion:^(NSError *error) {
+                                              callbackInvoked = YES;
+                                          }];
                 });
                 
                 it(@"invokes the completion block", ^{
@@ -249,9 +266,11 @@ describe(@"SENAPITimeline", ^{
                 it(@"invokes the completion block with an error", ^{
                     
                     __block NSError* apiError = nil;
-                    [SENAPITimeline removeSleepEvent:nil completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
+                    [SENAPITimeline removeSleepEvent:nil
+                                      forDateOfSleep:nightOfSleep
+                                          completion:^(NSError *error) {
+                                              apiError = error;
+                                          }];
                     
                     [[apiError shouldNot] beNil];
                 });
@@ -261,9 +280,11 @@ describe(@"SENAPITimeline", ^{
             context(@"sleep segment is passed in", ^{
                 
                 beforeEach(^{
-                    [SENAPITimeline removeSleepEvent:segment completion:^(id data, NSError *error) {
-                        callbackInvoked = YES;
-                    }];
+                    [SENAPITimeline removeSleepEvent:segment
+                                      forDateOfSleep:nightOfSleep
+                                          completion:^(NSError *error) {
+                                              callbackInvoked = YES;
+                                          }];
                 });
                 
                 it(@"invokes the completion block", ^{

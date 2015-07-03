@@ -22,9 +22,12 @@
  * Mark the sleep event as correct, assuming the event allows such action.
  *
  * @param sleepEvent: the event to mark as correct / verify
+ * @param date:       the date of sleep
  * @param block:      the block to excecute upon completion
  */
-+ (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent completion:(SENAPIDataBlock)block;
++ (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent
+          forDateOfSleep:(NSDate*)date
+              completion:(SENAPIErrorBlock)block;
 
 /**
  * @method removeSleepEvent
@@ -33,22 +36,29 @@
  * Remove the specified event, assuming it's removable.
  *
  * @param sleepEvent: the event to mark remove
+ * @param date:       the date of sleep
  * @param block:      the block to excecute upon completion
  */
-+ (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent completion:(SENAPIDataBlock)block;
++ (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent
+          forDateOfSleep:(NSDate*)date
+              completion:(SENAPIErrorBlock)block;
 
 /**
- * @method amendSleepEvent:withHour:andMinutes:completion
+ * @method amendSleepEvent:forDateOfSleep:withHour:andMinutes:completion
  *
  * @discussion
  * Amend the sleep event specified
  *
  * @param sleepEvent: the event to mark remove
- * @param block:      the block to excecute upon completion
+ * @param date:       the date of sleep
+ * @param hour:       the hour to change to
+ * @param minutes:    the minutes to change to
+ * @param completion: the block to excecute upon completion
  */
 + (void)amendSleepEvent:(SENSleepResultSegment*)sleepEvent
+         forDateOfSleep:(NSDate*)date
                withHour:(NSNumber*)hour
              andMinutes:(NSNumber*)minutes
-             completion:(SENAPIDataBlock)block;
+             completion:(SENAPIErrorBlock)block;
 
 @end

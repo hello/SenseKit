@@ -5,70 +5,106 @@
 
 @implementation SENAPITimeline
 
-static NSString* const SENAPITimelineEndpointFormat = @"v%ld/timeline/%ld-%ld-%ld";
+static NSString* const SENAPITimelineEndpointFormat = @"v1/timeline/%ld-%ld-%ld"; // deprecated
+static NSString* const SENAPITimelineEndpoint = @"v2/timeline";
 static NSString* const SENAPITimelineErrorDomain = @"is.hello.api.timeline";
+static NSString* const SENAPITimelineFeedbackPath = @"event";
 
 + (void)timelineForDate:(NSDate *)date completion:(SENAPIDataBlock)block
 {
-    [SENAPIClient  GET:[self timelinePathForDate:date apiVersion:1] parameters:nil completion:block];
+    [SENAPIClient  GET:[self timelinePathForDate:date] parameters:nil completion:block];
 }
 
-+ (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent completion:(SENAPIDataBlock)block
++ (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent
+          forDateOfSleep:(NSDate*)date
+              completion:(SENAPIErrorBlock)block
 {
     if (!sleepEvent) {
         if (block) {
-            NSError* error = [NSError errorWithDomain:SENAPITimelineErrorDomain
-                                                 code:-1
-                                             userInfo:nil];
-            block (nil, error);
+            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
+                                       code:-1
+                                   userInfo:nil]);
         }
         return;
     }
     
-    NSString* path = [self timelinePathForDate:[sleepEvent date] apiVersion:2];
+    NSString* path = [self feedbackPathForDateOfSleep:date];
     id parameters = [sleepEvent dictionaryValueForUpdateWithHour:nil minutes:nil];
-    [SENAPIClient PUT:path parameters:parameters completion:block];
+    [SENAPIClient PUT:path parameters:parameters completion:^(id data, NSError *error) {
+        if (block) {
+            block (error);
+        }
+    }];
 }
 
-+ (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent completion:(SENAPIDataBlock)block
++ (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent
+          forDateOfSleep:(NSDate*)date
+              completion:(SENAPIErrorBlock)block
 {
     if (!sleepEvent) {
         if (block) {
-            NSError* error = [NSError errorWithDomain:SENAPITimelineErrorDomain
-                                                 code:-1
-                                             userInfo:nil];
-            block (nil, error);
+            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
+                                       code:-1
+                                   userInfo:nil]);
         }
         return;
     }
     
-    NSString* path = [self timelinePathForDate:[sleepEvent date] apiVersion:2];
+    NSString* path = [self feedbackPathForDateOfSleep:date];
     id parameters = [sleepEvent dictionaryValueForUpdateWithHour:nil minutes:nil];
-    [SENAPIClient DELETE:path parameters:parameters completion:block];
+    [SENAPIClient DELETE:path parameters:parameters completion:^(id data, NSError *error) {
+        if (block) {
+            block (error);
+        }
+    }];
 }
 
 + (void)amendSleepEvent:(SENSleepResultSegment*)sleepEvent
+         forDateOfSleep:(NSDate*)date
                withHour:(NSNumber*)hour
              andMinutes:(NSNumber*)minutes
-             completion:(SENAPIDataBlock)block
+             completion:(SENAPIErrorBlock)block
 {
     
     if (!sleepEvent || !hour || !minutes) {
         if (block) {
-            block (nil, [NSError errorWithDomain:SENAPITimelineErrorDomain
-                                            code:-1
-                                        userInfo:nil]);
+            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
+                                       code:-1
+                                   userInfo:nil]);
         }
         return;
     }
     
-    NSString* path = [self timelinePathForDate:[sleepEvent date] apiVersion:2];
+    NSString* path = [self feedbackPathForDateOfSleep:date];
     id parameters = [sleepEvent dictionaryValueForUpdateWithHour:hour minutes:minutes];
-    [SENAPIClient PATCH:path parameters:parameters completion:block];
+    [SENAPIClient PATCH:path parameters:parameters completion:^(id data, NSError *error) {
+        if (block) {
+            block (error);
+        }
+    }];
     
 }
 
 #pragma mark - Helpers
+
++ (NSDateFormatter*)dateFormatter {
+    static NSDateFormatter* formatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [NSDateFormatter new];
+        [formatter setCalendar:[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
+        formatter.dateFormat = @"yyyy-MM-dd";
+    });
+    return formatter;
+}
+
+
++ (NSString*)feedbackPathForDateOfSleep:(NSDate*)dateOfSleep {
+    return [NSString stringWithFormat:@"%@/%@/%@",
+            SENAPITimelineEndpoint,
+            [[self dateFormatter] stringFromDate:dateOfSleep],
+            SENAPITimelineFeedbackPath];
+}
 
 + (NSString*)parameterStringForHour:(NSUInteger)hour minute:(NSUInteger)minute
 {
@@ -86,14 +122,14 @@ static NSString* const SENAPITimelineErrorDomain = @"is.hello.api.timeline";
     return [NSString stringWithFormat:format, (long)number];
 }
 
-+ (NSString*)timelinePathForDate:(NSDate*)date apiVersion:(NSInteger)version
++ (NSString*)timelinePathForDate:(NSDate*)date
 {
     NSString* calendarId = NSCalendarIdentifierGregorian;
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:calendarId];
     NSCalendarUnit flags = (NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit);
     NSDateComponents* components = [calendar components:flags fromDate:date];
     return [NSString stringWithFormat:SENAPITimelineEndpointFormat,
-            (long)version, (long)components.year, (long)components.month, (long)components.day];
+            (long)components.year, (long)components.month, (long)components.day];
 }
 
 @end
