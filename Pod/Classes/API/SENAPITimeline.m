@@ -8,7 +8,8 @@
 static NSString* const SENAPITimelineEndpointFormat = @"v1/timeline/%ld-%ld-%ld"; // deprecated
 static NSString* const SENAPITimelineEndpoint = @"v2/timeline";
 static NSString* const SENAPITimelineErrorDomain = @"is.hello.api.timeline";
-static NSString* const SENAPITimelineFeedbackPath = @"event";
+static NSString* const SENAPITimelineFeedbackPath = @"events";
+static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
 
 + (void)timelineForDate:(NSDate *)date completion:(SENAPIDataBlock)block
 {
@@ -28,9 +29,8 @@ static NSString* const SENAPITimelineFeedbackPath = @"event";
         return;
     }
     
-    NSString* path = [self feedbackPathForDateOfSleep:date];
-    id parameters = [sleepEvent dictionaryValueForUpdateWithHour:nil minutes:nil];
-    [SENAPIClient PUT:path parameters:parameters completion:^(id data, NSError *error) {
+    NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
+    [SENAPIClient PUT:path parameters:nil completion:^(id data, NSError *error) {
         if (block) {
             block (error);
         }
@@ -50,9 +50,8 @@ static NSString* const SENAPITimelineFeedbackPath = @"event";
         return;
     }
     
-    NSString* path = [self feedbackPathForDateOfSleep:date];
-    id parameters = [sleepEvent dictionaryValueForUpdateWithHour:nil minutes:nil];
-    [SENAPIClient DELETE:path parameters:parameters completion:^(id data, NSError *error) {
+    NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
+    [SENAPIClient DELETE:path parameters:nil completion:^(id data, NSError *error) {
         if (block) {
             block (error);
         }
@@ -75,8 +74,9 @@ static NSString* const SENAPITimelineFeedbackPath = @"event";
         return;
     }
     
-    NSString* path = [self feedbackPathForDateOfSleep:date];
-    id parameters = [sleepEvent dictionaryValueForUpdateWithHour:hour minutes:minutes];
+    NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
+    NSString* formattedTime = [self formattedValueWithHour:hour minutes:minutes];
+    NSDictionary* parameters = @{SENAPITimelineFeedbackParamNewTime : formattedTime};
     [SENAPIClient PATCH:path parameters:parameters completion:^(id data, NSError *error) {
         if (block) {
             block (error);
@@ -86,6 +86,24 @@ static NSString* const SENAPITimelineFeedbackPath = @"event";
 }
 
 #pragma mark - Helpers
+
++ (NSString*)formattedValueWithHour:(NSNumber*)hour minutes:(NSNumber*)minutes {
+    NSString* timeChange = nil;
+    if (hour && minutes) {
+        static NSString* const HEMClockParamFormat = @"%@:%@";
+        NSString* hourText = [self stringForNumber:[hour integerValue]];
+        NSString* minuteText = [self stringForNumber:[minutes integerValue]];
+        timeChange = [NSString stringWithFormat:HEMClockParamFormat, hourText, minuteText];
+    }
+    return timeChange;
+}
+
++ (NSNumber*)timestampForDate:(NSDate*)date {
+    if (date == nil) {
+        return nil;
+    }
+    return @([date timeIntervalSince1970] * 1000);
+}
 
 + (NSDateFormatter*)dateFormatter {
     static NSDateFormatter* formatter = nil;
@@ -99,23 +117,16 @@ static NSString* const SENAPITimelineFeedbackPath = @"event";
 }
 
 
-+ (NSString*)feedbackPathForDateOfSleep:(NSDate*)dateOfSleep {
-    return [NSString stringWithFormat:@"%@/%@/%@",
++ (NSString*)feedbackPathForDateOfSleep:(NSDate*)dateOfSleep withEvent:(SENSleepResultSegment*)event {
+    return [NSString stringWithFormat:@"%@/%@/%@/%@/%@",
             SENAPITimelineEndpoint,
             [[self dateFormatter] stringFromDate:dateOfSleep],
-            SENAPITimelineFeedbackPath];
+            SENAPITimelineFeedbackPath,
+            [event eventType],
+            [self timestampForDate:[event date]]];
 }
 
-+ (NSString*)parameterStringForHour:(NSUInteger)hour minute:(NSUInteger)minute
-{
-    static NSString* const HEMClockParamFormat = @"%@:%@";
-    NSString* hourText = [self stringForNumber:hour];
-    NSString* minuteText = [self stringForNumber:minute];
-    return [NSString stringWithFormat:HEMClockParamFormat, hourText, minuteText];
-}
-
-+ (NSString*)stringForNumber:(NSUInteger)number
-{
++ (NSString*)stringForNumber:(NSUInteger)number {
     static NSString* const HEMNumberParamFormat = @"%ld";
     static NSString* const HEMSmallNumberParamFormat = @"0%ld";
     NSString* format = number <= 9 ? HEMSmallNumberParamFormat : HEMNumberParamFormat;

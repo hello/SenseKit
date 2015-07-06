@@ -155,14 +155,6 @@ describe(@"SENAPITimeline", ^{
                     [[requestParams[@"new_event_time"] should] equal:@"01:22"];
                 });
                 
-                it(@"sends the inaccurate time", ^{
-                    [[requestParams[@"event_timestamp"] should] equal:timestamp];
-                });
-                
-                it(@"sends the event type", ^{
-                    [[requestParams[@"event_type"] should] equal:@"IN_BED"];
-                });
-                
             });
             
             context(@"sleep segment is not passed in", ^{
@@ -230,18 +222,6 @@ describe(@"SENAPITimeline", ^{
                     [[@(callbackInvoked) should] beYes];
                 });
                 
-                it(@"does not send a new time event", ^{
-                    [[requestParams[@"new_event_time"] should] beNil];
-                });
-                
-                it(@"sends the inaccurate time", ^{
-                    [[requestParams[@"event_timestamp"] should] equal:timestamp];
-                });
-                
-                it(@"sends the event type", ^{
-                    [[requestParams[@"event_type"] should] equal:@"IN_BED"];
-                });
-                
             });
             
         });
@@ -289,18 +269,6 @@ describe(@"SENAPITimeline", ^{
                 
                 it(@"invokes the completion block", ^{
                     [[@(callbackInvoked) should] beYes];
-                });
-                
-                it(@"does not send a new time event", ^{
-                    [[requestParams[@"new_event_time"] should] beNil];
-                });
-                
-                it(@"sends the inaccurate time", ^{
-                    [[requestParams[@"event_timestamp"] should] equal:timestamp];
-                });
-                
-                it(@"sends the event type", ^{
-                    [[requestParams[@"event_type"] should] equal:@"IN_BED"];
                 });
                 
             });

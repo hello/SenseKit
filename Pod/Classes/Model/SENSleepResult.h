@@ -77,23 +77,6 @@ extern NSString* const SENSleepResultSegmentEventTypeSleep;
 @property (strong) SENSleepResultSound* sound;
 @property NSInteger sleepDepth;
 
-/**
- * @method dictionaryValueForUpdate:
- *
- * @discussion:
- * Dictionary value of the segment intended to be used when updating the segment
- *
- * @param hour:    optional parameter to be used when changing the segment's actual
- *                 hour of occurrence.
- * @param minutes: optional parameter to be used when changing the segment's actual
- *                 minute of occurrence.
- *
- * @return         a dictionary containing values that can be used to update the 
- *                 source.  It will return an empty dictionary if segment does not
- *                 contain the appropriate values
- */
-- (NSDictionary*)dictionaryValueForUpdateWithHour:(NSNumber*)hour minutes:(NSNumber*)minutes;
-
 @end
 
 @interface SENSleepResultStatistic : NSObject <NSCoding>

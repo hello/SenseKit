@@ -9,14 +9,6 @@ static NSDate* SENSleepResultDateFromTimestamp(NSNumber* timestampMillis)
     return [NSDate dateWithTimeIntervalSince1970:[timestampMillis doubleValue] / 1000];
 }
 
-static NSNumber* SENSleepResultTimestampFromDate(NSDate* date)
-{
-    if (date == nil) {
-        return nil;
-    }
-    return @([date timeIntervalSince1970] * 1000);
-}
-
 static NSString* const SENSleepResultSegmentSensorName = @"name";
 
 @interface SENSleepResult ()
@@ -450,39 +442,6 @@ static NSString* const SENSleepResultSegmentDateUpdate = @"new_event_time";
         }
     }
     return changed;
-}
-
-- (NSDictionary*)dictionaryValueForUpdateWithHour:(NSNumber*)hour minutes:(NSNumber*)minutes
-{
-    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithCapacity:3];
-    NSString* timeChange = nil;
-    if (hour && minutes) {
-        timeChange = [self stringForHour:[hour integerValue] minute:[minutes integerValue]];
-    }
-
-    // setValue:forKey will ignore nils
-    [dict setValue:SENSleepResultTimestampFromDate([self date])
-            forKey:SENSleepResultSegmentDate];
-    [dict setValue:[self eventType] forKey:SENSleepResultSegmentType];
-    [dict setValue:timeChange forKey:SENSleepResultSegmentDateUpdate];
-    
-    return dict;
-}
-
-- (NSString*)stringForHour:(NSUInteger)hour minute:(NSUInteger)minute
-{
-    static NSString* const HEMClockParamFormat = @"%@:%@";
-    NSString* hourText = [self stringForNumber:hour];
-    NSString* minuteText = [self stringForNumber:minute];
-    return [NSString stringWithFormat:HEMClockParamFormat, hourText, minuteText];
-}
-
-- (NSString*)stringForNumber:(NSUInteger)number
-{
-    static NSString* const HEMNumberParamFormat = @"%ld";
-    static NSString* const HEMSmallNumberParamFormat = @"0%ld";
-    NSString* format = number <= 9 ? HEMSmallNumberParamFormat : HEMNumberParamFormat;
-    return [NSString stringWithFormat:format, (long)number];
 }
 
 @end
