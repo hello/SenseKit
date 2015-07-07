@@ -141,7 +141,7 @@ describe(@"SENAPITimeline", ^{
                                      forDateOfSleep:nightOfSleep
                                            withHour:@1
                                          andMinutes:@22
-                                         completion:^(NSError *error) {
+                                         completion:^(id data, NSError *error) {
                                              callbackInvoked = YES;
                                          }];
                     
@@ -166,7 +166,7 @@ describe(@"SENAPITimeline", ^{
                                      forDateOfSleep:nightOfSleep
                                            withHour:@1
                                          andMinutes:@22
-                                         completion:^(NSError *error) {
+                                         completion:^(id data, NSError *error) {
                                              apiError = error;
                                          }];
                     
@@ -199,7 +199,7 @@ describe(@"SENAPITimeline", ^{
                     __block NSError* apiError = nil;
                     [SENAPITimeline verifySleepEvent:nil
                                       forDateOfSleep:nightOfSleep
-                                          completion:^(NSError *error) {
+                                          completion:^(id data, NSError *error) {
                                               apiError = error;
                                           }];
                     
@@ -213,7 +213,7 @@ describe(@"SENAPITimeline", ^{
                 beforeEach(^{
                     [SENAPITimeline verifySleepEvent:segment
                                       forDateOfSleep:nightOfSleep
-                                          completion:^(NSError *error) {
+                                          completion:^(id data, NSError *error) {
                                               callbackInvoked = YES;
                                           }];
                 });
@@ -248,7 +248,7 @@ describe(@"SENAPITimeline", ^{
                     __block NSError* apiError = nil;
                     [SENAPITimeline removeSleepEvent:nil
                                       forDateOfSleep:nightOfSleep
-                                          completion:^(NSError *error) {
+                                          completion:^(id data, NSError *error) {
                                               apiError = error;
                                           }];
                     
@@ -262,7 +262,7 @@ describe(@"SENAPITimeline", ^{
                 beforeEach(^{
                     [SENAPITimeline removeSleepEvent:segment
                                       forDateOfSleep:nightOfSleep
-                                          completion:^(NSError *error) {
+                                          completion:^(id data, NSError *error) {
                                               callbackInvoked = YES;
                                           }];
                 });

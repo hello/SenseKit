@@ -27,7 +27,7 @@
  */
 + (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
-              completion:(SENAPIErrorBlock)block;
+              completion:(SENAPIDataBlock)block;
 
 /**
  * @method removeSleepEvent
@@ -41,7 +41,7 @@
  */
 + (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
-              completion:(SENAPIErrorBlock)block;
+              completion:(SENAPIDataBlock)block;
 
 /**
  * @method amendSleepEvent:forDateOfSleep:withHour:andMinutes:completion
@@ -59,6 +59,6 @@
          forDateOfSleep:(NSDate*)date
                withHour:(NSNumber*)hour
              andMinutes:(NSNumber*)minutes
-             completion:(SENAPIErrorBlock)block;
+             completion:(SENAPIDataBlock)block;
 
 @end

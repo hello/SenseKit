@@ -18,58 +18,50 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
 
 + (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
-              completion:(SENAPIErrorBlock)block
+              completion:(SENAPIDataBlock)block
 {
     if (!sleepEvent) {
         if (block) {
-            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
-                                       code:-1
-                                   userInfo:nil]);
+            block (nil, [NSError errorWithDomain:SENAPITimelineErrorDomain
+                                            code:-1
+                                        userInfo:nil]);
         }
         return;
     }
     
     NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
-    [SENAPIClient PUT:path parameters:nil completion:^(id data, NSError *error) {
-        if (block) {
-            block (error);
-        }
-    }];
+    [SENAPIClient PUT:path parameters:nil completion:block];
 }
 
 + (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
-              completion:(SENAPIErrorBlock)block
+              completion:(SENAPIDataBlock)block
 {
     if (!sleepEvent) {
         if (block) {
-            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
-                                       code:-1
-                                   userInfo:nil]);
+            block (nil, [NSError errorWithDomain:SENAPITimelineErrorDomain
+                                            code:-1
+                                        userInfo:nil]);
         }
         return;
     }
     
     NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
-    [SENAPIClient DELETE:path parameters:nil completion:^(id data, NSError *error) {
-        if (block) {
-            block (error);
-        }
-    }];
+    [SENAPIClient DELETE:path parameters:nil completion:block];
 }
 
 + (void)amendSleepEvent:(SENSleepResultSegment*)sleepEvent
          forDateOfSleep:(NSDate*)date
                withHour:(NSNumber*)hour
              andMinutes:(NSNumber*)minutes
-             completion:(SENAPIErrorBlock)block
+             completion:(SENAPIDataBlock)block
 {
     
     if (!sleepEvent || !hour || !minutes) {
         if (block) {
-            block ([NSError errorWithDomain:SENAPITimelineErrorDomain
-                                       code:-1
-                                   userInfo:nil]);
+            block (nil, [NSError errorWithDomain:SENAPITimelineErrorDomain
+                                            code:-1
+                                        userInfo:nil]);
         }
         return;
     }
@@ -77,11 +69,7 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
     NSString* formattedTime = [self formattedValueWithHour:hour minutes:minutes];
     NSDictionary* parameters = @{SENAPITimelineFeedbackParamNewTime : formattedTime};
-    [SENAPIClient PATCH:path parameters:parameters completion:^(id data, NSError *error) {
-        if (block) {
-            block (error);
-        }
-    }];
+    [SENAPIClient PATCH:path parameters:parameters completion:block];
     
 }
 
