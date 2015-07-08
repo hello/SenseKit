@@ -544,7 +544,6 @@
 		B11F143D124919B81D83C9F2 /* UIWebView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DFC95D7BB56E473EFDBC51E /* UIWebView+AFNetworking.h */; };
 		B1680211CD83ED1887D71892 /* NSObject+KiwiSpyAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DB8020E5668A314EECEB4985 /* NSObject+KiwiSpyAdditions.h */; };
 		B214A38F35BC2597AF92E2C8 /* YapDatabaseHooks.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C0EFCF8C184C907EF9C11D /* YapDatabaseHooks.h */; };
-		B2290591521E1FE9DF31E9D3 /* SENAPIFeedback.m in Sources */ = {isa = PBXBuildFile; fileRef = 522484FF38D2986F2F0F6851 /* SENAPIFeedback.m */; };
 		B278DC39FD0B53470647BF10 /* YDBCKChangeRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D23FB0E536F7A8D2C81AAB23 /* YDBCKChangeRecord.m */; };
 		B370FBF91EF8FFE99A61B9CA /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 64458BE9620030015EA97F29 /* WireFormat.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B4474F91F1680B37FC59DC38 /* MPABTestDesignerChangeRequestMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCEC2301ED91B7D440A2CAC /* MPABTestDesignerChangeRequestMessage.m */; };
@@ -730,7 +729,6 @@
 		F315F2CFEB70040F6D4BEA78 /* SENServiceHealthKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F847271F7F083BA01D5DB473 /* SENServiceHealthKit.m */; };
 		F39952F140462E6CFB527A14 /* KWFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = EFD75299B211A974E509AE2C /* KWFailure.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F3B7605C297A6E74FA6BD817 /* YDBCKChangeSet.m in Sources */ = {isa = PBXBuildFile; fileRef = EC57C4C19FEA78465977B31F /* YDBCKChangeSet.m */; };
-		F413FD4D8DDC803CC79F2814 /* SENAPIFeedback.h in Headers */ = {isa = PBXBuildFile; fileRef = C41F128B7EE014D1AE4C6670 /* SENAPIFeedback.h */; };
 		F4A475605A560281060D038D /* NSInvocation+KiwiAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B8E7A08070EABBEF0530184 /* NSInvocation+KiwiAdditions.h */; };
 		F554A5EC79E1EC4604E7847C /* KWWorkarounds.m in Sources */ = {isa = PBXBuildFile; fileRef = E55DB53467FDAE09BD0C85E5 /* KWWorkarounds.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F5C45FDA8CF2E83B1206F718 /* KWStub.h in Headers */ = {isa = PBXBuildFile; fileRef = D2F23FC3BF128A01589800B1 /* KWStub.h */; };
@@ -1173,7 +1171,6 @@
 		507FF70E22CC455D992BEF85 /* Pods-Tests-Kiwi.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Tests-Kiwi.xcconfig"; sourceTree = "<group>"; };
 		509E6E47764576B584707277 /* Pods-Mixpanel-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Mixpanel-dummy.m"; sourceTree = "<group>"; };
 		50D1CCFAA63396A2C37B4239 /* YapDatabaseRelationshipTransaction.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YapDatabaseRelationshipTransaction.m; path = YapDatabase/Extensions/Relationships/YapDatabaseRelationshipTransaction.m; sourceTree = "<group>"; };
-		522484FF38D2986F2F0F6851 /* SENAPIFeedback.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENAPIFeedback.m; sourceTree = "<group>"; };
 		522CFE43B635B3DE1A931006 /* KWValue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWValue.h; path = Classes/Core/KWValue.h; sourceTree = "<group>"; };
 		5249201852FE0519DA52762E /* KWSymbolicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSymbolicator.m; path = Classes/Core/KWSymbolicator.m; sourceTree = "<group>"; };
 		535626FA580DD4A826176C6F /* MPSequenceGenerator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MPSequenceGenerator.h; path = Mixpanel/MPSequenceGenerator.h; sourceTree = "<group>"; };
@@ -1536,7 +1533,6 @@
 		C3320C527B55AA668B375928 /* BLE.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = BLE.h; sourceTree = "<group>"; };
 		C3B284CFC3745795CDE31346 /* SENAuthorizationService.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENAuthorizationService.h; sourceTree = "<group>"; };
 		C41C510220AFAB31223C3B67 /* UIColor+MPColor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+MPColor.h"; path = "Mixpanel/UIColor+MPColor.h"; sourceTree = "<group>"; };
-		C41F128B7EE014D1AE4C6670 /* SENAPIFeedback.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENAPIFeedback.h; sourceTree = "<group>"; };
 		C47886257BEB4475A6296034 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIKit+AFNetworking.h"; path = "UIKit+AFNetworking/UIKit+AFNetworking.h"; sourceTree = "<group>"; };
 		C4ECFAD0E7E8FFCF0422411D /* Pods-Mixpanel-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Mixpanel-prefix.pch"; sourceTree = "<group>"; };
 		C51120C069BCC207874049F0 /* NSDictionary+YapDatabase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+YapDatabase.m"; path = "YapDatabase/Internal/NSDictionary+YapDatabase.m"; sourceTree = "<group>"; };
@@ -2764,8 +2760,6 @@
 				CDA7C90D61CD6AB50257D4FA /* SENAPIClient.m */,
 				4503D123B802AD2491029E13 /* SENAPIDevice.h */,
 				782F528284F5223ECAAFD868 /* SENAPIDevice.m */,
-				C41F128B7EE014D1AE4C6670 /* SENAPIFeedback.h */,
-				522484FF38D2986F2F0F6851 /* SENAPIFeedback.m */,
 				25B5BDBDDBF7E044FF7749C8 /* SENAPIInsight.h */,
 				1C857DC4598983F43BC1405D /* SENAPIInsight.m */,
 				6027FDCBC521AD4B551D4D00 /* SENAPINotification.h */,
@@ -3364,7 +3358,6 @@
 				849511532716FD8E958D5878 /* SENAPIAlarms.h in Headers */,
 				9D43D4584E49E9BD5D0EF213 /* SENAPIClient.h in Headers */,
 				88FBE4FDBE236FA7D02A1BED /* SENAPIDevice.h in Headers */,
-				F413FD4D8DDC803CC79F2814 /* SENAPIFeedback.h in Headers */,
 				AA26AC208CCF4CAE6AA6E5E9 /* SENAPIInsight.h in Headers */,
 				3C5DD3C3CDB6E6E36E6B04DF /* SENAPINotification.h in Headers */,
 				ACDB1E8878694BFE6B5A9706 /* SENAPIPreferences.h in Headers */,
@@ -4036,7 +4029,6 @@
 				5456E666A6ECA78B805D15DE /* SENAPIAlarms.m in Sources */,
 				58B60EDE6EB6E9010AE34D8A /* SENAPIClient.m in Sources */,
 				98E90C3A9D294923E977695E /* SENAPIDevice.m in Sources */,
-				B2290591521E1FE9DF31E9D3 /* SENAPIFeedback.m in Sources */,
 				CF10B4BE4E2CB4DE94DF42A2 /* SENAPIInsight.m in Sources */,
 				345223F6520B49E73D81214F /* SENAPINotification.m in Sources */,
 				C3491C40E989C9960ADE9E76 /* SENAPIPreferences.m in Sources */,
