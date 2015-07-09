@@ -5,7 +5,7 @@
 
 @implementation SENAPITimeline
 
-static NSString* const SENAPITimelineEndpointFormat = @"v1/timeline/%ld-%ld-%ld"; // deprecated
+static NSString* const SENAPITimelineEndpointFormat = @"v2/timeline/%ld-%ld-%ld";
 static NSString* const SENAPITimelineEndpoint = @"v2/timeline";
 static NSString* const SENAPITimelineErrorDomain = @"is.hello.api.timeline";
 static NSString* const SENAPITimelineFeedbackPath = @"events";
@@ -13,7 +13,22 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
 
 + (void)timelineForDate:(NSDate *)date completion:(SENAPIDataBlock)block
 {
-    [SENAPIClient  GET:[self timelinePathForDate:date] parameters:nil completion:block];
+    NSString* const SENAPITimelineUnparsedErrorFormat = @"Raw timeline could not be parsed: %@";
+    if (!block)
+        return;
+    [SENAPIClient  GET:[self timelinePathForDate:date] parameters:nil completion:^(id data, NSError *error) {
+        if (error) {
+            block(nil, error);
+        } else if ([data isKindOfClass:[NSDictionary class]]) {
+            SENTimeline* timeline = [[SENTimeline alloc] initWithDictionary:data];
+            block(timeline, nil);
+        } else {
+            NSString* description = [NSString stringWithFormat:SENAPITimelineUnparsedErrorFormat, data];
+            block(nil, [NSError errorWithDomain:@"is.hello"
+                                           code:500
+                                       userInfo:@{NSLocalizedDescriptionKey:description}]);
+        }
+    }];
 }
 
 + (void)verifySleepEvent:(SENTimelineSegment*)sleepEvent
