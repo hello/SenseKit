@@ -58,9 +58,9 @@ PODS:
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc (= 0.9)
   - SHSProtoBuf/non-arc (0.9)
-  - YapDatabase (2.6.4):
-    - YapDatabase/standard (= 2.6.4)
-  - YapDatabase/standard (2.6.4):
+  - YapDatabase (2.6.5):
+    - YapDatabase/standard (= 2.6.5)
+  - YapDatabase/standard (2.6.5):
     - CocoaLumberjack (~> 1)
 
 DEPENDENCIES:
@@ -97,6 +97,6 @@ SPEC CHECKSUMS:
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
   SenseKit: 80ec61d63f9281ba0ce0c1168b379388e967726c
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
-  YapDatabase: f9051e178a38f48d0f3a78562423a5bc969f1ca3
+  YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
 
 COCOAPODS: 0.37.2
