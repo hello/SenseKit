@@ -1,7 +1,7 @@
 
 #import "AFHTTPSessionManager.h"
 #import "SENAPITimeline.h"
-#import "SENSleepResult.h"
+#import "SENTimeline.h"
 
 @implementation SENAPITimeline
 
@@ -16,7 +16,7 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     [SENAPIClient  GET:[self timelinePathForDate:date] parameters:nil completion:block];
 }
 
-+ (void)verifySleepEvent:(SENSleepResultSegment*)sleepEvent
++ (void)verifySleepEvent:(SENTimelineSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
               completion:(SENAPIDataBlock)block
 {
@@ -33,7 +33,7 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     [SENAPIClient PUT:path parameters:nil completion:block];
 }
 
-+ (void)removeSleepEvent:(SENSleepResultSegment*)sleepEvent
++ (void)removeSleepEvent:(SENTimelineSegment*)sleepEvent
           forDateOfSleep:(NSDate*)date
               completion:(SENAPIDataBlock)block
 {
@@ -50,7 +50,7 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     [SENAPIClient DELETE:path parameters:nil completion:block];
 }
 
-+ (void)amendSleepEvent:(SENSleepResultSegment*)sleepEvent
++ (void)amendSleepEvent:(SENTimelineSegment*)sleepEvent
          forDateOfSleep:(NSDate*)date
                withHour:(NSNumber*)hour
              andMinutes:(NSNumber*)minutes
@@ -105,12 +105,12 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
 }
 
 
-+ (NSString*)feedbackPathForDateOfSleep:(NSDate*)dateOfSleep withEvent:(SENSleepResultSegment*)event {
++ (NSString*)feedbackPathForDateOfSleep:(NSDate*)dateOfSleep withEvent:(SENTimelineSegment*)event {
     return [NSString stringWithFormat:@"%@/%@/%@/%@/%@",
             SENAPITimelineEndpoint,
             [[self dateFormatter] stringFromDate:dateOfSleep],
             SENAPITimelineFeedbackPath,
-            [event eventType],
+            SENTimelineSegmentTypeNameFromType([event type]),
             [self timestampForDate:[event date]]];
 }
 

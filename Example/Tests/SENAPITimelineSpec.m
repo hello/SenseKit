@@ -9,7 +9,7 @@
 #import <Kiwi/Kiwi.h>
 #import <Nocilla/Nocilla.h>
 #import <SenseKit/SENAPITimeline.h>
-#import <SenseKit/SENSleepResult.h>
+#import <SenseKit/SENTimeline.h>
 
 @interface SENAPITimeline()
 
@@ -92,7 +92,7 @@ describe(@"SENAPITimeline", ^{
         __block NSDictionary* requestParams = nil;
         __block BOOL callbackInvoked = NO;
         __block NSNumber* timestamp = nil;
-        __block SENSleepResultSegment* segment = nil;
+        __block SENTimelineSegment* segment = nil;
         __block NSDate* nightOfSleep = nil;
         
         beforeEach(^{
@@ -108,10 +108,10 @@ describe(@"SENAPITimeline", ^{
             
             timestamp = @([[segmentFormatter dateFromString:@"2011-06-13 22:03"] timeIntervalSince1970] * 1000);
             NSDictionary* sleepSegmentDict = @{@"timestamp" : timestamp,
-                                               @"offset_millis": @(-25200000),
+                                               @"timezone_offset": @(-25200000),
                                                @"event_type":@"IN_BED",
                                                @"duration": @1};
-            segment = [[SENSleepResultSegment alloc] initWithDictionary:sleepSegmentDict];
+            segment = [[SENTimelineSegment alloc] initWithDictionary:sleepSegmentDict];
             
         });
         
@@ -124,8 +124,8 @@ describe(@"SENAPITimeline", ^{
             beforeEach(^{
                 [SENAPIClient stub:@selector(PATCH:parameters:completion:) withBlock:^id(NSArray *params) {
                     requestParams = params[1];
-                    SENAPIErrorBlock block = [params lastObject];
-                    block(nil);
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, nil);
                     return nil;
                 }];
             });
@@ -182,8 +182,8 @@ describe(@"SENAPITimeline", ^{
             beforeEach(^{
                 [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
                     requestParams = params[1];
-                    SENAPIErrorBlock block = [params lastObject];
-                    block(nil);
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, nil);
                     return nil;
                 }];
             });
@@ -231,8 +231,8 @@ describe(@"SENAPITimeline", ^{
             beforeEach(^{
                 [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
                     requestParams = params[1];
-                    SENAPIErrorBlock block = [params lastObject];
-                    block(nil);
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, nil);
                     return nil;
                 }];
             });
