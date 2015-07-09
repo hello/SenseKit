@@ -36,6 +36,12 @@ NSTimeZone* SENTimelineTimezoneFromOffset(NSNumber* offsetMillis) {
     return [NSTimeZone timeZoneForSecondsFromGMT:seconds];
 }
 
+NSTimeInterval SENTimelineIntervalFromNumber(NSNumber* value) {
+    if (![value isKindOfClass:[NSNumber class]])
+        return 0;
+    return [value doubleValue] / 1000;
+}
+
 NSDictionary* SENTimelineSegmentTypeMapping() {
     static NSDictionary* mapping = nil;
     static dispatch_once_t onceToken;
@@ -113,7 +119,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
 {
     if (self = [super init]) {
         _date = SENTimelineDateFromTimestamp(segmentData[SENTimelineSegmentTimestamp]);
-        _duration = segmentData[SENTimelineSegmentDuration];
+        _duration = SENTimelineIntervalFromNumber(segmentData[SENTimelineSegmentDuration]);
         _message = segmentData[SENTimelineSegmentMessage];
         _type = SENTimelineSegmentTypeFromString(segmentData[SENTimelineSegmentEventType]);
         _sleepDepth = [segmentData[SENTimelineSegmentSleepDepth] integerValue];
@@ -128,7 +134,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
 {
     if (self = [super init]) {
         _date = [aDecoder decodeObjectForKey:SENTimelineSegmentTimestamp];
-        _duration = [aDecoder decodeObjectForKey:SENTimelineSegmentDuration];
+        _duration = [aDecoder decodeDoubleForKey:SENTimelineSegmentDuration];
         _message = [aDecoder decodeObjectForKey:SENTimelineSegmentMessage];
         _type = [aDecoder decodeIntegerForKey:SENTimelineSegmentEventType];
         _sleepDepth = [aDecoder decodeIntegerForKey:SENTimelineSegmentSleepDepth];
@@ -141,14 +147,14 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
 
 - (NSString*)description
 {
-    static NSString* const SENTimelineSegmentDescriptionFormat = @"<SENTimelineSegment @sleepDepth=%ld @duration=%@ @eventType=%ld>";
+    static NSString* const SENTimelineSegmentDescriptionFormat = @"<SENTimelineSegment @sleepDepth=%ld @duration=%f @eventType=%ld>";
     return [NSString stringWithFormat:SENTimelineSegmentDescriptionFormat, (long)self.sleepDepth, self.duration, (long)self.type];
 }
 
 - (void)encodeWithCoder:(NSCoder*)aCoder
 {
     [aCoder encodeObject:self.date forKey:SENTimelineSegmentTimestamp];
-    [aCoder encodeObject:self.duration forKey:SENTimelineSegmentDuration];
+    [aCoder encodeDouble:self.duration forKey:SENTimelineSegmentDuration];
     [aCoder encodeObject:self.message forKey:SENTimelineSegmentMessage];
     [aCoder encodeInteger:self.type forKey:SENTimelineSegmentEventType];
     [aCoder encodeInteger:self.sleepDepth forKey:SENTimelineSegmentSleepDepth];
@@ -162,18 +168,18 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
     if (![object isKindOfClass:[SENTimelineSegment class]])
         return NO;
     return ((self.date && [self.date isEqual:object.date]) || (!self.date && !object.date))
-        && ((self.duration && [self.duration isEqual:object.duration]) || (!self.duration && !object.duration))
         && ((self.message && [self.message isEqual:object.message]) || (!self.message && !object.message))
         && (self.type == object.type)
         && ((self.timezone && [self.timezone isEqual:object.timezone]) || (!self.timezone && !object.timezone))
         && self.sleepDepth == object.sleepDepth
         && self.sleepState == object.sleepState
+        && self.duration == object.duration
         && self.possibleActions == object.possibleActions;
 }
 
 - (NSUInteger)hash
 {
-    return [self.date hash] + [self.duration hash];
+    return [self.date hash] + self.duration;
 }
 
 - (BOOL)updateWithDictionary:(NSDictionary*)data
@@ -186,9 +192,12 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
             changed = YES;
         }
     }
-    if (data[SENTimelineSegmentDuration] && ![self.duration isEqual:data[SENTimelineSegmentDuration]]) {
-        self.duration = data[SENTimelineSegmentDuration];
-        changed = YES;
+    if (data[SENTimelineSegmentDuration]) {
+        NSTimeInterval duration = SENTimelineIntervalFromNumber(data[SENTimelineSegmentDuration]);
+        if (self.duration != duration) {
+            self.duration = duration;
+            changed = YES;
+        }
     }
     if (data[SENTimelineSegmentMessage] && ![self.message isEqual:data[SENTimelineSegmentMessage]]) {
         self.message = data[SENTimelineSegmentMessage];

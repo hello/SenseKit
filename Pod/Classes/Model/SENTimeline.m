@@ -182,8 +182,7 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
         if ([previousSegment.message isEqual:segment.message]
             && previousSegment.type == segment.type
             && previousSegment.sleepDepth == segment.sleepDepth) {
-            previousSegment.duration =
-            [NSNumber numberWithDouble:[segment.duration doubleValue] + [previousSegment.duration doubleValue]];
+            previousSegment.duration += segment.duration;
         } else if (segment != nil) {
             if (previousSegment)
                 [segments addObject:previousSegment];

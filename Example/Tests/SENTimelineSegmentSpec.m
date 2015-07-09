@@ -40,7 +40,7 @@ describe(@"initWithDictionary:", ^{
     });
 
     it(@"sets the duration", ^{
-        [[[segment duration] should] equal:json[@"duration_millis"]];
+        [[@(segment.duration) should] equal:@([json[@"duration_millis"] doubleValue] / 1000)];
     });
 
     it(@"sets the message", ^{
@@ -126,7 +126,7 @@ describe(@"serialization", ^{
     });
 
     it(@"has the same duration after serialization", ^{
-        [[serializedSegment.duration should] equal:segment.duration];
+        [[@(serializedSegment.duration) should] equal:@(segment.duration)];
     });
 
     it(@"has the same timezone after serialization", ^{
@@ -165,7 +165,7 @@ describe(@"updateWithDictionary:", ^{
     });
 
     it(@"updates an existing instance with a dictionary", ^{
-        [[[segment duration] should] equal:updatedJSON[@"duration_millis"]];
+        [[@([segment duration]) should] equal:@([updatedJSON[@"duration_millis"] doubleValue] / 1000)];
     });
 
     it(@"does not override fields missing from a dictionary", ^{

@@ -50,13 +50,10 @@ SENTimelineSegmentAction SENTimelineSegmentActionFromStrings(NSArray* actions);
 
 @interface SENTimelineSegment : NSObject <NSCoding, SENSerializable>
 
-/**
- * Duration in milliseconds
- */
-@property (nonatomic, strong) NSNumber* duration;
 @property (nonatomic, strong) NSDate* date;
 @property (nonatomic, strong) NSTimeZone* timezone;
 @property (nonatomic, strong) NSString* message;
+@property (nonatomic) NSTimeInterval duration;
 @property (nonatomic) SENTimelineSegmentType type;
 @property (nonatomic) NSInteger sleepDepth;
 @property (nonatomic) SENTimelineSegmentSleepState sleepState;
