@@ -17,8 +17,8 @@ describe(@"SENAPINotification", ^{
     beforeEach(^{
         [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
             requestParams = params[1];
-            SENAPIErrorBlock block = [params lastObject];
-            block(nil);
+            SENAPIDataBlock block = [params lastObject];
+            block(nil, nil);
             return nil;
         }];
     });

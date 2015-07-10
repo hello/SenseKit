@@ -8,14 +8,14 @@
 
 #import <Kiwi/Kiwi.h>
 #import <HealthKit/HealthKit.h>
-#import "SENSleepResult.h"
+#import "SENTimeline.h"
 #import "SENServiceHealthKit.h"
 
 @interface SENServiceHealthKit()
 
 @property (nonatomic, strong) HKHealthStore* hkStore;
 
-- (NSArray*)sleepDataPointsForSleepResult:(SENSleepResult*)sleepResult;
+- (NSArray*)sleepDataPointsForSleepResult:(SENTimeline*)sleepResult;
 - (void)writeSleepAnalysisIfDataAvailableFor:(NSDate*)date completion:(void(^)(NSError* error))completion;
 - (NSDate*)lastNight;
 
@@ -104,24 +104,34 @@ describe(@"SENServiceHealthKitSpec", ^{
         
         context(@"has no sleep or wake up events", ^{
             
-            __block SENSleepResult* sleepResult = nil;
+            __block SENTimeline* sleepResult = nil;
             
             beforeEach(^{
-                
                 NSDictionary* json = @{@"score": @100,
-                                       @"date":@([[NSDate date] timeIntervalSince1970] * 1000),
-                                       @"segments" : @[
-                                               @{@"id": @33421},
-                                               @{@"id": @32995},
-                                               ],
-                                       @"statistics" : @{
-                                               @"total_sleep" : @330,
-                                               @"sound_sleep" : @123,
-                                               @"times_awake" : @1,
-                                               }
-                                       };
+                                       @"score_condition": @"IDEAL",
+                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
+                                       @"date": @"2015-03-11",
+                                       @"events": @[
+                                               @{  @"timestamp": @1432768812000,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @24,
+                                                   @"sleep_state": @"AWAKE",
+                                                   @"event_type": @"IN_BED",
+                                                   @"valid_actions": @[
+                                                           @"VERIFY",
+                                                           @"REMOVE"]},
+                                               @{  @"timestamp": @1432788812000,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @40,
+                                                   @"sleep_state": @"LIGHT",
+                                                   @"event_type": @"IN_BED",
+                                                   @"valid_actions": @[]}]};
                 
-                sleepResult = [[SENSleepResult alloc] initWithDictionary:json];
+                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
                 
             });
             
@@ -137,27 +147,35 @@ describe(@"SENServiceHealthKitSpec", ^{
         
         context(@"has sleep event, but no wake event", ^{
             
-            __block SENSleepResult* sleepResult = nil;
+            __block SENTimeline* sleepResult = nil;
             
             beforeEach(^{
                 
                 NSDictionary* json = @{@"score": @100,
-                                       @"date":@([[NSDate date] timeIntervalSince1970] * 1000),
-                                       @"segments" : @[
-                                               @{@"id": @33421},
-                                               @{@"id": @32995,
-                                                 @"event_type" : @"SLEEP",
-                                                 @"timestamp" : @([[NSDate date] timeIntervalSince1970] * 1000)
-                                                 }
-                                               ],
-                                       @"statistics" : @{
-                                               @"total_sleep" : @330,
-                                               @"sound_sleep" : @123,
-                                               @"times_awake" : @1,
-                                               }
-                                       };
+                                       @"score_condition": @"IDEAL",
+                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
+                                       @"date": @"2015-03-11",
+                                       @"events": @[
+                                               @{  @"timestamp": @1432768812000,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @24,
+                                                   @"sleep_state": @"AWAKE",
+                                                   @"event_type": @"FELL_ASLEEP",
+                                                   @"valid_actions": @[
+                                                           @"VERIFY",
+                                                           @"REMOVE"]},
+                                               @{  @"timestamp": @1432788812000,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @40,
+                                                   @"sleep_state": @"LIGHT",
+                                                   @"event_type": @"IN_BED",
+                                                   @"valid_actions": @[]}]};
                 
-                sleepResult = [[SENSleepResult alloc] initWithDictionary:json];
+                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
                 
             });
             
@@ -173,36 +191,37 @@ describe(@"SENServiceHealthKitSpec", ^{
         
         context(@"has sleep and wake events", ^{
             
-            __block SENSleepResult* sleepResult = nil;
+            __block SENTimeline* sleepResult = nil;
             __block NSTimeInterval sleepTime = [[NSDate date] timeIntervalSince1970];
             __block NSTimeInterval wakeTime = [[NSDate date] timeIntervalSince1970];
             
             beforeEach(^{
                 
                 NSDictionary* json = @{@"score": @100,
-                                       @"date":@([[NSDate date] timeIntervalSince1970] * 1000),
-                                       @"segments" : @[
-                                               @{@"id": @32995,
-                                                 @"event_type" : @"SLEEP",
-                                                 @"timestamp" : @(sleepTime * 1000)
-                                                 },
-                                               @{@"id" : @32996,
-                                                 @"event_type" : @"WAKE_UP",
-                                                 @"timestamp" : @([[NSDate date] timeIntervalSince1970] * 1000)
-                                                 },
-                                               @{@"id" : @32997,
-                                                 @"event_type" : @"WAKE_UP",
-                                                 @"timestamp" : @(wakeTime * 1000)
-                                                 }
-                                               ],
-                                       @"statistics" : @{
-                                               @"total_sleep" : @330,
-                                               @"sound_sleep" : @123,
-                                               @"times_awake" : @1,
-                                               }
-                                       };
+                                       @"score_condition": @"IDEAL",
+                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
+                                       @"date": @"2015-03-11",
+                                       @"events": @[
+                                               @{  @"timestamp": @1432768812,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @24,
+                                                   @"sleep_state": @"AWAKE",
+                                                   @"event_type": @"FELL_ASLEEP",
+                                                   @"valid_actions": @[
+                                                           @"VERIFY",
+                                                           @"REMOVE"]},
+                                               @{  @"timestamp": @1432788812,
+                                                   @"timezone_offset": @860000,
+                                                   @"duration_millis": @27000,
+                                                   @"message": @"You were moving around",
+                                                   @"sleep_depth": @40,
+                                                   @"sleep_state": @"LIGHT",
+                                                   @"event_type": @"WOKE_UP",
+                                                   @"valid_actions": @[]}]};
                 
-                sleepResult = [[SENSleepResult alloc] initWithDictionary:json];
+                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
                 
             });
             
