@@ -153,7 +153,7 @@ describe(@"SENAPITimeline", ^{
             
             NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
             NSDateComponents* components = [calendar components:flags fromDate:date];
-            gregorianDatePath = [NSString stringWithFormat:@"%ld-%ld-%ld",
+            gregorianDatePath = [NSString stringWithFormat:@"%ld-%02ld-%02ld",
                                  (long)[components year],
                                  (long)[components month],
                                  (long)[components day]];
