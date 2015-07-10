@@ -124,6 +124,59 @@ describe(@"serialization", ^{
     });
 });
 
+describe(@"isEqual:", ^{
+    __block SENTimeline* timeline1 = nil, *timeline2 = nil;
+
+    beforeEach(^{
+        timeline1 = [[SENTimeline alloc] initWithDictionary:json];
+        timeline2 = [[SENTimeline alloc] initWithDictionary:json];
+    });
+
+    afterEach(^{
+        timeline1 = nil;
+        timeline2 = nil;
+    });
+
+    it(@"is YES", ^{
+        [[timeline1 should] equal:timeline2];
+    });
+
+    it(@"is not the same after condition change", ^{
+        [timeline1 updateWithDictionary:@{@"score_condition":@"IDEAL"}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is not the same after score change", ^{
+        [timeline1 updateWithDictionary:@{@"score":@44}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is not the same after message change", ^{
+        [timeline1 updateWithDictionary:@{@"message":@"Hallo"}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is not the same after date change", ^{
+        [timeline1 updateWithDictionary:@{@"date":@"2014-11-08"}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is not the same after metrics change", ^{
+        [timeline1 updateWithDictionary:@{@"metrics":@[]}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is not the same after segments change", ^{
+        [timeline1 updateWithDictionary:@{@"events":@[]}];
+        [[timeline1 shouldNot] equal:timeline2];
+    });
+
+    it(@"is the same after nothing changes", ^{
+        [timeline1 updateWithDictionary:json];
+        [[timeline1 should] equal:timeline2];
+    });
+});
+
 describe(@"updateWithDictionary:", ^{
     __block SENTimeline* result = nil;
     __block BOOL updated = NO;

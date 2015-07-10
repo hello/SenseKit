@@ -208,6 +208,7 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
         && ((self.segments && [self.segments isEqualToArray:object.segments]) || (!self.segments && !object.segments))
         && ((self.metrics && [self.metrics isEqualToArray:object.metrics]) || (!self.metrics && !object.metrics))
         && ((self.score && [self.score isEqual:object.score]) || (!self.score && !object.score))
+        && self.scoreCondition == object.scoreCondition
         && ((self.message && [self.message isEqual:object.message]) || (!self.message && !object.message));
 }
 
