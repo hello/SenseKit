@@ -217,10 +217,8 @@ static NSString* const SENSErviceHKEnable = @"is.hello.service.hk.enable";
             sleepDate = [segment date];
         }
 
-        if (wakeUpDate == nil && sleepDate != nil) {
-            if (segment.type == SENTimelineSegmentTypeWokeUp) {
-                wakeUpDate = [segment date];
-            }
+        if (sleepDate != nil && segment.type == SENTimelineSegmentTypeWokeUp) {
+            wakeUpDate = [segment date];
         }
     }
     
