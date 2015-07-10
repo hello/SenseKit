@@ -84,8 +84,15 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
     NSString* formattedTime = [self formattedValueWithHour:hour minutes:minutes];
     NSDictionary* parameters = @{SENAPITimelineFeedbackParamNewTime : formattedTime};
-    [SENAPIClient PATCH:path parameters:parameters completion:block];
-    
+    [SENAPIClient PATCH:path parameters:parameters completion:^(id data, NSError *error) {
+        SENTimeline* timeline = nil;
+        if (!error && [data isKindOfClass:[NSDictionary class]]) {
+            timeline = [[SENTimeline alloc] initWithDictionary:data];
+        }
+        if (block)
+            block(timeline, error);
+    }];
+
 }
 
 #pragma mark - Helpers
