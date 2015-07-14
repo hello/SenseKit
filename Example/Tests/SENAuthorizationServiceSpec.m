@@ -9,6 +9,9 @@
 + (void)authorize:(NSString*)username
          password:(NSString*)password
      onCompletion:(void(^)(NSDictionary* response, NSError* error))block;
++ (void)authorizeRequestsWithToken:(NSString*)token;
++ (void)setAccountIdOfAuthorizedUser:(NSString*)accountId;
++ (void)notify:(NSString*)notificationName;
 
 @end
 
@@ -130,6 +133,90 @@ describe(@"SENAuthorizationService", ^{
             }];
             
             [[@(called) should] equal:@(YES)];
+        });
+        
+    });
+    
+    describe(@"+ deauthorize", ^{
+        
+        context(@"already deauthorized", ^{
+            
+            __block BOOL apiCalled = NO;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    apiCalled = YES;
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                [SENAuthorizationService deauthorize];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+            });
+            
+            it(@"api should not be called", ^{
+                [[@(apiCalled) should] equal:@(NO)];
+            });
+            
+        });
+        
+        context(@"is currently authorized", ^{
+            
+            __block BOOL apiCalled = NO;
+            __block BOOL notificationCalled = NO;
+            __block id token = @"shouldbewiped";
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    apiCalled = YES;
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                [SENAuthorizationService stub:@selector(isAuthorized) andReturn:[KWValue valueWithBool:YES]];
+                
+                [SENAuthorizationService stub:@selector(authorizeRequestsWithToken:) withBlock:^id(NSArray *params) {
+                    id param = [params firstObject];
+                    token = [param isKindOfClass:[NSNull class]] ? nil : param;
+                    return nil;
+                }];
+                
+                [SENAuthorizationService stub:@selector(notify:) withBlock:^id(NSArray *params) {
+                    notificationCalled = YES;
+                    return nil;
+                }];
+                
+                [SENAuthorizationService deauthorize];
+                
+            });
+            
+            afterEach(^{
+                
+                [SENAuthorizationService clearStubs];
+                [SENAPIClient clearStubs];
+                
+            });
+            
+            it(@"should call api", ^{
+                [[@(apiCalled) should] equal:@(YES)];
+            });
+            
+            it(@"should remove token", ^{
+                [[token should] beNil];
+            });
+            
+            it(@"should send notification", ^{
+                [[@(notificationCalled) should] equal:@(YES)];
+            });
+            
         });
         
     });
