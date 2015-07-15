@@ -188,6 +188,7 @@ describe(@"canPerformAction:", ^{
         [[@([segment canPerformAction:SENTimelineSegmentActionRemove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionApprove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionAdjustTime]) should] beNo];
+        [[@([segment canPerformAction:SENTimelineSegmentActionIncorrect]) should] beNo];
     });
 
     it(@"sets no actions from empty array", ^{
@@ -195,6 +196,7 @@ describe(@"canPerformAction:", ^{
         [[@([segment canPerformAction:SENTimelineSegmentActionRemove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionApprove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionAdjustTime]) should] beNo];
+        [[@([segment canPerformAction:SENTimelineSegmentActionIncorrect]) should] beNo];
     });
 
     it(@"checks actions from single item array", ^{
@@ -202,13 +204,15 @@ describe(@"canPerformAction:", ^{
         [[@([segment canPerformAction:SENTimelineSegmentActionRemove]) should] beYes];
         [[@([segment canPerformAction:SENTimelineSegmentActionApprove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionAdjustTime]) should] beNo];
+        [[@([segment canPerformAction:SENTimelineSegmentActionIncorrect]) should] beNo];
     });
 
     it(@"checks actions from multiple item array", ^{
-        segment = [[SENTimelineSegment alloc] initWithDictionary:@{@"valid_actions":@[@"REMOVE", @"VERIFY"]}];
-        [[@([segment canPerformAction:SENTimelineSegmentActionRemove]) should] beYes];
+        segment = [[SENTimelineSegment alloc] initWithDictionary:@{@"valid_actions":@[@"INCORRECT", @"VERIFY"]}];
+        [[@([segment canPerformAction:SENTimelineSegmentActionRemove]) should] beNo];
         [[@([segment canPerformAction:SENTimelineSegmentActionApprove]) should] beYes];
         [[@([segment canPerformAction:SENTimelineSegmentActionAdjustTime]) should] beNo];
+        [[@([segment canPerformAction:SENTimelineSegmentActionIncorrect]) should] beYes];
     });
 });
 
