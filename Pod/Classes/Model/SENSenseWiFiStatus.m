@@ -53,17 +53,18 @@
 
 
 - (BOOL)encounteredError {
+    // ignore SENWiFiConnectionStateDNSFailed and SENWiFiConnectionStateServerConnectionFailed
+    // as Sense will attempt retry the connection
     return [self state] == SENWiFiConnectionStateSSLFailure
         || [self state] == SENWiFiConnectionStateHelloKeyFailure
-        || [self state] == SENWiFiConnectionStateDNSFailed
-        || [self state] == SENWiFiConnectionStateServerConnectionFailed
         || [self hasErrorInMessage];
 }
 
 - (BOOL)isConnected {
     return ([self messageType] == SENSenseMessageTypeConnectionState
          && [self state] == SENWiFiConnectionStateConnectedToServer)
-         || [self state] == SENWiFiConnectionStateObtainedIP;
+         ||([self messageType] != SENSenseMessageTypeConnectionState
+         && [self state] == SENWiFiConnectionStateObtainedIP);
 }
 
 - (NSString *)description {
