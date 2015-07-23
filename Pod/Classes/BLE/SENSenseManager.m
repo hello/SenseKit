@@ -18,6 +18,7 @@
 #import "SENSenseManager.h"
 #import "SENSense+Protected.h"
 #import "SENSenseMessage.pb.h"
+#import "SENSenseWiFiStatus.h"
 
 #ifndef ddLogLevel
 #define ddLogLevel LOG_LEVEL_VERBOSE
@@ -38,11 +39,23 @@ static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD1
 static NSString* const kSENSenseCharacteristicInputId = @"BEEB";
 static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
 static NSInteger const kSENSensePacketSize = 20;
-static NSInteger const kSENSensePVTMessageVersion = 0; // 1 = WEP passcode fix, but we don't know what firmware supports
-
+static NSInteger const kSENSenseAppVersion = 0;
 static NSInteger const kSENSenseMaxBleRetries = 10;
 
 typedef BOOL(^SENSenseUpdateBlock)(id response);
+
+/**
+ * This represents the version of the protobuf that has been updated.  Sense
+ * returns this value, which allows us to determine how to proceed with certain
+ * commands.  Though, we really should find a better way to communicate this as
+ * we will only know this value from a response from Sense and that means if the
+ * command we sent initially is now different, we wouldn't know until the response
+ * comes back
+ */
+typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
+    SENSenseProtobufVersionPVT = 0,
+    SENSenseProtobufVersionWEP = 1
+};
 
 @interface SENSenseManager()
 
@@ -145,7 +158,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         DDLogVerbose(@"Sense manager initialized for %@, id %@", [sense name], [sense deviceId]);
         [self setSense:sense];
         [self setValid:YES];
-        [self setMessageVersion:kSENSensePVTMessageVersion];
+        [self setMessageVersion:SENSenseProtobufVersionPVT];
         [self setMessageSuccessCallbacks:[NSMutableDictionary dictionary]];
         [self setMessageFailureCallbacks:[NSMutableDictionary dictionary]];
         [self setMessageUpdateCallbacks:[NSMutableDictionary dictionary]];
@@ -420,6 +433,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
     [builder setType:type];
     [builder setVersion:[self messageVersion]];
+    [builder setAppVersion:kSENSenseAppVersion];
     return builder;
 }
 
@@ -788,29 +802,6 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     return code;
 }
 
-- (SENWiFiConnectionState)wiFiStateFromMessgage:(SENSenseMessage*)message {
-    SENWiFiConnectionState state = SENWiFiConnectionStateUnknown;
-    if ([message hasWifiState]) {
-        switch ([message wifiState]) {
-            case WiFiStateIpObtained:
-                state = SENWiFiConnectionStateConnected;
-                break;
-            case WiFiStateWlanConnected:
-                state = SENWiFiConnectionStateNoInternet;
-                break;
-            case WiFiStateWlanConnecting:
-                state = SENWiFiConnectionStateConnecting;
-                break;
-            case WiFiStateNoWlanConnected:
-                state = SENWifiConnectionStateDisconnected;
-                break;
-            default:
-                break;
-        }
-    }
-    return state;
-}
-
 /**
  * Handle response from Sense until it's done sending data back.  Since response
  * will likely be split in to multiple packets, we need to append all data as they
@@ -1115,7 +1106,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
         case SENWifiEndpointSecurityTypeOpen:
             return nil;
         case SENWifiEndpointSecurityTypeWep: {
-            if ([self messageVersion] == kSENSensePVTMessageVersion) {
+            if ([self messageVersion] == SENSenseProtobufVersionPVT) {
                 return [self dataValueForWepNetworkKey:password error:error];
             } // else, let it go through to default like all other types
         }
@@ -1129,6 +1120,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
 - (void)setWiFi:(NSString*)ssid
        password:(NSString*)password
    securityType:(SENWifiEndpointSecurityType)securityType
+         update:(SENSenseWiFiStateUpdateBlock)update
         success:(SENSenseSuccessBlock)success
         failure:(SENSenseFailureBlock)failure {
     
@@ -1153,7 +1145,33 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     
     [self sendMessage:[builder build]
               timeout:kSENSenseSetWifiTimeout
-               update:nil
+               update:^BOOL(SENSenseMessage* response) {
+                   SENSenseWiFiStatus* status = [[SENSenseWiFiStatus alloc] initWithMessage:response];
+                   DDLogVerbose(@"setting wifi returned an update, with state %@", status);
+                   
+                   BOOL stop = NO;
+                   
+                   if ([response type] == SENSenseMessageTypeConnectionState) {
+                       stop = [status isConnected] || [status encounteredError];
+                   } else if ([response type] == type) {
+                       stop = YES;
+                       DDLogVerbose(@"updates coming from older fw");
+                   } else if ([response type] == type
+                              || [response type] == SENSenseMessageTypeError
+                              || [response hasError]) {
+                       stop = YES;
+                   }
+                   
+                   if (stop) {
+                       DDLogVerbose(@"stopping wifi updates");
+                   }
+                   
+                   if (update) {
+                       update (status);
+                   }
+                   
+                   return stop;
+               }
               success:success
               failure:failure];
 }
@@ -1196,7 +1214,7 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
               failure:failure];
 }
 
-- (void)getConfiguredWiFi:(void(^)(NSString* ssid, SENWiFiConnectionState state))success
+- (void)getConfiguredWiFi:(void(^)(NSString* ssid, SENSenseWiFiStatus* status))success
                   failure:(SENSenseFailureBlock)failure {
     
     if (!success) {
@@ -1207,24 +1225,15 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
     }
     
     DDLogVerbose(@"retrieving configured wifi on Sense");
-    __weak typeof(self) weakSelf = self;
     SENSenseMessageType type = SENSenseMessageTypeGetWifiEndpoint;
     SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
     [self sendMessage:[builder build]
               timeout:kSENSenseDefaultTimeout
                update:nil
               success:^(SENSenseMessage* response) {
-                  // connection state and protobuf wifiState maps 1:1, but with more caller
-                  // friendly naming
-                  __strong typeof(weakSelf) strongSelf = weakSelf;
-                  SENWiFiConnectionState state = SENWiFiConnectionStateUnknown;
-                  if (strongSelf) {
-                      state = [strongSelf wiFiStateFromMessgage:response];
-                  }
-                  
-                  DDLogVerbose(@"wifi %@ is in state %ld", [response wifiSsid], (long)state);
-                  success ([response wifiSsid], state);
-                  
+                  SENSenseWiFiStatus* status = [[SENSenseWiFiStatus alloc] initWithMessage:response];
+                  DDLogVerbose(@"wifi %@ is in state %@", [response wifiSsid], status);
+                  success ([response wifiSsid], status);
               }
               failure:failure];
 }
