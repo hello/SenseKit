@@ -16,7 +16,7 @@ describe(@"SENSensor", ^{
                                        @"unit": @"c",
                                        @"message": @"It's pretty cold in here.",
                                        @"ideal_conditions": @"You sleep best when **it isn't freezing in here.**",
-                                       @"condition": @"warning",
+                                       @"condition": @"WARNING",
                                        @"last_updated_utc": @(sensorTimestamp)};
 
         beforeEach(^{
@@ -44,7 +44,7 @@ describe(@"SENSensor", ^{
         });
         
         it(@"sets the condition", ^{
-            [[@(sensor.condition) should] equal:@(SENSensorConditionWarning)];
+            [[@(sensor.condition) should] equal:@(SENConditionWarning)];
         });
         
         it(@"sets the updated date", ^{
@@ -93,7 +93,7 @@ describe(@"SENSensor", ^{
             });
 
             it(@"sets the condition", ^{
-                [[@(decodedSensor.condition) should] equal:@(SENSensorConditionWarning)];
+                [[@(decodedSensor.condition) should] equal:@(SENConditionWarning)];
             });
 
             it(@"sets the updated date", ^{
