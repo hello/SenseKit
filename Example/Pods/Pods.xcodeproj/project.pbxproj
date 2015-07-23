@@ -602,6 +602,7 @@
 		BE643ECF515C15E637F67E50 /* YapDatabaseCloudKitConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 246C12AF8156CE878639BA35 /* YapDatabaseCloudKitConnection.m */; };
 		BEA6457F39A54927CA74908E /* NSData+Matcheable.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E01299D37776E33118EB6A /* NSData+Matcheable.h */; };
 		BF2968B415527FE24B3055CD /* SENAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E438A79D87740939778768F /* SENAccount.m */; };
+		BFB7C3AD1B607DBA001A6280 /* SENSenseWiFiStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB7C3AC1B607DBA001A6280 /* SENSenseWiFiStatus.m */; };
 		BFC97CD7968B3EC524FD589D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2499D31FC53F3A547C19331B /* Foundation.framework */; };
 		BFF3CE852030E9E2D112FCEE /* KWNilMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BD3C62D051E791A77A5ABB5D /* KWNilMatcher.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		C08E73AFEB19EE7EE92208C2 /* YDBCKChangeSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 89457B38DECCD6FB9BC6E162 /* YDBCKChangeSet.m */; };
@@ -1568,6 +1569,8 @@
 		BF44976DB1B2452F90F5B898 /* YapDatabaseSearchResultsViewConnection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YapDatabaseSearchResultsViewConnection.m; path = YapDatabase/Extensions/SearchResults/YapDatabaseSearchResultsViewConnection.m; sourceTree = "<group>"; };
 		BF4E3D3728DD86EC3F019F60 /* SENAPITimeline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENAPITimeline.m; sourceTree = "<group>"; };
 		BF819CB9DF6F1D43538C5D6F /* MPArrowLeft@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "MPArrowLeft@2x.png"; path = "Mixpanel/Media.xcassets/MPArrowLeft.imageset/MPArrowLeft@2x.png"; sourceTree = "<group>"; };
+		BFB7C3AB1B607DBA001A6280 /* SENSenseWiFiStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SENSenseWiFiStatus.h; sourceTree = "<group>"; };
+		BFB7C3AC1B607DBA001A6280 /* SENSenseWiFiStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseWiFiStatus.m; sourceTree = "<group>"; };
 		C05C4FC0BD18F2BD1C065DE4 /* Pods-CocoaLumberjack-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CocoaLumberjack-Private.xcconfig"; sourceTree = "<group>"; };
 		C0CFD03433604996732522CC /* Pods-SHSProtoBuf.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SHSProtoBuf.xcconfig"; sourceTree = "<group>"; };
 		C15F57BC0FA85D7668856927 /* YapDatabaseCloudKitTypes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YapDatabaseCloudKitTypes.h; path = YapDatabase/Extensions/CloudKit/YapDatabaseCloudKitTypes.h; sourceTree = "<group>"; };
@@ -2378,6 +2381,8 @@
 				A397A79C693E5FF4FD0485A6 /* SENQuestion.m */,
 				F8A55AACDFCC414792B4A610 /* SENSense.h */,
 				C165ABE84C8B7664012F8B2B /* SENSense.m */,
+				BFB7C3AB1B607DBA001A6280 /* SENSenseWiFiStatus.h */,
+				BFB7C3AC1B607DBA001A6280 /* SENSenseWiFiStatus.m */,
 				15E0E93773B3A1AD87D457ED /* SENSense+Protected.h */,
 				65621BE7E14639F6C9B4A1DA /* SENSensor.h */,
 				960CE7A8DCB11CFFE3AA998D /* SENSensor.m */,
@@ -4057,6 +4062,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFB7C3AD1B607DBA001A6280 /* SENSenseWiFiStatus.m in Sources */,
 				597B58805FA1BFD2376DA501 /* Pods-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
