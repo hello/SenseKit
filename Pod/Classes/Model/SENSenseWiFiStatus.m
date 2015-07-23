@@ -11,9 +11,11 @@
 
 @interface SENSenseWiFiStatus()
 
+@property (nonatomic, assign) SENSenseMessageType messageType;
 @property (nonatomic, assign) SENWiFiConnectionState state;
 @property (nonatomic, copy)   NSString* httpStatusCode;
 @property (nonatomic, assign) NSInteger socketErrorCode;
+@property (nonatomic, assign, getter=hasErrorInMessage) BOOL errorInMessage;
 
 @end
 
@@ -41,6 +43,12 @@
         // of unknown, which will be the default value of -1
         [self setState:(SENWiFiConnectionState)[message wifiState]];
     }
+    
+    if ([message hasType]) {
+        [self setMessageType:[message type]];
+    }
+    
+    [self setErrorInMessage:[message hasError]];
 }
 
 
@@ -48,11 +56,14 @@
     return [self state] == SENWiFiConnectionStateSSLFailure
         || [self state] == SENWiFiConnectionStateHelloKeyFailure
         || [self state] == SENWiFiConnectionStateDNSFailed
-        || [self state] == SENWiFiConnectionStateServerConnectionFailed;
+        || [self state] == SENWiFiConnectionStateServerConnectionFailed
+        || [self hasErrorInMessage];
 }
 
 - (BOOL)isConnected {
-    return [self state] == SENWiFiConnectionStateConnectedToServer;
+    return ([self messageType] == SENSenseMessageTypeConnectionState
+         && [self state] == SENWiFiConnectionStateConnectedToServer)
+         || [self state] == SENWiFiConnectionStateObtainedIP;
 }
 
 - (NSString *)description {

@@ -952,6 +952,42 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
     }
 }
 
+#pragma mark - Connection Updates
+
+- (BOOL)shouldStopUpdatesFromResponse:(SENSenseMessage*)response
+                       forMessageType:(SENSenseMessageType)type
+                               status:(SENSenseWiFiStatus**)status {
+    
+    SENSenseWiFiStatus* update = nil;
+    
+    BOOL stop = NO;
+    BOOL stopWiFiScan = [response type] == SENSenseMessageTypeStopWifiscan && type == SENSenseMessageTypeStartWifiscan;
+    BOOL updatingConnectionState = [response type] == SENSenseMessageTypeConnectionState;
+    BOOL oldFwOrNoUpdates = [response type] == type && type != SENSenseMessageTypeStartWifiscan;
+    BOOL hasError = [response type] == SENSenseMessageTypeError || [response hasError];
+    
+    if (stopWiFiScan) {
+        stop = YES;
+        DDLogVerbose(@"stopping wifi scan");
+    } else if (updatingConnectionState) {
+        update = [[SENSenseWiFiStatus alloc] initWithMessage:response];
+        stop = [update isConnected] || [update encounteredError];
+        DDLogVerbose(@"got connection update %@, stop ? %@", update, stop ? @"y" : @"n");
+    } else if (oldFwOrNoUpdates) {
+        stop = YES;
+        DDLogVerbose(@"old fw or message without updates");
+    } else if (hasError) {
+        stop = YES;
+        DDLogVerbose(@"stopping updates due to hitting an error");
+    }
+    
+    if (status != NULL && update) {
+        *status = update;
+    }
+    
+    return stop;
+}
+
 #pragma mark - Pairing
 
 /**
@@ -1003,12 +1039,7 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
                   success:(SENSenseSuccessBlock)success
                   failure:(SENSenseFailureBlock)failure {
     DDLogVerbose(@"%@ pairing mode on Sense", enable?@"enabling":@"disabling");
-    
-    SENSenseMessageType type
-    = enable
-    ? SENSenseMessageTypeSwitchToPairingMode
-    : SENSenseMessageTypeSwitchToNormalMode;
-    
+    SENSenseMessageType type = enable ? SENSenseMessageTypeSwitchToPairingMode : SENSenseMessageTypeSwitchToNormalMode;
     [self sendMessage:[[self messageBuilderWithType:type] build]
               timeout:kSENSenseDefaultTimeout
                update:nil
@@ -1143,33 +1174,18 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
     [builder setWifiSsid:ssid];
     [builder setWifiPassword:passwordData];
     
+    __weak typeof(self) weakSelf = self;
     [self sendMessage:[builder build]
               timeout:kSENSenseSetWifiTimeout
                update:^BOOL(SENSenseMessage* response) {
-                   SENSenseWiFiStatus* status = [[SENSenseWiFiStatus alloc] initWithMessage:response];
-                   DDLogVerbose(@"setting wifi returned an update, with state %@", status);
-                   
-                   BOOL stop = NO;
-                   
-                   if ([response type] == SENSenseMessageTypeConnectionState) {
-                       stop = [status isConnected] || [status encounteredError];
-                   } else if ([response type] == type) {
-                       stop = YES;
-                       DDLogVerbose(@"updates coming from older fw");
-                   } else if ([response type] == type
-                              || [response type] == SENSenseMessageTypeError
-                              || [response hasError]) {
-                       stop = YES;
-                   }
-                   
-                   if (stop) {
-                       DDLogVerbose(@"stopping wifi updates");
-                   }
-                   
+                   __strong typeof(weakSelf) strongSelf = weakSelf;
+                   SENSenseWiFiStatus* status = nil;
+                   BOOL stop = [strongSelf shouldStopUpdatesFromResponse:response
+                                                          forMessageType:type
+                                                                  status:&status];
                    if (update) {
                        update (status);
                    }
-                   
                    return stop;
                }
               success:success
@@ -1183,17 +1199,21 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
     SENSenseMessageType type = SENSenseMessageTypeStartWifiscan;
     SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
     
+    __weak typeof(self) weakSelf = self;
     __block NSMutableArray* wifis = [NSMutableArray array];
     [self sendMessage:[builder build]
               timeout:kSENSenseScanWifiTimeout
                update:^BOOL(SENSenseMessage* updateResponse) {
+                   __strong typeof(weakSelf) strongSelf = weakSelf;
                    if ([updateResponse wifisDetected]) {
                        [[updateResponse wifisDetected] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                            DDLogVerbose(@"found wifi %@", [((SENWifiEndpoint*)obj) ssid]);
                            [wifis addObject:obj];
                        }];
                    }
-                   return [updateResponse type] == SENSenseMessageTypeStopWifiscan;
+                   return [strongSelf shouldStopUpdatesFromResponse:updateResponse
+                                                     forMessageType:type
+                                                             status:nil];
                }
               success:^(SENSenseMessage* response) {
                   [[response wifisDetected] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -1325,7 +1345,6 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
     DDLogVerbose(@"forcing data upload");
     SENSenseMessageType type = SENSenseMessageTypePushData;
     SENSenseMessageBuilder* builder = [self messageBuilderWithType:type];
-    
     [self sendMessage:[builder build]
               timeout:kSENSenseDefaultTimeout
                update:nil

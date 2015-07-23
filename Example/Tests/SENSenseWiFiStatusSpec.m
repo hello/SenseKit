@@ -24,7 +24,7 @@ describe(@"SENSenseWiFiStatus", ^{
                 SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
                 [builder setWifiState:WiFiStateConnected];
                 [builder setVersion:1];
-                [builder setType:SENSenseMessageTypeSetWifiEndpoint];
+                [builder setType:SENSenseMessageTypeConnectionState];
                 SENSenseMessage* message = [builder build];
                 status = [[SENSenseWiFiStatus alloc] initWithMessage:message];
             });
@@ -59,7 +59,7 @@ describe(@"SENSenseWiFiStatus", ^{
                 SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
                 [builder setWifiState:WiFiStateWlanConnecting];
                 [builder setVersion:1];
-                [builder setType:SENSenseMessageTypeSetWifiEndpoint];
+                [builder setType:SENSenseMessageTypeConnectionState];
                 SENSenseMessage* message = [builder build];
                 status = [[SENSenseWiFiStatus alloc] initWithMessage:message];
             });
@@ -96,7 +96,7 @@ describe(@"SENSenseWiFiStatus", ^{
                 SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
                 [builder setWifiState:WiFiStateSslFail];
                 [builder setVersion:1];
-                [builder setType:SENSenseMessageTypeSetWifiEndpoint];
+                [builder setType:SENSenseMessageTypeConnectionState];
                 [builder setHttpResponseCode:httpStatus];
                 SENSenseMessage* message = [builder build];
                 status = [[SENSenseWiFiStatus alloc] initWithMessage:message];
@@ -116,6 +116,38 @@ describe(@"SENSenseWiFiStatus", ^{
             
             it(@"should contain http status code", ^{
                 [[[status httpStatusCode] should] equal:httpStatus];
+            });
+            
+            it(@"should have 0 for socket error code", ^{
+                [[@([status socketErrorCode]) should] equal:@(0)];
+            });
+            
+        });
+        
+        context(@"initialized with a message regarding currently connected wifi", ^{
+            
+            __block SENSenseWiFiStatus* status;
+            
+            beforeAll(^{
+                SENSenseMessageBuilder* builder = [[SENSenseMessageBuilder alloc] init];
+                [builder setVersion:1];
+                [builder setType:SENSenseMessageTypeGetWifiEndpoint];
+                [builder setWifiSsid:@"hello"];
+                [builder setWifiState:WiFiStateIpObtained];
+                SENSenseMessage* message = [builder build];
+                status = [[SENSenseWiFiStatus alloc] initWithMessage:message];
+            });
+            
+            it(@"should not report an error", ^{
+                [[@([status encounteredError]) should] equal:@(NO)];
+            });
+            
+            it(@"should report that it is connected", ^{
+                [[@([status isConnected]) should] equal:@(YES)];
+            });
+            
+            it(@"should not contain http status code", ^{
+                [[[status httpStatusCode] should] beNil];
             });
             
             it(@"should have 0 for socket error code", ^{
