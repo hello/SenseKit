@@ -87,6 +87,11 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
 @property (nonatomic, strong, readwrite) NSNumber* longitude;
 
 /**
+ *  Date on which the account was created
+ */
+@property (nonatomic, strong, readwrite) NSDate* createdAt;
+
+/**
  * Initialize the SENAccount and return the instance with the specified
  * account id and and lastModifiedDate, which are both not changeable
  * on the client.
