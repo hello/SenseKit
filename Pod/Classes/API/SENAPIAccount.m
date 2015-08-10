@@ -11,26 +11,12 @@ NSString* const SENAPIAccountErrorDomain = @"is.hello.account";
 NSString* const SENAPIAccountPropertyName = @"name";
 NSString* const SENAPIAccountPropertyEmailAddress = @"email";
 NSString* const SENAPIAccountPropertyPassword = @"password";
-NSString* const SENAPIAccountPropertyHeight = @"height";
-NSString* const SENAPIAccountPropertyWeight = @"weight";
 NSString* const SENAPIAccountPropertyTimezone = @"tz";
-NSString* const SENAPIAccountPropertySignature = @"sig";
-NSString* const SENAPIAccountPropertyId = @"id";
-NSString* const SENAPIAccountPropertyLastModified = @"last_modified";
-NSString* const SENAPIAccountPropertyBirthdate = @"dob";
-NSString* const SENAPIAccountPropertyGender = @"gender";
-NSString* const SENAPIAccountPropertyValueGenderOther = @"OTHER";
-NSString* const SENAPIAccountPropertyValueGenderMale = @"MALE";
-NSString* const SENAPIAccountPropertyValueGenderFemale = @"FEMALE";
-NSString* const SENAPIAccountPropertyValueLatitude = @"lat";
-NSString* const SENAPIAccountPropertyValueLongitude = @"lon";
-NSString* const SENAPIAccountPropertyValueCreated = @"created";
 NSString* const SENAPIAccountPropertyCurrentPassword = @"current_password";
 NSString* const SENAPIAccountPropertyNewPassword = @"new_password";
-
 NSString* const SENAPIAccountErrorResponseMessageKey= @"message";
 NSString* const SENAPIAccountErrorMessagePasswordTooShort = @"PASSWORD_TOO_SHORT";
-NSString* const SENAPIAccountErrorMessagePasswordInsecure= @"PASSWORD_INSECURE";
+NSString* const SENAPIAccountErrorMessagePasswordInsecure = @"PASSWORD_INSECURE";
 NSString* const SENAPIAccountErrorMessageNameTooLong = @"NAME_TOO_LONG";
 NSString* const SENAPIAccountErrorMessageNameTooShort = @"NAME_TOO_SHORT";
 NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
@@ -45,7 +31,6 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
                  emailAddress:(NSString*)emailAddress
                      password:(NSString*)password
                    completion:(SENAPIDataBlock)completionBlock {
-    
     NSMutableDictionary* params = [[NSMutableDictionary alloc] initWithCapacity:5];
 
     if (password)
@@ -61,7 +46,7 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
     [SENAPIClient POST:URLPath parameters:params completion:^(id responseObject, NSError *error) {
         SENAccount* account = nil;
         if (error == nil && [responseObject isKindOfClass:[NSDictionary class]]) {
-            account = [self accountFromResponse:responseObject];
+            account = [[SENAccount alloc] initWithDictionary:responseObject];
             if (account != nil) {
                 NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
                 [center postNotificationName:kSENAccountNotificationAccountCreated
@@ -73,13 +58,13 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
 }
 
 + (void)updateAccount:(SENAccount*)account completionBlock:(SENAPIDataBlock)completion {
-    NSMutableDictionary* accountDict = [self dictionaryValue:account];
+    NSMutableDictionary* accountDict = [[account dictionaryValue] mutableCopy];
     accountDict[SENAPIAccountPropertyTimezone] = [self currentTimezoneInMillis];
     
     [SENAPIClient PUT:SENAPIAccountEndpoint parameters:accountDict completion:^(id data, NSError *error) {
         SENAccount* account = nil;
         if (error == nil && [data isKindOfClass:[NSDictionary class]]) {
-            account = [self accountFromResponse:data];
+            account = [[SENAccount alloc] initWithDictionary:data];
         }
         if (completion) completion (account, error);
     }];
@@ -91,7 +76,7 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
            completion:^(id data, NSError *error) {
                SENAccount* account = nil;
                if ([data isKindOfClass:[NSDictionary class]]) {
-                   account = [self accountFromResponse:data];
+                   account = [[SENAccount alloc] initWithDictionary:data];
                }
                completion(account, error);
            }];
@@ -124,7 +109,7 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
         return;
     }
     
-    NSDictionary* body = [self dictionaryValue:account];
+    NSDictionary* body = [account dictionaryValue];
     NSString* path = [SENAPIAccountEndpoint stringByAppendingPathComponent:@"email"];
     [SENAPIClient POST:path parameters:body completion:completion];
 }
@@ -152,99 +137,6 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
     }
     
     return errorType;
-}
-
-#pragma mark - Helpers
-
-+ (NSString*)stringValueOfGender:(SENAccountGender)gender {
-    NSString* value;
-    switch (gender) {
-        case SENAccountGenderFemale:
-            value = SENAPIAccountPropertyValueGenderFemale;
-            break;
-        case SENAccountGenderMale:
-            value = SENAPIAccountPropertyValueGenderMale;
-            break;
-        default:
-            value = SENAPIAccountPropertyValueGenderOther;
-            break;
-    }
-    return value;
-}
-
-+ (SENAccountGender)genderFromString:(NSString*)genderString {
-    SENAccountGender gender = SENAccountGenderOther;
-    if ([[genderString uppercaseString] isEqualToString:SENAPIAccountPropertyValueGenderFemale]) {
-        gender = SENAccountGenderFemale;
-    } else if ([[genderString uppercaseString] isEqualToString:SENAPIAccountPropertyValueGenderMale]) {
-        gender = SENAccountGenderMale;
-    }
-    return gender;
-}
-
-/**
- * Convert the account object in to a dictionary that can be used as the parameter
- * value in updating the account.  Note that not all properties should be passed
- * back through the API such as the account Id and password.  The password should
- * be updated by itself.
- *
- * only values that are non-nil will be set.
- *
- * @param account: the account object to convert to a dictionary.
- * @return         a dictionary containing non-nil values from the account object.
- */
-+ (NSMutableDictionary*)dictionaryValue:(SENAccount*)account {
-    NSMutableDictionary* params = [NSMutableDictionary dictionary];
-    [params setValue:[account name] forKey:SENAPIAccountPropertyName];
-    [params setValue:[account email] forKey:SENAPIAccountPropertyEmailAddress];
-    [params setValue:[account weight] forKey:SENAPIAccountPropertyWeight];
-    [params setValue:[account height] forKey:SENAPIAccountPropertyHeight];
-    [params setValue:[self stringValueOfGender:[account gender]] forKey:SENAPIAccountPropertyGender];
-    [params setValue:[account birthdate] forKey:SENAPIAccountPropertyBirthdate];
-    [params setValue:[account lastModified] forKey:SENAPIAccountPropertyLastModified];
-    [params setValue:[account latitude] forKey:SENAPIAccountPropertyValueLatitude];
-    [params setValue:[account longitude] forKey:SENAPIAccountPropertyValueLongitude];
-    [params setValue:[account createdAt] forKey:SENAPIAccountPropertyValueCreated];
-    return params;
-}
-
-/**
- * Convert the response object, which should be a NSDictionary, into A SENAccount
- * object, ensuring proper typing of values
- * @param responseObject: the response object
- * @return SENAccount representation of the response
- */
-+ (SENAccount*)accountFromResponse:(id)responseObject {
-    if (![responseObject respondsToSelector:@selector(objectForKeyedSubscript:)])
-        return nil;
-    // calling object:mustBe: for each object so that NSNull (or wrong type)
-    // will never be set inside the account object.  The reason is because
-    // setting the value in the object is fine, even if property is different
-    // then what is passed but when you try to operate on the value, expecting
-    // that's the correct class, it will crash at runtime.
-    NSString* accountId = SENObjectOfClass(responseObject[SENAPIAccountPropertyId], [NSString class]);
-    NSNumber* lastModified = SENObjectOfClass(responseObject[SENAPIAccountPropertyLastModified], [NSNumber class]);
-    NSNumber* createdAt = SENObjectOfClass(responseObject[SENAPIAccountPropertyLastModified], [NSNumber class]);
-    NSString* name = SENObjectOfClass(responseObject[SENAPIAccountPropertyName], [NSString class]);
-    NSString* gender = SENObjectOfClass(responseObject[SENAPIAccountPropertyGender], [NSString class]);
-    NSNumber* weight = SENObjectOfClass(responseObject[SENAPIAccountPropertyWeight], [NSNumber class]);
-    NSNumber* height = SENObjectOfClass(responseObject[SENAPIAccountPropertyHeight], [NSNumber class]);
-    NSString* email = SENObjectOfClass(responseObject[SENAPIAccountPropertyEmailAddress], [NSString class]);
-    NSString* birthdate = SENObjectOfClass(responseObject[SENAPIAccountPropertyBirthdate], [NSString class]);
-    NSNumber* latitude = SENObjectOfClass(responseObject[SENAPIAccountPropertyValueLatitude], [NSNumber class]);
-    NSNumber* longitude = SENObjectOfClass(responseObject[SENAPIAccountPropertyValueLongitude], [NSNumber class]);
-    
-    SENAccount* account = [[SENAccount alloc] initWithAccountId:accountId lastModified:lastModified];
-    [account setName:name];
-    [account setGender:[self genderFromString:gender]];
-    [account setWeight:weight];
-    [account setHeight:height];
-    [account setEmail:email];
-    [account setLatitude:latitude];
-    [account setLongitude:longitude];
-    [account setBirthdate:birthdate];
-    [account setCreatedAt:[NSDate dateWithTimeIntervalSince1970:[createdAt unsignedIntegerValue]]];
-    return account;
 }
 
 @end

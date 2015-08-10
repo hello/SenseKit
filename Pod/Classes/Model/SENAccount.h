@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SENSerializable.h"
 
 typedef NS_ENUM(NSUInteger, SENAccountGender) {
     SENAccountGenderOther,
@@ -14,7 +15,7 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
     SENAccountGenderFemale
 };
 
-@interface SENAccount : NSObject
+@interface SENAccount : NSObject <SENSerializable>
 
 @property (nonatomic, copy, readonly)    NSString* accountId;
 
@@ -92,15 +93,11 @@ typedef NS_ENUM(NSUInteger, SENAccountGender) {
 @property (nonatomic, strong, readwrite) NSDate* createdAt;
 
 /**
- * Initialize the SENAccount and return the instance with the specified
- * account id and and lastModifiedDate, which are both not changeable
- * on the client.
+ *  Serialized version of the account
  *
- * @param accountId:      the unique identifier of the account
- * @param isoLateModDate: the last modified date of the account object in milli
+ *  @return a dictionary representing the account
  */
-- (instancetype)initWithAccountId:(NSString*)accountId
-                     lastModified:(NSNumber*)isoLastModDate;
+- (NSDictionary*)dictionaryValue;
 
 /**
  * Set the birth date with individual components that are based on the user's
