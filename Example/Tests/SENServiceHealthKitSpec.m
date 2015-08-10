@@ -445,7 +445,8 @@ describe(@"SENServiceHealthKitSpec", ^{
             
             beforeEach(^{
                 SENTimeline* timeline = [[SENTimeline alloc] init];
-                [timeline setSegments:@[[SENTimelineSegment new]]];
+                [timeline setScoreCondition:SENConditionIdeal];
+                [timeline setMetrics:@[[SENTimelineMetric new]]];
                 [SENTimeline stub:@selector(timelineForDate:) andReturn:timeline];
                 [SENAPITimeline stub:@selector(timelineForDate:completion:) withBlock:^id(NSArray *params) {
                     void(^cb)(SENTimeline* timeline, NSError* error) = [params lastObject];

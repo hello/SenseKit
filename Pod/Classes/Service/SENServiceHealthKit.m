@@ -254,7 +254,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
 
 - (void)timelineForDate:(NSDate*)date completion:(void(^)(SENTimeline* timeline, NSError* error))completion {
     SENTimeline* timeline = [SENTimeline timelineForDate:date];
-    if ([[timeline segments] count] > 0) {
+    if ([[timeline metrics] count] > 0 && [timeline scoreCondition] != SENConditionUnknown) {
         completion (timeline, nil);
     } else {
         [SENAPITimeline timelineForDate:date completion:^(id data, NSError *error) {
@@ -311,15 +311,19 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
     NSDate* wakeUpDate = nil;
     NSDate* sleepDate = nil;
-    NSArray* segments = [sleepResult segments];
+    NSArray* metrics = [sleepResult metrics];
 
-    for (SENTimelineSegment* segment in segments) {
-        if (!sleepDate && segment.type == SENTimelineSegmentTypeFellAsleep) {
-            sleepDate = [segment date];
+    for (SENTimelineMetric* metric in metrics) {
+        if (!sleepDate
+            && metric.type == SENTimelineMetricTypeFellAsleep
+            && metric.unit == SENTimelineMetricUnitTimestamp) {
+            sleepDate = [NSDate dateWithTimeIntervalSince1970:[metric.value doubleValue] / 1000];
         }
 
-        if (sleepDate != nil && segment.type == SENTimelineSegmentTypeWokeUp) {
-            wakeUpDate = [segment date];
+        if (sleepDate != nil
+            && metric.type == SENTimelineMetricTypeWokeUp
+            && metric.unit == SENTimelineMetricUnitTimestamp) {
+            wakeUpDate = [NSDate dateWithTimeIntervalSince1970:[metric.value doubleValue] / 1000];
         }
     }
     
