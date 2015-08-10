@@ -20,13 +20,13 @@
 #endif
 
 static NSString* const SENServiceHKErrorDomain = @"is.hello.service.hk";
+static NSString* const SENServiceHKLastDateWritten = @"is.hello.service.hk.lastdate";
 static NSString* const SENServiceHKEnable = @"is.hello.service.hk.enable";
 static CGFloat const SENServiceHKBackFillLimit = 3;
 
 @interface SENServiceHealthKit()
 
 @property (nonatomic, strong) HKHealthStore* hkStore;
-@property (nonatomic, assign) NSUInteger pendingNextAnchor;
 
 @end
 
@@ -71,6 +71,19 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     return [[preferences userPreferenceForKey:SENServiceHKEnable] boolValue];
 }
 
+- (void)saveLastWrittenDate:(NSDate*)date {
+    if (date == nil) {
+        return;
+    }
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    [preferences setUserPreference:date forKey:SENServiceHKLastDateWritten];
+}
+
+- (NSDate*)lastWrittenDate {
+    SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+    return [preferences userPreferenceForKey:SENServiceHKLastDateWritten];
+}
+
 #pragma mark - Support / Authorization
 
 - (BOOL)isSupported {
@@ -95,6 +108,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     }
     
     HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
+    
     NSSet* writeTypes = [NSSet setWithObject:hkSleepCategory];
     NSSet* readTypes = [NSSet setWithObject:hkSleepCategory]; // there will be more, soon
     
@@ -156,6 +170,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
 - (void)syncRecentMissingDays:(void(^)(NSError* error))completion {
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
+    // last night
     NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
     NSDateComponents* todayComponents = [calendar components:unitsWeCareAbout fromDate:[NSDate date]];
     NSDate* today = [calendar dateFromComponents:todayComponents];
@@ -164,47 +179,41 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     [lastNightComponents setDay:-1];
     NSDate* lastNight = [calendar dateByAddingComponents:lastNightComponents toDate:today options:0];
     
-    NSDateComponents* oldestDateToBackFill = [[NSDateComponents alloc] init];
-    [oldestDateToBackFill setDay:-SENServiceHKBackFillLimit];
-    NSDate* startDate = [calendar dateByAddingComponents:oldestDateToBackFill toDate:today options:0];
+    // last time it was sync'ed
+    NSDate* syncStartDate = [self lastWrittenDate];
     
-    HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
-    NSPredicate* predicate = [HKQuery predicateForSamplesWithStartDate:startDate endDate:lastNight options:HKQueryOptionStrictStartDate];
-    
-    void(^syncCompletion)(NSError* error) = ^(NSError* error){
-        if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion (error);
-            });
+    if (syncStartDate) {
+        NSDateComponents *difference = [calendar components:NSCalendarUnitDay
+                                                   fromDate:syncStartDate
+                                                     toDate:lastNight
+                                                    options:0];
+        if ([difference day] == 0) {
+            completion ([NSError errorWithDomain:SENServiceHKErrorDomain
+                                            code:SENServiceHealthKitErrorAlreadySynced
+                                        userInfo:nil]);
+            return;
+        } else if ([difference day] > SENServiceHKBackFillLimit) { // make sure we don't backfill too much
+            NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
+            [backFillComps setDay:-SENServiceHKBackFillLimit];
+            syncStartDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
         }
-    };
+    } else { // if never been sync'ed before, just sync last night's data
+        syncStartDate = lastNight;
+    }
     
     __weak typeof(self) weakSelf = self;
-    HKSampleQuery* query =
-    [[HKSampleQuery alloc] initWithSampleType:hkSleepCategory
-                                    predicate:predicate
-                                        limit:SENServiceHKBackFillLimit
-                              sortDescriptors:@[HKSampleSortIdentifierStartDate]
-                               resultsHandler:^(HKSampleQuery *query, NSArray *results, NSError *error) {
-                                   __strong typeof(weakSelf) strongSelf = weakSelf;
-                                   if (error) {
-                                       syncCompletion (error);
-                                       return;
-                                   }
-                                   [strongSelf syncTimelineDataAfter:[[results lastObject] endDate]
-                                                               until:lastNight
-                                                        withCalendar:calendar
-                                                          completion:syncCompletion];
-                               }];
-    
-    [[self hkStore] executeQuery:query];
+    [self syncTimelineDataAfter:syncStartDate until:lastNight withCalendar:calendar completion:^(NSError *error) {
+        if (!error) {
+            [weakSelf saveLastWrittenDate:lastNight];
+        }
+        completion (error);
+    }];
 }
 
 - (void)syncTimelineDataAfter:(NSDate*)startDate
                         until:(NSDate*)endDate
                  withCalendar:(NSCalendar*)calendar
                    completion:(void(^)(NSError* error))completion {
-    
     NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
     NSDate* nextStartDate = startDate;
     NSUInteger daysFromStartDate = 0;
@@ -216,6 +225,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     __weak typeof(self) weakSelf = self;
     while ([calendar compareDate:nextStartDate toDate:endDate toUnitGranularity:unitsWeCareAbout] != NSOrderedDescending) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
+        
         dispatch_group_enter(getTimelineGroup);
         [strongSelf timelineForDate:nextStartDate completion:^(SENTimeline *timeline, NSError *error) {
             if (timeline) {
@@ -224,33 +234,40 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
             dispatch_group_leave(getTimelineGroup);
         }];
         
-        components = [calendar components:unitsWeCareAbout fromDate:startDate];
+        components = [calendar components:unitsWeCareAbout fromDate:nextStartDate];
         [components setDay:daysFromStartDate];
-        nextStartDate = [calendar dateByAddingComponents:components toDate:startDate options:0];
+        nextStartDate = [calendar dateByAddingComponents:components toDate:nextStartDate options:0];
         daysFromStartDate++;
     }
     
     long queuePriority = DISPATCH_QUEUE_PRIORITY_DEFAULT;
     dispatch_queue_t queue = dispatch_get_global_queue(queuePriority, 0);
     dispatch_group_notify(getTimelineGroup, queue, ^{
-        [weakSelf syncTimelinesToHealthKit:timelines completion:completion];
+        [weakSelf syncTimelinesToHealthKit:timelines completion:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion (error);
+            });
+        }];
     });
 
 }
 
 - (void)timelineForDate:(NSDate*)date completion:(void(^)(SENTimeline* timeline, NSError* error))completion {
-    if (!completion) {
-        return;
-    }
-    
     SENTimeline* timeline = [SENTimeline timelineForDate:date];
     if ([[timeline segments] count] > 0) {
         completion (timeline, nil);
     } else {
         [SENAPITimeline timelineForDate:date completion:^(id data, NSError *error) {
             SENTimeline* timeline = data;
-            if (!error && [timeline isKindOfClass:[SENTimeline class]]) {
-                [timeline save];
+            if (!error) {
+                if ([timeline isKindOfClass:[SENTimeline class]]) {
+                    [timeline save];
+                } else {
+                    timeline = nil;
+                    error = [NSError errorWithDomain:SENServiceHKErrorDomain
+                                                code:SENServiceHealthKitErrorUnexpectedAPIResponse
+                                            userInfo:nil];
+                }
             }
             completion (timeline, error);
         }];
@@ -260,11 +277,9 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
 - (void)syncTimelinesToHealthKit:(NSArray*)timelines completion:(void(^)(NSError* error))completion {
     NSUInteger timelineCount = [timelines count];
     if (timelineCount == 0) {
-        if (completion) {
-            completion ([NSError errorWithDomain:SENServiceHKErrorDomain
-                                            code:SENServiceHealthKitErrorNoDataToWrite
-                                        userInfo:nil]);
-        }
+        completion ([NSError errorWithDomain:SENServiceHKErrorDomain
+                                        code:SENServiceHealthKitErrorNoDataToWrite
+                                    userInfo:nil]);
         return;
     }
     
@@ -287,9 +302,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     }
     
     [[self hkStore] saveObjects:samples withCompletion:^(BOOL success, NSError *error) {
-        if (completion) {
-            completion (error);
-        }
+        completion (error);
     }];
 }
 
