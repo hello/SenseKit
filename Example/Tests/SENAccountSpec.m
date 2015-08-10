@@ -18,8 +18,193 @@ describe(@"SENAccount", ^{
     beforeAll(^{
         gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     });
+
+    describe(@"-initWithDictionary:", ^{
+
+        it(@"sets accountId", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"id":@"399-90-11123"}];
+            [[[account accountId] should] equal:@"399-90-11123"];
+        });
+
+        it(@"sets lastModified", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"last_modified":@303444}];
+            [[[account lastModified] should] equal:@303444];
+        });
+
+        it(@"sets name", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"name":@"Veronica Choi"}];
+            [[[account name] should] equal:@"Veronica Choi"];
+        });
+
+        it(@"sets email", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"email":@"v@example.com"}];
+            [[[account email] should] equal:@"v@example.com"];
+        });
+
+        it(@"sets weight", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"weight":@51}];
+            [[[account weight] should] equal:@51];
+        });
+
+        it(@"sets height", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"height":@154}];
+            [[[account height] should] equal:@154];
+        });
+
+        it(@"sets latitude", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lat":@(-42.22)}];
+            [[[account latitude] should] equal:@(-42.22)];
+        });
+
+        it(@"sets longitude", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lon":@(84.50993)}];
+            [[[account longitude] should] equal:@(84.50993)];
+        });
+
+        it(@"sets birthdate", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"dob":@"1982-03-17"}];
+            [[[account birthdate] should] equal:@"1982-03-17"];
+        });
+
+        it(@"sets createdAt", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747}];
+            [[@([[account createdAt] timeIntervalSince1970]) should] equal:@1439225747];
+        });
+
+        it(@"ignores unknown values", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747, @"color":@"blue"}];
+            [[@([[account createdAt] timeIntervalSince1970]) should] equal:@1439225747];
+        });
+
+        it(@"ignores non-dictionary values", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:(id)@300];
+            [[account should] beNil];
+        });
+
+        context(@"gender is female", ^{
+
+            it(@"sets female gender", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"FEMALE"}];
+                [[@([account gender]) should] equal:@(SENAccountGenderFemale)];
+            });
+        });
+
+        context(@"gender is male", ^{
+
+            it(@"sets male gender", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"MALE"}];
+                [[@([account gender]) should] equal:@(SENAccountGenderMale)];
+            });
+        });
+
+        context(@"gender is other", ^{
+
+            it(@"sets female gender", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"OTHER"}];
+                [[@([account gender]) should] equal:@(SENAccountGenderOther)];
+            });
+        });
+
+        context(@"gender is unknown", ^{
+
+            it(@"sets other gender", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"mayonnaise"}];
+                [[@([account gender]) should] equal:@(SENAccountGenderOther)];
+            });
+        });
+
+        context(@"gender is unspecified", ^{
+
+            it(@"sets other gender", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{}];
+                [[@([account gender]) should] equal:@(SENAccountGenderOther)];
+            });
+        });
+    });
+
+    describe(@"-dictionaryValue", ^{
+
+        it(@"does not set account ID", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"id":@399}];
+            [[[account dictionaryValue][@"id"] should] beNil];
+        });
+
+        it(@"does not populate missing values", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"weight":@399}];
+            [[[account dictionaryValue][@"name"] should] beNil];
+        });
+
+        it(@"sets name", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"name":@"Beth Parker"}];
+            [[[account dictionaryValue][@"name"] should] equal:@"Beth Parker"];
+        });
+
+        it(@"sets email", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"email":@"betty@example.com"}];
+            [[[account dictionaryValue][@"email"] should] equal:@"betty@example.com"];
+        });
+
+        it(@"sets weight", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"weight":@59}];
+            [[[account dictionaryValue][@"weight"] should] equal:@59];
+        });
+
+        it(@"sets height", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"height":@180}];
+            [[[account dictionaryValue][@"height"] should] equal:@180];
+        });
+
+        it(@"sets birthdate", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"dob":@"1978-01-23"}];
+            [[[account dictionaryValue][@"dob"] should] equal:@"1978-01-23"];
+        });
+
+        it(@"sets last modified", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"last_modified":@1439225747}];
+            [[[account dictionaryValue][@"last_modified"] should] equal:@1439225747];
+        });
+
+        it(@"sets created at", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747}];
+            [[[account dictionaryValue][@"created"] should] equal:@1439225747];
+        });
+
+        it(@"sets latitude", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lat":@143}];
+            [[[account dictionaryValue][@"lat"] should] equal:@143];
+        });
+
+        it(@"sets longitude", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lon":@344}];
+            [[[account dictionaryValue][@"lon"] should] equal:@344];
+        });
+
+        context(@"gender is male", ^{
+
+            it(@"sets gender property to MALE", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"MALE"}];
+                [[[account dictionaryValue][@"gender"] should] equal:@"MALE"];
+            });
+        });
+
+        context(@"gender is female", ^{
+
+            it(@"sets gender property to FEMALE", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"FEMALE"}];
+                [[[account dictionaryValue][@"gender"] should] equal:@"FEMALE"];
+            });
+        });
+
+        context(@"gender is other", ^{
+
+            it(@"sets gender property to OTHER", ^{
+                SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"gender":@"OTHER"}];
+                [[[account dictionaryValue][@"gender"] should] equal:@"OTHER"];
+            });
+        });
+    });
     
-    describe(@"+setBirthMonth:day:andYear:", ^{
+    describe(@"-setBirthMonth:day:andYear:", ^{
         
         __block long year = 0;
         __block long month = 0;
