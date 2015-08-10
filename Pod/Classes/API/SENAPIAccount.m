@@ -1,7 +1,7 @@
 
 #import <AFNetworking/AFHTTPSessionManager.h>
 #import "SENAPIAccount.h"
-#import "SENAccount.h"
+#import "Model.h"
 
 NSString* const kSENAccountNotificationAccountCreated = @"SENAccountCreated";
 
@@ -209,16 +209,6 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
 }
 
 /**
- * Convenience method to ensure an object is of a certain type.
- * @param object: object to check
- * @param clazz: the class the object should be
- * @return object if is of class.  nil otherwise
- */
-+ (id)object:(id)object mustBe:(Class)clazz {
-    return [object isKindOfClass:clazz]?object:nil;
-}
-
-/**
  * Convert the response object, which should be a NSDictionary, into A SENAccount
  * object, ensuring proper typing of values
  * @param responseObject: the response object
@@ -232,17 +222,17 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
     // setting the value in the object is fine, even if property is different
     // then what is passed but when you try to operate on the value, expecting
     // that's the correct class, it will crash at runtime.
-    NSString* accountId = [self object:responseObject[SENAPIAccountPropertyId] mustBe:[NSString class]];
-    NSNumber* lastModified = [self object:responseObject[SENAPIAccountPropertyLastModified] mustBe:[NSNumber class]];
-    NSNumber* createdAt = [self object:responseObject[SENAPIAccountPropertyLastModified] mustBe:[NSNumber class]];
-    NSString* name = [self object:responseObject[SENAPIAccountPropertyName] mustBe:[NSString class]];
-    NSString* gender = [self object:responseObject[SENAPIAccountPropertyGender] mustBe:[NSString class]];
-    NSNumber* weight = [self object:responseObject[SENAPIAccountPropertyWeight] mustBe:[NSNumber class]];
-    NSNumber* height = [self object:responseObject[SENAPIAccountPropertyHeight] mustBe:[NSNumber class]];
-    NSString* email = [self object:responseObject[SENAPIAccountPropertyEmailAddress] mustBe:[NSString class]];
-    NSString* birthdate = [self object:responseObject[SENAPIAccountPropertyBirthdate] mustBe:[NSString class]];
-    NSNumber* latitude = [self object:responseObject[SENAPIAccountPropertyValueLatitude] mustBe:[NSNumber class]];
-    NSNumber* longitude = [self object:responseObject[SENAPIAccountPropertyValueLongitude] mustBe:[NSNumber class]];
+    NSString* accountId = SENObjectOfClass(responseObject[SENAPIAccountPropertyId], [NSString class]);
+    NSNumber* lastModified = SENObjectOfClass(responseObject[SENAPIAccountPropertyLastModified], [NSNumber class]);
+    NSNumber* createdAt = SENObjectOfClass(responseObject[SENAPIAccountPropertyLastModified], [NSNumber class]);
+    NSString* name = SENObjectOfClass(responseObject[SENAPIAccountPropertyName], [NSString class]);
+    NSString* gender = SENObjectOfClass(responseObject[SENAPIAccountPropertyGender], [NSString class]);
+    NSNumber* weight = SENObjectOfClass(responseObject[SENAPIAccountPropertyWeight], [NSNumber class]);
+    NSNumber* height = SENObjectOfClass(responseObject[SENAPIAccountPropertyHeight], [NSNumber class]);
+    NSString* email = SENObjectOfClass(responseObject[SENAPIAccountPropertyEmailAddress], [NSString class]);
+    NSString* birthdate = SENObjectOfClass(responseObject[SENAPIAccountPropertyBirthdate], [NSString class]);
+    NSNumber* latitude = SENObjectOfClass(responseObject[SENAPIAccountPropertyValueLatitude], [NSNumber class]);
+    NSNumber* longitude = SENObjectOfClass(responseObject[SENAPIAccountPropertyValueLongitude], [NSNumber class]);
     
     SENAccount* account = [[SENAccount alloc] initWithAccountId:accountId lastModified:lastModified];
     [account setName:name];
