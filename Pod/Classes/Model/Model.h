@@ -2,7 +2,6 @@
 #import "SENAccount.h"
 #import "SENAlarm.h"
 #import "SENAnswer.h"
-#import "SENBackgroundNoise.h"
 #import "SENDevice.h"
 #import "SENInsight.h"
 #import "SENQuestion.h"
