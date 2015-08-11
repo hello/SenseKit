@@ -9,6 +9,7 @@
 #import <Kiwi/Kiwi.h>
 #import <HealthKit/HealthKit.h>
 #import "SENTimeline.h"
+#import "SENAPITimeline.h"
 #import "SENServiceHealthKit.h"
 
 @interface SENServiceHealthKit()
@@ -16,8 +17,15 @@
 @property (nonatomic, strong) HKHealthStore* hkStore;
 
 - (NSArray*)sleepDataPointsForSleepResult:(SENTimeline*)sleepResult;
-- (void)writeSleepAnalysisIfDataAvailableFor:(NSDate*)date completion:(void(^)(NSError* error))completion;
-- (NSDate*)lastNight;
+- (BOOL)isHealthKitEnabled;
+- (void)syncRecentMissingDays:(void(^)(NSError* error))completion;
+- (NSDate*)lastWrittenDate;
+- (void)syncTimelineDataAfter:(NSDate*)startDate
+                        until:(NSDate*)endDate
+                 withCalendar:(NSCalendar*)calendar
+                   completion:(void(^)(NSError* error))completion;
+- (void)timelineForDate:(NSDate*)date
+             completion:(void(^)(SENTimeline* timeline, NSError* error))completion;
 
 @end
 
@@ -93,283 +101,461 @@ describe(@"SENServiceHealthKitSpec", ^{
         });
         
     });
-    
-    describe(@"-sleepDataPointsForSleepResult:", ^{
-        
-        __block SENServiceHealthKit* service = nil;
-        
-        beforeEach(^{
-            service = [SENServiceHealthKit sharedService];
-        });
-        
-        context(@"has no sleep or wake up events", ^{
-            
-            __block SENTimeline* sleepResult = nil;
-            
-            beforeEach(^{
-                NSDictionary* json = @{@"score": @100,
-                                       @"score_condition": @"IDEAL",
-                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
-                                       @"date": @"2015-03-11",
-                                       @"events": @[
-                                               @{  @"timestamp": @1432768812000,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @24,
-                                                   @"sleep_state": @"AWAKE",
-                                                   @"event_type": @"IN_BED",
-                                                   @"valid_actions": @[
-                                                           @"VERIFY",
-                                                           @"REMOVE"]},
-                                               @{  @"timestamp": @1432788812000,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @40,
-                                                   @"sleep_state": @"LIGHT",
-                                                   @"event_type": @"IN_BED",
-                                                   @"valid_actions": @[]}]};
-                
-                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
-                
-            });
-            
-            it(@"should return no data points", ^{
-                
-                NSArray* dataPoints = [service sleepDataPointsForSleepResult:sleepResult];
-                [[dataPoints shouldNot] beNil];
-                [[dataPoints should] haveCountOf:0];
-                
-            });
-            
-        });
-        
-        context(@"has sleep event, but no wake event", ^{
-            
-            __block SENTimeline* sleepResult = nil;
-            
-            beforeEach(^{
-                
-                NSDictionary* json = @{@"score": @100,
-                                       @"score_condition": @"IDEAL",
-                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
-                                       @"date": @"2015-03-11",
-                                       @"events": @[
-                                               @{  @"timestamp": @1432768812000,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @24,
-                                                   @"sleep_state": @"AWAKE",
-                                                   @"event_type": @"FELL_ASLEEP",
-                                                   @"valid_actions": @[
-                                                           @"VERIFY",
-                                                           @"REMOVE"]},
-                                               @{  @"timestamp": @1432788812000,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @40,
-                                                   @"sleep_state": @"LIGHT",
-                                                   @"event_type": @"IN_BED",
-                                                   @"valid_actions": @[]}]};
-                
-                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
-                
-            });
-            
-            it(@"should return no data points", ^{
-                
-                NSArray* dataPoints = [service sleepDataPointsForSleepResult:sleepResult];
-                [[dataPoints shouldNot] beNil];
-                [[dataPoints should] haveCountOf:0];
-                
-            });
-            
-        });
-        
-        context(@"has sleep and wake events", ^{
-            
-            __block SENTimeline* sleepResult = nil;
-            __block NSTimeInterval sleepTime = [[NSDate date] timeIntervalSince1970];
-            __block NSTimeInterval wakeTime = [[NSDate date] timeIntervalSince1970];
-            
-            beforeEach(^{
-                
-                NSDictionary* json = @{@"score": @100,
-                                       @"score_condition": @"IDEAL",
-                                       @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
-                                       @"date": @"2015-03-11",
-                                       @"events": @[
-                                               @{  @"timestamp": @1432768812,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @24,
-                                                   @"sleep_state": @"AWAKE",
-                                                   @"event_type": @"FELL_ASLEEP",
-                                                   @"valid_actions": @[
-                                                           @"VERIFY",
-                                                           @"REMOVE"]},
-                                               @{  @"timestamp": @1432788812,
-                                                   @"timezone_offset": @860000,
-                                                   @"duration_millis": @27000,
-                                                   @"message": @"You were moving around",
-                                                   @"sleep_depth": @40,
-                                                   @"sleep_state": @"LIGHT",
-                                                   @"event_type": @"WOKE_UP",
-                                                   @"valid_actions": @[]}]};
-                
-                sleepResult = [[SENTimeline alloc] initWithDictionary:json];
-                
-            });
-            
-            it(@"should return 1 data point", ^{
-                NSNumber* acceptableDelta = @10;
-                NSArray* dataPoints = [service sleepDataPointsForSleepResult:sleepResult];
-                [[dataPoints should] haveCountOf:1];
-                
-                NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:sleepTime];
-                NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:wakeTime];
-                HKCategorySample* sample = dataPoints[0];
-                NSNumber* startDelta = @([[sample startDate] timeIntervalSince1970] - [startDate timeIntervalSince1970]);
-                NSNumber* endDelta = @([[sample endDate] timeIntervalSince1970] - [endDate timeIntervalSince1970]);
-                [[startDelta should] beLessThan:acceptableDelta];
-                [[endDelta should] beLessThan:acceptableDelta];
-            });
-            
-        });
-        
-    });
         
     describe(@"-sync:", ^{
         
         __block SENServiceHealthKit* service = nil;
+        __block NSError* syncError = nil;
+        __block BOOL syncCompleted = NO;
         
         beforeEach(^{
             service = [SENServiceHealthKit sharedService];
         });
         
-        context(@"completes with error", ^{
+        context(@"healthkit is not not enabled as a preference", ^{
+            
+            beforeEach(^{
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:NO]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(canWriteSleepAnalysis) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(syncRecentMissingDays:) withBlock:^id(NSArray *params) {
+                    void(^cb)(NSError* error) = [params lastObject];
+                    syncCompleted = YES;
+                    cb (nil);
+                    return nil;
+                }];
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                syncCompleted = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
             
             it(@"should return with not enabled error", ^{
-                
-                __block NSError* syncError = nil;
-                [service sync:^(NSError *error) {
-                    syncError = error;
-                }];
-                
                 [[syncError shouldNot] beNil];
                 [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotEnabled)];
-                
             });
             
-            it(@"should return with not supported error", ^{
-                
-                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
-                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:NO]];
-                
-                __block NSError* syncError = nil;
-                [service sync:^(NSError *error) {
-                    syncError = error;
-                }];
-                
-                [[syncError shouldNot] beNil];
-                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotSupported)];
-                
-            });
-            
-            it(@"should return with not authorized error", ^{
-                
-                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
-                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
-                
-                __block NSError* syncError = nil;
-                [service sync:^(NSError *error) {
-                    syncError = error;
-                }];
-                
-                [[syncError shouldNot] beNil];
-                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotAuthorized)];
-                
+            it(@"should not have completed a sync to get the error", ^{
+                [[@(syncCompleted) shouldNot] beYes];
             });
             
         });
         
-        context(@"healthkit is set up and can sync", ^{
+        context(@"device / iOS does not support HealthKit", ^{
+            
+            beforeEach(^{
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:NO]];
+                [service stub:@selector(canWriteSleepAnalysis) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(syncRecentMissingDays:) withBlock:^id(NSArray *params) {
+                    void(^cb)(NSError* error) = [params lastObject];
+                    syncCompleted = YES;
+                    cb (nil);
+                    return nil;
+                }];
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                syncCompleted = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should return error saying not supported", ^{
+                [[syncError shouldNot] beNil];
+                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotSupported)];
+            });
+            
+            it(@"should not have completed a sync to get the error", ^{
+                [[@(syncCompleted) shouldNot] beYes];
+            });
+            
+        });
+        
+        context(@"user did not give permissions for Sense to access health data", ^{
+            
+            beforeEach(^{
+                [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(canWriteSleepAnalysis) andReturn:[KWValue valueWithBool:NO]];
+                [service stub:@selector(syncRecentMissingDays:) withBlock:^id(NSArray *params) {
+                    void(^cb)(NSError* error) = [params lastObject];
+                    syncCompleted = YES;
+                    cb (nil);
+                    return nil;
+                }];
+                [service sync:^(NSError *error) {
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                syncCompleted = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should return error stating not authorized", ^{
+                [[syncError shouldNot] beNil];
+                [[@([syncError code]) should] equal:@(SENServiceHealthKitErrorNotAuthorized)];
+            });
+            
+            it(@"should not have completed a sync to get the error", ^{
+                [[@(syncCompleted) shouldNot] beYes];
+            });
+            
+        });
+        
+        context(@"HealthKit is supported, enabled, and authorized", ^{
             
             beforeEach(^{
                 [service stub:@selector(isHealthKitEnabled) andReturn:[KWValue valueWithBool:YES]];
                 [service stub:@selector(isSupported) andReturn:[KWValue valueWithBool:YES]];
                 [service stub:@selector(canWriteSleepAnalysis) andReturn:[KWValue valueWithBool:YES]];
-            });
-            
-            it(@"should call writeSleepAnalysisIfDataAvailableFor with no error", ^{
-                
-                [service stub:@selector(writeSleepAnalysisIfDataAvailableFor:completion:) withBlock:^id(NSArray *params) {
-                    void(^callback)(NSError* error) = [params lastObject];
-                    callback(nil);
+                [service stub:@selector(syncRecentMissingDays:) withBlock:^id(NSArray *params) {
+                    void(^cb)(NSError* error) = [params lastObject];
+                    syncCompleted = YES;
+                    cb (nil);
                     return nil;
                 }];
-                [[service should] receive:@selector(writeSleepAnalysisIfDataAvailableFor:completion:)];
-                
-                __block NSError* syncError = nil;
                 [service sync:^(NSError *error) {
                     syncError = error;
                 }];
-                
+            });
+            
+            afterEach(^{
+                syncCompleted = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should not return an error", ^{
                 [[syncError should] beNil];
-                
+            });
+            
+            it(@"should have completed a sync, since it's stubbed", ^{
+                [[@(syncCompleted) should] beYes];
             });
             
         });
         
     });
     
-    describe(@"-lastNight", ^{
+    describe(@"-syncRecentMissingDays:", ^{
         
         __block SENServiceHealthKit* service = nil;
+        __block NSDate* startSyncDate = nil;
+        __block NSDate* endSyncDate = nil;
+        __block NSDate* lastNight = nil;
+        __block BOOL calledBack = NO;
+        __block NSError* syncError = nil;
+        __block NSCalendar* calendar = nil;
+        
+        beforeEach(^{
+            calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
+            NSDateComponents* todayComponents = [calendar components:unitsWeCareAbout fromDate:[NSDate date]];
+            NSDate* today = [calendar dateFromComponents:todayComponents];
+            
+            NSDateComponents* lastNightComponents = [[NSDateComponents alloc] init];
+            [lastNightComponents setDay:-1];
+            lastNight = [calendar dateByAddingComponents:lastNightComponents toDate:today options:0];
+            
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        context(@"never sync'ed successfully before", ^{
+            
+            beforeEach(^{
+                [service stub:@selector(lastWrittenDate) andReturn:nil];
+                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                    withBlock:^id(NSArray *params) {
+                        startSyncDate = [params firstObject];
+                        endSyncDate = params[1];
+                        void(^cb)(NSError* error) = [params lastObject];
+                        cb (nil);
+                        return nil;
+                    }];
+                
+                [service syncRecentMissingDays:^(NSError *error) {
+                    calledBack = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service clearStubs];
+                calledBack = NO;
+                startSyncDate = nil;
+                endSyncDate = nil;
+                syncError = nil;
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not have encountered error", ^{
+                [[syncError should] beNil];
+            });
+            
+            it(@"should try and sync with last night as the start date", ^{
+                [[startSyncDate should] equal:lastNight];
+            });
+            
+            it(@"should have end syc date equal to last night", ^{
+                [[endSyncDate should] equal:lastNight];
+            });
+            
+        });
+        
+        context(@"sync'ed before, 2 days before last night", ^{
+            
+            __block NSDate* lastWrittenDate = nil;
+            
+            beforeEach(^{
+                NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
+                [backFillComps setDay:-2];
+                lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
+                
+                [service stub:@selector(lastWrittenDate) andReturn:lastWrittenDate];
+                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                    withBlock:^id(NSArray *params) {
+                        startSyncDate = [params firstObject];
+                        endSyncDate = params[1];
+                        void(^cb)(NSError* error) = [params lastObject];
+                        cb (nil);
+                        return nil;
+                    }];
+                
+                [service syncRecentMissingDays:^(NSError *error) {
+                    calledBack = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service clearStubs];
+                calledBack = NO;
+                startSyncDate = nil;
+                endSyncDate = nil;
+                syncError = nil;
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not have encountered error", ^{
+                [[syncError should] beNil];
+            });
+            
+            it(@"should try and sync from lastWrittenDate", ^{
+                [[startSyncDate should] equal:lastWrittenDate];
+            });
+            
+            it(@"should sync until last night", ^{
+                [[endSyncDate should] equal:lastNight];
+            });
+            
+        });
+        
+        context(@"sync'ed before, 4 days before last night", ^{
+            
+            __block NSDate* lastWrittenDate = nil;
+            
+            beforeEach(^{
+                NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
+                [backFillComps setDay:-4];
+                lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
+                
+                [service stub:@selector(lastWrittenDate) andReturn:lastWrittenDate];
+                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                    withBlock:^id(NSArray *params) {
+                        startSyncDate = [params firstObject];
+                        endSyncDate = params[1];
+                        void(^cb)(NSError* error) = [params lastObject];
+                        cb (nil);
+                        return nil;
+                    }];
+                
+                [service syncRecentMissingDays:^(NSError *error) {
+                    calledBack = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service clearStubs];
+                calledBack = NO;
+                startSyncDate = nil;
+                endSyncDate = nil;
+                syncError = nil;
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not have encountered error", ^{
+                [[syncError should] beNil];
+            });
+            
+            it(@"should try and sync from the limit of 3 days past last night", ^{
+                NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
+                [backFillComps setDay:-3];
+                NSDate* startDate = [calendar dateByAddingComponents:backFillComps
+                                                              toDate:lastNight
+                                                             options:0];
+                [[startSyncDate should] equal:startDate];
+            });
+            
+            it(@"should sync until last night", ^{
+                [[endSyncDate should] equal:lastNight];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"-timelineForDate:completion:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        __block BOOL apiCalled = NO;
+        __block BOOL calledBack = NO;
+        __block NSError* timelineError = nil;
         
         beforeEach(^{
             service = [SENServiceHealthKit sharedService];
         });
         
-        it(@"should be 1 day difference", ^{
+        afterEach(^{
+            [SENAPITimeline clearStubs];
+        });
+        
+        context(@"device has local timeline data", ^{
             
-            NSDate* lastNight = [service lastNight];
-            NSDate* today = [NSDate date];
-
-            NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-            NSCalendarUnit flags = NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit;
-            NSDateComponents* lastNightComps = [calendar components:flags fromDate:lastNight];
+            beforeEach(^{
+                SENTimeline* timeline = [[SENTimeline alloc] init];
+                [timeline setScoreCondition:SENConditionIdeal];
+                [timeline setMetrics:@[[SENTimelineMetric new]]];
+                [SENTimeline stub:@selector(timelineForDate:) andReturn:timeline];
+                [SENAPITimeline stub:@selector(timelineForDate:completion:) withBlock:^id(NSArray *params) {
+                    void(^cb)(SENTimeline* timeline, NSError* error) = [params lastObject];
+                    cb([SENTimeline new], nil);
+                    apiCalled = YES;
+                    return nil;
+                }];
+                [service timelineForDate:[NSDate date] completion:^(SENTimeline *timeline, NSError *error) {
+                    calledBack = YES;
+                    timelineError = error;
+                }];
+            });
             
-            NSDateComponents* adjustedComponents = [[NSDateComponents alloc] init];
-            [adjustedComponents setDay:-1];
+            afterEach(^{
+                [SENTimeline clearStubs];
+                [SENAPITimeline clearStubs];
+                apiCalled = NO;
+                calledBack = NO;
+                timelineError = nil;
+            });
             
-            NSDate* calculatedLastNightDate = [calendar dateByAddingComponents:adjustedComponents
-                                                                        toDate:today
-                                                                       options:0];
-            NSDateComponents* calculatedLastNightComps = [calendar components:flags
-                                                                     fromDate:calculatedLastNightDate];
+            it(@"should call back", ^{
+                [[@(calledBack) should] beYes];
+            });
             
-            [[@([lastNightComps day]) should] equal:@([calculatedLastNightComps day])];
-            [[@([lastNightComps month]) should] equal:@([calculatedLastNightComps month])];
-            [[@([lastNightComps year]) should] equal:@([calculatedLastNightComps year])];
+            it(@"should not return error", ^{
+                [[timelineError should] beNil];
+            });
+            
+            it(@"should not call api", ^{
+                [[@(apiCalled) should] beNo];
+            });
             
         });
         
-        it(@"should not contain any time components", ^{
+        context(@"device does not have local timeline data, api returns timeline", ^{
             
-            NSDate* lastNight = [service lastNight];
+            beforeEach(^{
+                [SENTimeline stub:@selector(timelineForDate:) andReturn:nil];
+                [SENAPITimeline stub:@selector(timelineForDate:completion:) withBlock:^id(NSArray *params) {
+                    void(^cb)(SENTimeline* timeline, NSError* error) = [params lastObject];
+                    cb([SENTimeline new], nil);
+                    apiCalled = YES;
+                    return nil;
+                }];
+                [service timelineForDate:[NSDate date] completion:^(SENTimeline *timeline, NSError *error) {
+                    calledBack = YES;
+                    timelineError = error;
+                }];
+            });
             
-            NSCalendar* calendar = [NSCalendar autoupdatingCurrentCalendar];
-            NSCalendarUnit unitsWeWant = NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit;
-            NSDateComponents *components = [calendar components:unitsWeWant fromDate:lastNight];
+            afterEach(^{
+                [SENTimeline clearStubs];
+                [SENAPITimeline clearStubs];
+                apiCalled = NO;
+                calledBack = NO;
+                timelineError = nil;
+            });
             
-            [[@([components hour]) should] equal:@(0)];
-            [[@([components minute]) should] equal:@(0)];
-            [[@([components second]) should] equal:@(0)];
+            it(@"should call back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not return error", ^{
+                [[timelineError should] beNil];
+            });
+            
+            it(@"should call api", ^{
+                [[@(apiCalled) should] beYes];
+            });
+            
+        });
+        
+        context(@"device does not have local timeline data, api returns junk", ^{
+            
+            beforeEach(^{
+                [SENTimeline stub:@selector(timelineForDate:) andReturn:nil];
+                [SENAPITimeline stub:@selector(timelineForDate:completion:) withBlock:^id(NSArray *params) {
+                    void(^cb)(id data, NSError* error) = [params lastObject];
+                    cb([NSArray array], nil);
+                    apiCalled = YES;
+                    return nil;
+                }];
+                [service timelineForDate:[NSDate date] completion:^(SENTimeline *timeline, NSError *error) {
+                    calledBack = YES;
+                    timelineError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENTimeline clearStubs];
+                [SENAPITimeline clearStubs];
+                apiCalled = NO;
+                calledBack = NO;
+                timelineError = nil;
+            });
+            
+            it(@"should call back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should return unexpected api response error", ^{
+                [[timelineError shouldNot] beNil];
+                [[@([timelineError code]) should] equal:@(SENServiceHealthKitErrorUnexpectedAPIResponse)];
+            });
+            
+            it(@"should call api", ^{
+                [[@(apiCalled) should] beYes];
+            });
             
         });
         
