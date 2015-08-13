@@ -77,7 +77,7 @@ describe(@"SENAPIPreferencesSpec", ^{
             [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                 NSDictionary* body = @{
                     @"ENHANCED_AUDIO" : @(true),
-                    @"TEMP_CELSIUS" : @(true),
+                    @"HEIGHT_METRIC" : @(true),
                     @"FAKE_PREFERENCE" : @(true)
                 };
                 SENAPIDataBlock block = [params lastObject];
@@ -104,7 +104,7 @@ describe(@"SENAPIPreferencesSpec", ^{
             }];
             [[@([preferences count]) should] equal:@(2)];
             [[[preferences objectForKey:@(SENPreferenceTypeEnhancedAudio)] should] beKindOfClass:[SENPreference class]];
-            [[[preferences objectForKey:@(SENPreferenceTypeTempCelcius)] should] beKindOfClass:[SENPreference class]];
+            [[[preferences objectForKey:@(SENPreferenceTypeHeightMetric)] should] beKindOfClass:[SENPreference class]];
             
         });
         
