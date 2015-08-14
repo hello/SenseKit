@@ -188,7 +188,7 @@ describe(@"SENServiceAccountSpec", ^{
             
             beforeEach(^{
                 preference = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
-                [SENAPIPreferences stub:@selector(updatePreference:completion:) withBlock:^id(NSArray *params) {
+                [SENAPIPreferences stub:@selector(updatePreferencesWithCompletion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
                     block (nil, nil);
                     return nil;
@@ -198,7 +198,7 @@ describe(@"SENServiceAccountSpec", ^{
             it(@"should call preference api", ^{
                 
                 SENServiceAccount* service = [SENServiceAccount sharedService];
-                [[SENAPIPreferences shouldSoon] receive:@selector(updatePreference:completion:)];
+                [[SENAPIPreferences shouldSoon] receive:@selector(updatePreferencesWithCompletion:)];
                 [service updatePreference:preference completion:nil];
                 
             });
