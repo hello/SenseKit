@@ -7,7 +7,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import <SenseKit/Model.h>
+#import <SenseKit/SenseKit.h>
 
 SPEC_BEGIN(SENPreferenceSpec)
 
@@ -80,10 +80,28 @@ describe(@"SENPreference", ^{
             });
         });
 
+        context(@"pref represents height format", ^{
+            NSDictionary* dict = @{@"pref" : @"HEIGHT_METRIC", @"enabled" : @(YES)};
+
+            it(@"has a type of height", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypeHeightMetric)];
+            });
+        });
+
+        context(@"pref represents weight format", ^{
+            NSDictionary* dict = @{@"pref" : @"WEIGHT_METRIC", @"enabled" : @(YES)};
+
+            it(@"has a type of weight", ^{
+                pref = [[SENPreference alloc] initWithDictionary:dict];
+                [[@([pref type]) should] equal:@(SENPreferenceTypeWeightMetric)];
+            });
+        });
+
         context(@"pref represents push notifications for alert conditions", ^{
             NSDictionary* dict = @{@"pref" : @"PUSH_ALERT_CONDITIONS", @"enabled" : @(YES)};
 
-            it(@"has a type of enhanced audio", ^{
+            it(@"has a type of push conditions", ^{
                 pref = [[SENPreference alloc] initWithDictionary:dict];
                 [[@([pref type]) should] equal:@(SENPreferenceTypePushConditions)];
             });
@@ -92,13 +110,13 @@ describe(@"SENPreference", ^{
         context(@"pref represents push notifications for score", ^{
             NSDictionary* dict = @{@"pref" : @"PUSH_SCORE", @"enabled" : @(YES)};
 
-            it(@"has a type of enhanced audio", ^{
+            it(@"has a type of push score", ^{
                 pref = [[SENPreference alloc] initWithDictionary:dict];
                 [[@([pref type]) should] equal:@(SENPreferenceTypePushScore)];
             });
         });
     });
-    
+
     describe(@"-initWithType:enable:", ^{
         
         it(@"instance should be properly initialized", ^{
