@@ -23,9 +23,10 @@
 - (void)syncTimelineDataAfter:(NSDate*)startDate
                         until:(NSDate*)endDate
                  withCalendar:(NSCalendar*)calendar
-                   completion:(void(^)(NSError* error))completion;
+                   completion:(void(^)(NSArray* timelines, NSError* error))completion;
 - (void)timelineForDate:(NSDate*)date
              completion:(void(^)(SENTimeline* timeline, NSError* error))completion;
+- (void)syncTimelinesToHealthKit:(NSArray*)timelines completion:(void(^)(NSError* error))completion;
 
 @end
 
@@ -280,8 +281,8 @@ describe(@"SENServiceHealthKitSpec", ^{
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
-                        void(^cb)(NSError* error) = [params lastObject];
-                        cb (nil);
+                        void(^cb)(NSArray* timelines, NSError* error) = [params lastObject];
+                        cb (@[[SENTimeline new]], nil);
                         return nil;
                     }];
                 
@@ -331,8 +332,8 @@ describe(@"SENServiceHealthKitSpec", ^{
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
-                        void(^cb)(NSError* error) = [params lastObject];
-                        cb (nil);
+                        void(^cb)(NSArray* timeine, NSError* error) = [params lastObject];
+                        cb (@[[SENTimeline new], [SENTimeline new], [SENTimeline new]], nil);
                         return nil;
                     }];
                 
@@ -382,8 +383,8 @@ describe(@"SENServiceHealthKitSpec", ^{
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
-                        void(^cb)(NSError* error) = [params lastObject];
-                        cb (nil);
+                        void(^cb)(NSArray* timelines, NSError* error) = [params lastObject];
+                        cb (@[[SENTimeline new], [SENTimeline new], [SENTimeline new], [SENTimeline new], [SENTimeline new]], nil);
                         return nil;
                     }];
                 
@@ -555,6 +556,152 @@ describe(@"SENServiceHealthKitSpec", ^{
             
             it(@"should call api", ^{
                 [[@(apiCalled) should] beYes];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"-syncTimelineDataAfter:until:withCalendar:completion", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        __block NSCalendar* calendar = nil;
+        __block NSDate* lastNight = nil;
+        __block NSDate* today = nil;
+        
+        beforeEach(^{
+            calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
+            NSDateComponents* todayComponents = [calendar components:unitsWeCareAbout fromDate:[NSDate date]];
+            today = [calendar dateFromComponents:todayComponents];
+            
+            NSDateComponents* lastNightComponents = [[NSDateComponents alloc] init];
+            [lastNightComponents setDay:-1];
+            lastNight = [calendar dateByAddingComponents:lastNightComponents toDate:today options:0];
+            
+            service = [SENServiceHealthKit sharedService];
+            [service stub:@selector(timelineForDate:completion:) withBlock:^id(NSArray *params) {
+                void(^cb)(SENTimeline *timeline, NSError *error) = [params lastObject];
+                cb ([[SENTimeline alloc] init], nil);
+                return nil;
+            }];
+            
+            [service stub:@selector(syncTimelinesToHealthKit:completion:) withBlock:^id(NSArray *params) {
+                void(^cb)(NSError* error) = [params lastObject];
+                cb (nil);
+                return nil;
+            }];
+        });
+        
+        afterEach(^{
+            [service clearStubs];
+        });
+        
+        context(@"starts from the night before last night", ^{
+            
+            __block BOOL syncCallback = NO;
+            __block NSError* syncError = nil;
+            __block NSUInteger numberOfTimelinesToSync = 0;
+            
+            beforeAll(^{
+                NSDateComponents* twoNightsComponents = [[NSDateComponents alloc] init];
+                [twoNightsComponents setDay:-2];
+                NSDate* twoNights = [calendar dateByAddingComponents:twoNightsComponents toDate:today options:0];
+
+                [service syncTimelineDataAfter:twoNights until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+                    numberOfTimelinesToSync = [timelines count];
+                    syncCallback = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterAll(^{
+                numberOfTimelinesToSync = 0;
+                syncCallback = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should attempt to sync 2 timelines", ^{
+                [[expectFutureValue(@(numberOfTimelinesToSync)) shouldSoon] equal:@2];
+            });
+            
+            it(@"should call back", ^{
+                [[expectFutureValue(@(syncCallback)) shouldSoon] beYes];
+            });
+            
+            it(@"should not return an error", ^{
+                [[expectFutureValue(syncError) shouldSoon] beNil];
+            });
+            
+        });
+        
+        context(@"starts from last night", ^{
+            
+            __block BOOL syncCallback = NO;
+            __block NSError* syncError = nil;
+            __block NSUInteger numberOfTimelinesToSync = 0;
+            
+            beforeAll(^{
+                [service syncTimelineDataAfter:lastNight until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+                    numberOfTimelinesToSync = [timelines count];
+                    syncCallback = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterAll(^{
+                numberOfTimelinesToSync = 0;
+                syncCallback = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should attempt to sync 1 timeline1", ^{
+                [[expectFutureValue(@(numberOfTimelinesToSync)) shouldSoon] equal:@1];
+            });
+            
+            it(@"should call back", ^{
+                [[expectFutureValue(@(syncCallback)) shouldSoon] beYes];
+            });
+            
+            it(@"should not return an error", ^{
+                [[expectFutureValue(syncError) shouldSoon] beNil];
+            });
+            
+        });
+        
+        context(@"starts from today (day after last night)", ^{
+            
+            __block BOOL syncCallback = NO;
+            __block NSError* syncError = nil;
+            __block NSUInteger numberOfTimelinesToSync = 0;
+            
+            beforeAll(^{
+                [service syncTimelineDataAfter:[NSDate date] until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+                    numberOfTimelinesToSync = [timelines count];
+                    syncCallback = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterAll(^{
+                numberOfTimelinesToSync = 0;
+                syncCallback = NO;
+                syncError = nil;
+                [service clearStubs];
+            });
+            
+            it(@"should not return any timelines to sync", ^{
+                [[expectFutureValue(@(numberOfTimelinesToSync)) shouldSoon] equal:@0];
+            });
+            
+            it(@"should call back", ^{
+                [[expectFutureValue(@(syncCallback)) shouldSoon] beYes];
+            });
+            
+            it(@"should return an error with no data to write", ^{
+                [[expectFutureValue(@([syncError code])) shouldSoon] equal:@(SENServiceHealthKitErrorNoDataToWrite)];
             });
             
         });
