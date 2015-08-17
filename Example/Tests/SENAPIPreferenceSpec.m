@@ -26,7 +26,7 @@ describe(@"SENAPIPreferencesSpec", ^{
         [[LSNocilla sharedInstance] stop];
     });
     
-    describe(@"+updatePreference:completion", ^{
+    describe(@"+updatePreferencesWithCompletion", ^{
 
         context(@"returned object is not a dictionary", ^{
 
@@ -39,12 +39,11 @@ describe(@"SENAPIPreferencesSpec", ^{
             });
 
             it(@"pref is nil", ^{
-                __block SENPreference* updatedPref = nil;
-                SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
-                [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
-                    updatedPref = data;
+                __block NSDictionary* updatedPrefs = nil;
+                [SENAPIPreferences updatePreferencesWithCompletion:^(id data, NSError *error) {
+                    updatedPrefs = data;
                 }];
-                [[updatedPref should] beNil];
+                [[updatedPrefs should] beNil];
             });
         });
 
@@ -52,7 +51,7 @@ describe(@"SENAPIPreferencesSpec", ^{
 
             beforeEach(^{
                 [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
-                    NSDictionary* body = params[1];
+                    NSDictionary* body = @{@"HEIGHT_METRIC":@1};
                     SENAPIDataBlock block = [params lastObject];
                     block(body, nil);
                     return nil;
@@ -60,12 +59,14 @@ describe(@"SENAPIPreferencesSpec", ^{
             });
 
             it(@"invokes the completion block with data returned", ^{
-                __block SENPreference* updatedPref = nil;
-                SENPreference* pref = [[SENPreference alloc] initWithType:SENPreferenceTypeEnhancedAudio enable:YES];
-                [SENAPIPreferences updatePreference:pref completion:^(id data, NSError *error) {
-                    updatedPref = data;
+                __block NSDictionary* updatedPrefs = nil;
+                [SENAPIPreferences updatePreferencesWithCompletion:^(id data, NSError *error) {
+                    updatedPrefs = data;
                 }];
-                [[updatedPref should] beKindOfClass:[SENPreference class]];
+                [[updatedPrefs should] beKindOfClass:[NSDictionary class]];
+                SENPreference *pref = updatedPrefs[@(SENPreferenceTypeHeightMetric)];
+                [[pref should] beKindOfClass:[SENPreference class]];
+                [[@([pref isEnabled]) should] beYes];
             });
         });
 
