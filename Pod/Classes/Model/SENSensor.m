@@ -21,7 +21,7 @@ static NSString* const SENSensorDataPointDateOffsetKey = @"offset_millis";
         NSNumber* value = dict[SENSensorDataPointValueKey];
         _value = [value floatValue] == SENSensorSentinelValue ? nil : value;
         _dateOffset = dict[SENSensorDataPointDateOffsetKey];
-        _date = [NSDate dateWithTimeIntervalSince1970:([dict[SENSensorDataPointDateKey] doubleValue])/1000];
+        _date = SENDateFromNumber(dict[SENSensorDataPointDateKey]);
     }
     return self;
 }
