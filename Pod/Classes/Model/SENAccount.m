@@ -72,7 +72,7 @@ NSString* const SENAccountPropertyCreated = @"created";
 
         NSNumber *createdAt = SENObjectOfClass(data[SENAccountPropertyCreated], [NSNumber class]);
         if (createdAt) {
-            _createdAt = [NSDate dateWithTimeIntervalSince1970:[createdAt unsignedIntegerValue]];
+            _createdAt = SENDateFromNumber(createdAt);
         }
     }
     return self;

@@ -67,12 +67,12 @@ describe(@"SENAccount", ^{
         });
 
         it(@"sets createdAt", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747}];
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747000}];
             [[@([[account createdAt] timeIntervalSince1970]) should] equal:@1439225747];
         });
 
         it(@"ignores unknown values", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747, @"color":@"blue"}];
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747000, @"color":@"blue"}];
             [[@([[account createdAt] timeIntervalSince1970]) should] equal:@1439225747];
         });
 
@@ -165,7 +165,7 @@ describe(@"SENAccount", ^{
         });
 
         it(@"sets created at", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747}];
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747000}];
             [[[account dictionaryValue][@"created"] should] equal:@1439225747];
         });
 

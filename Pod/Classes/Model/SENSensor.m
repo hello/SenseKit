@@ -2,7 +2,7 @@
 #import "SENAPIRoom.h"
 #import "SENSensor.h"
 #import "SENKeyedArchiver.h"
-#import "SENPreference.h"
+#import "Model.h"
 
 NSString* const SENSensorUpdatedNotification = @"SENSensorUpdatedNotification";
 NSString* const SENSensorsUpdatedNotification = @"SENSensorsUpdatedNotification";
@@ -177,7 +177,9 @@ static NSString* const SENSensorConditionWarningSymbol = @"WARNING";
         _idealConditionsMessage = dict[SENSensorIdealMessageKey];
         _condition = SENConditionFromString(dict[SENSensorConditionKey]);
         _unit = [SENSensor unitFromValue:dict[SENSensorUnitKey]];
-        _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[dict[SENSensorLastUpdatedKey] doubleValue] / 1000];
+        NSNumber* dateMillis = SENObjectOfClass(dict[SENSensorLastUpdatedKey], [NSNumber class]);
+        if (dateMillis)
+            _lastUpdated = SENDateFromNumber(dateMillis);
     }
     return self;
 }
