@@ -491,6 +491,8 @@ describe(@"SENSenseManager", ^{
         
         context(@"central found peripheral for the saved sense UUID", ^{
             
+            __block NSString* everythingId = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
+            
             beforeAll(^{
                 [SENSenseManager stub:@selector(whenBleStateAvailable:) withBlock:^id(NSArray *params) {
                     void(^cb)(BOOL on) = [params lastObject];
@@ -499,7 +501,7 @@ describe(@"SENSenseManager", ^{
                 }];
                 
                 SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
-                [preferences stub:@selector(userPreferenceForKey:) andReturn:@"0000FEE1-1212-EFDE-1523-785FEABCD123"];
+                [preferences stub:@selector(userPreferenceForKey:) andReturn:everythingId];
                 
                 [central stub:@selector(retrievePeripheralsWithIdentifiers:) andReturn:@[[LGPeripheral new]]];
                 
@@ -517,12 +519,16 @@ describe(@"SENSenseManager", ^{
                 error = nil;
             });
             
+            it(@"should not return an error", ^{
+                [[error should] beNil];
+            });
+            
             it(@"should return a SENSense object", ^{
                 [[sense should] beKindOfClass:[SENSense class]];
             });
             
-            it(@"should not return an error", ^{
-                [[error should] beNil];
+            it(@"should return a SENSense object with a device id", ^{
+                [[[sense deviceId] should] equal:everythingId];
             });
             
         });
