@@ -19,6 +19,7 @@
 #import "SENSense+Protected.h"
 #import "SENSenseMessage.pb.h"
 #import "SENSenseWiFiStatus.h"
+#import "SENLocalPreferences.h"
 
 #ifndef ddLogLevel
 #define ddLogLevel LOG_LEVEL_VERBOSE
@@ -33,6 +34,8 @@ static CGFloat const kSENSensePillPairTimeout = 45.0f; // firmware timesout at 2
 static CGFloat const kSENSenseLinkAccountTimeout = 45.0f;
 static CGFloat const kSENSenseUnsubscribeTimeout = 3.0f;
 static CGFloat const kSENSenseLedTimeout = 30.0f;
+
+static NSString* const SENSensePeripheralUUIDKey = @"sense.uuid";
 
 static NSString* const kSENSenseErrorDomain = @"is.hello.ble";
 static NSString* const kSENSenseServiceID = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
@@ -73,6 +76,49 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
 @end
 
 @implementation SENSenseManager
+
++ (void)lastConnectedSense:(void(^)(SENSense* sense, NSError* error))completion {
+    if (!completion) {
+        return;
+    }
+    
+    DDLogVerbose(@"retrieving last connected Sense");
+    
+    [self whenBleStateAvailable:^(BOOL on) {
+        if (!on) {
+            completion (nil, [NSError errorWithDomain:kSENSenseErrorDomain
+                                                 code:SENSenseManagerErrorCodeNoBLE
+                                             userInfo:nil]);
+            return;
+        }
+        
+        SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+        NSString* senseUUID = [preferences userPreferenceForKey:SENSensePeripheralUUIDKey];
+        
+        LGCentralManager* manager = [LGCentralManager sharedInstance];
+        SENSense* sense = nil;
+        NSError* error = nil;
+        if (senseUUID) {
+            DDLogVerbose(@"last connected Sense UUID %@", senseUUID);
+            NSUUID* uuidObject = [[NSUUID alloc] initWithUUIDString:senseUUID];
+            NSArray* peripherals = [manager retrievePeripheralsWithIdentifiers:@[uuidObject]];
+            if ([peripherals count] > 0) {
+                DDLogVerbose(@"retrieved last connected sense");
+                sense = [[SENSense alloc] initWithPeripheral:peripherals[0]];
+            } else {
+                error = [NSError errorWithDomain:kSENSenseErrorDomain
+                                            code:SENSenseManagerErrorCodeForgottenSense
+                                        userInfo:nil];
+            }
+        } else {
+            error = [NSError errorWithDomain:kSENSenseErrorDomain
+                                        code:SENSenseManagerErrorCodeNeverConnectedToASense
+                                    userInfo:nil];
+        }
+        
+        completion (sense, error);
+    }];
+}
 
 + (BOOL)scanForSense:(void(^)(NSArray* senses))completion {
     return [self scanForSenseWithTimeout:kSENSenseScanTimeout
@@ -256,7 +302,8 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
         
         id postConnectionBlock = ^(NSError* error) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf && error == nil) {
+            if (error == nil) {
+                [strongSelf saveSenseUUID];
                 [strongSelf listenForUnexpectedDisconnects];
             }
             if (completion) completion (error);
@@ -907,6 +954,17 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
         *error = [self errorWithCode:errCode description:errorDesc fromUnderlyingError:nil];
     }
     return response;
+}
+
+#pragma mark - Local state
+
+- (void)saveSenseUUID {
+    NSString* senseUUID = [[[self sense] peripheral] UUIDString];
+    if (senseUUID) {
+        DDLogVerbose(@"saving sense uuid %@", senseUUID);
+        SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+        [preferences setUserPreference:senseUUID forKey:SENSensePeripheralUUIDKey];
+    }
 }
 
 #pragma mark - (Private) Timeout
