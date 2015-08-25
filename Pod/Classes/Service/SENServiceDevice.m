@@ -390,7 +390,9 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         if (!error && [strongSelf senseIsTheOnePairedToAccount:sense]) {
             [strongSelf setSenseManager:[[SENSenseManager alloc] initWithSense:sense]];
             completion (nil);
-        } else {
+        } else if ([error code] == SENSenseManagerErrorCodeNoBLE) {
+            completion (error);
+        } else { // if any other error or sense not the one paired, scan for it
             [strongSelf scan:completion];
         }
     }];
