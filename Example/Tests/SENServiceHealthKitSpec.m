@@ -19,7 +19,7 @@
 - (NSArray*)sleepDataPointsForSleepResult:(SENTimeline*)sleepResult;
 - (BOOL)isHealthKitEnabled;
 - (void)syncRecentMissingDays:(void(^)(NSError* error))completion;
-- (NSDate*)lastWrittenDate;
+- (NSDate*)lastSyncDate;
 - (void)syncTimelineDataAfter:(NSDate*)startDate
                         until:(NSDate*)endDate
                  withCalendar:(NSCalendar*)calendar
@@ -276,7 +276,7 @@ describe(@"SENServiceHealthKitSpec", ^{
         context(@"never sync'ed successfully before", ^{
             
             beforeEach(^{
-                [service stub:@selector(lastWrittenDate) andReturn:nil];
+                [service stub:@selector(lastSyncDate) andReturn:nil];
                 [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
@@ -327,7 +327,7 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [backFillComps setDay:-2];
                 lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
                 
-                [service stub:@selector(lastWrittenDate) andReturn:lastWrittenDate];
+                [service stub:@selector(lastSyncDate) andReturn:lastWrittenDate];
                 [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
@@ -378,7 +378,7 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [backFillComps setDay:-4];
                 lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
                 
-                [service stub:@selector(lastWrittenDate) andReturn:lastWrittenDate];
+                [service stub:@selector(lastSyncDate) andReturn:lastWrittenDate];
                 [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
