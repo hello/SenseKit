@@ -27,7 +27,7 @@ PODS:
   - CocoaLumberjack/Extensions (1.6.3):
     - CocoaLumberjack/Core
   - FXKeychain (1.5.3)
-  - Kiwi (2.3.1)
+  - Kiwi (2.4.0)
   - LGBluetooth (1.1.4)
   - Mixpanel (2.7.2):
     - Mixpanel/MPCategoryHelpers (= 2.7.2)
@@ -90,7 +90,7 @@ SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   CocoaLumberjack: 79086d1841c6c61383afa50cafc8883b7f44f63c
   FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
-  Kiwi: f038a6c61f7a9e4d7766bff5717aa3b3fdb75f55
+  Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
   Mixpanel: e9bcb16eb0e2a98fc330ceeb0d8b7f4aec4182ab
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
