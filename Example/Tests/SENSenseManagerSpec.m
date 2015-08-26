@@ -3,6 +3,7 @@
 #import "SENSenseManager.h"
 #import "SENSense.h"
 #import "SENSenseMessage.pb.h"
+#import "SENLocalPreferences.h"
 
 @interface SENSenseManager (Private)
 
@@ -365,6 +366,179 @@ describe(@"SENSenseManager", ^{
                 [[error should] beNil];
                 [[data should] beNonNil];
                 
+            });
+            
+        });
+        
+    });
+    
+    describe(@"+lastConnectedSense:", ^{
+        
+        __block SENSense* sense = nil;
+        __block NSError* error = nil;
+        __block LGCentralManager* central = nil;
+        
+        beforeAll(^{
+            central = [LGCentralManager sharedInstance];
+        });
+        
+        afterAll(^{
+            [central clearStubs];
+            [[SENLocalPreferences sharedPreferences] clearStubs];
+            [SENSenseManager clearStubs];
+            
+            sense = nil;
+            error = nil;
+            central = nil;
+        });
+        
+        context(@"ble not available", ^{
+            
+            beforeAll(^{
+                [SENSenseManager stub:@selector(whenBleStateAvailable:) withBlock:^id(NSArray *params) {
+                    void(^cb)(BOOL on) = [params lastObject];
+                    cb (NO);
+                    return nil;
+                }];
+                
+                [SENSenseManager lastConnectedSense:^(SENSense *lastSense, NSError *bleError) {
+                    sense = lastSense;
+                    error = bleError;
+                }];
+            });
+            
+            afterAll(^{
+                [SENSenseManager clearStubs];
+                sense = nil;
+                error = nil;
+            });
+            
+            it(@"should not return a SENSense object", ^{
+                [[sense should] beNil];
+            });
+            
+            it(@"should return a no ble error", ^{
+                [[error should] beNonNil];
+                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNoBLE)];
+            });
+            
+        });
+        
+        context(@"ble is available, but device never saved the last sense connected to", ^{
+            
+            beforeAll(^{
+                [SENSenseManager stub:@selector(whenBleStateAvailable:) withBlock:^id(NSArray *params) {
+                    void(^cb)(BOOL on) = [params lastObject];
+                    cb (YES);
+                    return nil;
+                }];
+                
+                SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+                [preferences stub:@selector(userPreferenceForKey:) andReturn:nil];
+                
+                [SENSenseManager lastConnectedSense:^(SENSense *lastSense, NSError *bleError) {
+                    sense = lastSense;
+                    error = bleError;
+                }];
+            });
+            
+            afterAll(^{
+                [[SENLocalPreferences sharedPreferences] clearStubs];
+                [SENSenseManager clearStubs];
+                sense = nil;
+                error = nil;
+            });
+            
+            it(@"should not return a SENSense object", ^{
+                [[sense should] beNil];
+            });
+            
+            it(@"should return an error with code specifying it never connected", ^{
+                [[error should] beNonNil];
+                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeNeverConnectedToASense)];
+            });
+            
+        });
+        
+        context(@"ble is available and last connected Sense was saved, but Sense was forgotten", ^{
+            
+            beforeAll(^{
+                [SENSenseManager stub:@selector(whenBleStateAvailable:) withBlock:^id(NSArray *params) {
+                    void(^cb)(BOOL on) = [params lastObject];
+                    cb (YES);
+                    return nil;
+                }];
+                
+                SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+                [preferences stub:@selector(userPreferenceForKey:) andReturn:@"0000FEE1-1212-EFDE-1523-785FEABCD123"];
+                
+                [central stub:@selector(retrievePeripheralsWithIdentifiers:) andReturn:@[]];
+                
+                [SENSenseManager lastConnectedSense:^(SENSense *lastSense, NSError *bleError) {
+                    sense = lastSense;
+                    error = bleError;
+                }];
+            });
+            
+            afterAll(^{
+                [central clearStubs];
+                [[SENLocalPreferences sharedPreferences] clearStubs];
+                [SENSenseManager clearStubs];
+                sense = nil;
+                error = nil;
+            });
+            
+            it(@"should not return a SENSense object", ^{
+                [[sense should] beNil];
+            });
+            
+            it(@"should return an error that sense was forgotten", ^{
+                [[error should] beNonNil];
+                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeForgottenSense)];
+            });
+            
+        });
+        
+        context(@"central found peripheral for the saved sense UUID", ^{
+            
+            __block NSString* everythingId = @"0000FEE1-1212-EFDE-1523-785FEABCD123";
+            
+            beforeAll(^{
+                [SENSenseManager stub:@selector(whenBleStateAvailable:) withBlock:^id(NSArray *params) {
+                    void(^cb)(BOOL on) = [params lastObject];
+                    cb (YES);
+                    return nil;
+                }];
+                
+                SENLocalPreferences* preferences = [SENLocalPreferences sharedPreferences];
+                [preferences stub:@selector(userPreferenceForKey:) andReturn:everythingId];
+                
+                [central stub:@selector(retrievePeripheralsWithIdentifiers:) andReturn:@[[LGPeripheral new]]];
+                
+                [SENSenseManager lastConnectedSense:^(SENSense *lastSense, NSError *bleError) {
+                    sense = lastSense;
+                    error = bleError;
+                }];
+            });
+            
+            afterAll(^{
+                [central clearStubs];
+                [[SENLocalPreferences sharedPreferences] clearStubs];
+                [SENSenseManager clearStubs];
+                sense = nil;
+                error = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[error should] beNil];
+            });
+            
+            it(@"should return a SENSense object", ^{
+                [[sense should] beKindOfClass:[SENSense class]];
+            });
+            
+            it(@"should return a SENSense object with a device id", ^{
+                [[[sense deviceId] should] equal:everythingId];
             });
             
         });
