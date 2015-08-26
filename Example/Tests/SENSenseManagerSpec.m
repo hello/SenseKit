@@ -382,6 +382,16 @@ describe(@"SENSenseManager", ^{
             central = [LGCentralManager sharedInstance];
         });
         
+        afterAll(^{
+            [central clearStubs];
+            [[SENLocalPreferences sharedPreferences] clearStubs];
+            [SENSenseManager clearStubs];
+            
+            sense = nil;
+            error = nil;
+            central = nil;
+        });
+        
         context(@"ble not available", ^{
             
             beforeAll(^{
