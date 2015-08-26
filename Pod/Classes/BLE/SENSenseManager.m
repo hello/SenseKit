@@ -306,8 +306,13 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
             if (error == nil) {
                 [strongSelf saveSenseUUID];
                 [strongSelf listenForUnexpectedDisconnects];
+            } else {
+                // if you fail to connect to the peripheral once, calling LGPeripheral's
+                // connectWithTimeout:completion: will actually never call you back
+                // until you obtain a new new instance by scanning again
+                [strongSelf setValid:NO];
             }
-            if (completion) completion (error);
+            completion (error);
         };
         
         if (![self isValid]) {
