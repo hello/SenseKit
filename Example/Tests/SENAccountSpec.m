@@ -166,7 +166,7 @@ describe(@"SENAccount", ^{
 
         it(@"sets created at", ^{
             SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"created":@1439225747000}];
-            [[[account dictionaryValue][@"created"] should] equal:@1439225747];
+            [[[account dictionaryValue][@"created"] should] equal:@1439225747000];
         });
 
         it(@"sets latitude", ^{
