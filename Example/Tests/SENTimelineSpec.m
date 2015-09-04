@@ -64,10 +64,6 @@ describe(@"initWithDictionary:", ^{
         [[[timeline score] should] equal:@78];
     });
 
-    it(@"sets the score condition", ^{
-        [[@(timeline.scoreCondition) should] equal:@(SENConditionAlert)];
-    });
-
     it(@"sets the message", ^{
         [[timeline.message should] equal:@"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours."];
     });
@@ -78,6 +74,54 @@ describe(@"initWithDictionary:", ^{
 
     it(@"sets the metrics", ^{
         [[[timeline metrics] should] haveCountOf:3];
+    });
+
+    context(@"score condition is alert", ^{
+
+        it(@"sets the score condition as alert", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"ALERT"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionAlert)];
+        });
+    });
+
+    context(@"score condition is warning", ^{
+
+        it(@"sets the score condition as warning", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"WARNING"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionWarning)];
+        });
+    });
+
+    context(@"score condition is ideal", ^{
+
+        it(@"sets the score condition as ideal", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"IDEAL"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionIdeal)];
+        });
+    });
+
+    context(@"score condition is unavailable", ^{
+
+        it(@"sets the score condition as unknown", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"UNAVAILABLE"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionUnknown)];
+        });
+    });
+
+    context(@"score condition is not recognized", ^{
+
+        it(@"sets the score condition as unknown", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"$4 PIZZA"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionUnknown)];
+        });
+    });
+
+    context(@"score condition is incomplete", ^{
+
+        it(@"sets the score condition as incomplete", ^{
+            timeline = [[SENTimeline alloc] initWithDictionary:@{@"score_condition": @"INCOMPLETE"}];
+            [[@(timeline.scoreCondition) should] equal:@(SENConditionIncomplete)];
+        });
     });
 });
 
