@@ -180,11 +180,12 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     NSDate* lastNight = [calendar dateByAddingComponents:lastNightComponents toDate:today options:0];
     
     // last time it was sync'ed
-    NSDate* syncStartDate = [self lastSyncDate];
+    NSDate* lastSyncDate = [self lastSyncDate];
+    NSDate* syncFromDate = nil;
     
-    if (syncStartDate) {
+    if (lastSyncDate) {
         NSDateComponents *difference = [calendar components:NSCalendarUnitDay
-                                                   fromDate:syncStartDate
+                                                   fromDate:lastSyncDate
                                                      toDate:lastNight
                                                     options:0];
         if ([difference day] == 0) {
@@ -192,17 +193,24 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
                                             code:SENServiceHealthKitErrorAlreadySynced
                                         userInfo:nil]);
             return;
-        } else if ([difference day] > SENServiceHKBackFillLimit) { // make sure we don't backfill too much
+        } else if ([difference day] == 1) {
+            // special case for when user is consistently syncing everyday.  This
+            // can be handled by the else case, but this just avoids having to do
+            // the arithmetic
+            syncFromDate = lastNight;
+        } else {
             NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
-            [backFillComps setDay:-SENServiceHKBackFillLimit];
-            syncStartDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
+            [backFillComps setDay:-MAX([difference day] - 1, SENServiceHKBackFillLimit)];
+            syncFromDate = [calendar dateByAddingComponents:backFillComps
+                                                     toDate:lastNight
+                                                    options:0];
         }
     } else { // if never been sync'ed before, just sync last night's data
-        syncStartDate = lastNight;
+        syncFromDate = lastNight;
     }
     
     __weak typeof(self) weakSelf = self;
-    [self syncTimelineDataAfter:syncStartDate until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+    [self syncTimelineDataFrom:syncFromDate until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
         if (!error) {
             [weakSelf saveLastSyncDate:lastNight];
         }
@@ -210,10 +218,10 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     }];
 }
 
-- (void)syncTimelineDataAfter:(NSDate*)startDate
-                        until:(NSDate*)endDate
-                 withCalendar:(NSCalendar*)calendar
-                   completion:(void(^)(NSArray* timelines, NSError* error))completion {
+- (void)syncTimelineDataFrom:(NSDate*)startDate
+                       until:(NSDate*)endDate
+                withCalendar:(NSCalendar*)calendar
+                  completion:(void(^)(NSArray* timelines, NSError* error))completion {
     NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
     NSDate* nextStartDate = startDate;
     NSUInteger daysFromStartDate = 0;
