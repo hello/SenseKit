@@ -481,9 +481,9 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[syncError should] beNil];
             });
             
-            it(@"should try and sync from the limit of 3 days past last night", ^{
+            it(@"should sync from the limit of 3 nights, last night plus 2 more", ^{
                 NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
-                [backFillComps setDay:-3];
+                [backFillComps setDay:-2];
                 NSDate* startDate = [calendar dateByAddingComponents:backFillComps
                                                               toDate:lastNight
                                                              options:0];

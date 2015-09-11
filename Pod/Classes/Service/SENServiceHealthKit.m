@@ -200,7 +200,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
             syncFromDate = lastNight;
         } else {
             NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
-            [backFillComps setDay:-MIN([difference day] - 1, SENServiceHKBackFillLimit)];
+            [backFillComps setDay:-(MIN([difference day], SENServiceHKBackFillLimit) - 1)];
             syncFromDate = [calendar dateByAddingComponents:backFillComps
                                                      toDate:lastNight
                                                     options:0];
@@ -224,7 +224,6 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
                   completion:(void(^)(NSArray* timelines, NSError* error))completion {
     NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
     NSDate* nextStartDate = startDate;
-    NSUInteger daysFromStartDate = 0;
     NSDateComponents* components = nil;
     
     BOOL haveTimelines = NO;
@@ -234,6 +233,8 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     __weak typeof(self) weakSelf = self;
     while ([calendar compareDate:nextStartDate toDate:endDate toUnitGranularity:unitsWeCareAbout] != NSOrderedDescending) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        DDLogVerbose(@"retrieving timeline for date %@ to sync to healthkit", nextStartDate);
         
         haveTimelines = YES;
         
@@ -245,9 +246,8 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
             dispatch_group_leave(getTimelineGroup);
         }];
         
-        daysFromStartDate++;
         components = [[NSDateComponents alloc] init];
-        [components setDay:daysFromStartDate];
+        [components setDay:1];
         nextStartDate = [calendar dateByAddingComponents:components toDate:nextStartDate options:0];
     }
     
