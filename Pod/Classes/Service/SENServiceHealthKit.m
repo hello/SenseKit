@@ -270,9 +270,16 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
 
 }
 
+- (BOOL)timelineHasSufficientData:(SENTimeline*)timeline {
+    return [timeline scoreCondition] != SENConditionUnknown
+        && [timeline scoreCondition] != SENConditionIncomplete
+        && [[timeline metrics] count] > 0;
+}
+
 - (void)timelineForDate:(NSDate*)date completion:(void(^)(SENTimeline* timeline, NSError* error))completion {
     SENTimeline* timeline = [SENTimeline timelineForDate:date];
-    if ([[timeline metrics] count] > 0 && [timeline scoreCondition] != SENConditionUnknown) {
+    // if cached timeline does not have sufficient data, grab an update, if any
+    if ([self timelineHasSufficientData:timeline]) {
         completion (timeline, nil);
     } else {
         [SENAPITimeline timelineForDate:date completion:^(id data, NSError *error) {
@@ -322,12 +329,16 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
     }];
 }
 
-- (HKSample*)sleepSampleFromTimeline:(SENTimeline*)sleepResult {
+- (HKSample*)sleepSampleFromTimeline:(SENTimeline*)timeline {
+    if (![self timelineHasSufficientData:timeline]) {
+        return nil;
+    }
+    
     HKSample* sample = nil;
     HKCategoryType* hkSleepCategory = [HKObjectType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
     NSDate* wakeUpDate = nil;
     NSDate* sleepDate = nil;
-    NSArray* metrics = [sleepResult metrics];
+    NSArray* metrics = [timeline metrics];
 
     for (SENTimelineMetric* metric in metrics) {
         CGFloat metricValue = [metric.value doubleValue];

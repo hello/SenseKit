@@ -18,6 +18,7 @@
 
 - (NSArray*)sleepDataPointsForSleepResult:(SENTimeline*)sleepResult;
 - (BOOL)isHealthKitEnabled;
+- (BOOL)timelineHasSufficientData:(SENTimeline*)timeline;
 - (void)syncRecentMissingDays:(void(^)(NSError* error))completion;
 - (NSDate*)lastSyncDate;
 - (void)syncTimelineDataFrom:(NSDate*)startDate
@@ -27,6 +28,7 @@
 - (void)timelineForDate:(NSDate*)date
              completion:(void(^)(SENTimeline* timeline, NSError* error))completion;
 - (void)syncTimelinesToHealthKit:(NSArray*)timelines completion:(void(^)(NSError* error))completion;
+- (HKSample*)sleepSampleFromTimeline:(SENTimeline*)timeline;
 
 @end
 
@@ -734,6 +736,71 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[expectFutureValue(@([syncError code])) shouldSoon] equal:@(SENServiceHealthKitErrorNoDataToWrite)];
             });
             
+        });
+        
+    });
+    
+    describe(@"-timelineHasSufficientData:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeAll(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        it(@"should return NO when timeline is nil", ^{
+            BOOL hasData = [service timelineHasSufficientData:nil];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline condition is unknown", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionUnknown];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline condition is incomplete", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIncomplete];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline has no metrics", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:nil];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return YES if timeline has at least 1 metric and condition is not unknown or incomplete", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beYes];
+        });
+        
+    });
+    
+    describe(@"-sleepSampleFromTimeline:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeAll(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        it(@"should return nil if timeline does not have sufficient data", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIncomplete];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            HKSample* sample = [service sleepSampleFromTimeline:timeline];
+            [[sample should] beNil];
         });
         
     });
