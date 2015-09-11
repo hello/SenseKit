@@ -426,10 +426,10 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[syncError should] beNil];
             });
             
-            it(@"should try and sync from lastWrittenDate", ^{
+            it(@"should try and sync from the day after last sync'ed", ^{
                 NSDateComponents *difference = [calendar components:NSCalendarUnitDay
-                                                           fromDate:startSyncDate
-                                                             toDate:lastWrittenDate
+                                                           fromDate:lastWrittenDate
+                                                             toDate:startSyncDate
                                                             options:0];
                 [[@([difference day]) should] equal:@1];
             });

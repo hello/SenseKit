@@ -200,7 +200,7 @@ static CGFloat const SENServiceHKBackFillLimit = 3;
             syncFromDate = lastNight;
         } else {
             NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
-            [backFillComps setDay:-MAX([difference day] - 1, SENServiceHKBackFillLimit)];
+            [backFillComps setDay:-MIN([difference day] - 1, SENServiceHKBackFillLimit)];
             syncFromDate = [calendar dateByAddingComponents:backFillComps
                                                      toDate:lastNight
                                                     options:0];
