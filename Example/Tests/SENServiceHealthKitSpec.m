@@ -18,15 +18,17 @@
 
 - (NSArray*)sleepDataPointsForSleepResult:(SENTimeline*)sleepResult;
 - (BOOL)isHealthKitEnabled;
+- (BOOL)timelineHasSufficientData:(SENTimeline*)timeline;
 - (void)syncRecentMissingDays:(void(^)(NSError* error))completion;
 - (NSDate*)lastSyncDate;
-- (void)syncTimelineDataAfter:(NSDate*)startDate
-                        until:(NSDate*)endDate
-                 withCalendar:(NSCalendar*)calendar
-                   completion:(void(^)(NSArray* timelines, NSError* error))completion;
+- (void)syncTimelineDataFrom:(NSDate*)startDate
+                       until:(NSDate*)endDate
+                withCalendar:(NSCalendar*)calendar
+                  completion:(void(^)(NSArray* timelines, NSError* error))completion;
 - (void)timelineForDate:(NSDate*)date
              completion:(void(^)(SENTimeline* timeline, NSError* error))completion;
 - (void)syncTimelinesToHealthKit:(NSArray*)timelines completion:(void(^)(NSError* error))completion;
+- (HKSample*)sleepSampleFromTimeline:(SENTimeline*)timeline;
 
 @end
 
@@ -273,11 +275,21 @@ describe(@"SENServiceHealthKitSpec", ^{
             service = [SENServiceHealthKit sharedService];
         });
         
+        afterEach(^{
+            service = nil;
+            startSyncDate = nil;
+            endSyncDate = nil;
+            lastNight = nil;
+            calledBack = NO;
+            syncError = nil;
+            calendar = nil;
+        });
+        
         context(@"never sync'ed successfully before", ^{
             
             beforeEach(^{
                 [service stub:@selector(lastSyncDate) andReturn:nil];
-                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                [service stub:@selector(syncTimelineDataFrom:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
@@ -318,17 +330,72 @@ describe(@"SENServiceHealthKitSpec", ^{
             
         });
         
-        context(@"sync'ed before, 2 days before last night", ^{
+        context(@"sync'ed data from 2 nights ago", ^{
+            
+            __block NSDate* lastWrittenDate = nil;
+            
+            beforeEach(^{
+                // last sync date is the date of sleep that was last sync'ed, which
+                // if means if it sync'ed yesterday, it it's two nights ago
+                NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
+                [backFillComps setDay:-1];
+                lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
+                
+                [service stub:@selector(lastSyncDate) andReturn:lastWrittenDate];
+                [service stub:@selector(syncTimelineDataFrom:until:withCalendar:completion:)
+                    withBlock:^id(NSArray *params) {
+                        startSyncDate = [params firstObject];
+                        endSyncDate = params[1];
+                        void(^cb)(NSArray* timelines, NSError* error) = [params lastObject];
+                        cb (@[[SENTimeline new]], nil);
+                        return nil;
+                    }];
+                
+                [service syncRecentMissingDays:^(NSError *error) {
+                    calledBack = YES;
+                    syncError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service clearStubs];
+                calledBack = NO;
+                startSyncDate = nil;
+                endSyncDate = nil;
+                syncError = nil;
+            });
+            
+            it(@"should sync just last night", ^{
+                [[startSyncDate should] equal:lastNight];
+            });
+            
+            it(@"should set end sync date to be last night", ^{
+                [[endSyncDate should] equal:lastNight];
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not have returned an error", ^{
+                [[syncError should] beNil];
+            });
+            
+        });
+        
+        context(@"sync'ed data from 3 nights ago", ^{
             
             __block NSDate* lastWrittenDate = nil;
             
             beforeEach(^{
                 NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
                 [backFillComps setDay:-2];
-                lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
+                lastWrittenDate = [calendar dateByAddingComponents:backFillComps
+                                                            toDate:lastNight
+                                                           options:0];
                 
                 [service stub:@selector(lastSyncDate) andReturn:lastWrittenDate];
-                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                [service stub:@selector(syncTimelineDataFrom:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
@@ -359,8 +426,12 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[syncError should] beNil];
             });
             
-            it(@"should try and sync from lastWrittenDate", ^{
-                [[startSyncDate should] equal:lastWrittenDate];
+            it(@"should try and sync from the day after last sync'ed", ^{
+                NSDateComponents *difference = [calendar components:NSCalendarUnitDay
+                                                           fromDate:lastWrittenDate
+                                                             toDate:startSyncDate
+                                                            options:0];
+                [[@([difference day]) should] equal:@1];
             });
             
             it(@"should sync until last night", ^{
@@ -379,7 +450,7 @@ describe(@"SENServiceHealthKitSpec", ^{
                 lastWrittenDate = [calendar dateByAddingComponents:backFillComps toDate:lastNight options:0];
                 
                 [service stub:@selector(lastSyncDate) andReturn:lastWrittenDate];
-                [service stub:@selector(syncTimelineDataAfter:until:withCalendar:completion:)
+                [service stub:@selector(syncTimelineDataFrom:until:withCalendar:completion:)
                     withBlock:^id(NSArray *params) {
                         startSyncDate = [params firstObject];
                         endSyncDate = params[1];
@@ -410,9 +481,9 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[syncError should] beNil];
             });
             
-            it(@"should try and sync from the limit of 3 days past last night", ^{
+            it(@"should sync from the limit of 3 nights, last night plus 2 more", ^{
                 NSDateComponents* backFillComps = [[NSDateComponents alloc] init];
-                [backFillComps setDay:-3];
+                [backFillComps setDay:-2];
                 NSDate* startDate = [calendar dateByAddingComponents:backFillComps
                                                               toDate:lastNight
                                                              options:0];
@@ -562,7 +633,7 @@ describe(@"SENServiceHealthKitSpec", ^{
         
     });
     
-    describe(@"-syncTimelineDataAfter:until:withCalendar:completion", ^{
+    describe(@"-syncTimelineDataFrom:until:withCalendar:completion", ^{
         
         __block SENServiceHealthKit* service = nil;
         __block NSCalendar* calendar = nil;
@@ -597,18 +668,14 @@ describe(@"SENServiceHealthKitSpec", ^{
             [service clearStubs];
         });
         
-        context(@"starts from the night before last night", ^{
+        context(@"up to date in syncing, except last night", ^{
             
             __block BOOL syncCallback = NO;
             __block NSError* syncError = nil;
             __block NSUInteger numberOfTimelinesToSync = 0;
             
             beforeAll(^{
-                NSDateComponents* twoNightsComponents = [[NSDateComponents alloc] init];
-                [twoNightsComponents setDay:-2];
-                NSDate* twoNights = [calendar dateByAddingComponents:twoNightsComponents toDate:today options:0];
-
-                [service syncTimelineDataAfter:twoNights until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+                [service syncTimelineDataFrom:lastNight until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
                     numberOfTimelinesToSync = [timelines count];
                     syncCallback = YES;
                     syncError = error;
@@ -622,42 +689,7 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [service clearStubs];
             });
             
-            it(@"should attempt to sync 2 timelines", ^{
-                [[expectFutureValue(@(numberOfTimelinesToSync)) shouldSoon] equal:@2];
-            });
-            
-            it(@"should call back", ^{
-                [[expectFutureValue(@(syncCallback)) shouldSoon] beYes];
-            });
-            
-            it(@"should not return an error", ^{
-                [[expectFutureValue(syncError) shouldSoon] beNil];
-            });
-            
-        });
-        
-        context(@"starts from last night", ^{
-            
-            __block BOOL syncCallback = NO;
-            __block NSError* syncError = nil;
-            __block NSUInteger numberOfTimelinesToSync = 0;
-            
-            beforeAll(^{
-                [service syncTimelineDataAfter:lastNight until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
-                    numberOfTimelinesToSync = [timelines count];
-                    syncCallback = YES;
-                    syncError = error;
-                }];
-            });
-            
-            afterAll(^{
-                numberOfTimelinesToSync = 0;
-                syncCallback = NO;
-                syncError = nil;
-                [service clearStubs];
-            });
-            
-            it(@"should attempt to sync 1 timeline1", ^{
+            it(@"should attempt to sync 1 timelines", ^{
                 [[expectFutureValue(@(numberOfTimelinesToSync)) shouldSoon] equal:@1];
             });
             
@@ -678,7 +710,7 @@ describe(@"SENServiceHealthKitSpec", ^{
             __block NSUInteger numberOfTimelinesToSync = 0;
             
             beforeAll(^{
-                [service syncTimelineDataAfter:[NSDate date] until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
+                [service syncTimelineDataFrom:[NSDate date] until:lastNight withCalendar:calendar completion:^(NSArray* timelines, NSError *error) {
                     numberOfTimelinesToSync = [timelines count];
                     syncCallback = YES;
                     syncError = error;
@@ -704,6 +736,92 @@ describe(@"SENServiceHealthKitSpec", ^{
                 [[expectFutureValue(@([syncError code])) shouldSoon] equal:@(SENServiceHealthKitErrorNoDataToWrite)];
             });
             
+        });
+        
+    });
+    
+    describe(@"-timelineHasSufficientData:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeAll(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        it(@"should return NO when timeline is nil", ^{
+            BOOL hasData = [service timelineHasSufficientData:nil];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline condition is unknown", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionUnknown];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline condition is incomplete", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIncomplete];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return NO if timeline has no metrics", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:nil];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beNo];
+        });
+        
+        it(@"should return YES if timeline has at least 1 metric and condition is not unknown or incomplete", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            BOOL hasData = [service timelineHasSufficientData:timeline];
+            [[@(hasData) should] beYes];
+        });
+        
+    });
+    
+    describe(@"-sleepSampleFromTimeline:", ^{
+        
+        __block SENServiceHealthKit* service = nil;
+        
+        beforeAll(^{
+            service = [SENServiceHealthKit sharedService];
+        });
+        
+        it(@"should return nil if timeline does not have sufficient data", ^{
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIncomplete];
+            [timeline setMetrics:@[[SENTimelineMetric new]]];
+            HKSample* sample = [service sleepSampleFromTimeline:timeline];
+            [[sample should] beNil];
+        });
+        
+        it(@"should return HKSample if timeline contains sufficient data, including sleep and wake metrics", ^{
+            NSTimeInterval nowInSecs = [NSDate timeIntervalSinceReferenceDate];
+            SENTimelineMetric* sleepMetric = [SENTimelineMetric new];
+            [sleepMetric setName:@"fell_asleep"];
+            [sleepMetric setUnit:SENTimelineMetricUnitTimestamp];
+            [sleepMetric setType:SENTimelineMetricTypeFellAsleep];
+            [sleepMetric setValue:@((nowInSecs- 28800) * 1000)];
+            
+            SENTimelineMetric* wakeMetric = [SENTimelineMetric new];
+            [wakeMetric setName:@"woke_up"];
+            [wakeMetric setUnit:SENTimelineMetricUnitTimestamp];
+            [wakeMetric setType:SENTimelineMetricTypeWokeUp];
+            [wakeMetric setValue:@(nowInSecs * 1000)];
+            
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:@[sleepMetric, wakeMetric]];
+            id sample = [service sleepSampleFromTimeline:timeline];
+            [[sample should] beKindOfClass:[HKSample class]];
         });
         
     });
