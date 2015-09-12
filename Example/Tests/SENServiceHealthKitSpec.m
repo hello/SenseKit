@@ -803,6 +803,27 @@ describe(@"SENServiceHealthKitSpec", ^{
             [[sample should] beNil];
         });
         
+        it(@"should return HKSample if timeline contains sufficient data, including sleep and wake metrics", ^{
+            NSTimeInterval nowInSecs = [NSDate timeIntervalSinceReferenceDate];
+            SENTimelineMetric* sleepMetric = [SENTimelineMetric new];
+            [sleepMetric setName:@"fell_asleep"];
+            [sleepMetric setUnit:SENTimelineMetricUnitTimestamp];
+            [sleepMetric setType:SENTimelineMetricTypeFellAsleep];
+            [sleepMetric setValue:@((nowInSecs- 28800) * 1000)];
+            
+            SENTimelineMetric* wakeMetric = [SENTimelineMetric new];
+            [wakeMetric setName:@"woke_up"];
+            [wakeMetric setUnit:SENTimelineMetricUnitTimestamp];
+            [wakeMetric setType:SENTimelineMetricTypeWokeUp];
+            [wakeMetric setValue:@(nowInSecs * 1000)];
+            
+            SENTimeline* timeline = [SENTimeline new];
+            [timeline setScoreCondition:SENConditionIdeal];
+            [timeline setMetrics:@[sleepMetric, wakeMetric]];
+            id sample = [service sleepSampleFromTimeline:timeline];
+            [[sample should] beKindOfClass:[HKSample class]];
+        });
+        
     });
     
 });
