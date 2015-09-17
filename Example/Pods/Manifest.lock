@@ -20,12 +20,14 @@ PODS:
   - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - CocoaLumberjack (1.6.3):
-    - CocoaLumberjack/Core (= 1.6.3)
-    - CocoaLumberjack/Extensions (= 1.6.3)
-  - CocoaLumberjack/Core (1.6.3)
-  - CocoaLumberjack/Extensions (1.6.3):
+  - CocoaLumberjack (2.0.1):
+    - CocoaLumberjack/Default (= 2.0.1)
+    - CocoaLumberjack/Extensions (= 2.0.1)
+  - CocoaLumberjack/Core (2.0.1)
+  - CocoaLumberjack/Default (2.0.1):
     - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.1):
+    - CocoaLumberjack/Default
   - FXKeychain (1.5.3)
   - Kiwi (2.4.0)
   - LGBluetooth (1.1.4)
@@ -41,19 +43,19 @@ PODS:
     - SenseKit/Model (= 0.1.0)
     - SenseKit/Service (= 0.1.0)
   - SenseKit/Analytics (0.1.0):
-    - CocoaLumberjack (= 1.6.3)
+    - CocoaLumberjack (~> 2.0.0)
     - Mixpanel (= 2.7.2)
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.6.0)
     - FXKeychain (~> 1.5.1)
     - NSJSONSerialization-NSNullRemoval (~> 1.0.0)
   - SenseKit/BLE (0.1.0):
-    - CocoaLumberjack (= 1.6.3)
+    - CocoaLumberjack (~> 2.0.0)
     - LGBluetooth
     - SHSProtoBuf
   - SenseKit/Model (0.1.0)
   - SenseKit/Service (0.1.0):
-    - CocoaLumberjack (= 1.6.3)
+    - CocoaLumberjack (~> 2.0.0)
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc (= 0.9)
   - SHSProtoBuf/non-arc (0.9)
@@ -83,14 +85,14 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
-  CocoaLumberjack: 79086d1841c6c61383afa50cafc8883b7f44f63c
+  CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
   Mixpanel: e9bcb16eb0e2a98fc330ceeb0d8b7f4aec4182ab
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
-  SenseKit: e30eb5fda541aa919b8362755251bdafb5703ba6
+  SenseKit: 25eef4c144917f0f45be138058801ce110c3923d
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
 
 COCOAPODS: 0.37.2
