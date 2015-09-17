@@ -51,17 +51,12 @@ PODS:
     - CocoaLumberjack (= 1.6.3)
     - LGBluetooth
     - SHSProtoBuf
-  - SenseKit/Model (0.1.0):
-    - YapDatabase (~> 2.6.4)
+  - SenseKit/Model (0.1.0)
   - SenseKit/Service (0.1.0):
     - CocoaLumberjack (= 1.6.3)
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc (= 0.9)
   - SHSProtoBuf/non-arc (0.9)
-  - YapDatabase (2.6.5):
-    - YapDatabase/standard (= 2.6.5)
-  - YapDatabase/standard (2.6.5):
-    - CocoaLumberjack (~> 1)
 
 DEPENDENCIES:
   - Kiwi
@@ -95,8 +90,7 @@ SPEC CHECKSUMS:
   Mixpanel: e9bcb16eb0e2a98fc330ceeb0d8b7f4aec4182ab
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
-  SenseKit: 80ec61d63f9281ba0ce0c1168b379388e967726c
+  SenseKit: 6bf7bdd77e072752523cd16328fb9dd54e7a61f7
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
-  YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
 
 COCOAPODS: 0.37.2
