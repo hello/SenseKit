@@ -692,6 +692,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -712,6 +713,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
