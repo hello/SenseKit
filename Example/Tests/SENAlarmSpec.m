@@ -2,11 +2,6 @@
 #import <Kiwi/Kiwi.h>
 #import <SenseKit/SENAlarm.h>
 #import <SenseKit/SENKeyedArchiver.h>
-#import <YapDatabase/YapDatabase.h>
-
-@interface SENKeyedArchiver ()
-+ (YapDatabaseConnection*)mainConnection;
-@end
 
 SPEC_BEGIN(SENAlarmSpec)
 
@@ -15,9 +10,7 @@ describe(@"SENAlarm", ^{
 
     beforeEach(^{
         NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-        YapDatabase* database = [[YapDatabase alloc] initWithPath:path];
-        id connection = [database newConnection];
-        [SENKeyedArchiver stub:@selector(mainConnection) andReturn:connection];
+        [SENKeyedArchiver stub:@selector(datastorePath) andReturn:path];
     });
 
     afterEach(^{
