@@ -144,15 +144,3 @@
 #define COCOAPODS_VERSION_MINOR_SenseKit_Service 1
 #define COCOAPODS_VERSION_PATCH_SenseKit_Service 0
 
-// YapDatabase
-#define COCOAPODS_POD_AVAILABLE_YapDatabase
-#define COCOAPODS_VERSION_MAJOR_YapDatabase 2
-#define COCOAPODS_VERSION_MINOR_YapDatabase 6
-#define COCOAPODS_VERSION_PATCH_YapDatabase 5
-
-// YapDatabase/standard
-#define COCOAPODS_POD_AVAILABLE_YapDatabase_standard
-#define COCOAPODS_VERSION_MAJOR_YapDatabase_standard 2
-#define COCOAPODS_VERSION_MINOR_YapDatabase_standard 6
-#define COCOAPODS_VERSION_PATCH_YapDatabase_standard 5
-
