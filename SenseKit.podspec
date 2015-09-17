@@ -34,7 +34,6 @@ Pod::Spec.new do |s|
 
   s.subspec "Model" do |ss|
     ss.source_files = 'Pod/Classes/Model/*'
-    ss.dependency 'YapDatabase', '~> 2.6.4'
   end
 
   s.subspec "Service" do |ss|
