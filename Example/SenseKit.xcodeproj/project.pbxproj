@@ -26,7 +26,6 @@
 		8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */; };
 		8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
-		8A4152BC1BB9BE2200413DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A4152BB1BB9BE2200413DCF /* libresolv.tbd */; };
 		8A45E66E1A819FBB0038AA7A /* SENTimelineMetricSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
 		8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */; };
@@ -147,7 +146,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A4152BC1BB9BE2200413DCF /* libresolv.tbd in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
@@ -705,6 +703,36 @@
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"AFNetworking\"",
+					"-l\"CocoaLumberjack\"",
+					"-l\"FXKeychain\"",
+					"-l\"LGBluetooth\"",
+					"-l\"Mixpanel-simple\"",
+					"-l\"NSJSONSerialization-NSNullRemoval\"",
+					"-l\"SHSProtoBuf\"",
+					"-l\"SenseKit\"",
+					"-framework",
+					"\"CoreBluetooth\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WatchKit\"",
+					"-lresolv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -735,6 +763,36 @@
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"AFNetworking\"",
+					"-l\"CocoaLumberjack\"",
+					"-l\"FXKeychain\"",
+					"-l\"LGBluetooth\"",
+					"-l\"Mixpanel-simple\"",
+					"-l\"NSJSONSerialization-NSNullRemoval\"",
+					"-l\"SHSProtoBuf\"",
+					"-l\"SenseKit\"",
+					"-framework",
+					"\"CoreBluetooth\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"MobileCoreServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WatchKit\"",
+					"-lresolv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
