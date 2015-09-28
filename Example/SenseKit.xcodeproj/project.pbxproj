@@ -26,6 +26,7 @@
 		8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */; };
 		8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
+		8A4152BC1BB9BE2200413DCF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A4152BB1BB9BE2200413DCF /* libresolv.tbd */; };
 		8A45E66E1A819FBB0038AA7A /* SENTimelineMetricSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
 		8A5313B81A6704AA003948E5 /* SENAPITrendsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */; };
@@ -101,6 +102,7 @@
 		8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendSpec.m; sourceTree = "<group>"; };
 		8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendDataPointSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
+		8A4152BB1BB9BE2200413DCF /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineMetricSpec.m; sourceTree = "<group>"; };
 		8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAuthorizationServiceSpec.m; sourceTree = "<group>"; };
 		8A5313B71A6704AA003948E5 /* SENAPITrendsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITrendsSpec.m; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A4152BC1BB9BE2200413DCF /* libresolv.tbd in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
@@ -189,6 +192,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A4152BB1BB9BE2200413DCF /* libresolv.tbd */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
