@@ -70,12 +70,4 @@ NSString* const SENAMCacheDirectory = @"MixpanelCache";
     [self.mixpanel.tracker track:eventName properties:properties];
 }
 
-- (void)startEvent:(NSString *)eventName {
-//    [self.mixpanel.tracker timeEvent:eventName];
-}
-
-- (void)endEvent:(NSString *)eventName {
-    [self.mixpanel.tracker track:eventName];
-}
-
 @end
