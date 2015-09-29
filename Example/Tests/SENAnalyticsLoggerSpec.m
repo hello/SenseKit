@@ -25,16 +25,6 @@ describe(@"SENAPIAnalyticsLogger", ^{
         logger = [[SENAnalyticsLogger alloc] init];
     });
     
-    describe(@"-startEvent:", ^{
-        
-        it(@"should cache a timed event", ^{
-            NSString* event = @"Test";
-            [logger startEvent:event];
-            [[[[logger timedEvents] valueForKey:event] should] beNonNil];
-        });
-        
-    });
-    
     describe(@"-endEvent:", ^{
         
         it(@"should remove cached timed event", ^{
