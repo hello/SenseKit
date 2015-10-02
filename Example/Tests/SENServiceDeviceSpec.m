@@ -22,7 +22,10 @@ SENDevice* (^CreateDevice)(SENDeviceType, SENDeviceState, NSDate*) = ^SENDevice*
 
 @interface SENServiceDevice()
 
-- (void)setSystemState:(SENServiceDeviceState)state;
+- (BOOL)isCheckingStates;
+- (void)setCheckingStates:(BOOL)checking;
+- (void)setDeviceState:(SENServiceDeviceState)state;
+- (void)setSenseManager:(SENSenseManager*)manager;
 - (void)setSenseInfo:(SENDevice*)device;
 - (void)setPillInfo:(SENDevice*)device;
 - (void)setLoadingInfo:(BOOL)isLoading;
@@ -487,6 +490,167 @@ describe(@"SENServiceDevice", ^{
 
         });
 
+    });
+    
+    describe(@"-resetDeviceStates", ^{
+        
+        __block SENServiceDevice* service = nil;
+        
+        beforeAll(^{
+            service = [SENServiceDevice sharedService];
+            [service setDeviceState:SENServiceDeviceStateNormal];
+            [service setCheckingStates:YES];
+            [service setSenseManager:[SENSenseManager new]];
+            [service resetDeviceStates];
+        });
+        
+        afterAll(^{
+            [service setSenseManager:nil];
+        });
+        
+        it(@"should reset checking states flag", ^{
+            [[@([service isCheckingStates]) should] beNo];
+        });
+        
+        it(@"should reset actual state", ^{
+            [[@([service deviceState]) should] equal:@(SENServiceDeviceStateUnknown)];
+        });
+        
+        it(@"should not clear sense manager", ^{
+            [[[service senseManager] should] beNonNil];
+        });
+        
+    });
+    
+    describe(@"-unlinkSenseFromAccount:", ^{
+        
+        context(@"sense not paired", ^{
+            
+            __block NSError* unlinkError = nil;
+            __block SENServiceDevice* service = nil;
+            
+            beforeEach(^{
+                service = [SENServiceDevice sharedService];
+                [service unlinkSenseFromAccount:^(NSError *error) {
+                    unlinkError = error;
+                }];
+            });
+            
+            it(@"should return error stating no sense paired", ^{
+                [[@([unlinkError code]) should] equal:@(SENServiceDeviceErrorSenseNotPaired)];
+            });
+            
+        });
+        
+        context(@"sense paired, but API failed with error", ^{
+            
+            __block NSError* unlinkError = nil;
+            __block SENDevice* senseInfo = nil;
+            __block SENSenseManager* senseManager = nil;
+            __block BOOL disconnectCalled = NO;
+            __block SENServiceDevice* service = nil;
+            
+            beforeEach(^{
+                service = [SENServiceDevice sharedService];
+                senseInfo = [SENDevice new];
+                senseManager = [SENSenseManager new];
+                [service setSenseInfo:senseInfo];
+                [service setSenseManager:senseManager];
+                
+                [senseManager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
+                    disconnectCalled = YES;
+                    return nil;
+                }];
+                
+                [SENAPIDevice stub:@selector(unregisterSense:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, [NSError errorWithDomain:@"is.hello.fail" code:-1 userInfo:nil]);
+                    return nil;
+                }];
+                
+                [service unlinkSenseFromAccount:^(NSError *error) {
+                    unlinkError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service setSenseInfo:nil];
+                [service setSenseManager:nil];
+                [SENAPIDevice clearStubs];
+            });
+            
+            it(@"should return error with unlink sense code", ^{
+                [[@([unlinkError code]) should] equal:@(SENServiceDeviceErrorUnlinkSenseFromAccount)];
+            });
+            
+            it(@"should not disconnect Sense", ^{
+                [[@(disconnectCalled) should] beNo];
+            });
+            
+            it(@"should not clear sense manager", ^{
+                [[[service senseManager] should] beNonNil];
+            });
+            
+            it(@"should not clear out sense info", ^{
+                [[[service senseInfo] should] beNonNil];
+            });
+            
+        });
+        
+        context(@"sense paired and API succeeded to unlink sense", ^{
+            
+            __block NSError* unlinkError = nil;
+            __block SENDevice* senseInfo = nil;
+            __block SENSenseManager* senseManager = nil;
+            __block BOOL disconnectCalled = NO;
+            __block SENServiceDevice* service = nil;
+            
+            beforeEach(^{
+                service = [SENServiceDevice sharedService];
+                senseInfo = [SENDevice new];
+                senseManager = [SENSenseManager new];
+                [service setSenseInfo:senseInfo];
+                [service setSenseManager:senseManager];
+                
+                [senseManager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
+                    disconnectCalled = YES;
+                    return nil;
+                }];
+                
+                [SENAPIDevice stub:@selector(unregisterSense:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                [service unlinkSenseFromAccount:^(NSError *error) {
+                    unlinkError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [service setSenseInfo:nil];
+                [service setSenseManager:nil];
+                [SENAPIDevice clearStubs];
+            });
+            
+            it(@"should not return an error", ^{
+                [[unlinkError should] beNil];
+            });
+            
+            it(@"should disconnect from Sense", ^{
+                [[@(disconnectCalled) should] beYes];
+            });
+            
+            it(@"should clear out sense manager", ^{
+                [[[service senseManager] should] beNil];
+            });
+            
+            it(@"should clear out sense info", ^{
+                [[[service senseInfo] should] beNil];
+            });
+        });
+        
     });
 
 });
