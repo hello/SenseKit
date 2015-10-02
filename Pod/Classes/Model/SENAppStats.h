@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong, readonly) NSDate* lastViewedInsights;
 
-- (instancetype _Nonnull)initWithDictionary:(NSDictionary* _Nonnull)dictionary;
-- (NSDictionary* _Nonnull)dictionaryValue;
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary;
+- (nonnull NSDictionary*)dictionaryValue;
 
 @end

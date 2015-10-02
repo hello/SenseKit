@@ -13,7 +13,7 @@
 @property (nonatomic, assign, readonly, getter=hasUnreadInsights) BOOL unreadInsights;
 @property (nonatomic, assign, readonly, getter=hasUnreadQuestions) BOOL unreadQuestions;
 
-- (instancetype _Nonnull)initWithDictionary:(NSDictionary* _Nonnull)dictionary;
-- (NSDictionary* _Nonnull)dictionaryValue;
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary;
+- (nonnull NSDictionary*)dictionaryValue;
 
 @end

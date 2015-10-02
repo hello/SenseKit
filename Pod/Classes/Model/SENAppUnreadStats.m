@@ -21,7 +21,7 @@ static NSString* const SENAppUnreadStatsQuestions = @"has_unread_questions";
 
 @implementation SENAppUnreadStats
 
-- (instancetype _Nonnull)initWithDictionary:(NSDictionary* _Nonnull)dictionary {
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary {
     self = [super init];
     if (self) {
         _unreadInsights = SENBoolValue(dictionary[SENAppUnreadStatsInsights]);
@@ -30,7 +30,7 @@ static NSString* const SENAppUnreadStatsQuestions = @"has_unread_questions";
     return self;
 }
 
-- (NSDictionary* _Nonnull)dictionaryValue {
+- (nonnull NSDictionary*)dictionaryValue {
     return @{SENAppUnreadStatsInsights : @([self hasUnreadInsights]),
              SENAppUnreadStatsQuestions : @([self hasUnreadQuestions])};
 }
