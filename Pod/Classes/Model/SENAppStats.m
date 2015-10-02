@@ -19,7 +19,7 @@ static NSString* const SENAppStatsInsightsLastViewed = @"insights_last_viewed";
 
 @implementation SENAppStats
 
-- (nonnull instancetype)initWithDictionary:(nonull NSDictionary*)dictionary {
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary {
     self = [super init];
     if (self) {
         _lastViewedInsights = SENDateFromNumber(dictionary[SENAppStatsInsightsLastViewed]);
