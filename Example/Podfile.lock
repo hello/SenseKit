@@ -42,7 +42,7 @@ PODS:
     - SenseKit/Service (= 0.1.0)
   - SenseKit/Analytics (0.1.0):
     - CocoaLumberjack (~> 2.0.0)
-    - Mixpanel-simple (= 1.0.0)
+    - Mixpanel-simple
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.6.0)
     - FXKeychain (~> 1.5.1)
@@ -72,7 +72,7 @@ EXTERNAL SOURCES:
   Mixpanel-simple:
     :git: git@github.com:hello/Mixpanel-simple.git
   SenseKit:
-    :path: "../"
+    :path: ../
   SHSProtoBuf:
     :git: git@github.com:hello/protobuf-objc.git
 
@@ -81,7 +81,7 @@ CHECKOUT OPTIONS:
     :commit: bb9399161f3231e3bb3dddc89aae99018c77cdad
     :git: git@github.com:hello/LGBluetooth.git
   Mixpanel-simple:
-    :commit: ddf0e2bbaf5add54e9ac6fecec4c38e00e551af7
+    :commit: 65d6bbfdea46b0b61a14af19ed93cb794f73225f
     :git: git@github.com:hello/Mixpanel-simple.git
   SHSProtoBuf:
     :commit: e44003540c7b52b8fa29a05a059e43751e25d0d4
@@ -93,10 +93,10 @@ SPEC CHECKSUMS:
   FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
-  Mixpanel-simple: be3779a4d88a7a05eeaa590832d6e8bcffa719f9
+  Mixpanel-simple: 4dc2ad0d5908384ea3e1832cc2c72c6b0522a7a3
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
-  SenseKit: 005248ad3983b56e1aa7da3c0d5897ddeb844947
+  SenseKit: 1997bd34101b0e3d4151d377afc8317d6437e69e
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
 
 COCOAPODS: 0.38.2
