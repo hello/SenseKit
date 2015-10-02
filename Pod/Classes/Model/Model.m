@@ -15,6 +15,13 @@ NSNumber* SENDateMillisecondsSince1970(NSDate* date) {
     return @([date timeIntervalSince1970] * 1000);
 }
 
+BOOL SENBoolValue(id value) {
+    if ([value respondsToSelector:@selector(boolValue)]) {
+        return [value boolValue];
+    }
+    return NO;
+}
+
 id SENObjectOfClass(id object, __unsafe_unretained Class klass) {
     return [object isKindOfClass:klass] ? object : nil;
 }
