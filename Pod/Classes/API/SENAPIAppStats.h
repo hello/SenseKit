@@ -13,8 +13,8 @@
 
 @interface SENAPIAppStats : NSObject
 
-+ (void)stats:(SENAPIDataBlock _Nonnull)completion;
-+ (void)updateStats:(SENAppStats* _Nonnull)stats completion:(SENAPIDataBlock _Nullable)completion;
-+ (void)unread:(SENAPIDataBlock _Nonnull)completion;
++ (void)stats:(nonnull SENAPIDataBlock)completion;
++ (void)updateStats:(nonnull SENAppStats*)stats completion:(nonnull SENAPIDataBlock)completion;
++ (void)unread:(nonnull SENAPIDataBlock)completion;
 
 @end

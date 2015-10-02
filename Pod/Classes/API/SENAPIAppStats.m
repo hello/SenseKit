@@ -15,7 +15,7 @@ static NSString* const SENAPIAppStatusUnreadPath = @"unread";
 
 @implementation SENAPIAppStats
 
-+ (void)stats:(SENAPIDataBlock _Nonnull)completion {
++ (void)stats:(nonnull SENAPIDataBlock)completion {
     [SENAPIClient GET:SENAPIAppStatusEndpoint parameters:nil completion:^(id data, NSError *error) {
         SENAppStats* stats = nil;
         if (!error) {
@@ -25,12 +25,12 @@ static NSString* const SENAPIAppStatusUnreadPath = @"unread";
     }];
 }
 
-+ (void)updateStats:(SENAppStats* _Nonnull)stats completion:(SENAPIDataBlock _Nullable)completion {
++ (void)updateStats:(nonnull SENAppStats*)stats completion:(nonnull SENAPIDataBlock)completion {
     NSDictionary* params = [stats dictionaryValue];
     [SENAPIClient PATCH:SENAPIAppStatusEndpoint parameters:params completion:completion];
 }
 
-+ (void)unread:(SENAPIDataBlock _Nonnull)completion {
++ (void)unread:(nonnull SENAPIDataBlock)completion {
     NSString* path = [SENAPIAppStatusEndpoint stringByAppendingPathComponent:SENAPIAppStatusUnreadPath];
     [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
         SENAppUnreadStats* unreadStats = nil;
