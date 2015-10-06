@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
 
   s.subspec "Model" do |ss|
     ss.source_files = 'Pod/Classes/Model/*'
+    ss.dependency 'CGFloatType', '~> 1.3.1'
   end
 
   s.subspec "Service" do |ss|
