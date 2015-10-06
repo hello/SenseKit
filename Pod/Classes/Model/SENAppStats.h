@@ -10,7 +10,7 @@
 
 @interface SENAppStats : NSObject
 
-@property (nonatomic, strong, readonly) NSDate* lastViewedInsights;
+@property (nonatomic, strong, nullable) NSDate* lastViewedInsights;
 
 - (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary;
 - (nonnull NSDictionary*)dictionaryValue;

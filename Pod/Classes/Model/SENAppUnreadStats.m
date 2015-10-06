@@ -10,7 +10,7 @@
 #import "Model.h"
 
 static NSString* const SENAppUnreadStatsInsights = @"has_unread_insights";
-static NSString* const SENAppUnreadStatsQuestions = @"has_unread_questions";
+static NSString* const SENAppUnreadStatsQuestions = @"has_unanswered_questions";
 
 @interface SENAppUnreadStats()
 
@@ -21,7 +21,7 @@ static NSString* const SENAppUnreadStatsQuestions = @"has_unread_questions";
 
 @implementation SENAppUnreadStats
 
-- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary {
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
         _unreadInsights = SENBoolValue(dictionary[SENAppUnreadStatsInsights]);
@@ -30,7 +30,7 @@ static NSString* const SENAppUnreadStatsQuestions = @"has_unread_questions";
     return self;
 }
 
-- (nonnull NSDictionary*)dictionaryValue {
+- (NSDictionary*)dictionaryValue {
     return @{SENAppUnreadStatsInsights : @([self hasUnreadInsights]),
              SENAppUnreadStatsQuestions : @([self hasUnreadQuestions])};
 }

@@ -11,15 +11,9 @@
 
 static NSString* const SENAppStatsInsightsLastViewed = @"insights_last_viewed";
 
-@interface SENAppStats()
-
-@property (nonatomic, strong) NSDate* lastViewedInsights;
-
-@end
-
 @implementation SENAppStats
 
-- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dictionary {
+- (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
         _lastViewedInsights = SENDateFromNumber(dictionary[SENAppStatsInsightsLastViewed]);
@@ -27,7 +21,7 @@ static NSString* const SENAppStatsInsightsLastViewed = @"insights_last_viewed";
     return self;
 }
 
-- (nonnull NSDictionary*)dictionaryValue {
+- (NSDictionary*)dictionaryValue {
     if (![self lastViewedInsights]) {
         return @{};
     }

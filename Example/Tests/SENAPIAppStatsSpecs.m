@@ -229,7 +229,7 @@ describe(@"SENAPIAppStats", ^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock cb = [params lastObject];
                     cb (@{@"has_unread_insights" : @(YES),
-                          @"has_unread_questions" : @(YES)}, nil);
+                          @"has_unanswered_questions" : @(YES)}, nil);
                     return nil;
                 }];
                 
