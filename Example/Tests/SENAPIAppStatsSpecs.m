@@ -16,7 +16,7 @@ SPEC_BEGIN(SENAPIAppStatsSpec)
 
 describe(@"SENAPIAppStats", ^{
     
-    describe(@"+stats:", ^{
+    describe(@"+retrieveStats:", ^{
         
         context(@"api returns an error", ^{
             
@@ -30,7 +30,7 @@ describe(@"SENAPIAppStats", ^{
                     return nil;
                 }];
                 
-                [SENAPIAppStats stats:^(id data, NSError *error) {
+                [SENAPIAppStats retrieveStats:^(id data, NSError *error) {
                     calledBack = YES;
                     apiError = error;
                 }];
@@ -65,7 +65,7 @@ describe(@"SENAPIAppStats", ^{
                     return nil;
                 }];
                 
-                [SENAPIAppStats stats:^(id data, NSError *error) {
+                [SENAPIAppStats retrieveStats:^(id data, NSError *error) {
                     calledBack = YES;
                     apiError = error;
                     stats = data;
@@ -183,7 +183,7 @@ describe(@"SENAPIAppStats", ^{
         
     });
     
-    describe(@"+unread:", ^{
+    describe(@"+retrieveUnread:", ^{
         
         context(@"api returns an error", ^{
             
@@ -197,7 +197,7 @@ describe(@"SENAPIAppStats", ^{
                     return nil;
                 }];
                 
-                [SENAPIAppStats unread:^(id data, NSError *error) {
+                [SENAPIAppStats retrieveUnread:^(id data, NSError *error) {
                     calledBack = YES;
                     apiError = error;
                 }];
@@ -233,7 +233,7 @@ describe(@"SENAPIAppStats", ^{
                     return nil;
                 }];
                 
-                [SENAPIAppStats unread:^(id data, NSError *error) {
+                [SENAPIAppStats retrieveUnread:^(id data, NSError *error) {
                     calledBack = YES;
                     apiError = error;
                     stats = data;
