@@ -8,17 +8,13 @@
 
 #import <Kiwi/Kiwi.h>
 #import <Nocilla/Nocilla.h>
-#import <SenseKit/SenseKit.h>
-#import <SenseKit/SENKeyedArchiver.h>
+#import <SenseKit/SENAPIAlarms.h>
+#import <SenseKit/SENAlarm.h>
+#import <SenseKit/SENSound.h>
 
 SPEC_BEGIN(SENAPIAlarmsSpec)
 
 describe(@"SENAPIAlarms", ^{
-
-    beforeEach(^{
-        NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-        [SENKeyedArchiver stub:@selector(datastorePath) andReturn:path];
-    });
 
     beforeAll(^{
         [[LSNocilla sharedInstance] start];

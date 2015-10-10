@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hello Inc. All rights reserved.
 //
 
-#import <CocoaLumberjack/CocoaLumberjack.h>
+#import <CocoaLumberjack/DDLog.h>
 
 #import <CoreBluetooth/CoreBluetooth.h>
 
@@ -20,6 +20,10 @@
 #import "SENSenseMessage.pb.h"
 #import "SENSenseWiFiStatus.h"
 #import "SENLocalPreferences.h"
+
+#ifndef ddLogLevel
+#define ddLogLevel LOG_LEVEL_VERBOSE
+#endif
 
 static CGFloat const kSENSenseDefaultTimeout = 20.0f;
 static CGFloat const kSENSenseScanTimeout = 10.0f;
@@ -72,8 +76,6 @@ typedef NS_ENUM(NSUInteger, SENSenseProtobufVersion) {
 @end
 
 @implementation SENSenseManager
-
-static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 + (void)lastConnectedSense:(void(^)(SENSense* sense, NSError* error))completion {
     if (!completion) {

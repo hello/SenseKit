@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "124F63D97679E741A8408497CE145BBCC89F73C9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "124F63D97679E741A8408497CE145BBCC89F73C9" : 0,
+    "F3A7ADDBA75EEAD4A3269487247E353334B0164A" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E321A7E3-C7FC-4E58-83E3-CB0F62E15A9A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "124F63D97679E741A8408497CE145BBCC89F73C9" : "SenseKit",
+    "F3A7ADDBA75EEAD4A3269487247E353334B0164A" : "mixpanel-simple\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SenseKit",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Example\/SenseKit.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:hello\/SenseKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "124F63D97679E741A8408497CE145BBCC89F73C9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:hello\/Mixpanel-simple.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F3A7ADDBA75EEAD4A3269487247E353334B0164A"
+    }
+  ]
+}

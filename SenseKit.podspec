@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.subspec "Analytics" do |ss|
     ss.source_files = 'Pod/Classes/Analytics/*'
     ss.dependency 'Mixpanel-simple'
-    ss.dependency 'CocoaLumberjack', '~> 2.0.0'
+    ss.dependency 'CocoaLumberjack', '~> 1'
   end
 
   s.subspec "API" do |ss|
@@ -29,17 +29,18 @@ Pod::Spec.new do |s|
     ss.source_files = 'Pod/Classes/BLE/**/*.{h,m}'
     ss.dependency 'LGBluetooth'
     ss.dependency 'SHSProtoBuf'
-    ss.dependency 'CocoaLumberjack', '~> 2.0.0'
+    ss.dependency 'CocoaLumberjack', '~> 1'
   end
 
   s.subspec "Model" do |ss|
     ss.source_files = 'Pod/Classes/Model/*'
     ss.dependency 'CGFloatType', '~> 1.3.1'
+    ss.dependency 'YapDatabase', '~> 2.6.4'
   end
 
   s.subspec "Service" do |ss|
     ss.source_files = 'Pod/Classes/Service/*'
-    ss.dependency 'CocoaLumberjack', '~> 2.0.0'
+    ss.dependency 'CocoaLumberjack', '~> 1'
   end
 
   s.source_files = 'Pod/Classes/SenseKit.h'

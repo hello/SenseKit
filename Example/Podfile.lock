@@ -21,14 +21,11 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - CGFloatType (1.3.1)
-  - CocoaLumberjack (2.0.1):
-    - CocoaLumberjack/Default (= 2.0.1)
-    - CocoaLumberjack/Extensions (= 2.0.1)
-  - CocoaLumberjack/Core (2.0.1)
-  - CocoaLumberjack/Default (2.0.1):
+  - CocoaLumberjack (1.9.2):
+    - CocoaLumberjack/Extensions (= 1.9.2)
+  - CocoaLumberjack/Core (1.9.2)
+  - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.1):
-    - CocoaLumberjack/Default
   - FXKeychain (1.5.3)
   - Kiwi (2.4.0)
   - LGBluetooth (1.1.4)
@@ -42,23 +39,28 @@ PODS:
     - SenseKit/Model (= 0.1.0)
     - SenseKit/Service (= 0.1.0)
   - SenseKit/Analytics (0.1.0):
-    - CocoaLumberjack (~> 2.0.0)
+    - CocoaLumberjack (~> 1)
     - Mixpanel-simple
   - SenseKit/API (0.1.0):
     - AFNetworking (~> 2.6.0)
     - FXKeychain (~> 1.5.1)
     - NSJSONSerialization-NSNullRemoval (~> 1.0.0)
   - SenseKit/BLE (0.1.0):
-    - CocoaLumberjack (~> 2.0.0)
+    - CocoaLumberjack (~> 1)
     - LGBluetooth
     - SHSProtoBuf
   - SenseKit/Model (0.1.0):
     - CGFloatType (~> 1.3.1)
+    - YapDatabase (~> 2.6.4)
   - SenseKit/Service (0.1.0):
-    - CocoaLumberjack (~> 2.0.0)
+    - CocoaLumberjack (~> 1)
   - SHSProtoBuf (0.9):
     - SHSProtoBuf/non-arc (= 0.9)
   - SHSProtoBuf/non-arc (0.9)
+  - YapDatabase (2.6.5):
+    - YapDatabase/standard (= 2.6.5)
+  - YapDatabase/standard (2.6.5):
+    - CocoaLumberjack (~> 1)
 
 DEPENDENCIES:
   - Kiwi
@@ -92,14 +94,15 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   CGFloatType: fa1da294540051a76750092a427b95296bbdc006
-  CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
+  CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
   Mixpanel-simple: 4dc2ad0d5908384ea3e1832cc2c72c6b0522a7a3
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
-  SenseKit: 276b32392eabf5228c3b69484817fd283725d04a
+  SenseKit: 7c4dc54e7b819478046d4d5cb40fed776d751041
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
+  YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
 
 COCOAPODS: 0.38.2
