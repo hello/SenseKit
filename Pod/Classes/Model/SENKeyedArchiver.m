@@ -6,7 +6,7 @@
 @implementation SENKeyedArchiver
 
 NSString* const SENKeyedArchiverGroupId = @"group.is.hello.sense.data";
-NSString* const SENKeyedArchiverStoreName = @"SENKeyedArchiverCache";
+NSString* const SENKeyedArchiverStoreName = @"SENKeyedArchiverStorage";
 
 static dispatch_queue_t SENKeyedArchiverQueue = nil;
 
