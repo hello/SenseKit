@@ -15,32 +15,24 @@ static dispatch_queue_t SENKeyedArchiverQueue = nil;
     return [[url path] stringByAppendingPathComponent:SENKeyedArchiverStoreName];
 }
 
-+ (NSString*)pathForCollection:(NSString*)collectionName {
++ (NSString*)pathForCollectionNamed:(NSString*)collectionName {
     return [[self datastorePath] stringByAppendingPathComponent:collectionName];
+}
+
++ (NSString*)pathForKey:(NSString*)key inCollectionNamed:(NSString*)collectionName {
+    return [[self pathForCollectionNamed:collectionName] stringByAppendingPathComponent:key];
 }
 
 + (NSArray*)allObjectsInCollection:(NSString*)collectionName
 {
-    NSArray* objects = [[self collectionWithName:collectionName] allValues];
-    if (!objects)
-        objects = @[];
-    return objects;
-}
-
-+ (NSDictionary*)collectionWithName:(NSString*)collectionName {
-    NSString* path = [self pathForCollection:collectionName];
-    __block NSDictionary* collection = nil;
-    [self onInternalQueue:^{
-        collection = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    }];
-    if (!collection)
-        collection = @{};
-    return collection;
+    return [self unarchiveObjectsAtPath:[self pathForCollectionNamed:collectionName]];
 }
 
 + (void)removeAllObjectsInCollection:(NSString*)collectionName
 {
-    [self writeCollection:nil withName:collectionName];
+    [self onInternalQueue:^{
+        [[NSFileManager defaultManager] removeItemAtPath:[self pathForCollectionNamed:collectionName] error:nil];
+    }];
 }
 
 + (void)removeAllObjects
@@ -53,58 +45,65 @@ static dispatch_queue_t SENKeyedArchiverQueue = nil;
 
 + (id)objectsForKey:(NSString*)key inCollection:(NSString*)collectionName
 {
-    return [self collectionWithName:collectionName][key];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForKey:key inCollectionNamed:collectionName]];
 }
 
 + (void)setObject:(id<NSCoding>)object forKey:(NSString*)key inCollection:(NSString*)collectionName
 {
     if (key.length == 0 || collectionName.length == 0)
         return;
-    if (!object) {
-        [self removeAllObjectsForKey:key inCollection:collectionName];
-        return;
-    }
-    NSMutableDictionary* collection = [[self collectionWithName:collectionName] mutableCopy];
-    collection[key] = object;
-    [self writeCollection:collection withName:collectionName];
+
+    [self onInternalQueue:^{
+        NSString* path = [self pathForKey:key inCollectionNamed:collectionName];
+        if (!object) {
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        } else if ([self createDirectoryAtPathIfNeeded:[path stringByDeletingLastPathComponent]]) {
+            [NSKeyedArchiver archiveRootObject:object toFile:path];
+        }
+    }];
 }
 
 + (void)removeAllObjectsForKey:(nonnull NSString*)key inCollection:(NSString*)collectionName
 {
-    NSMutableDictionary* collection = [[self collectionWithName:collectionName] mutableCopy];
-    [collection removeObjectForKey:key];
-    [self writeCollection:collection withName:collectionName];
+    [self setObject:nil forKey:key inCollection:collectionName];
 }
 
 + (BOOL)hasObjectForKey:(NSString*)key inCollection:(NSString*)collectionName
 {
-    NSDictionary* collection = [self collectionWithName:collectionName];
-    return collection[key] != nil;
+    BOOL isDir = NO;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[self pathForKey:key inCollectionNamed:collectionName]
+                                                       isDirectory:&isDir];
+    return exists && !isDir;
 }
 
-+ (void)writeCollection:(NSDictionary*)collection withName:(NSString*)collectionName {
-    NSString* path = [self pathForCollection:collectionName];
-    NSString* datastorePath = [self datastorePath];
-    [self onInternalQueue:^{
-        BOOL isDir = NO;
-        [[NSFileManager defaultManager] fileExistsAtPath:datastorePath isDirectory:&isDir];
-        if (!isDir) {
-            NSError* error = nil;
-            [[NSFileManager defaultManager] createDirectoryAtPath:datastorePath
-                                      withIntermediateDirectories:YES
-                                                       attributes:nil
-                                                            error:&error];
-            if (error)
-                return;
-        }
-        if (collection) {
-            [NSKeyedArchiver archiveRootObject:collection toFile:path];
-        } else {
-            NSError* error = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-        }
+/**
+ * Creates a directory if needed, returning NO if directory does not exist
+ */
++ (BOOL)createDirectoryAtPathIfNeeded:(NSString*)path {
+    NSError* error = nil;
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+    if (!isDir) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:path
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil
+                                                        error:&error];
+    }
+    return error == nil;
+}
 
++ (NSArray*)unarchiveObjectsAtPath:(NSString*)path {
+    __block NSMutableArray* objects = [NSMutableArray new];
+    [self onInternalQueue:^{
+        for (NSString* filePath in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil]) {
+            if (!filePath)
+                continue;
+            id object = [NSKeyedUnarchiver unarchiveObjectWithFile:[path stringByAppendingPathComponent:filePath]];
+            if (object)
+                [objects addObject:object];
+        }
     }];
+    return [objects copy];
 }
 
 /**
@@ -115,7 +114,7 @@ static dispatch_queue_t SENKeyedArchiverQueue = nil;
     dispatch_once(&onceToken, ^{
         SENKeyedArchiverQueue = dispatch_queue_create("SENKeyedArchiver-Read", NULL);
     });
-    dispatch_async(SENKeyedArchiverQueue, block);
+    dispatch_sync(SENKeyedArchiverQueue, block);
 }
 
 @end

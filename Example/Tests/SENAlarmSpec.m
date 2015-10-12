@@ -3,10 +3,6 @@
 #import <SenseKit/SENAlarm.h>
 #import <SenseKit/SENKeyedArchiver.h>
 
-@interface SENKeyedArchiver ()
-+ (void)onInternalQueue:(void(^)())block;
-@end
-
 SPEC_BEGIN(SENAlarmSpec)
 
 describe(@"SENAlarm", ^{
@@ -15,11 +11,6 @@ describe(@"SENAlarm", ^{
     beforeEach(^{
         NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
         [SENKeyedArchiver stub:@selector(datastorePath) andReturn:path];
-        [SENKeyedArchiver stub:@selector(onInternalQueue:) withBlock:^id(NSArray *params) {
-            void (^block)() = [params lastObject];
-            block();
-            return nil;
-        }];
     });
 
     afterEach(^{
