@@ -1,6 +1,7 @@
 
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import "SENKeyedArchiver.h"
+#import "SENAuthorizationService.h"
 
 @implementation SENKeyedArchiver
 
@@ -11,8 +12,12 @@ static dispatch_queue_t SENKeyedArchiverQueue = nil;
 
 + (NSString*)datastorePath
 {
+    NSString* accountID = [SENAuthorizationService accountIdOfAuthorizedUser];
+    if (accountID.length == 0)
+        return nil;
     NSURL* url = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:SENKeyedArchiverGroupId];
-    return [[url path] stringByAppendingPathComponent:SENKeyedArchiverStoreName];
+    NSString* accountStorePath = [[url path] stringByAppendingPathComponent:accountID];
+    return [accountStorePath stringByAppendingPathComponent:SENKeyedArchiverStoreName];
 }
 
 + (NSString*)pathForCollectionNamed:(NSString*)collectionName {
