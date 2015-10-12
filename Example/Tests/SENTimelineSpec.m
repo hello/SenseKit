@@ -52,7 +52,7 @@ describe(@"initWithDictionary:", ^{
 
     it(@"sets the date", ^{
         [[timeline.date shouldNot] beNil];
-        NSCalendarUnit units = (NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit);
+        NSCalendarUnit units = (NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear);
         NSDateComponents* components = [[NSCalendar currentCalendar] components:units
                                                                        fromDate:timeline.date];
         [[@(components.day) should] equal:@11];
