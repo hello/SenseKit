@@ -2,11 +2,6 @@
 #import <Kiwi/Kiwi.h>
 #import <SenseKit/SENAlarm.h>
 #import <SenseKit/SENKeyedArchiver.h>
-#import <YapDatabase/YapDatabase.h>
-
-@interface SENKeyedArchiver ()
-+ (YapDatabaseConnection*)mainConnection;
-@end
 
 @interface SENKeyedArchiver ()
 + (void)onInternalQueue:(void(^)())block;
@@ -19,9 +14,12 @@ describe(@"SENAlarm", ^{
 
     beforeEach(^{
         NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-        YapDatabase* database = [[YapDatabase alloc] initWithPath:path];
-        id connection = [database newConnection];
-        [SENKeyedArchiver stub:@selector(mainConnection) andReturn:connection];
+        [SENKeyedArchiver stub:@selector(datastorePath) andReturn:path];
+        [SENKeyedArchiver stub:@selector(onInternalQueue:) withBlock:^id(NSArray *params) {
+            void (^block)() = [params lastObject];
+            block();
+            return nil;
+        }];
     });
 
     afterEach(^{
@@ -81,28 +79,28 @@ describe(@"SENAlarm", ^{
     });
 
     describe(@"-initWithDictionary:", ^{
-
+        
         NSDictionary* alarmValues = @{@"id":@"abcdef-123456",
                                       @"enabled": @YES, @"hour":@22, @"minute":@15,
                                       @"sound":@{@"name":@"Bells",@"id":@78},
                                       @"editable": @YES, @"smart":@YES, @"day_of_week":@[@1,@5,@6]};
-
+        
         beforeEach(^{
             alarm = [[SENAlarm alloc] initWithDictionary:alarmValues];
         });
-
+        
         it(@"sets the activation state", ^{
             [[@([alarm isOn]) should] beTrue];
         });
-
+        
         it(@"sets the hour", ^{
             [[@([alarm hour]) should] equal:alarmValues[@"hour"]];
         });
-
+        
         it(@"sets the minute", ^{
             [[@([alarm minute]) should] equal:alarmValues[@"minute"]];
         });
-
+        
         it(@"sets the sound name", ^{
             [[[alarm soundName] should] equal:alarmValues[@"sound"][@"name"]];
         });
