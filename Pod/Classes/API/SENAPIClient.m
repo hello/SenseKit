@@ -17,9 +17,6 @@ static AFHTTPSessionManager* sessionManager = nil;
 
 @implementation SENAPIClient
 
-typedef void (^SENAFFailureBlock)(NSURLSessionDataTask *, NSError *);
-typedef void (^SENAFSuccessBlock)(NSURLSessionDataTask *, id responseObject);
-
 static NSError* SENParseErrorForData(NSError* error) {
     NSData *data = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
     if (data) {
@@ -80,10 +77,12 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
     if (!sessionManager) {
         sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[self baseURL]];
         sessionManager.requestSerializer = [[AFJSONRequestSerializer alloc] init];
+#if !TARGET_OS_WATCH
         [sessionManager.reachabilityManager startMonitoring];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleReachabilityUpdate:)
                                                      name:AFNetworkingReachabilityDidChangeNotification object:nil];
+#endif
     }
     return sessionManager;
 }
@@ -98,7 +97,9 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
 
 + (void)resetToDefaultBaseURL
 {
+#if !TARGET_OS_WATCH
     [sessionManager.reachabilityManager stopMonitoring];
+#endif
     sessionManager = nil;
     [[SENLocalPreferences sharedPreferences] setPersistentPreference:nil forKey:SENAPIClientBaseURLPathKey];
 }
@@ -107,7 +108,9 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
 {
     NSURL* baseURL = [NSURL URLWithString:baseURLPath];
     if (baseURL && baseURLPath.length > 0) {
+#if !TARGET_OS_WATCH
         [sessionManager.reachabilityManager stopMonitoring];
+#endif
         sessionManager = nil;
         // why would base url path have length of 0 here?
         [[SENLocalPreferences sharedPreferences] setPersistentPreference:baseURLPath.length == 0 ? nil : baseURLPath
@@ -130,6 +133,7 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
 
 + (void)handleReachabilityUpdate:(NSNotification*)note
 {
+#if !TARGET_OS_WATCH
     AFNetworkReachabilityStatus status = [note.userInfo[AFNetworkingReachabilityNotificationStatusItem] integerValue];
     switch (status) {
         case AFNetworkReachabilityStatusUnknown:
@@ -144,12 +148,16 @@ SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock) = ^SENAFSu
             [[NSNotificationCenter defaultCenter] postNotificationName:SENAPIUnreachableNotification object:nil];
             break;
     }
+#endif
 }
 
 + (BOOL)isAPIReachable
 {
+#if !TARGET_OS_WATCH
     AFNetworkReachabilityManager* manager = sessionManager.reachabilityManager;
     return [manager isReachable];
+#endif
+    return YES;
 }
 
 ///-------------------------------
