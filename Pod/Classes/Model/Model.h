@@ -6,7 +6,6 @@
 #import "SENDevice.h"
 #import "SENInsight.h"
 #import "SENQuestion.h"
-#import "SENSense.h"
 #import "SENSensor.h"
 #import "SENTimeline.h"
 #import "SENSound.h"
