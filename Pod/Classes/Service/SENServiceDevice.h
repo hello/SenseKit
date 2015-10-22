@@ -9,7 +9,7 @@
 #import "SENService.h"
 #import "SENSenseManager.h"
 
-@class SENDevice;
+@class SENPairedDevices;
 @class SENSenseManager;
 @class SENSenseWiFiStatus;
 
@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, SENServiceDeviceState) {
     SENServiceDeviceStateUnknown = 0,
     SENServiceDeviceStateNormal = 1,
     SENServiceDeviceStateSenseNotPaired = 2,
-    SENServiceDeviceStateSenseNoData = 3,
+    SENServiceDeviceStateSenseNoData = 3, // 2015-10-21: obsolete
     SENServiceDeviceStatePillNotPaired = 4,
     SENServiceDeviceStatePillLowBattery = 5,
     SENServiceDeviceStateSenseNotSeen = 6,
@@ -44,15 +44,7 @@ typedef void(^SENServiceDeviceCompletionBlock)(NSError* error);
 
 @interface SENServiceDevice : SENService
 
-/**
- * @property pillInfo: the device information for the Sleep Pill
- */
-@property (nonatomic, strong, readonly) SENDevice* pillInfo;
-
-/**
- * @property pillInfo: the device information for the Sense
- */
-@property (nonatomic, strong, readonly) SENDevice* senseInfo;
+@property (nonatomic, strong, readonly) SENPairedDevices* devices;
 
 /**
  * @property systemState: the state of the current Sense system
@@ -139,15 +131,6 @@ typedef void(^SENServiceDeviceCompletionBlock)(NSError* error);
  * @param completion block invoked when request is completed
  */
 - (void)loadDeviceInfoIfNeeded:(SENServiceDeviceCompletionBlock)completion;
-
-/**
- * @method shouldWarnAboutLastSeenForDevice:
- * 
- * @param device: the device to check
- * @return YES if the loaded info indicates the device hasn't been seen for a
- *         theshold configured.  No, if no info to check or is ok.
- */
-- (BOOL)shouldWarnAboutLastSeenForDevice:(SENDevice*)device;
 
 /**
  * @return YES if the loaded info indicates the pill hasn't been seen for a 

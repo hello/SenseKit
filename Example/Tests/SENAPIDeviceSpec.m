@@ -1,12 +1,33 @@
 #import <Kiwi/Kiwi.h>
-#import <Nocilla/Nocilla.h>
-#import <SenseKit/SENDevice.h>
+#import <SenseKit/Model.h>
 #import <SenseKit/SENAPIDevice.h>
 
-@interface SENAPIDevice (Private)
+NSDictionary* (^CreateFakeSenseData)(void) = ^(void) {
+    return @{@"id" : @"1",
+             @"firmware_version" : @"1",
+             @"last_updated" : @([NSDate timeIntervalSinceReferenceDate]),
+             @"state" : @"NORMAL",
+             @"color" : @"BLACK",
+             @"wifi_info" : @{@"ssid" : @"Hello",
+                              @"rssi" : @(-50),
+                              @"condition" : @"FAIR",
+                              @"last_updated" : @([NSDate timeIntervalSinceReferenceDate])}};
+};
 
-+ (SENDevice*)deviceFromRawResponse:(id)rawResponse;
-+ (NSArray*)devicesFromRawResponse:(id)rawResponse;
+NSDictionary* (^CreateFakePillData)(void) = ^(void) {
+    return @{@"id" : @"1",
+             @"firmware_version" : @"1",
+             @"last_updated" : @([NSDate timeIntervalSinceReferenceDate]),
+             @"state" : @"LOW_BATTERY",
+             @"color" : @"BLUE",
+             @"battery_level" : @100};
+};
+
+NSDictionary* (^CreateFakePairingInfo)(void) = ^(void) {
+    return @{@"sense_id" : @"1", @"paired_accounts" : @1};
+};
+
+@interface SENAPIDevice (Private)
 
 @end
 
@@ -14,418 +35,522 @@ SPEC_BEGIN(SENAPIDeviceSpec)
 
 describe(@"SENAPIDevice", ^{
 
-    beforeAll(^{
-        [[LSNocilla sharedInstance] start];
-    });
-
-    afterEach(^{
-        [[LSNocilla sharedInstance] clearStubs];
-    });
-
-    afterAll(^{
-        [[LSNocilla sharedInstance] stop];
-    });
-
-    describe(@"+ getPairedDevices", ^{
+    describe(@"+ getPairedDevices:", ^{
 
         context(@"there are no paired devices", ^{
+            
+            __block NSError* apiError = nil;
+            __block id responseObj = nil;
 
             beforeEach(^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
-                    block(@[], nil);
+                    block(@{@"senses" : @[], @"pills" : @[]}, nil);
                     return nil;
                 }];
-            });
-
-            it(@"should return empty array", ^{
-                __block NSArray* devices = nil;
-                [SENAPIDevice getPairedDevices:^(NSArray* data, NSError *error) {
-                    devices = data;
-                }];
-                [[devices should] haveCountOf:0];
                 
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
             });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+            });
+
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a SENPairedDevices object", ^{
+                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
+            });
+            
+            it(@"should not have a paired sense", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedSense]) should] beNo];
+            });
+            
+            it(@"should not have a paired pill", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedPill]) should] beNo];
+            });
+            
         });
         
-    });
-    
-    describe(@"+ devicesFromRawResponse", ^{
-
-        __block NSArray* devices;
-
-        context(@"there are no devices", ^{
-
+        context(@"a sense is paired", ^{
+            
+            __block NSError* apiError = nil;
+            __block id responseObj = nil;
+            __block NSDictionary* fakeSense = nil;
+            
             beforeEach(^{
-                devices = [SENAPIDevice devicesFromRawResponse:@[]];
+                fakeSense = CreateFakeSenseData();
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@{@"senses" : @[fakeSense], @"pills" : @[]}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
             });
-
-            it(@"should return an empty array", ^{
-                [[devices should] haveCountOf:0];
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+                fakeSense = nil;
             });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a SENPairedDevices object", ^{
+                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
+            });
+            
+            it(@"should have a paired sense", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedSense]) should] beYes];
+            });
+            
+            it(@"should contain a proper sense metadata object", ^{
+                SENPairedDevices* devices = responseObj;
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
+                [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
+            });
+            
+            it(@"should not have a paired pill", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedPill]) should] beNo];
+            });
+            
         });
-
-        context(@"there is one device", ^{
-
+        
+        context(@"a pill is paired", ^{
+            
+            __block NSError* apiError = nil;
+            __block id responseObj = nil;
+            __block NSDictionary* fakePill = nil;
+            
             beforeEach(^{
-                NSArray* deviceResponse = @[@{@"device_id" : @"1", @"type" : @"SENSE", @"state" : @"NORMAL", @"color" : @"BLACK"}];
-                devices = [SENAPIDevice devicesFromRawResponse:deviceResponse];
+                fakePill = CreateFakePillData();
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@{@"senses" : @[], @"pills" : @[fakePill]}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
             });
-
-            it(@"returns 1 SENDevice object", ^{
-                [[devices should] haveCountOf:1];
-                id device = [devices lastObject];
-                [[device should] beKindOfClass:[SENDevice class]];
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+                fakePill = nil;
             });
-        });
-
-        context(@"properties are correct", ^{
-            NSString* version = @"alpha-1";
-            NSString* deviceId = @"1";
-            NSArray* deviceResponse = @[
-                @{@"device_id" : deviceId,
-                  @"type" : @"SENSE",
-                  @"state" : @"NORMAL",
-                  @"color" : @"BLACK",
-                  @"firmware_version" : version,
-                  @"last_updated" : @"1412730626330"}
-            ];
-
-            it(@"sets last_updated and firmware version", ^{
-                SENDevice* device = [SENAPIDevice devicesFromRawResponse:deviceResponse][0];
-                [[[device lastSeen] should] beKindOfClass:[NSDate class]];
-                [[[device firmwareVersion] should] equal:version];
-                [[@([device color]) should] equal:@(SENDeviceColorBlack)];
-                [[@([device type]) should] equal:@(SENDeviceTypeSense)];
-                [[@([device state]) should] equal:@(SENDeviceStateNormal)];
-                [[[device deviceId] should] equal:deviceId];
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
             });
-
-        });
-    });
-    
-    describe(@"unregister devices", ^{
-
-        __block SENDevice* device = nil;
-        __block NSError* apiError = nil;
-
-        beforeEach(^{
-            [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(nil, nil);
-                return nil;
-            }];
-        });
-
-        afterEach(^{
-            device = nil;
-            apiError = nil;
-        });
-
-        describe(@"+unregisterPill:completion", ^{
-
-            context(@"device has no type", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] init];
-                });
-
-                it(@"calls the block with an invalid argument error", ^{
-                    [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
-                });
+            
+            it(@"should return a SENPairedDevices object", ^{
+                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
             });
-
-            context(@"device is a sense", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                            type:SENDeviceTypeSense
-                                                           state:SENDeviceStateNormal
-                                                           color:SENDeviceColorBlack
-                                                 firmwareVersion:@"1"
-                                                        lastSeen:[NSDate date]];
-                });
-
-                it(@"calls the block with an invalid argument error", ^{
-                    [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
-                });
+            
+            it(@"should not have a paired sense", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedSense]) should] beNo];
             });
-
-            context(@"device is a pill", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                            type:SENDeviceTypePill
-                                                           state:SENDeviceStateNormal
-                                                           color:SENDeviceColorBlue
-                                                 firmwareVersion:@"1"
-                                                        lastSeen:[NSDate date]];
-                });
-
-                it(@"returns with no error", ^{
-                    [SENAPIDevice unregisterPill:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[apiError should] beNil];
-                });
+            
+            it(@"should have a paired pill", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedPill]) should] beYes];
             });
-        });
-        
-        describe(@"+unregisterSense:completion", ^{
-
-            context(@"device has no type", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] init];
-                });
-
-                it(@"calls the block with an invalid argument error", ^{
-                    [SENAPIDevice unregisterSense:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
-                });
+            
+            it(@"should contain a proper pill metadata object", ^{
+                SENPairedDevices* devices = responseObj;
+                SENPillMetadata* pillMetadata = [devices pillMetadata];
+                [[[pillMetadata uniqueId] should] equal:fakePill[@"id"]];
             });
-
-            context(@"device is a pill", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                            type:SENDeviceTypePill
-                                                           state:SENDeviceStateNormal
-                                                           color:SENDeviceColorBlue
-                                                 firmwareVersion:@"1"
-                                                        lastSeen:[NSDate date]];
-                });
-
-                it(@"calls the block with an invalid argument error", ^{
-                    [SENAPIDevice unregisterSense:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
-                });
-            });
-
-            context(@"device is a sense", ^{
-
-                beforeEach(^{
-                    device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                            type:SENDeviceTypeSense
-                                                           state:SENDeviceStateNormal
-                                                           color:SENDeviceColorWhite
-                                                 firmwareVersion:@"1"
-                                                        lastSeen:[NSDate date]];
-                });
-
-                it(@"returns with no error", ^{
-                    [SENAPIDevice unregisterSense:device completion:^(id data, NSError *error) {
-                        apiError = error;
-                    }];
-                    [[apiError should] beNil];
-                });
-            });
+        
         });
         
-    });
-    
-    describe(@"+getSenseMetaData", ^{
-        
-        afterEach(^{
-            [SENAPIClient clearStubs];
-        });
-        
-        it(@"should return a SENDeviceMetadata object", ^{
-            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(@{@"sense_id" : @"Sense",
-                        @"paired_accounts" : @(1)}, nil);
-                return nil;
-            }];
-            
-            __block id metadata = nil;
-            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
-                metadata = data;
-            }];
-            [[metadata should] beKindOfClass:[SENDeviceMetadata class]];
-            
-        });
-        
-        it(@"should fail with no metadata", ^{
-            
-            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
-                return nil;
-            }];
-            
-            __block id metadata = nil;
-            __block NSError* metadataError = nil;
-            [SENAPIDevice getSenseMetaData:^(id data, NSError *error) {
-                metadata = data;
-                metadataError = error;
-            }];
-            [[metadata should] beNil];
-            [[metadataError should] beNonNil];
-            
-        });
-        
-    });
-    
-    describe(@"+getNumberOfAccountsForPairedSense", ^{
-        
-        __block NSString* senseId;
-        
-        beforeEach(^{
-            senseId = @"123";
-        });
-        
-        afterEach(^{
-            [SENAPIClient clearStubs];
-            [SENAPIDevice clearStubs];
-        });
-        
-        it(@"should succeed when matching senseId and no error", ^{
-            
-            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(@{@"sense_id" : senseId,
-                        @"paired_accounts" : @(1)}, nil);
-                return nil;
-            }];
-            
-            __block NSNumber* accounts = nil;
-            __block NSError* deviceError = nil;
-            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
-                accounts = data;
-                deviceError = error;
-            }];
-            
-            [[accounts should] equal:@(1)];
-            [[deviceError should] beNil];
-            
-        });
-        
-        it(@"should fail if sense id returned from server does not match ", ^{
-            
-            [SENAPIDevice stub:@selector(getSenseMetaData:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block ([[SENDeviceMetadata alloc] initWithDictionary:@{@"sense_id" : @"doesnotexist",
-                                                                       @"paired_accounts" : @(1)}
-                                                            withType:SENDeviceTypeSense], nil);
-                return nil;
-            }];
-            
-            __block NSNumber* accounts = nil;
-            __block NSError* deviceError = nil;
-            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
-                accounts = data;
-                deviceError = error;
-            }];
-            
-            [[accounts should] beNil];
-            [[deviceError should] beNonNil];
-            
-        });
-        
-        it(@"should fail if API client fails ", ^{
-            
-            [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock block = [params lastObject];
-                block(nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
-                return nil;
-            }];
-            
-            __block NSNumber* accounts = nil;
-            __block NSError* deviceError = nil;
-            [SENAPIDevice getNumberOfAccountsForPairedSense:senseId completion:^(id data, NSError *error) {
-                accounts = data;
-                deviceError = error;
-            }];
-            
-            [[accounts should] beNil];
-            [[deviceError should] beNonNil];
-            
-        });
-        
-    });
-    
-    describe(@"+removeAssociationsToSense:completion", ^{
-        
-        it(@"fail when no device passed is nil", ^{
+        context(@"a pill and sense is paired", ^{
             
             __block NSError* apiError = nil;
-            [SENAPIDevice removeAssociationsToSense:nil completion:^(id data, NSError *error) {
-                apiError = error;
-            }];
-            [[apiError should] beNonNil];
+            __block id responseObj = nil;
+            __block NSDictionary* fakePill = nil;
+            __block NSDictionary* fakeSense = nil;
+            
+            beforeEach(^{
+                fakeSense = CreateFakeSenseData();
+                fakePill = CreateFakePillData();
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@{@"senses" : @[fakeSense], @"pills" : @[fakePill]}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+                fakePill = nil;
+                fakeSense = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a SENPairedDevices object", ^{
+                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
+            });
+            
+            it(@"should have a paired sense", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedSense]) should] beYes];
+            });
+            
+            it(@"should have a paired pill", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedPill]) should] beYes];
+            });
+            
+            it(@"should contain a proper sense metadata object", ^{
+                SENPairedDevices* devices = responseObj;
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
+                [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
+            });
+            
+            it(@"should contain a proper pill metadata object", ^{
+                SENPairedDevices* devices = responseObj;
+                SENPillMetadata* pillMetadata = [devices pillMetadata];
+                [[[pillMetadata uniqueId] should] equal:fakePill[@"id"]];
+            });
             
         });
         
-        it(@"fail when device is not of Sense", ^{
-            
-            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                               type:SENDeviceTypePill
-                                                              state:SENDeviceStateNormal
-                                                              color:SENDeviceColorBlue
-                                                    firmwareVersion:@"1"
-                                                           lastSeen:nil];
+    });
+    
+    describe(@"+ getPairingInfo", ^{
+        
+        context(@"no sense paired to account", ^{
             
             __block NSError* apiError = nil;
-            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
-                apiError = error;
-            }];
-            [[apiError should] beNonNil];
+            __block id responseObj = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(nil, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should not return any data", ^{
+                [[responseObj should] beNil];
+            });
             
         });
         
-        it(@"fail when device does not have a device id", ^{
-            
-            SENDevice* device = [[SENDevice alloc] initWithDeviceId:nil
-                                                               type:SENDeviceTypeSense
-                                                              state:SENDeviceStateNormal
-                                                              color:SENDeviceColorBlack
-                                                    firmwareVersion:@"1"
-                                                           lastSeen:[NSDate date]];
+        context(@"sense paired to account", ^{
             
             __block NSError* apiError = nil;
-            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
-                apiError = error;
-            }];
-            [[apiError should] beNonNil];
+            __block id responseObj = nil;
+            __block NSNumber* accountsPairedToSense = nil;
+            
+            beforeEach(^{
+                NSDictionary* fakePairingInfo = CreateFakePairingInfo();
+                accountsPairedToSense = fakePairingInfo[@"paired_accounts"];
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(fakePairingInfo, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairingInfo:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                accountsPairedToSense = nil;
+                apiError = nil;
+                responseObj = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a SENDevicePairingInfo object", ^{
+                [[responseObj should] beKindOfClass:[SENDevicePairingInfo class]];
+            });
+            
+            it(@"should return same account paired count", ^{
+                SENDevicePairingInfo* pairingInfo = responseObj;
+                [[[pairingInfo pairedAccounts] should] equal:accountsPairedToSense];
+            });
             
         });
         
-        it(@"succeeds (no error)", ^{
-            
-            [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
-                SENAPIDataBlock callback = [params lastObject];
-                callback (nil, nil);
-                return nil;
-            }];
-            
-            SENDevice* device = [[SENDevice alloc] initWithDeviceId:@"1"
-                                                               type:SENDeviceTypeSense
-                                                              state:SENDeviceStateNormal
-                                                              color:SENDeviceColorBlack
-                                                    firmwareVersion:@"1"
-                                                           lastSeen:[NSDate date]];
+    });
+    
+    describe(@"+ unregisterPill:completion", ^{
+        
+        context(@"no error is encountered", ^{
+           
             __block BOOL calledBack = NO;
             __block NSError* apiError = nil;
-            [SENAPIDevice removeAssociationsToSense:device completion:^(id data, NSError *error) {
-                apiError = error;
-                calledBack = YES;
-            }];
             
-            [[apiError should] beNil];
-            [[@(calledBack) should] beYes];
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSDictionary* fakePillData = CreateFakePillData();
+                SENPillMetadata* pillMetadata = [[SENPillMetadata alloc] initWithDictionary:fakePillData];
+                [SENAPIDevice unregisterPill:pillMetadata completion:^(id data, NSError *error) {
+                    calledBack = YES;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                calledBack = YES;
+                apiError = nil;
+            });
+            
+            it(@"should callback", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
         });
-
+        
+        context(@"no pill id in metadata", ^{
+            
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSMutableDictionary* fakePillData = [CreateFakePillData() mutableCopy];
+                [fakePillData removeObjectForKey:@"id"];
+                SENPillMetadata* pillMetadata = [[SENPillMetadata alloc] initWithDictionary:fakePillData];
+                [SENAPIDevice unregisterPill:pillMetadata completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+            });
+            
+            it(@"should not return an invalid param error", ^{
+                [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"+ unregisterSense:completion", ^{
+        
+        context(@"no error is encountered", ^{
+            
+            __block BOOL calledBack = NO;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSDictionary* fakeSenseData = CreateFakeSenseData();
+                SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
+                [SENAPIDevice unregisterSense:senseMetadata completion:^(id data, NSError *error) {
+                    calledBack = YES;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                calledBack = YES;
+                apiError = nil;
+            });
+            
+            it(@"should callback", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+        });
+        
+        context(@"no sense id in metadata", ^{
+            
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData() mutableCopy];
+                [fakeSenseData removeObjectForKey:@"id"];
+                SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
+                [SENAPIDevice unregisterSense:senseMetadata completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+            });
+            
+            it(@"should not return an invalid param error", ^{
+                [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"+ removeAssociationsToSense:completion", ^{
+        
+        context(@"no error is encountered", ^{
+            
+            __block BOOL calledBack = NO;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSDictionary* fakeSenseData = CreateFakeSenseData();
+                SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
+                [SENAPIDevice removeAssociationsToSense:senseMetadata completion:^(id data, NSError *error) {
+                    calledBack = YES;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                calledBack = YES;
+                apiError = nil;
+            });
+            
+            it(@"should callback", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+        });
+        
+        context(@"no sense id in metadata", ^{
+            
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData() mutableCopy];
+                [fakeSenseData removeObjectForKey:@"id"];
+                SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
+                [SENAPIDevice removeAssociationsToSense:senseMetadata completion:^(id data, NSError *error) {
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+            });
+            
+            it(@"should not return an invalid param error", ^{
+                [[@([apiError code]) should] equal:@(SENAPIDeviceErrorInvalidParam)];
+            });
+            
+        });
         
     });
     
