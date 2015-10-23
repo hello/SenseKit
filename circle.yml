@@ -4,6 +4,3 @@ machine:
 dependencies:
   pre:
     - sudo make ci_deps
-test:
-  override:
-    - make ci
