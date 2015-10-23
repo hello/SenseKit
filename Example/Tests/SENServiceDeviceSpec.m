@@ -6,653 +6,232 @@
 //  Copyright (c) 2014 Hello, Inc. All rights reserved.
 //
 #import <Kiwi/Kiwi.h>
-#import <Nocilla/Nocilla.h>
-#import <SenseKit/SenseKit.h>
-
-typedef void(^SENServiceDeviceCheckBlock)(SENServiceDeviceState state);
-
-SENDevice* (^CreateDevice)(SENDeviceType, SENDeviceState, NSDate*) = ^SENDevice*(SENDeviceType type, SENDeviceState state, NSDate* lastSeen) {
-    return [[SENDevice alloc] initWithDeviceId:@"1"
-                                          type:type
-                                         state:state
-                                         color:SENDeviceColorBlack
-                               firmwareVersion:@"1"
-                                      lastSeen:lastSeen];
-};
+#import <SenseKit/Model.h>
+#import <SenseKit/Services.h>
+#import <SenseKit/API.h>
 
 @interface SENServiceDevice()
 
-- (BOOL)isCheckingStates;
-- (void)setCheckingStates:(BOOL)checking;
-- (void)setDeviceState:(SENServiceDeviceState)state;
-- (void)setSenseManager:(SENSenseManager*)manager;
-- (void)setSenseInfo:(SENDevice*)device;
-- (void)setPillInfo:(SENDevice*)device;
-- (void)setLoadingInfo:(BOOL)isLoading;
-- (void)setInfoLoaded:(BOOL)isLoaded;
-- (void)checkDevicesState:(void (^)(SENServiceDeviceState))completion;
 - (void)whenPairedSenseIsReadyDo:(void(^)(NSError* error))completion;
-- (void)checkSenseAndPillState:(void (^)(SENServiceDeviceState))completion;
+- (void)setSenseManager:(SENSenseManager*)manager;
+- (void)setDevices:(SENPairedDevices*)devices;
 
 @end
 
 SPEC_BEGIN(SENServiceDeviceSpec)
 
 describe(@"SENServiceDevice", ^{
-
+    
+    __block SENServiceDevice* service = nil;
+    
     beforeAll(^{
-        [[LSNocilla sharedInstance] start];
+        service = [SENServiceDevice sharedService];
     });
 
-    beforeEach(^{
-        [[SENServiceDevice sharedService] setSenseInfo:nil];
-        [[SENServiceDevice sharedService] setPillInfo:nil];
-        [[SENServiceDevice sharedService] setLoadingInfo:NO];
-        [[SENServiceDevice sharedService] setInfoLoaded:NO];
-    });
-
-    afterAll(^{
-        [[LSNocilla sharedInstance] stop];
-    });
-
-    afterEach(^{
-        [[LSNocilla sharedInstance] clearStubs];
-    });
-
-    describe(@"+sharedService", ^{
-
-        it(@"should be singleton", ^{
-
-            SENService* service1 = [SENServiceDevice sharedService];
-            SENService* service2 = [SENServiceDevice sharedService];
-            [[service1 should] beIdenticalTo:service2];
-
-            SENService* service3 = [[SENServiceDevice alloc] init];
-            [[service1 should] beIdenticalTo:service3];
-
-        });
-
-    });
-
-    describe(@"-loadDeviceInfo:", ^{
-
-        context(@"info is not being loaded already", ^{
-
-            __block SENDevice *sense, *pill;
-
-            beforeEach(^{
-                sense = CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date]);
-                pill = CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, [NSDate date]);
-                [SENAPIDevice stub:@selector(getPairedDevices:) withBlock:^id(NSArray *params) {
-                    SENAPIDataBlock block = [params lastObject];
-                    block(@[sense, pill], nil);
-                    return nil;
-                }];
-            });
-
-            it(@"fetches paired device info from the API", ^{
-                [[SENAPIDevice should] receive:@selector(getPairedDevices:)];
-                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
-            });
-
-            it(@"updates sense info with device metadata", ^{
-                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
-                [[[[SENServiceDevice sharedService] senseInfo] should] equal:sense];
-            });
-
-            it(@"update pill info with device metadata", ^{
-                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
-                [[[[SENServiceDevice sharedService] pillInfo] should] equal:pill];
-            });
-        });
-
-        context(@"info is already being loaded", ^{
-
-            beforeEach(^{
-                [[SENServiceDevice sharedService] setLoadingInfo:YES];
-            });
-
-            it(@"invokes the completion block with an error", ^{
-                __block NSError* loadingError = nil;
-                [[SENServiceDevice sharedService] loadDeviceInfo:^(NSError *error) {
-                    loadingError = error;
-                }];
-                [[@([loadingError code]) should] equal:@(SENServiceDeviceErrorInProgress)];
-            });
-
-            it(@"does not make a request for new device info", ^{
-                [[SENAPIDevice shouldNot] receive:@selector(getPairedDevices:)];
-                [[SENServiceDevice sharedService] loadDeviceInfo:NULL];
-            });
-        });
-    });
-
-    describe(@"-loadDeviceInfoIfNeeded:", ^{
-
-        context(@"device info is not yet loaded", ^{
-
-            beforeEach(^{
-                [SENAPIDevice stub:@selector(getPairedDevices:) withBlock:^id(NSArray *params) {
-                    SENAPIDataBlock block = [params lastObject];
-                    block(nil, nil);
-                    return nil;
-                }];
-            });
-
-            it(@"loads device info", ^{
-                [[SENAPIDevice should] receive:@selector(getPairedDevices:)];
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:NULL];
-            });
-
-            it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:^(NSError *error) {
-                    callbackInvoked = YES;
-                }];
-                [[@(callbackInvoked) should] beYes];
-            });
-        });
-
-        context(@"device info is being loaded", ^{
-
-            beforeEach(^{
-                [[SENServiceDevice sharedService] setLoadingInfo:YES];
-            });
-
-            it(@"invokes the completion block with an error", ^{
-                __block NSError* loadingError = nil;
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:^(NSError *error) {
-                    loadingError = error;
-                }];
-                [[@([loadingError code]) should] equal:@(SENServiceDeviceErrorInProgress)];
-            });
-
-            it(@"does not reload device info", ^{
-                [[SENAPIDevice shouldNot] receive:@selector(getPairedDevices:)];
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:NULL];
-            });
-        });
-
-        context(@"device info is already loaded", ^{
-
-            beforeEach(^{
-                [[SENServiceDevice sharedService] setSenseInfo:CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date])];
-                [[SENServiceDevice sharedService] setPillInfo:CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, [NSDate date])];
-                [[SENServiceDevice sharedService] setInfoLoaded:YES];
-            });
-
-            it(@"invokes the completion block", ^{
-                __block BOOL callbackInvoked = NO;
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:^(NSError *error) {
-                    callbackInvoked = YES;
-                }];
-                [[@(callbackInvoked) should] beYes];
-            });
-
-            it(@"does not reload device info", ^{
-                [[SENAPIDevice shouldNot] receive:@selector(getPairedDevices:)];
-                [[SENServiceDevice sharedService] loadDeviceInfoIfNeeded:NULL];
-            });
-        });
-    });
-
-    describe(@"-checkDevicesState:", ^{
-
-        __block SENServiceDeviceState deviceState;
-
+    describe(@"- restoreFactorySettings:", ^{
+        
+        __block SENPairedDevices* devices = nil;
+        __block SENSenseManager* manager = nil;
+        __block BOOL calledSetLED = NO;
+        __block BOOL calledRemoveAssociations = NO;
+        __block BOOL calledResetToFactoryOnSense = NO;
+        __block BOOL disconnectedFromSense = NO;
+        __block BOOL calledBack = NO;
+        __block NSError* serviceError = nil;
+        
         beforeEach(^{
-            [SENAuthorizationService stub:@selector(isAuthorized) andReturn:[KWValue valueWithBool:YES]];
+            devices = [SENPairedDevices new];
+            manager = [SENSenseManager new];
         });
-
-        afterEach(^{
-            [SENAuthorizationService clearStubs];
-        });
-
-        context(@"sense is checked", ^{
-
-            __block SENServiceDevice* service;
-
-            beforeEach(^{
-                service = [SENServiceDevice sharedService];
-                deviceState = SENServiceDeviceStateUnknown;
-            });
-
-            afterEach(^{
-                [service clearStubs];
-            });
-
-            context(@"sense is not paired", ^{
-
-                beforeEach(^{
-                    [service setSenseInfo:nil];
-                    [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
-                        void(^callback)(NSError* error) = [params firstObject];
-                        if (callback) callback (nil);
-                        return nil;
-                    }];
-
-                    [service checkDevicesState:^(SENServiceDeviceState state) {
-                        deviceState = state;
-                    }];
-                });
-
-                it(@"returns sense not paired state", ^{
-                    [[@(deviceState) should] equal:@(SENServiceDeviceStateSenseNotPaired)];
-                });
-            });
-
-            context(@"sense has no data", ^{
-
-                beforeEach(^{
-                    [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
-                        [service setSenseInfo:CreateDevice(SENDeviceTypeSense, SENDeviceStateNoData, [NSDate date])];
-                        void(^callback)(NSError* error) = [params firstObject];
-                        if (callback) callback (nil);
-                        return nil;
-                    }];
-
-                    [service checkDevicesState:^(SENServiceDeviceState state) {
-                        deviceState = state;
-                    }];
-                });
-
-                it(@"returns 'no data' state", ^{
-                    [[@(deviceState) should] equal:@(SENServiceDeviceStateSenseNoData)];
-                });
-            });
-        });
-
-        context(@"pill is checked", ^{
-
-            __block SENServiceDevice* service = nil;
-            beforeEach(^{
-                service = [SENServiceDevice sharedService];
-                [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
-                    [service setSenseInfo:CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date])];
-                    void(^callback)(NSError* error) = [params firstObject];
-                    if (callback) callback (nil);
-                    return nil;
-                }];
-            });
-
-            afterEach(^{
-                [service clearStubs];
-            });
-
-            context(@"pill is not paired", ^{
-
-                beforeEach(^{
-                    [service setPillInfo: nil];
-                    [service checkDevicesState:^(SENServiceDeviceState state) {
-                        deviceState = state;
-                    }];
-                });
-
-                it(@"returns pill not paired state", ^{
-                    [[@(deviceState) should] equal:@(SENServiceDeviceStatePillNotPaired)];
-                });
-            });
-
-            context(@"pill has a low battery", ^{
-
-                beforeEach(^{
-                    [service setPillInfo:CreateDevice(SENDeviceTypePill, SENDeviceStateLowBattery, [NSDate date])];
-                    [service checkDevicesState:^(SENServiceDeviceState state) {
-                        deviceState = state;
-                    }];
-                });
-
-                it(@"returns pill has low battery state", ^{
-                    [[@(deviceState) should] equal:@(SENServiceDeviceStatePillLowBattery)];
-                });
-            });
-        });
-    });
-
-    describe(@"-whenPairedSenseIsReadyDo:", ^{
-
-        it(@"Will fail with no sense paired", ^{
-
-            __block NSError* senseError = nil;
-            SENServiceDevice* service = [SENServiceDevice sharedService];
-            [service setSenseInfo:nil];
-            [service whenPairedSenseIsReadyDo:^(NSError *error) {
-                senseError = error;
-            }];
-
-            [[expectFutureValue(@([senseError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseNotPaired)];
-        });
-
-        it(@"Will fail with sense not available", ^{
-
-            __block NSError* senseError = nil;
-            SENServiceDevice* service = [SENServiceDevice sharedService];
-
-            [service setSenseInfo:CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date])];
-            [service whenPairedSenseIsReadyDo:^(NSError *error) {
-                senseError = error;
-            }];
-
-            [[expectFutureValue(@([senseError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseUnavailable)];
-
-        });
-
-    });
-
-    describe(@"-replaceWithNewlyPairedSenseManager:completion", ^{
-
-        __block NSString* deviceId = nil;
-        __block SENServiceDevice* service = nil;
-        __block SENSense* sense = nil;
-
-        beforeEach(^{
-            deviceId = @"1";
-            service = [SENServiceDevice sharedService];
-            sense = [[SENSense alloc] init];
-            [sense stub:@selector(deviceId) andReturn:deviceId];
-            [service stub:@selector(loadDeviceInfo:) withBlock:^id(NSArray *params) {
-                [service setSenseInfo:[[SENDevice alloc] initWithDeviceId:deviceId
-                                                                     type:SENDeviceTypeSense
-                                                                    state:SENDeviceStateNormal
-                                                                    color:SENDeviceColorBlack
-                                                          firmwareVersion:@"1"
-                                                                 lastSeen:[NSDate date]]];
-
-                void(^callback)(NSError* error) = [params firstObject];
-                if (callback) callback (nil);
-                return nil;
-            }];
-        });
-
+        
         afterEach(^{
             [service clearStubs];
-            [sense clearStubs];
-        });
-
-        it(@"should fail because sense manager not initialized with sense", ^{
-
-            __block NSError* deviceError = nil;
-            SENSenseManager* manager = [[SENSenseManager alloc] init];
-            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
-                deviceError = error;
-            }];
-
-            [[expectFutureValue(@([deviceError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseUnavailable)];
-            [[expectFutureValue([service senseManager]) shouldSoon] beNil];
-
-        });
-
-        it(@"should fail if sense in manager not matching device info", ^{
-
-            [sense stub:@selector(deviceId) andReturn:@"notit"];
-            __block NSError* deviceError = nil;
-            SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:sense];
-            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
-                deviceError = error;
-            }];
-
-            [[expectFutureValue(@([deviceError code])) shouldSoon] equal:@(SENServiceDeviceErrorSenseNotMatching)];
-
-        });
-
-        it(@"should succeed with an intiialized sense that matches device info", ^{
-
-            [sense stub:@selector(deviceId) andReturn:deviceId];
-            __block NSError* deviceError = nil;
-            SENSenseManager* manager = [[SENSenseManager alloc] initWithSense:sense];
-            [service replaceWithNewlyPairedSenseManager:manager completion:^(NSError *error) {
-                deviceError = error;
-            }];
-
-            [[expectFutureValue(deviceError) shouldSoon] beNil];
-            [[expectFutureValue([service senseManager]) shouldSoon] beNonNil];
-
-        });
-
-    });
-
-    describe(@"-shouldWarnAboutLastSeenForDevice:", ^{
-        __block SENServiceDevice* service = nil;
-        __block SENDevice* device = nil;
-
-        beforeEach(^{
-            service = [SENServiceDevice sharedService];
-        });
-
-        afterEach(^{
-            device = nil;
-        });
-
-        context(@"sense is checked", ^{
-
-            context(@"sense has been seen recently", ^{
-
-                beforeEach(^{
-                    device = CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate date]);
-                });
-
-                it(@"should return NO", ^{
-                    BOOL warn = [service shouldWarnAboutLastSeenForDevice:device];
-                    [[@(warn) should] beNo];
-                });
-            });
-
-            context(@"sense has not been seen recently", ^{
-
-                beforeEach(^{
-                    device = CreateDevice(SENDeviceTypeSense, SENDeviceStateNormal, [NSDate dateWithTimeIntervalSince1970:0]);
-                });
-
-                it(@"should return YES", ^{
-                    BOOL warn = [service shouldWarnAboutLastSeenForDevice:device];
-                    [[@(warn) should] beYes];
-                });
-            });
-        });
-
-        context(@"pill is checked", ^{
-
-            context(@"pill has been seen recently", ^{
-
-                beforeEach(^{
-                    device = CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, [NSDate date]);
-                });
-
-                it(@"should return NO", ^{
-                    BOOL warn = [service shouldWarnAboutLastSeenForDevice:device];
-                    [[@(warn) should] beNo];
-                });
-            });
-
-            context(@"pill has not been seen recently", ^{
-
-                beforeEach(^{
-                    device = CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, [NSDate dateWithTimeIntervalSince1970:0]);
-                });
-
-                it(@"should return YES", ^{
-                    BOOL warn = [service shouldWarnAboutLastSeenForDevice:device];
-                    [[@(warn) should] beYes];
-                });
-            });
-
-            context(@"pill has never been seen", ^{
-
-                beforeEach(^{
-                    device = CreateDevice(SENDeviceTypePill, SENDeviceStateNormal, nil);
-                });
-
-                it(@"should return NO", ^{
-                    BOOL warn = [service shouldWarnAboutLastSeenForDevice:device];
-                    [[@(warn) should] beNo];
-                });
-            });
-
-        });
-
-    });
-    
-    describe(@"-resetDeviceStates", ^{
-        
-        __block SENServiceDevice* service = nil;
-        
-        beforeAll(^{
-            service = [SENServiceDevice sharedService];
-            [service setDeviceState:SENServiceDeviceStateNormal];
-            [service setCheckingStates:YES];
-            [service setSenseManager:[SENSenseManager new]];
-            [service resetDeviceStates];
+            [SENAPIDevice clearStubs];
+            calledSetLED = NO;
+            calledRemoveAssociations = NO;
+            calledResetToFactoryOnSense = NO;
+            disconnectedFromSense = NO;
+            calledBack = NO;
+            manager = nil;
+            serviceError = nil;
+            devices = nil;
         });
         
-        afterAll(^{
-            [service setSenseManager:nil];
-        });
-        
-        it(@"should reset checking states flag", ^{
-            [[@([service isCheckingStates]) should] beNo];
-        });
-        
-        it(@"should reset actual state", ^{
-            [[@([service deviceState]) should] equal:@(SENServiceDeviceStateUnknown)];
-        });
-        
-        it(@"should not clear sense manager", ^{
-            [[[service senseManager] should] beNonNil];
-        });
-        
-    });
-    
-    describe(@"-unlinkSenseFromAccount:", ^{
-        
-        context(@"sense not paired", ^{
-            
-            __block NSError* unlinkError = nil;
-            __block SENServiceDevice* service = nil;
+        context(@"account has a paired sense, is nearby, and all is happy", ^{
             
             beforeEach(^{
-                service = [SENServiceDevice sharedService];
-                [service unlinkSenseFromAccount:^(NSError *error) {
-                    unlinkError = error;
-                }];
-            });
-            
-            it(@"should return error stating no sense paired", ^{
-                [[@([unlinkError code]) should] equal:@(SENServiceDeviceErrorSenseNotPaired)];
-            });
-            
-        });
-        
-        context(@"sense paired, but API failed with error", ^{
-            
-            __block NSError* unlinkError = nil;
-            __block SENDevice* senseInfo = nil;
-            __block SENSenseManager* senseManager = nil;
-            __block BOOL disconnectCalled = NO;
-            __block SENServiceDevice* service = nil;
-            
-            beforeEach(^{
-                service = [SENServiceDevice sharedService];
-                senseInfo = [SENDevice new];
-                senseManager = [SENSenseManager new];
-                [service setSenseInfo:senseInfo];
-                [service setSenseManager:senseManager];
+                [devices stub:@selector(hasPairedSense) andReturn:[KWValue valueWithBool:YES]];
+                [service stub:@selector(devices) andReturn:devices];
                 
-                [senseManager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
-                    disconnectCalled = YES;
+                [manager stub:@selector(resetToFactoryState:failure:) withBlock:^id(NSArray *params) {
+                    calledResetToFactoryOnSense = YES;
+                    void(^success)(id response) = [params firstObject];
+                    success(nil);
                     return nil;
                 }];
                 
-                [SENAPIDevice stub:@selector(unregisterSense:completion:) withBlock:^id(NSArray *params) {
-                    SENAPIDataBlock block = [params lastObject];
-                    block (nil, [NSError errorWithDomain:@"is.hello.fail" code:-1 userInfo:nil]);
+                [manager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
+                    disconnectedFromSense = YES;
                     return nil;
                 }];
                 
-                [service unlinkSenseFromAccount:^(NSError *error) {
-                    unlinkError = error;
-                }];
-            });
-            
-            afterEach(^{
-                [service setSenseInfo:nil];
-                [service setSenseManager:nil];
-                [SENAPIDevice clearStubs];
-            });
-            
-            it(@"should return error with unlink sense code", ^{
-                [[@([unlinkError code]) should] equal:@(SENServiceDeviceErrorUnlinkSenseFromAccount)];
-            });
-            
-            it(@"should not disconnect Sense", ^{
-                [[@(disconnectCalled) should] beNo];
-            });
-            
-            it(@"should not clear sense manager", ^{
-                [[[service senseManager] should] beNonNil];
-            });
-            
-            it(@"should not clear out sense info", ^{
-                [[[service senseInfo] should] beNonNil];
-            });
-            
-        });
-        
-        context(@"sense paired and API succeeded to unlink sense", ^{
-            
-            __block NSError* unlinkError = nil;
-            __block SENDevice* senseInfo = nil;
-            __block SENSenseManager* senseManager = nil;
-            __block BOOL disconnectCalled = NO;
-            __block SENServiceDevice* service = nil;
-            
-            beforeEach(^{
-                service = [SENServiceDevice sharedService];
-                senseInfo = [SENDevice new];
-                senseManager = [SENSenseManager new];
-                [service setSenseInfo:senseInfo];
-                [service setSenseManager:senseManager];
+                [service stub:@selector(senseManager) andReturn:manager];
                 
-                [senseManager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
-                    disconnectCalled = YES;
+                [service stub:@selector(whenPairedSenseIsReadyDo:) withBlock:^id(NSArray *params) {
+                    void(^block)(NSError* error) = [params lastObject];
+                    block(nil);
                     return nil;
                 }];
                 
-                [SENAPIDevice stub:@selector(unregisterSense:completion:) withBlock:^id(NSArray *params) {
+                [service stub:@selector(setLEDState:completion:) withBlock:^id(NSArray *params) {
+                    calledSetLED = YES;
+                    void(^block)(NSError* error) = [params lastObject];
+                    block (nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice stub:@selector(removeAssociationsToSense:completion:) withBlock:^id(NSArray *params) {
+                    calledRemoveAssociations = YES;
                     SENAPIDataBlock block = [params lastObject];
                     block (nil, nil);
                     return nil;
                 }];
                 
-                [service unlinkSenseFromAccount:^(NSError *error) {
-                    unlinkError = error;
+                [service restoreFactorySettings:^(NSError *error) {
+                    calledBack = YES;
+                    serviceError = error;
                 }];
+                
             });
             
             afterEach(^{
-                [service setSenseInfo:nil];
-                [service setSenseManager:nil];
+                [service clearStubs];
                 [SENAPIDevice clearStubs];
+                calledSetLED = NO;
+                calledRemoveAssociations = NO;
+                calledResetToFactoryOnSense = NO;
+                disconnectedFromSense = NO;
+                calledBack = NO;
+                manager = nil;
+                serviceError = nil;
+                devices = nil;
             });
             
             it(@"should not return an error", ^{
-                [[unlinkError should] beNil];
+                [[serviceError should] beNil];
             });
             
-            it(@"should disconnect from Sense", ^{
-                [[@(disconnectCalled) should] beYes];
+            it(@"should have set LED", ^{
+                [[@(calledSetLED) should] beYes];
             });
             
-            it(@"should clear out sense manager", ^{
-                [[[service senseManager] should] beNil];
+            it(@"should have removed associations", ^{
+                [[@(calledRemoveAssociations) should] beYes];
             });
             
-            it(@"should clear out sense info", ^{
-                [[[service senseInfo] should] beNil];
+            it(@"should have factory reset sense", ^{
+                [[@(calledResetToFactoryOnSense) should] beYes];
             });
+            
+            it(@"should have disconnected sense", ^{
+                [[@(disconnectedFromSense) should] beYes];
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+        });
+        
+        context(@"account does not have a paired sense", ^{
+            
+            beforeEach(^{
+                [devices stub:@selector(hasPairedSense) andReturn:[KWValue valueWithBool:NO]];
+                [service stub:@selector(devices) andReturn:devices];
+                
+                [manager stub:@selector(resetToFactoryState:failure:) withBlock:^id(NSArray *params) {
+                    calledResetToFactoryOnSense = YES;
+                    void(^success)(id response) = [params firstObject];
+                    success(nil);
+                    return nil;
+                }];
+                
+                [manager stub:@selector(disconnectFromSense) withBlock:^id(NSArray *params) {
+                    disconnectedFromSense = YES;
+                    return nil;
+                }];
+                
+                [service stub:@selector(senseManager) andReturn:manager];
+                
+                [service stub:@selector(whenPairedSenseIsReadyDo:) withBlock:^id(NSArray *params) {
+                    void(^block)(NSError* error) = [params lastObject];
+                    block(nil);
+                    return nil;
+                }];
+                
+                [service stub:@selector(setLEDState:completion:) withBlock:^id(NSArray *params) {
+                    calledSetLED = YES;
+                    void(^block)(NSError* error) = [params lastObject];
+                    block (nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice stub:@selector(removeAssociationsToSense:completion:) withBlock:^id(NSArray *params) {
+                    calledRemoveAssociations = YES;
+                    SENAPIDataBlock block = [params lastObject];
+                    block (nil, nil);
+                    return nil;
+                }];
+                
+                [service restoreFactorySettings:^(NSError *error) {
+                    calledBack = YES;
+                    serviceError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [service clearStubs];
+                [SENAPIDevice clearStubs];
+                calledSetLED = NO;
+                calledRemoveAssociations = NO;
+                calledResetToFactoryOnSense = NO;
+                disconnectedFromSense = NO;
+                calledBack = NO;
+                manager = nil;
+                serviceError = nil;
+                devices = nil;
+            });
+            
+            it(@"should return an error with sense unavailable code", ^{
+                [[serviceError should] beNonNil];
+                [[@([serviceError code]) should] equal:@(SENServiceDeviceErrorSenseUnavailable)];
+            });
+            
+            it(@"should not have set LED", ^{
+                [[@(calledSetLED) should] beNo];
+            });
+            
+            it(@"should not have removed associations", ^{
+                [[@(calledRemoveAssociations) should] beNo];
+            });
+            
+            it(@"should not have factory reset sense", ^{
+                [[@(calledResetToFactoryOnSense) should] beNo];
+            });
+            
+            it(@"should not have disconnected sense", ^{
+                [[@(disconnectedFromSense) should] beNo];
+            });
+            
+            it(@"should still have called back though", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
         });
         
     });
-
+    
 });
 
 SPEC_END

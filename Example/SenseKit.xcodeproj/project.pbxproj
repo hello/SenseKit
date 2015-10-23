@@ -366,8 +366,8 @@
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
 				F59D15D8C16B46BEBDEA3249 /* Check Pods Manifest.lock */,
-				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
+				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AC195388D20070C39A /* Resources */,
 				3CDE065A6A6849B1B9986C77 /* Copy Pods Resources */,
 			);
