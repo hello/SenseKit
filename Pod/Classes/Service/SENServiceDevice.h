@@ -12,6 +12,7 @@
 @class SENPairedDevices;
 @class SENSenseManager;
 @class SENSenseWiFiStatus;
+@class SENDeviceMetadata;
 
 extern NSString* const SENServiceDeviceNotificationFactorySettingsRestored;
 extern NSString* const SENServiceDeviceNotificationWarning;
@@ -133,21 +134,11 @@ typedef void(^SENServiceDeviceCompletionBlock)(NSError* error);
 - (void)loadDeviceInfoIfNeeded:(SENServiceDeviceCompletionBlock)completion;
 
 /**
- * @return YES if the loaded info indicates the pill hasn't been seen for a 
- *         theshold configured.  No, if no info to check or is ok.
- *
- * @see @method shouldWarnAboutLastSeenForDevice:
+ * @param metadata: the device metadata
+ * @return YES if the device metadata's last seen date is greater than the specified
+ *         threshold of how long the device should be offline for
  */
-- (BOOL)shouldWarnAboutPillLastSeen;
-
-/**
- * @return YES if the loaded info indicates that Sense hasn't been seen for a
- *         threshold configured.  No, if no info to check or is ok.
- *
- * @see @method shouldWarnAboutLastSeenForDevice:
- */
-- (BOOL)shouldWarnAboutSenseLastSeen;
-
+- (BOOL)shouldWarnAboutLastSeenForDevice:(SENDeviceMetadata*)metadata;
 
 /**
  * @method scanForPairedSense

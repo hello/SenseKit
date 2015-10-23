@@ -101,7 +101,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
 
 - (void)checkSenseState:(void(^)(SENServiceDeviceState state))completion {
     SENServiceDeviceState deviceState
-        = [[self devices] hasPairedSense]
+        = ![[self devices] hasPairedSense]
         ? SENServiceDeviceStateSenseNotPaired
         : SENServiceDeviceStateNormal;
     
@@ -116,7 +116,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
 
 - (void)checkPillState:(void(^)(SENServiceDeviceState state))completion {
     SENServiceDeviceState deviceState
-        = [[self devices] hasPairedPill]
+        = ![[self devices] hasPairedPill]
         ? SENServiceDeviceStatePillNotPaired
         : SENServiceDeviceStateNormal;
     
