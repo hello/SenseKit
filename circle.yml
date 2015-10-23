@@ -5,4 +5,4 @@ machine:
 ## Customize dependencies
 dependencies:
   pre:
-    - gem install xcpretty --no-ri --no-rdoc -v 0.1.12
+    - sudo gem install xcpretty --no-ri --no-rdoc -v 0.1.12
