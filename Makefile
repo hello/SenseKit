@@ -4,8 +4,10 @@ DOCSET_DIR=$(COMPANY_ID).$(PROJECT_NAME)
 DOCSET_BUILD_DIR=docset_build
 DOCTOOL=appledoc --project-name $(PROJECT_NAME) --project-company Hello --company-id $(COMPANY_ID) --index-desc README.md --search-undocumented-doc --keep-undocumented-objects
 
-
 default: test
+
+ci_deps:
+	    gem install xcpretty --no-ri --no-rdoc -v 0.1.12
 
 ci: 
 		$(MAKE) -C Example circleci
