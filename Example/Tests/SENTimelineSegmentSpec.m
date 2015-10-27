@@ -30,7 +30,7 @@ describe(@"initWithDictionary:", ^{
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
         NSComparisonResult result = [[NSCalendar currentCalendar] compareDate:segment.date
                                                                        toDate:date
-                                                            toUnitGranularity:NSSecondCalendarUnit];
+                                                            toUnitGranularity:NSCalendarUnitSecond];
         [[@(result) should] equal:@(NSOrderedSame)];
     });
 

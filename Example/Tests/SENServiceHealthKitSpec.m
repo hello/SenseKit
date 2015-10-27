@@ -264,7 +264,7 @@ describe(@"SENServiceHealthKitSpec", ^{
         
         beforeEach(^{
             calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-            NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
+            NSCalendarUnit unitsWeCareAbout = NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay;
             NSDateComponents* todayComponents = [calendar components:unitsWeCareAbout fromDate:[NSDate date]];
             NSDate* today = [calendar dateFromComponents:todayComponents];
             
@@ -642,7 +642,7 @@ describe(@"SENServiceHealthKitSpec", ^{
         
         beforeEach(^{
             calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-            NSCalendarUnit unitsWeCareAbout = NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit;
+            NSCalendarUnit unitsWeCareAbout = NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay;
             NSDateComponents* todayComponents = [calendar components:unitsWeCareAbout fromDate:[NSDate date]];
             today = [calendar dateFromComponents:todayComponents];
             
