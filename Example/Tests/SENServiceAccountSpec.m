@@ -14,10 +14,12 @@
 #import "SENPreference.h"
 #import "SENAuthorizationService.h"
 #import "SENPreference.h"
+#import "SENAccount.h"
 
 @interface SENServiceAccount()
 
 - (void)setPreferences:(NSDictionary*)preferences;
+- (void)setAccount:(SENAccount*)account;
 
 @end
 
@@ -113,6 +115,17 @@ describe(@"SENServiceAccountSpec", ^{
     
     describe(@"-changeEmail:completion", ^{
         
+        beforeEach(^{
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [service setAccount:[SENAccount new]];
+        });
+        
+        afterEach(^{
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [service setAccount:nil];
+            [service clearStubs];
+        });
+        
         it(@"should return error if email not provided", ^{
             
             __block NSError* invalidError = nil;
@@ -132,30 +145,42 @@ describe(@"SENServiceAccountSpec", ^{
             
         });
         
+        it(@"should trim the email", ^{
+            
+            SENServiceAccount* service = [SENServiceAccount sharedService];
+            [service stub:@selector(refreshAccount:) withBlock:^id(NSArray *params) {
+                SENAccountResponseBlock block = [params lastObject];
+                block (nil);
+                return nil;
+            }];
+            
+            [service changeEmail:@"test@test.com    " completion:nil];
+            [[[[service account] email] should] equal:@"test@test.com"];
+            
+        });
+        
     });
     
     describe(@"-updateAccount", ^{
         
+        beforeEach(^{
+            stubRequest(@"POST", @".*".regex).andReturn(204).withHeader(@"Content-Type", @"application/json");
+            stubRequest(@"GET", @".*".regex).andReturn(200).withHeader(@"Content-Type", @"application/json");
+        });
+        
+        afterEach(^{
+            [[LSNocilla sharedInstance] clearStubs];
+        });
+        
         it(@"should call refreshAccount if account is not yet cached", ^{
             
             SENServiceAccount* service = [SENServiceAccount sharedService];
-            [[service shouldSoon] receive:@selector(refreshAccount:)];
+            [[service should] receive:@selector(refreshAccount:)];
             [service updateAccount:nil];
             
         });
         
         context(@"account refreshed", ^{
-            
-            beforeEach(^{
-                
-                SENServiceAccount* service = [SENServiceAccount sharedService];
-                [service stub:@selector(refreshAccount:) withBlock:^id(NSArray *params) {
-                    SENAccountResponseBlock cb = [params firstObject];
-                    cb(nil);
-                    return nil;
-                }];
-                
-            });
             
             it(@"should call updateAccount:completionBlock of API", ^{
                 
