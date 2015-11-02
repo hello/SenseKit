@@ -173,9 +173,11 @@ NSString* const SENServiceAccountErrorDomain = @"is.hello.service.account";
     if (!serviceError) {
         switch (unrecognizedCode) {
             case 409:
-                return [self errorWithCode:SENServiceAccountErrorPasswordNotRecognized];
+                serviceError = [self errorWithCode:SENServiceAccountErrorPasswordNotRecognized];
+                break;
             default:
                 serviceError = error; // pass error through since it can't be interpreted here
+                break;
         }
     }
 
@@ -219,9 +221,11 @@ NSString* const SENServiceAccountErrorDomain = @"is.hello.service.account";
     if (!serviceError) {
         switch (unrecognizedCode) {
             case 409:
-                return [self errorWithCode:SENServiceAccountErrorEmailAlreadyExists];
+                serviceError = [self errorWithCode:SENServiceAccountErrorEmailAlreadyExists];
+                break;
             default:
                 serviceError = error; // pass error through since it can't be interpreted here
+                break;
         }
     }
     
