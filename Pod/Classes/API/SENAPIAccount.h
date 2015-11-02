@@ -10,6 +10,7 @@ typedef NS_ENUM(NSUInteger, SENAPIAccountError) {
     SENAPIAccountErrorEmailInvalid = 4,
     SENAPIAccountErrorPasswordInsecure = 5,
     SENAPIAccountErrorPasswordTooShort = 6,
+    SENAPIAccountErrorAccountNotUpToDate = 7
 };
 
 extern NSString* const kSENAccountNotificationAccountCreated;
