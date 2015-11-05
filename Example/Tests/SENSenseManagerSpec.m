@@ -301,6 +301,11 @@ describe(@"SENSenseManager", ^{
             
         });
         
+        it(@"should be valid despite cases in lower and upper case", ^{
+            BOOL valid = [SENSenseManager isWepKeyValid:@"9436afD3AD1234567891234567"];
+            [[@(valid) should] beYes];
+        });
+        
         it(@"should be invalid if not hex", ^{
             BOOL valid = [SENSenseManager isWepKeyValid:@"MYNAMEISWEPANDISUCK"];
             [[@(valid) should] beNo];

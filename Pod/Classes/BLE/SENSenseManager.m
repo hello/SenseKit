@@ -1155,7 +1155,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     
     if (valid) {
         NSCharacterSet* hexCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEF"] invertedSet];
-        valid = [key rangeOfCharacterFromSet:hexCharacters].location == NSNotFound;
+        valid = [[key uppercaseString] rangeOfCharacterFromSet:hexCharacters].location == NSNotFound;
     }
     
     return valid;
