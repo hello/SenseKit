@@ -271,39 +271,49 @@ describe(@"SENSenseManager", ^{
         });
     });
     
-    describe(@"setting wifi", ^{
+    describe(@"+isWepKeyValid", ^{
         
-        context(@"WEP network key validation", ^{
+        it(@"should be invalid if empty string", ^{
             
-           it(@"should be invalid if empty string", ^{
-               
-               BOOL valid = [SENSenseManager isWepKeyValid:@""];
-               [[@(valid) should] beNo];
-               
-           });
-            
-            it(@"should be invalid if key has an odd length", ^{
-                
-                BOOL valid = [SENSenseManager isWepKeyValid:@"ABCDEF123"];
-                [[@(valid) should] beNo];
-                
-            });
-            
-            it(@"should be valid with 64/40 bit encryption network key", ^{
-                
-                BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD"];
-                [[@(valid) should] beYes];
-                
-            });
-            
-            it(@"should be valid with 128 bit encryption network key", ^{
-                
-                BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD1234567891234567"];
-                [[@(valid) should] beYes];
-                
-            });
+            BOOL valid = [SENSenseManager isWepKeyValid:@""];
+            [[@(valid) should] beNo];
             
         });
+        
+        it(@"should be invalid if key has an odd length", ^{
+            
+            BOOL valid = [SENSenseManager isWepKeyValid:@"ABCDEF123"];
+            [[@(valid) should] beNo];
+            
+        });
+        
+        it(@"should be valid with 64/40 bit encryption network key", ^{
+            
+            BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD"];
+            [[@(valid) should] beYes];
+            
+        });
+        
+        it(@"should be valid with 128 bit encryption network key", ^{
+            
+            BOOL valid = [SENSenseManager isWepKeyValid:@"9436AFD3AD1234567891234567"];
+            [[@(valid) should] beYes];
+            
+        });
+        
+        it(@"should be valid despite cases in lower and upper case", ^{
+            BOOL valid = [SENSenseManager isWepKeyValid:@"9436afD3AD1234567891234567"];
+            [[@(valid) should] beYes];
+        });
+        
+        it(@"should be invalid if not hex", ^{
+            BOOL valid = [SENSenseManager isWepKeyValid:@"MYNAMEISWEPANDISUCK"];
+            [[@(valid) should] beNo];
+        });
+        
+    });
+    
+    describe(@"setting wifi", ^{
         
         context(@"wifi password converstion to data", ^{
             
@@ -341,7 +351,7 @@ describe(@"SENSenseManager", ^{
                 NSData* data = [manager dataValueForWiFiPassword:@"9436AFD3AD1"
                                                 withSecurityType:SENWifiEndpointSecurityTypeWep
                                                  formattingError:&error];
-                [[error should] beNonNil];
+                [[@([error code]) should] equal:@(SENSenseManagerErrorCodeInvalidWEPKey)];
                 [[data should] beNil];
                 
             });
