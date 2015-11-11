@@ -2,7 +2,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
 pod 'LGBluetooth', :git => 'git@github.com:hello/LGBluetooth.git'
-pod 'Mixpanel-simple', :git => 'git@github.com:hello/Mixpanel-simple.git'
 pod "SenseKit", :path => "../"
 
 target 'Tests', :exclusive => true do
