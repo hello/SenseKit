@@ -5,6 +5,8 @@
 #import "SENSenseMessage.pb.h"
 #import "SENLocalPreferences.h"
 
+typedef BOOL(^SENSenseUpdateBlock)(id response);
+
 @interface SENSenseManager (Private)
 
 - (NSArray*)blePackets:(SENSenseMessage*)message;
@@ -28,6 +30,11 @@
 - (NSData*)dataValueForWiFiPassword:(NSString*)password
                    withSecurityType:(SENWifiEndpointSecurityType)type
                     formattingError:(NSError**)error;
+- (void)sendMessage:(SENSenseMessage*)message
+            timeout:(NSTimeInterval)timeout
+             update:(SENSenseUpdateBlock)update
+            success:(SENSenseSuccessBlock)success
+            failure:(SENSenseFailureBlock)failure;
 
 @end
 
@@ -549,6 +556,87 @@ describe(@"SENSenseManager", ^{
             
             it(@"should return a SENSense object with a device id", ^{
                 [[[sense deviceId] should] equal:everythingId];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"-scanForWifiNetworksForCountry:success:failure", ^{
+        
+        context(@"sends EU as country code", ^{
+            
+            __block NSString* countryCode = nil;
+            __block SENSenseManager* manager = nil;
+            __block SENSenseMessage* message = nil;
+            __block BOOL calledBack = NO;
+            
+            beforeEach(^{
+                countryCode = @"EU";
+                manager = [SENSenseManager new];
+                [manager stub:@selector(sendMessage:timeout:update:success:failure:) withBlock:^id(NSArray *params) {
+                    message = [params firstObject];
+                    SENSenseSuccessBlock success = params[3];
+                    success ([SENSenseMessage new]);
+                    return nil;
+                }];
+                
+                [manager scanForWifiNetworksInCountry:countryCode success:^(id response) {
+                    calledBack = YES;
+                } failure:nil];
+                
+            });
+            
+            afterEach(^{
+                [manager clearStubs];
+                countryCode = nil;
+                manager = nil;
+                message = nil;
+            });
+            
+            it(@"should have EU as country code in sense message", ^{
+                [[[message countryCode] should] equal:countryCode];
+            });
+            
+            it(@"should call back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+        });
+        
+        context(@"no country code sent", ^{
+            
+            __block SENSenseManager* manager = nil;
+            __block SENSenseMessage* message = nil;
+            __block BOOL calledBack = NO;
+            
+            beforeEach(^{
+                manager = [SENSenseManager new];
+                [manager stub:@selector(sendMessage:timeout:update:success:failure:) withBlock:^id(NSArray *params) {
+                    message = [params firstObject];
+                    SENSenseSuccessBlock success = params[3];
+                    success ([SENSenseMessage new]);
+                    return nil;
+                }];
+                
+                [manager scanForWifiNetworksInCountry:nil success:^(id response) {
+                    calledBack = YES;
+                } failure:nil];
+                
+            });
+            
+            afterEach(^{
+                [manager clearStubs];
+                manager = nil;
+                message = nil;
+            });
+            
+            it(@"should not have country code in sense message", ^{
+                [[@([message hasCountryCode]) should] beNo];
+            });
+            
+            it(@"should call back", ^{
+                [[@(calledBack) should] beYes];
             });
             
         });
