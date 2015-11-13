@@ -35,6 +35,8 @@ typedef BOOL(^SENSenseUpdateBlock)(id response);
              update:(SENSenseUpdateBlock)update
             success:(SENSenseSuccessBlock)success
             failure:(SENSenseFailureBlock)failure;
+- (SENSenseMessageBuilder*)messageBuilderWithType:(SENSenseMessageType)type;
+- (BOOL)response:(SENSenseMessage*)response matchesRequestType:(SENSenseMessageType)type;
 
 @end
 
@@ -639,6 +641,55 @@ describe(@"SENSenseManager", ^{
                 [[@(calledBack) should] beYes];
             });
             
+        });
+        
+    });
+    
+    describe(@"- response:matchesRequestType:", ^{
+        
+        __block SENSenseManager* manager = nil;
+        
+        beforeEach(^{
+            manager = [SENSenseManager new];
+        });
+        
+        afterEach(^{
+            manager = nil;
+        });
+        
+        it(@"should return NO if response for start scan is not start or end", ^{
+            SENSenseMessageBuilder* builder = [manager messageBuilderWithType:SENSenseMessageTypeConnectionState];
+            BOOL matches = [manager response:[builder build]
+                          matchesRequestType:SENSenseMessageTypeStartWifiscan];
+            [[@(matches) should] beNo];
+        });
+        
+        it(@"should return YES if response for start scan is to end", ^{
+            SENSenseMessageBuilder* builder = [manager messageBuilderWithType:SENSenseMessageTypeStopWifiscan];
+            BOOL matches = [manager response:[builder build]
+                          matchesRequestType:SENSenseMessageTypeStartWifiscan];
+            [[@(matches) should] beYes];
+        });
+        
+        it(@"should return YES if response for set wifi is connection state change", ^{
+            SENSenseMessageBuilder* builder = [manager messageBuilderWithType:SENSenseMessageTypeConnectionState];
+            BOOL matches = [manager response:[builder build]
+                          matchesRequestType:SENSenseMessageTypeSetWifiEndpoint];
+            [[@(matches) should] beYes];
+        });
+        
+        it(@"should return YES if response type is request type", ^{
+            SENSenseMessageBuilder* builder = [manager messageBuilderWithType:SENSenseMessageTypePairSense];
+            BOOL matches = [manager response:[builder build]
+                          matchesRequestType:SENSenseMessageTypePairSense];
+            [[@(matches) should] beYes];
+        });
+        
+        it(@"should return NO if response type is NOt request type and not one of the wifi commands", ^{
+            SENSenseMessageBuilder* builder = [manager messageBuilderWithType:SENSenseMessageTypePairPill];
+            BOOL matches = [manager response:[builder build]
+                          matchesRequestType:SENSenseMessageTypePairSense];
+            [[@(matches) should] beNo];
         });
         
     });
