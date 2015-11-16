@@ -24,11 +24,14 @@ static NSString* const SENAppStatsQuestionsLastViewed = @"questions_last_viewed"
 }
 
 - (NSDictionary*)dictionaryValue {
-    if (![self lastViewedInsights]) {
-        return @{};
+    NSMutableDictionary *dictionaryValue = [NSMutableDictionary dictionaryWithCapacity:2];
+    if ([self lastViewedInsights]) {
+        dictionaryValue[SENAppStatsInsightsLastViewed] = SENDateMillisecondsSince1970([self lastViewedInsights]);
     }
-    return @{SENAppStatsInsightsLastViewed : SENDateMillisecondsSince1970([self lastViewedInsights]),
-             SENAppStatsQuestionsLastViewed : SENDateMillisecondsSince1970([self lastViewedQuestions])};
+    if ([self lastViewedQuestions]) {
+        dictionaryValue[SENAppStatsQuestionsLastViewed] = SENDateMillisecondsSince1970([self lastViewedQuestions]);
+    }
+    return dictionaryValue;
 }
 
 @end
