@@ -27,7 +27,7 @@ describe(@"SENPillMetadata", ^{
             [[@(state) should] equal:@(SENPillStateLowBattery)];
         });
         
-        it(@"should return low battery state if NORMAL", ^{
+        it(@"should return normal state if NORMAL", ^{
             SENPillMetadata* pillMeta = [SENPillMetadata new];
             SENPillState state = [pillMeta stateFromValue:@"NORMAL"];
             [[@(state) should] equal:@(SENPillStateNormal)];
