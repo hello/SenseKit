@@ -11,6 +11,7 @@ static NSString* const SENInsightId = @"identifier";
 static NSString* const SENInsightText = @"text";
 static NSString* const SENInsightImageUri = @"image_url";
 static NSString* const SENInsightInfoPreviewKey = @"info_preview";
+static NSString* const SENInsightMultiDensityImage = @"image";
 
 static NSString* const SENInsightCategoryGeneric = @"GENERIC";
 
@@ -21,11 +22,18 @@ static NSString* const SENInsightCategoryGeneric = @"GENERIC";
     if (self = [super init]) {
         _title = [dict[SENInsightTitleKey] copy];
         _message = [dict[SENInsightMessageKey] copy];
-        NSNumber* dateMillis = SENObjectOfClass(dict[SENInsightDateCreatedKey], [NSNumber class]);
-        if (dateMillis)
-            _dateCreated = SENDateFromNumber(dateMillis);
         _category = [dict[SENInsightCategory] copy];
         _infoPreview = [dict[SENInsightInfoPreviewKey] copy];
+        
+        NSNumber* dateMillis = SENObjectOfClass(dict[SENInsightDateCreatedKey], [NSNumber class]);
+        if (dateMillis) {
+            _dateCreated = SENDateFromNumber(dateMillis);
+        }
+        
+        NSDictionary* imageDict = SENObjectOfClass(dict[SENInsightMultiDensityImage], [NSDictionary class]);
+        if (imageDict) {
+            _remoteImage = [[SENRemoteImage alloc] initWithDictionary:imageDict];
+        }
     }
     return self;
 }
@@ -38,6 +46,7 @@ static NSString* const SENInsightCategoryGeneric = @"GENERIC";
         _dateCreated = [aDecoder decodeObjectForKey:SENInsightDateCreatedKey];
         _category = [aDecoder decodeObjectForKey:SENInsightCategory];
         _infoPreview = [aDecoder decodeObjectForKey:SENInsightInfoPreviewKey];
+        _remoteImage = [aDecoder decodeObjectForKey:SENInsightMultiDensityImage];
     }
     return self;
 }
@@ -49,6 +58,7 @@ static NSString* const SENInsightCategoryGeneric = @"GENERIC";
     if (self.dateCreated) [aCoder encodeObject:self.dateCreated forKey:SENInsightDateCreatedKey];
     if (self.category) [aCoder encodeObject:self.category forKey:SENInsightCategory];
     if (self.infoPreview) [aCoder encodeObject:self.infoPreview forKey:SENInsightInfoPreviewKey];
+    if (self.remoteImage) [aCoder encodeObject:self.remoteImage forKey:SENInsightMultiDensityImage];
 }
 
 - (BOOL)isGeneric {

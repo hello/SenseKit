@@ -7,8 +7,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import <SenseKit/SENInsight.h>
-
+#import <SenseKit/Model.h>
 
 SPEC_BEGIN(SENInsightSpec)
 
@@ -26,7 +25,10 @@ describe(@"SENInsight", ^{
         NSDictionary* data = @{@"timestamp":@(timeInterval * 1000),
                                @"title": @"The forecast calls for rain",
                                @"message": @"You may need to patch your roof, it is too damp for quality sleep.",
-                               @"category": @"ROOF_SENSOR"};
+                               @"category": @"ROOF_SENSOR",
+                               @"image" : @{@"phone_1x" : @"https://someimage.url.com/1x",
+                                            @"phone_2x" : @"https://someimage.url.com/2x",
+                                            @"phone_3x" : @"https://someimage.url.com/3x"}};
 
         beforeEach(^{
             insight = [[SENInsight alloc] initWithDictionary:data];
@@ -48,6 +50,10 @@ describe(@"SENInsight", ^{
         it(@"sets the category", ^{
             [[insight.category should] equal:data[@"category"]];
         });
+        
+        it(@"should create a SENRemoteImage object", ^{
+            [[insight.remoteImage should] beKindOfClass:[SENRemoteImage class]];
+        });
 
         it(@"is equal to an insight with the same properties", ^{
             SENInsight* other = [[SENInsight alloc] initWithDictionary:data];
@@ -59,6 +65,7 @@ describe(@"SENInsight", ^{
             SENInsight* other = [[SENInsight alloc] initWithDictionary:@{@"title":@"Blue moons are bad for you"}];
             [[insight shouldNot] equal:other];
         });
+
     });
 
     describe(@"isGeneric", ^{
