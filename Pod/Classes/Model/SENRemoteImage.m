@@ -47,11 +47,27 @@ static NSString* const HEMRemoteImageScale3 = @"phone_3x";
         [aCoder encodeObject:[self normalUri] forKey:HEMRemoteImageScale1];
     }
     if ([self doubleScaleUri]) {
-        [aCoder encodeObject:[self normalUri] forKey:HEMRemoteImageScale2];
+        [aCoder encodeObject:[self doubleScaleUri] forKey:HEMRemoteImageScale2];
     }
     if ([self tripeScaleUri]) {
-        [aCoder encodeObject:[self normalUri] forKey:HEMRemoteImageScale3];
+        [aCoder encodeObject:[self tripeScaleUri] forKey:HEMRemoteImageScale3];
     }
+}
+
+- (BOOL)isEqual:(id)other {
+    if (other == self) {
+        return YES;
+    } else if (![other isKindOfClass:[self class]]) {
+        return NO;
+    } else {
+        return ((![self normalUri] && ![other normalUri]) || [[self normalUri] isEqualToString:[other normalUri]])
+            && ((![self doubleScaleUri] && ![other doubleScaleUri]) || [[self doubleScaleUri] isEqualToString:[other doubleScaleUri]])
+            && ((![self tripeScaleUri] && ![other tripeScaleUri]) || [[self tripeScaleUri] isEqualToString:[other tripeScaleUri]]);
+    }
+}
+
+- (NSUInteger)hash {
+    return [[self normalUri] hash] + [[self doubleScaleUri] hash] + [[self tripeScaleUri] hash];
 }
 
 @end

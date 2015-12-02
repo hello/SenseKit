@@ -72,17 +72,18 @@ static NSString* const SENInsightCategoryGeneric = @"GENERIC";
     } else if (![other isKindOfClass:[SENInsight class]]) {
         return NO;
     } else {
-        return ((self.title && [self.title isEqualToString:other.title]) || (!self.title && !other.title))
-            && ((self.message && [self.message isEqualToString:other.message]) || (!self.message && !other.message))
-            && ((self.dateCreated && [self.dateCreated isEqualToDate:other.dateCreated]) || (!self.dateCreated && !other.dateCreated))
-            && ((self.infoPreview && [self.infoPreview isEqualToString:other.infoPreview]) || (!self.infoPreview && !other.infoPreview))
-            && ((self.category && [self.category isEqualToString:other.category]) || (!self.category && !other.category));
+        return ([self.title isEqualToString:other.title] || (!self.title && !other.title))
+            && ([self.message isEqualToString:other.message] || (!self.message && !other.message))
+            && ([self.dateCreated isEqualToDate:other.dateCreated] || (!self.dateCreated && !other.dateCreated))
+            && ([self.infoPreview isEqualToString:other.infoPreview] || (!self.infoPreview && !other.infoPreview))
+            && ([self.category isEqualToString:other.category] || (!self.category && !other.category))
+            && ([self.remoteImage isEqual:other.remoteImage] || (!self.remoteImage && !other.remoteImage));
     }
 }
 
 - (NSUInteger)hash
 {
-    return [self.title hash] + [self.message hash] + [self.dateCreated hash] + [self.category hash] + [self.infoPreview hash];
+    return [self.title hash] + [self.message hash] + [self.dateCreated hash] + [self.category hash] + [self.infoPreview hash] + [self.remoteImage hash];
 }
 
 @end
