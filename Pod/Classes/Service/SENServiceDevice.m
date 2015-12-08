@@ -203,7 +203,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
 
 - (void)loadDeviceInfo:(void(^)(NSError* error))completion {
     if (completion) {
-        [self.pendingDeviceInfoDoneBlocks addObject:completion];
+        [self.pendingDeviceInfoDoneBlocks addObject:[completion copy]];
     }
     
     if ([self isLoadingInfo]) {
