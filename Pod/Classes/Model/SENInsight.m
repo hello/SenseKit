@@ -62,7 +62,7 @@ static NSString* const SENInsightCategoryGeneric = @"GENERIC";
     if (self.category) [aCoder encodeObject:self.category forKey:SENInsightCategory];
     if (self.infoPreview) [aCoder encodeObject:self.infoPreview forKey:SENInsightInfoPreviewKey];
     if (self.remoteImage) [aCoder encodeObject:self.remoteImage forKey:SENInsightMultiDensityImage];
-    if (self.categoryName) [aCoder encodeObject:self.remoteImage forKey:SENInsightCategoryName];
+    if (self.categoryName) [aCoder encodeObject:self.categoryName forKey:SENInsightCategoryName];
 }
 
 - (BOOL)isGeneric {
