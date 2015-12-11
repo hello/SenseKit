@@ -3,6 +3,11 @@
 
 typedef void (^SENAPIDataBlock)(id data, NSError* error);
 typedef void (^SENAPIErrorBlock)(NSError* error);
+typedef void (^SENAFFailureBlock)(NSURLSessionDataTask *, NSError *);
+typedef void (^SENAFSuccessBlock)(NSURLSessionDataTask *, id responseObject);
+
+extern SENAFFailureBlock (^SENAPIClientRequestFailureBlock)(SENAPIDataBlock);
+extern SENAFSuccessBlock (^SENAPIClientRequestSuccessBlock)(SENAPIDataBlock);
 
 /**
  *  Notification sent when Sense API is changed to reachable

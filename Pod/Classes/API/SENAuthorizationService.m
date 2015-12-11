@@ -1,7 +1,5 @@
 
 #import <AFNetworking/AFHTTPSessionManager.h>
-#import <AFNetworking/AFHTTPRequestOperation.h>
-#import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import <FXKeychain/FXKeychain.h>
 
 #import "SENAuthorizationService.h"
@@ -130,6 +128,17 @@ static NSString* const SENAuthorizationServiceAuthorizationHeaderKey = @"Authori
 
 #pragma mark Private
 
++ (AFHTTPSessionManager *)sessionManager {
+    static AFHTTPSessionManager* manager;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[SENAPIClient baseURL]];
+        manager.requestSerializer = [AFHTTPRequestSerializer new];
+        [manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    });
+    return manager;
+}
+
 + (void)authorize:(NSString*)username password:(NSString*)password onCompletion:(void(^)(NSDictionary* response, NSError* error))block {
     if (SENAuthorizationServiceClientID.length == 0) {
         if (block)
@@ -140,20 +149,11 @@ static NSString* const SENAuthorizationServiceAuthorizationHeaderKey = @"Authori
                               @"client_id" : SENAuthorizationServiceClientID,
                               @"username" : username ?: @"",
                               @"password" : password ?: @"" };
-    
-    NSURL* url = [[SENAPIClient baseURL] URLByAppendingPathComponent:SENAuthorizationServiceTokenPath];
-    NSMutableURLRequest* request = [[self requestSerializer] requestWithMethod:@"POST" URLString:[url absoluteString] parameters:params error:nil];
-    
-    AFHTTPRequestOperation* operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation* operation, id responseObject) {
-        NSDictionary* response = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];
-        if (block)
-            block(response, operation.error);
-    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
-        if (block)
-            block(nil, error);
-    }];
-    [[AFHTTPRequestOperationManager manager].operationQueue addOperation:operation];
+
+    [[self sessionManager] POST:SENAuthorizationServiceTokenPath
+                     parameters:params
+                        success:SENAPIClientRequestSuccessBlock(block)
+                        failure:SENAPIClientRequestFailureBlock(block)];
 }
 
 + (id)authorizationHeaderValue

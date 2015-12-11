@@ -1,1 +1,1 @@
-../../../../../Pod/Classes/Model/SENSense.h
+../../../../../Pod/Classes/BLE/SENSense.h

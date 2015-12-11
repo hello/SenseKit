@@ -7,7 +7,8 @@ Pod::Spec.new do |s|
   s.author           = { "Delisa Mason" => "iskanamagus@gmail.com", "Jimmy Lu" => "jimmy.m.lu@gmail.com" }
   s.source           = { :git => "https://github.com/hello/SenseKit.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '7.0'
+  s.ios.platform     = :ios, '8.0'
+  s.watchos.platform = :watchos, '2.0'
   s.requires_arc = true
 
   s.resources = 'Pod/Assets/*.png'
@@ -22,6 +23,11 @@ Pod::Spec.new do |s|
     ss.dependency 'FXKeychain', '~> 1.5.1'
     ss.dependency 'AFNetworking', '~> 2.6.0'
     ss.dependency 'NSJSONSerialization-NSNullRemoval', '~> 1.0.0'
+  end
+
+  s.subspec "API-UIKit" do |ss|
+    ss.source_files = 'Pod/Classes/API-UIKit/*'
+    ss.dependency 'SenseKit/API', s.version.to_s
   end
 
   s.subspec "BLE" do |ss|

@@ -1,1 +1,1 @@
-../../../../../Pod/Classes/Model/SENSenseWiFiStatus.h
+../../../../../Pod/Classes/BLE/SENSenseWiFiStatus.h
