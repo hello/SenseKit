@@ -67,31 +67,6 @@ describe(@"SENInsight", ^{
         });
 
     });
-
-    describe(@"isGeneric", ^{
-
-        context(@"category is generic", ^{
-
-            beforeEach(^{
-                insight = [[SENInsight alloc] initWithDictionary:@{@"category":@"GENERIC"}];
-            });
-
-            it(@"is YES", ^{
-                [[@([insight isGeneric]) should] beYes];
-            });
-        });
-
-        context(@"category is not generic", ^{
-
-            beforeEach(^{
-                insight = [[SENInsight alloc] initWithDictionary:@{@"category":@"SNAZZ"}];
-            });
-
-            it(@"is YES", ^{
-                [[@([insight isGeneric]) should] beNo];
-            });
-        });
-    });
     
     describe(@"-isEqual:", ^{
         
