@@ -299,7 +299,7 @@ describe(@"SENAPIQuestionsSpec", ^{
             NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setCalendar:gregorian];
             [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-            [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+            [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
             dateParam = [dateFormatter stringFromDate:date];
         });
         

@@ -39,7 +39,6 @@
 		8AF2CFD619B63A1D00D09600 /* SENTimelineSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2CFD519B63A1D00D09600 /* SENTimelineSpec.m */; };
 		A074E0189DF84269ACBD8754 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F567B2B7C8E6429891E89AFC /* libPods.a */; };
 		BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF05C8DD1A392032002A1307 /* SENSenseSpec.m */; };
-		BF0E53971A327F76002FB083 /* SENServiceAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF0E53961A327F76002FB083 /* SENServiceAccountSpec.m */; };
 		BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */; };
 		BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */; };
 		BF1E2E791A031DF900DDD0D0 /* SENAPIInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */; };
@@ -117,7 +116,6 @@
 		8AF2CFD519B63A1D00D09600 /* SENTimelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineSpec.m; sourceTree = "<group>"; };
 		BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BF05C8DD1A392032002A1307 /* SENSenseSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseSpec.m; sourceTree = "<group>"; };
-		BF0E53961A327F76002FB083 /* SENServiceAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceAccountSpec.m; sourceTree = "<group>"; };
 		BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIQuestionsSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPITimeZoneSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIInsightSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -324,7 +322,6 @@
 		8AFE76F719E718820000F881 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				BF0E53961A327F76002FB083 /* SENServiceAccountSpec.m */,
 				BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */,
 				BF414CE31A771206006204DE /* SENServiceHealthKitSpec.m */,
 			);
@@ -531,7 +528,6 @@
 				BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */,
 				BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */,
 				8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */,
-				BF0E53971A327F76002FB083 /* SENServiceAccountSpec.m in Sources */,
 				BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */,
 				8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */,
 				BF8339821C0FAF5600BFD0F4 /* SENRemoteImageSpec.m in Sources */,
