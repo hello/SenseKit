@@ -57,7 +57,7 @@ describe(@"SENAccount", ^{
         });
 
         it(@"sets longitude", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lon":@(84.50993)}];
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"long":@(84.50993)}];
             [[[account longitude] should] equal:@(84.50993)];
         });
 
@@ -175,7 +175,7 @@ describe(@"SENAccount", ^{
         });
 
         it(@"sets longitude", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lon":@344}];
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"long":@344}];
             [[[account dictionaryValue][@"long"] should] equal:@344];
         });
 
