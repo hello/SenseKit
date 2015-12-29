@@ -176,7 +176,7 @@ describe(@"SENAccount", ^{
 
         it(@"sets longitude", ^{
             SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lon":@344}];
-            [[[account dictionaryValue][@"lon"] should] equal:@344];
+            [[[account dictionaryValue][@"long"] should] equal:@344];
         });
 
         context(@"gender is male", ^{
