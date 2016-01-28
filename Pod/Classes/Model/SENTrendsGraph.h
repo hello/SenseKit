@@ -7,36 +7,39 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SENConditionRange.h"
+#import "SENCondition.h"
+
+@class SENConditionRange;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, SENTrendTimeScale) {
-    SENTrendTimeScaleUnknown = 1,
-    SENTrendTimeScaleWeek,
-    SENTrendTimeScaleMonth,
-    SENTrendTimeScaleQuarter
+typedef NS_ENUM(NSUInteger, SENTrendsTimeScale) {
+    SENTrendsTimeScaleUnknown = 1,
+    SENTrendsTimeScaleWeek,
+    SENTrendsTimeScaleMonth,
+    SENTrendsTimeScaleQuarter
 };
 
-typedef NS_ENUM(NSUInteger, SENTrendDataType) {
-    SENTrendDataTypeUnknown = 1,
-    SENTrendDataTypeScore,
-    SENTrendDataTypeHour,
-    SENTrendDataTypePercent
+typedef NS_ENUM(NSUInteger, SENTrendsDataType) {
+    SENTrendsDataTypeUnknown = 1,
+    SENTrendsDataTypeScore,
+    SENTrendsDataTypeHour,
+    SENTrendsDataTypePercent
 };
 
-typedef NS_ENUM(NSUInteger, SENTrendDisplayType) {
-    SENTrendDisplayTypeUnknown = 1,
-    SENTrendDisplayTypeGrid,
-    SENTrendDisplayTypeOverview,
-    SENTrendDisplayTypeBar,
-    SENTrendDisplayTypeBubble
+typedef NS_ENUM(NSUInteger, SENTrendsDisplayType) {
+    SENTrendsDisplayTypeUnknown = 1,
+    SENTrendsDisplayTypeGrid,
+    SENTrendsDisplayTypeOverview,
+    SENTrendsDisplayTypeBar,
+    SENTrendsDisplayTypeBubble
 };
 
-SENTrendDataType SENTrendDataTypeFromString(id dataType);
-SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale);
+SENTrendsDataType SENTrendsDataTypeFromString(id dataType);
+SENTrendsTimeScale SENTrendsTimeScaleFromString(id timeScale);
+NSString* SENTrendsTimeScaleValueFromEnum(SENTrendsTimeScale timeScale);
 
-@interface SENTrendGraphSection : NSObject
+@interface SENTrendsGraphSection : NSObject
 
 @property (nonatomic, strong, readonly, nullable) NSArray<NSNumber*>* values;
 @property (nonatomic, strong, readonly, nullable) NSArray<NSString*>* titles;
@@ -47,11 +50,11 @@ SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale);
 
 @end
 
-@interface SENTrendAnnotation : NSObject
+@interface SENTrendsAnnotation : NSObject
 
 @property (nonatomic, copy, readonly, nullable) NSString* title;
 @property (nonatomic, strong, readonly, nullable) NSNumber* value;
-@property (nonatomic, assign, readonly) SENTrendDataType dataType;
+@property (nonatomic, assign, readonly) SENTrendsDataType dataType;
 @property (nonatomic, assign, readonly) SENCondition condition;
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
@@ -60,15 +63,15 @@ SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale);
 
 @interface SENTrendsGraph : NSObject
 
-@property (nonatomic, assign, readonly) SENTrendTimeScale timeScale;
-@property (nonatomic, assign, readonly) SENTrendDataType dataType;
-@property (nonatomic, assign, readonly) SENTrendDisplayType displayType;
+@property (nonatomic, assign, readonly) SENTrendsTimeScale timeScale;
+@property (nonatomic, assign, readonly) SENTrendsDataType dataType;
+@property (nonatomic, assign, readonly) SENTrendsDisplayType displayType;
 @property (nonatomic, copy, readonly, nullable)   NSString* title;
 @property (nonatomic, strong, readonly, nullable) NSNumber* minValue;
 @property (nonatomic, strong, readonly, nullable) NSNumber* maxValue;
 @property (nonatomic, strong, readonly, nullable) NSArray<SENConditionRange*>* conditionRanges;
-@property (nonatomic, strong, readonly, nullable) NSArray<SENTrendGraphSection*>* sections;
-@property (nonatomic, strong, readonly, nullable) NSArray<SENTrendAnnotation*>* annotations;
+@property (nonatomic, strong, readonly, nullable) NSArray<SENTrendsGraphSection*>* sections;
+@property (nonatomic, strong, readonly, nullable) NSArray<SENTrendsAnnotation*>* annotations;
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary;
 

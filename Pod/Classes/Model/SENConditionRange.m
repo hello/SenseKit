@@ -7,7 +7,6 @@
 //
 #import "Model.h"
 #import "SENConditionRange.h"
-#import "SENCondition.h"
 
 static NSString* const SENConditionRangeMinValue = @"min_value";
 static NSString* const SENConditionRangeMaxValue = @"max_value";

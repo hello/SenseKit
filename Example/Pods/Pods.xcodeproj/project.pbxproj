@@ -384,12 +384,12 @@
 		BF1A78D878BF61A137AAD779E23C51D6 /* KWItNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 125042C5D06E50BD92BA19C6B49B16C5 /* KWItNode.h */; };
 		BF47DE48D7901DE149FAF1AC71F90106 /* KWBeforeAllNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9491301C1939D396646E21D4AE28752D /* KWBeforeAllNode.h */; };
 		BFA7DD3622B0580849BE2E462FC30EB6 /* KWConformToProtocolMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 945C3D9CE2415D5124757B0A518CFEFB /* KWConformToProtocolMatcher.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		BFB5249F1C5A9A170062145D /* SENTrendsGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB5249D1C5A9A170062145D /* SENTrendsGraph.h */; };
-		BFB524A01C5A9A170062145D /* SENTrendsGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB5249E1C5A9A170062145D /* SENTrendsGraph.m */; };
-		BFB524A31C5A9D830062145D /* SENConditionRange.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB524A11C5A9D830062145D /* SENConditionRange.h */; };
-		BFB524A41C5A9D830062145D /* SENConditionRange.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB524A21C5A9D830062145D /* SENConditionRange.m */; };
-		BFB524AF1C5AC9110062145D /* SENTrends.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB524AD1C5AC9110062145D /* SENTrends.h */; };
-		BFB524B01C5AC9110062145D /* SENTrends.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB524AE1C5AC9110062145D /* SENTrends.m */; };
+		BFB524B11C5AD2C80062145D /* SENConditionRange.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB524A11C5A9D830062145D /* SENConditionRange.h */; };
+		BFB524B21C5AD2C80062145D /* SENTrendsGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB5249D1C5A9A170062145D /* SENTrendsGraph.h */; };
+		BFB524B31C5AD2C80062145D /* SENTrends.h in Headers */ = {isa = PBXBuildFile; fileRef = BFB524AD1C5AC9110062145D /* SENTrends.h */; };
+		BFB524B41C5AD2D50062145D /* SENConditionRange.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB524A21C5A9D830062145D /* SENConditionRange.m */; };
+		BFB524B51C5AD2D50062145D /* SENTrendsGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB5249E1C5A9A170062145D /* SENTrendsGraph.m */; };
+		BFB524B61C5AD2D50062145D /* SENTrends.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB524AE1C5AC9110062145D /* SENTrends.m */; };
 		BFDB5FD7A340EC83CAE0CCA1213CC464 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63887106F0F5B97D400D273C5D440A7A /* MobileCoreServices.framework */; };
 		BFDCEDF181F681D7CE801CD0F065541F /* SENQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF4EB7E135159B3536518CC3DFD931F /* SENQuestion.m */; };
 		C00FB5ED72C8E19900E90B03AC5D8D84 /* NSString+Nocilla.h in Headers */ = {isa = PBXBuildFile; fileRef = 4A6068559A585675E719C1E1029CCE23 /* NSString+Nocilla.h */; };
@@ -2471,6 +2471,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFB524B11C5AD2C80062145D /* SENConditionRange.h in Headers */,
+				BFB524B21C5AD2C80062145D /* SENTrendsGraph.h in Headers */,
+				BFB524B31C5AD2C80062145D /* SENTrends.h in Headers */,
 				C169EFE292A87744119035B2B362F845 /* API.h in Headers */,
 				5ED808464581937A191A74916B1C8388 /* Analytics.h in Headers */,
 				73AACAE7CE5AC062AC6D762BD3F95A12 /* BLE.h in Headers */,
@@ -2541,10 +2544,7 @@
 				A2C53447AB66B28AA5AA7B20C413A2BC /* AFHTTPSessionManager.h in Headers */,
 				C33B26426F66A8E294AED29D34D46E95 /* AFNetworkActivityIndicatorManager.h in Headers */,
 				CB7B5922FFCFF5B8858060395B60A847 /* AFNetworkReachabilityManager.h in Headers */,
-				BFB5249F1C5A9A170062145D /* SENTrendsGraph.h in Headers */,
 				8C57E043967A714DBF0269E2A862BCA1 /* AFNetworking.h in Headers */,
-				BFB524AF1C5AC9110062145D /* SENTrends.h in Headers */,
-				BFB524A31C5A9D830062145D /* SENConditionRange.h in Headers */,
 				6A074069620A8504DB2A1F881C008344 /* AFSecurityPolicy.h in Headers */,
 				E4A92E1145A25A27179EA1473D16AC76 /* AFURLConnectionOperation.h in Headers */,
 				CAAF5316DE855386C3B0582CC138DECD /* AFURLRequestSerialization.h in Headers */,
@@ -3049,6 +3049,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFB524B41C5AD2D50062145D /* SENConditionRange.m in Sources */,
+				BFB524B51C5AD2D50062145D /* SENTrendsGraph.m in Sources */,
+				BFB524B61C5AD2D50062145D /* SENTrends.m in Sources */,
 				DDDF534F77342E7D110818544423F6AF /* Model.m in Sources */,
 				E03E2345BEE844FBC48BC7584EB4693A /* SENAPIAccount.m in Sources */,
 				755C8EA3796AFABFD22B34E6CABC3DF9 /* SENAPIAlarms.m in Sources */,
@@ -3228,8 +3231,6 @@
 				83D47ACE549CFA4AA95B5452FA13A945 /* AFHTTPRequestOperationManager.m in Sources */,
 				49E9471DC3EB0EF4E8918AF4ED3A7B7B /* AFHTTPSessionManager.m in Sources */,
 				286B372843855C46D38A84C616EE15ED /* AFNetworkActivityIndicatorManager.m in Sources */,
-				BFB524A41C5A9D830062145D /* SENConditionRange.m in Sources */,
-				BFB524B01C5AC9110062145D /* SENTrends.m in Sources */,
 				57329AAC3482E2CC38B1955ED97108F9 /* AFNetworkReachabilityManager.m in Sources */,
 				CCEF9932B14E3B5ACFD6451F85D8BFD7 /* AFNetworking-dummy.m in Sources */,
 				67E56BB32C3CD09A083DF3654E4A4024 /* AFSecurityPolicy.m in Sources */,
@@ -3242,7 +3243,6 @@
 				3799CC4426ADA6CEA3A399AD34A2581A /* UIButton+AFNetworking.m in Sources */,
 				394C6422E3C8CFF8930EEB9708900616 /* UIImageView+AFNetworking.m in Sources */,
 				6A97A19262E9E834A9048C8055543080 /* UIProgressView+AFNetworking.m in Sources */,
-				BFB524A01C5A9A170062145D /* SENTrendsGraph.m in Sources */,
 				1C754722611D6B6EB81EA03199D8D008 /* UIRefreshControl+AFNetworking.m in Sources */,
 				C5E3A54AE912401A4FC049812F55F13F /* UIWebView+AFNetworking.m in Sources */,
 			);

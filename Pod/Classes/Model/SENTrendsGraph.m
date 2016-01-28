@@ -1,5 +1,5 @@
 //
-//  SENTrendGraph.m
+//  SENTrendsGraph.m
 //  Pods
 //
 //  Created by Jimmy Lu on 1/28/16.
@@ -9,61 +9,74 @@
 #import "SENTrendsGraph.h"
 #import "SENConditionRange.h"
 
-static NSString* const SENTrendGraphSectionValues = @"values";
-static NSString* const SENTrendGraphSectionTitles = @"titles";
-static NSString* const SENTrendGraphSectionHighlightedValues = @"highlighted_values";
-static NSString* const SENTrendGraphSectionHighlightedTitle = @"highlighted_title";
-static NSString* const SENTrendGraphTitle = @"title";
-static NSString* const SENTrendGraphValue = @"value";
-static NSString* const SENTrendGraphDataType = @"data_type";
-static NSString* const SENTrendGraphDataTypeScore = @"SCORES";
-static NSString* const SENTrendGraphDataTypeHour = @"HOURS";
-static NSString* const SENTrendGraphDataTypePercent = @"PERCENTS";
-static NSString* const SENTrendGraphCondition = @"condition";
-static NSString* const SENTrendGraphDisplayType = @"graph_type";
-static NSString* const SENTrendGraphDisplayTypeGrid = @"GRID";
-static NSString* const SENTrendGraphDisplayTypeOverview = @"OVERVIEW";
-static NSString* const SENTrendGraphDisplayTypeBar = @"BAR";
-static NSString* const SENTrendGraphDisplayTypeBubble = @"BUBBLES";
-static NSString* const SENTrendGraphTimeScale = @"time_scale";
-static NSString* const SENTrendGraphTimeScaleWeek = @"last_week";
-static NSString* const SENTrendGraphTimeScaleMonth = @"last_month";
-static NSString* const SENTrendGraphTimeScaleQuarter = @"last_3_months";
-static NSString* const SENTrendGraphMinValue = @"min_value";
-static NSString* const SENTrendGraphMaxValue = @"max_value";
-static NSString* const SENTrendGraphSections = @"sections";
-static NSString* const SENTrendGraphConditionRanges = @"condition_ranges";
-static NSString* const SENTrendGraphAnnotations = @"annotations";
+static NSString* const SENTrendsGraphSectionValues = @"values";
+static NSString* const SENTrendsGraphSectionTitles = @"titles";
+static NSString* const SENTrendsGraphSectionHighlightedValues = @"highlighted_values";
+static NSString* const SENTrendsGraphSectionHighlightedTitle = @"highlighted_title";
+static NSString* const SENTrendsGraphTitle = @"title";
+static NSString* const SENTrendsGraphValue = @"value";
+static NSString* const SENTrendsGraphDataType = @"data_type";
+static NSString* const SENTrendsGraphDataTypeScore = @"SCORES";
+static NSString* const SENTrendsGraphDataTypeHour = @"HOURS";
+static NSString* const SENTrendsGraphDataTypePercent = @"PERCENTS";
+static NSString* const SENTrendsGraphCondition = @"condition";
+static NSString* const SENTrendsGraphDisplayType = @"graph_type";
+static NSString* const SENTrendsGraphDisplayTypeGrid = @"GRID";
+static NSString* const SENTrendsGraphDisplayTypeOverview = @"OVERVIEW";
+static NSString* const SENTrendsGraphDisplayTypeBar = @"BAR";
+static NSString* const SENTrendsGraphDisplayTypeBubble = @"BUBBLES";
+static NSString* const SENTrendsGraphTimeScale = @"time_scale";
+static NSString* const SENTrendsGraphTimeScaleWeek = @"last_week";
+static NSString* const SENTrendsGraphTimeScaleMonth = @"last_month";
+static NSString* const SENTrendsGraphTimeScaleQuarter = @"last_3_months";
+static NSString* const SENTrendsGraphMinValue = @"min_value";
+static NSString* const SENTrendsGraphMaxValue = @"max_value";
+static NSString* const SENTrendsGraphSections = @"sections";
+static NSString* const SENTrendsGraphConditionRanges = @"condition_ranges";
+static NSString* const SENTrendsGraphAnnotations = @"annotations";
 
-SENTrendDataType SENTrendDataTypeFromString(id dataType) {
-    SENTrendDataType type = SENTrendDataTypeUnknown;
+SENTrendsDataType SENTrendsDataTypeFromString(id dataType) {
+    SENTrendsDataType type = SENTrendsDataTypeUnknown;
     if ([dataType isKindOfClass:[NSString class]]) {
-        if ([dataType isEqualToString:SENTrendGraphDataTypeScore]) {
-            type = SENTrendDataTypeScore;
-        } else if ([dataType isEqualToString:SENTrendGraphDataTypeHour]) {
-            type = SENTrendDataTypeHour;
-        } else if ([dataType isEqualToString:SENTrendGraphDataTypePercent]) {
-            type = SENTrendDataTypePercent;
+        if ([dataType isEqualToString:SENTrendsGraphDataTypeScore]) {
+            type = SENTrendsDataTypeScore;
+        } else if ([dataType isEqualToString:SENTrendsGraphDataTypeHour]) {
+            type = SENTrendsDataTypeHour;
+        } else if ([dataType isEqualToString:SENTrendsGraphDataTypePercent]) {
+            type = SENTrendsDataTypePercent;
         }
     }
     return type;
 }
 
-SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale) {
-    SENTrendTimeScale time = SENTrendTimeScaleUnknown;
+SENTrendsTimeScale SENTrendsTimeScaleFromString(id timeScale) {
+    SENTrendsTimeScale time = SENTrendsTimeScaleUnknown;
     if ([timeScale isKindOfClass:[NSString class]]) {
-        if ([timeScale isEqualToString:SENTrendGraphTimeScaleWeek]) {
-            time = SENTrendTimeScaleWeek;
-        } else if ([timeScale isEqualToString:SENTrendGraphTimeScaleMonth]) {
-            time = SENTrendTimeScaleMonth;
-        } else if ([timeScale isEqualToString:SENTrendGraphTimeScaleQuarter]) {
-            time = SENTrendTimeScaleQuarter;
+        if ([timeScale isEqualToString:SENTrendsGraphTimeScaleWeek]) {
+            time = SENTrendsTimeScaleWeek;
+        } else if ([timeScale isEqualToString:SENTrendsGraphTimeScaleMonth]) {
+            time = SENTrendsTimeScaleMonth;
+        } else if ([timeScale isEqualToString:SENTrendsGraphTimeScaleQuarter]) {
+            time = SENTrendsTimeScaleQuarter;
         }
     }
     return time;
 }
 
-@interface SENTrendGraphSection()
+NSString* SENTrendsTimeScaleValueFromEnum(SENTrendsTimeScale timeScale) {
+    switch (timeScale) {
+        case SENTrendsTimeScaleWeek:
+            return SENTrendsGraphTimeScaleWeek;
+        case SENTrendsTimeScaleMonth:
+            return SENTrendsGraphTimeScaleMonth;
+        case SENTrendsTimeScaleQuarter:
+            return SENTrendsGraphTimeScaleQuarter;
+        default:
+            return @"UNDEFINED";
+    }
+}
+
+@interface SENTrendsGraphSection()
 
 @property (nonatomic, strong) NSArray<NSNumber*>* values;
 @property (nonatomic, strong) NSArray<NSString*>* titles;
@@ -72,25 +85,25 @@ SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale) {
 
 @end
 
-@implementation SENTrendGraphSection
+@implementation SENTrendsGraphSection
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
-        _values = SENObjectOfClass(dictionary[SENTrendGraphSectionValues], [NSArray class]);
-        _titles = SENObjectOfClass(dictionary[SENTrendGraphSectionTitles], [NSArray class]);
-        _highlightedValues = SENObjectOfClass(dictionary[SENTrendGraphSectionHighlightedValues], [NSArray class]);
-        _highlightedTitles = SENObjectOfClass(dictionary[SENTrendGraphSectionHighlightedTitle], [NSArray class]);
+        _values = SENObjectOfClass(dictionary[SENTrendsGraphSectionValues], [NSArray class]);
+        _titles = SENObjectOfClass(dictionary[SENTrendsGraphSectionTitles], [NSArray class]);
+        _highlightedValues = SENObjectOfClass(dictionary[SENTrendsGraphSectionHighlightedValues], [NSArray class]);
+        _highlightedTitles = SENObjectOfClass(dictionary[SENTrendsGraphSectionHighlightedTitle], [NSArray class]);
     }
     return self;
 }
 
 - (BOOL)isEqual:(id)object {
-    if (![object isKindOfClass:[SENTrendGraphSection class]]) {
+    if (![object isKindOfClass:[SENTrendsGraphSection class]]) {
         return NO;
     }
     
-    SENTrendGraphSection* other = object;
+    SENTrendsGraphSection* other = object;
     return ((![self values] && ![other values]) || [[self values] isEqual:[other values]])
     && ((![self titles] && ![other titles]) || [[self titles] isEqual:[other titles]])
     && ((![self highlightedValues] && ![other highlightedValues]) || [[self highlightedValues] isEqual:[other highlightedValues]])
@@ -108,34 +121,34 @@ SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale) {
 
 @end
 
-@interface SENTrendAnnotation()
+@interface SENTrendsAnnotation()
 
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, strong) NSNumber* value;
-@property (nonatomic, assign) SENTrendDataType dataType;
+@property (nonatomic, assign) SENTrendsDataType dataType;
 @property (nonatomic, assign) SENCondition condition;
 
 @end
 
-@implementation SENTrendAnnotation
+@implementation SENTrendsAnnotation
 
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
-        _title = SENObjectOfClass(dictionary[SENTrendGraphTitle], [NSString class]);
-        _value = SENObjectOfClass(dictionary[SENTrendGraphValue], [NSNumber class]);
-        _dataType = SENTrendDataTypeFromString(dictionary[SENTrendGraphDataType]);
-        _condition = SENConditionFromString(dictionary[SENTrendGraphCondition]);
+        _title = SENObjectOfClass(dictionary[SENTrendsGraphTitle], [NSString class]);
+        _value = SENObjectOfClass(dictionary[SENTrendsGraphValue], [NSNumber class]);
+        _dataType = SENTrendsDataTypeFromString(dictionary[SENTrendsGraphDataType]);
+        _condition = SENConditionFromString(dictionary[SENTrendsGraphCondition]);
     }
     return self;
 }
 
 - (BOOL)isEqual:(id)object {
-    if (![object isKindOfClass:[SENTrendAnnotation class]]) {
+    if (![object isKindOfClass:[SENTrendsAnnotation class]]) {
         return NO;
     }
     
-    SENTrendAnnotation* other = object;
+    SENTrendsAnnotation* other = object;
     return ((![self title] && ![other title]) || [[self title] isEqualToString:[other title]])
         && ((![self value] && ![other value]) || [[self value] isEqual:[other value]])
         && [self dataType] == [other dataType]
@@ -155,31 +168,31 @@ SENTrendTimeScale SENTrendTimeScaleFromString(id timeScale) {
 
 @interface SENTrendsGraph()
 
-@property (nonatomic, assign) SENTrendTimeScale timeScale;
-@property (nonatomic, assign) SENTrendDataType dataType;
-@property (nonatomic, assign) SENTrendDisplayType displayType;
+@property (nonatomic, assign) SENTrendsTimeScale timeScale;
+@property (nonatomic, assign) SENTrendsDataType dataType;
+@property (nonatomic, assign) SENTrendsDisplayType displayType;
 @property (nonatomic, copy)   NSString* title;
 @property (nonatomic, strong) NSNumber* minValue;
 @property (nonatomic, strong) NSNumber* maxValue;
 @property (nonatomic, strong) NSArray<SENConditionRange*>* conditionRanges;
-@property (nonatomic, strong) NSArray<SENTrendGraphSection*>* sections;
-@property (nonatomic, strong) NSArray<SENTrendAnnotation*>* annotations;
+@property (nonatomic, strong) NSArray<SENTrendsGraphSection*>* sections;
+@property (nonatomic, strong) NSArray<SENTrendsAnnotation*>* annotations;
 
 @end
 
 @implementation SENTrendsGraph
 
-SENTrendDisplayType SENTrendDisplayTypeFromString(id displayType) {
-    SENTrendDisplayType type = SENTrendDisplayTypeUnknown;
+SENTrendsDisplayType SENTrendsDisplayTypeFromString(id displayType) {
+    SENTrendsDisplayType type = SENTrendsDisplayTypeUnknown;
     if ([displayType isKindOfClass:[NSString class]]) {
-        if ([displayType isEqualToString:SENTrendGraphDisplayTypeGrid]) {
-            type = SENTrendDisplayTypeGrid;
-        } else if ([displayType isEqualToString:SENTrendGraphDisplayTypeOverview]) {
-            type = SENTrendDisplayTypeOverview;
-        } else if ([displayType isEqualToString:SENTrendGraphDisplayTypeBar]) {
-            type = SENTrendDisplayTypeBar;
-        } else if ([displayType isEqualToString:SENTrendGraphDisplayTypeBubble]) {
-            type = SENTrendDisplayTypeBubble;
+        if ([displayType isEqualToString:SENTrendsGraphDisplayTypeGrid]) {
+            type = SENTrendsDisplayTypeGrid;
+        } else if ([displayType isEqualToString:SENTrendsGraphDisplayTypeOverview]) {
+            type = SENTrendsDisplayTypeOverview;
+        } else if ([displayType isEqualToString:SENTrendsGraphDisplayTypeBar]) {
+            type = SENTrendsDisplayTypeBar;
+        } else if ([displayType isEqualToString:SENTrendsGraphDisplayTypeBubble]) {
+            type = SENTrendsDisplayTypeBubble;
         }
     }
     return type;
@@ -188,20 +201,20 @@ SENTrendDisplayType SENTrendDisplayTypeFromString(id displayType) {
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
-        _timeScale = SENTrendTimeScaleFromString(dictionary[SENTrendGraphTimeScale]);
-        _dataType = SENTrendDataTypeFromString(dictionary[SENTrendGraphDataType]);
-        _displayType = SENTrendDisplayTypeFromString(dictionary[SENTrendGraphDisplayType]);
-        _title = SENObjectOfClass(dictionary[SENTrendGraphTitle], [NSString class]);
-        _minValue = SENObjectOfClass(dictionary[SENTrendGraphMinValue], [NSNumber class]);
-        _maxValue = SENObjectOfClass(dictionary[SENTrendGraphMaxValue], [NSNumber class]);
+        _timeScale = SENTrendsTimeScaleFromString(dictionary[SENTrendsGraphTimeScale]);
+        _dataType = SENTrendsDataTypeFromString(dictionary[SENTrendsGraphDataType]);
+        _displayType = SENTrendsDisplayTypeFromString(dictionary[SENTrendsGraphDisplayType]);
+        _title = SENObjectOfClass(dictionary[SENTrendsGraphTitle], [NSString class]);
+        _minValue = SENObjectOfClass(dictionary[SENTrendsGraphMinValue], [NSNumber class]);
+        _maxValue = SENObjectOfClass(dictionary[SENTrendsGraphMaxValue], [NSNumber class]);
         
-        NSArray* rawSections = SENObjectOfClass(dictionary[SENTrendGraphSections], [NSArray class]);
+        NSArray* rawSections = SENObjectOfClass(dictionary[SENTrendsGraphSections], [NSArray class]);
         _sections = [self sectionsFromRawValues:rawSections];
         
-        NSArray* rawRanges = SENObjectOfClass(dictionary[SENTrendGraphConditionRanges], [NSArray class]);
+        NSArray* rawRanges = SENObjectOfClass(dictionary[SENTrendsGraphConditionRanges], [NSArray class]);
         _conditionRanges = [self conditionRangesFromRawValues:rawRanges];
         
-        NSArray* rawAnnotations = SENObjectOfClass(dictionary[SENTrendGraphAnnotations], [NSArray class]);
+        NSArray* rawAnnotations = SENObjectOfClass(dictionary[SENTrendsGraphAnnotations], [NSArray class]);
         _annotations = [self annotationsFromRawValues:rawAnnotations];
     }
     return self;
@@ -211,7 +224,7 @@ SENTrendDisplayType SENTrendDisplayTypeFromString(id displayType) {
     NSMutableArray*  sections = [NSMutableArray arrayWithCapacity:[rawSections count]];
     for (id rawSection in rawSections) {
         if ([rawSection isKindOfClass:[NSDictionary class]]) {
-            [sections addObject:[[SENTrendGraphSection alloc] initWithDictionary:rawSection]];
+            [sections addObject:[[SENTrendsGraphSection alloc] initWithDictionary:rawSection]];
         }
     }
     return sections;
@@ -231,7 +244,7 @@ SENTrendDisplayType SENTrendDisplayTypeFromString(id displayType) {
     NSMutableArray*  annotations = [NSMutableArray arrayWithCapacity:[rawAnnotations count]];
     for (id rawAnnotation in rawAnnotations) {
         if ([rawAnnotation isKindOfClass:[NSDictionary class]]) {
-            [annotations addObject:[[SENTrendAnnotation alloc] initWithDictionary:rawAnnotation]];
+            [annotations addObject:[[SENTrendsAnnotation alloc] initWithDictionary:rawAnnotation]];
         }
     }
     return annotations;

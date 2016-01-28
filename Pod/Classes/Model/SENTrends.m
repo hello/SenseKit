@@ -46,7 +46,7 @@ static NSString* const SENTrendsGraphs = @"graphs";
     NSMutableArray<NSNumber*>* timeScales = [NSMutableArray arrayWithCapacity:[rawValues count]];
     for (id timeScale in rawValues) {
         if ([timeScale isKindOfClass:[NSString class]]) {
-            [timeScales addObject:@(SENTrendTimeScaleFromString(timeScale))];
+            [timeScales addObject:@(SENTrendsTimeScaleFromString(timeScale))];
         }
     }
     return timeScales;
