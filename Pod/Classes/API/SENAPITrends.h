@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * @discussion
- * 
+ *
  * Get trends from the v2 API
  *
  * @param timeScale: the time scale to retrieve trends for

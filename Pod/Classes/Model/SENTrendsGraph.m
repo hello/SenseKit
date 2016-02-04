@@ -26,9 +26,9 @@ static NSString* const SENTrendsGraphDisplayTypeOverview = @"OVERVIEW";
 static NSString* const SENTrendsGraphDisplayTypeBar = @"BAR";
 static NSString* const SENTrendsGraphDisplayTypeBubble = @"BUBBLES";
 static NSString* const SENTrendsGraphTimeScale = @"time_scale";
-static NSString* const SENTrendsGraphTimeScaleWeek = @"last_week";
-static NSString* const SENTrendsGraphTimeScaleMonth = @"last_month";
-static NSString* const SENTrendsGraphTimeScaleQuarter = @"last_3_months";
+static NSString* const SENTrendsGraphTimeScaleWeek = @"LAST_WEEK";
+static NSString* const SENTrendsGraphTimeScaleMonth = @"LAST_MONTH";
+static NSString* const SENTrendsGraphTimeScaleQuarter = @"LAST_3_MONTHS";
 static NSString* const SENTrendsGraphMinValue = @"min_value";
 static NSString* const SENTrendsGraphMaxValue = @"max_value";
 static NSString* const SENTrendsGraphSections = @"sections";
@@ -52,11 +52,12 @@ SENTrendsDataType SENTrendsDataTypeFromString(id dataType) {
 SENTrendsTimeScale SENTrendsTimeScaleFromString(id timeScale) {
     SENTrendsTimeScale time = SENTrendsTimeScaleUnknown;
     if ([timeScale isKindOfClass:[NSString class]]) {
-        if ([timeScale isEqualToString:SENTrendsGraphTimeScaleWeek]) {
+        NSString* uppercase = [timeScale uppercaseString];
+        if ([uppercase isEqualToString:SENTrendsGraphTimeScaleWeek]) {
             time = SENTrendsTimeScaleWeek;
-        } else if ([timeScale isEqualToString:SENTrendsGraphTimeScaleMonth]) {
+        } else if ([uppercase isEqualToString:SENTrendsGraphTimeScaleMonth]) {
             time = SENTrendsTimeScaleMonth;
-        } else if ([timeScale isEqualToString:SENTrendsGraphTimeScaleQuarter]) {
+        } else if ([uppercase isEqualToString:SENTrendsGraphTimeScaleQuarter]) {
             time = SENTrendsTimeScaleQuarter;
         }
     }

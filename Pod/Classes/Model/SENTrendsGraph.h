@@ -13,22 +13,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, SENTrendsTimeScale) {
-    SENTrendsTimeScaleUnknown = 1,
+typedef NS_ENUM(NSInteger, SENTrendsTimeScale) {
+    SENTrendsTimeScaleUnknown = 0,
     SENTrendsTimeScaleWeek,
     SENTrendsTimeScaleMonth,
     SENTrendsTimeScaleQuarter
 };
 
-typedef NS_ENUM(NSUInteger, SENTrendsDataType) {
-    SENTrendsDataTypeUnknown = 1,
+typedef NS_ENUM(NSInteger, SENTrendsDataType) {
+    SENTrendsDataTypeUnknown = 0,
     SENTrendsDataTypeScore,
     SENTrendsDataTypeHour,
     SENTrendsDataTypePercent
 };
 
-typedef NS_ENUM(NSUInteger, SENTrendsDisplayType) {
-    SENTrendsDisplayTypeUnknown = 1,
+typedef NS_ENUM(NSInteger, SENTrendsDisplayType) {
+    SENTrendsDisplayTypeUnknown = 0,
     SENTrendsDisplayTypeGrid,
     SENTrendsDisplayTypeOverview,
     SENTrendsDisplayTypeBar,

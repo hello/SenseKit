@@ -24,7 +24,8 @@ static NSString* const SENTrendsGraphs = @"graphs";
 - (instancetype)initWithDictionary:(NSDictionary*)dictionary {
     self = [super init];
     if (self) {
-        _availableTimeScales = SENObjectOfClass(dictionary[SENTrendsAvaiableTimeScales], [NSArray class]);
+        NSArray* rawTimeScales = SENObjectOfClass(dictionary[SENTrendsAvaiableTimeScales], [NSArray class]);
+        _availableTimeScales = [self timeScalesFromRawValues:rawTimeScales];
         
         NSArray* rawGraphs = SENObjectOfClass(dictionary[SENTrendsGraphs], [NSArray class]);
         _graphs = [self graphsFromRawGraphs:rawGraphs];

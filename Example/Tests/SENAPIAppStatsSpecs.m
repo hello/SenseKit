@@ -7,7 +7,6 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import <Nocilla/Nocilla.h>
 #import "SENAPIAppStats.h"
 #import "SENAppStats.h"
 #import "SENAppUnreadStats.h"

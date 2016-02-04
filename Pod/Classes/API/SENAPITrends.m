@@ -69,7 +69,8 @@ static NSString* const SENAPITrendsEndpoint = @"v2/trends";
 }
 
 + (void)trendsForTimeScale:(SENTrendsTimeScale)timeScale completion:(SENAPIDataBlock)completion {
-    NSString* endpoint = [SENAPITrendsEndpoint stringByAppendingPathComponent:SENTrendsTimeScaleValueFromEnum(timeScale)];
+    NSString* scalePath = SENTrendsTimeScaleValueFromEnum(timeScale);
+    NSString* endpoint = [SENAPITrendsEndpoint stringByAppendingPathComponent:scalePath];
     [SENAPIClient GET:endpoint parameters:nil completion:^(id data, NSError *error) {
         SENTrends* trends = nil;
         if ([data isKindOfClass:[NSDictionary class]] && !error) {
