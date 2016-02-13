@@ -190,7 +190,6 @@
 		5CC1C70500A65E5A8F64DCCF43F58EAF /* ASIHTTPRequestStub.h in Headers */ = {isa = PBXBuildFile; fileRef = B71C3928B0F37F242412E98B6A82DBA0 /* ASIHTTPRequestStub.h */; };
 		5D24B00D0AE27F7350B40460CE645940 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D2CAA76B9AAFBB4118A0433BC9021A /* AFHTTPRequestOperationManager.m */; };
 		5D298E78972E96820C974A1FB1EB2FFD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BB3B217753DAB4AA36CE43182E69B9B /* Foundation.framework */; };
-		5D47CC20349C52635D04AADEEAF902EB /* SENTrend.h in Headers */ = {isa = PBXBuildFile; fileRef = 58C51E0B93F30350CAF5D66571261D73 /* SENTrend.h */; };
 		5D89F0C8B58F8CF66AF29A883589D7F3 /* KWExpectationType.h in Headers */ = {isa = PBXBuildFile; fileRef = 5ADF9D79D5506BE2274F120FBB0ADF6A /* KWExpectationType.h */; };
 		5DC3319B087A79FA28C2C8BF7CE44360 /* NSObject+KiwiVerifierAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 76260C9D91607108494E7C2DCE560F51 /* NSObject+KiwiVerifierAdditions.h */; };
 		5E027EB8BBB4E4F85D5C3CAE22C397E8 /* Model.h in Headers */ = {isa = PBXBuildFile; fileRef = 9664F2ECAEEED593DDC628CF06F359C3 /* Model.h */; };
@@ -487,7 +486,6 @@
 		EF8E26AE9192EE644592F71C5B3DA4DD /* KWMatching.h in Headers */ = {isa = PBXBuildFile; fileRef = A2FB4120FD7A27420BD2117CAB2AFECD /* KWMatching.h */; };
 		F01D9738AAEFDB85B3B149B4C40333AB /* KWStringPrefixMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 704540B643573556900D41120737B88B /* KWStringPrefixMatcher.h */; };
 		F02EF0A78EB4AD3FFD292AA38EA14A35 /* SENCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1840FF0CED62C747F33D94F35820FE08 /* SENCondition.m */; };
-		F07782B7D18757B842B9CE2B7184FC8D /* SENTrend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4937D1298B96D51B5BF110A96DE2B61F /* SENTrend.m */; };
 		F3628988B32DD887A9CAAC70D8015470 /* NSMethodSignature+KiwiAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = B19FB1C7DCABB9A5BF2BD9DE5AD9C235 /* NSMethodSignature+KiwiAdditions.h */; };
 		F36791D2B7AF669E9289A1C0644F13E0 /* KWUserDefinedMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = D570C1A6E47CE722D2754D7154A984E2 /* KWUserDefinedMatcher.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F372996B05C799B510B73CF5601A3C27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BB3B217753DAB4AA36CE43182E69B9B /* Foundation.framework */; };
@@ -804,7 +802,6 @@
 		488E792E28CF57C418C025AE0132B314 /* WireFormat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = WireFormat.m; path = src/runtime/Classes/WireFormat.m; sourceTree = "<group>"; };
 		489EDE38B6966F6603A212059BDC5D50 /* SENPairedDevices.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENPairedDevices.h; sourceTree = "<group>"; };
 		4917FE7AB85D1374C648097D21F3B4B1 /* KWNilMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWNilMatcher.m; path = Classes/Matchers/KWNilMatcher.m; sourceTree = "<group>"; };
-		4937D1298B96D51B5BF110A96DE2B61F /* SENTrend.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENTrend.m; sourceTree = "<group>"; };
 		4965A426C2A11003B1E0D2EB6BABE8D6 /* KWBeforeAllNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeforeAllNode.m; path = Classes/Nodes/KWBeforeAllNode.m; sourceTree = "<group>"; };
 		49902322A84D122799DAC176524F2F02 /* KWValue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWValue.m; path = Classes/Core/KWValue.m; sourceTree = "<group>"; };
 		49C5E7343EBD2CEA61A07F6C4C2BB013 /* LGBluetooth-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LGBluetooth-dummy.m"; sourceTree = "<group>"; };
@@ -835,7 +832,6 @@
 		578CC1F3FEFD63DD0ED666C7F592DE2E /* Pods-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-dummy.m"; sourceTree = "<group>"; };
 		5890BAB844B83C7095D72B1B4B5F30D8 /* KWBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBlock.m; path = Classes/Core/KWBlock.m; sourceTree = "<group>"; };
 		58B657E877C7D080BBED9255513DE7DC /* SENAPIAccount.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENAPIAccount.m; sourceTree = "<group>"; };
-		58C51E0B93F30350CAF5D66571261D73 /* SENTrend.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENTrend.h; sourceTree = "<group>"; };
 		5A686DAE20EE2F73370B29BC82F337F8 /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIProgressView+AFNetworking.m"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
 		5A9222F746A3D5840F7DBB5C0476F097 /* Descriptor.pb.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Descriptor.pb.h; path = src/runtime/Classes/Descriptor/Descriptor.pb.h; sourceTree = "<group>"; };
 		5AB29A97F5A1F4B859D47984E2FBB419 /* SENConditionRange.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENConditionRange.m; sourceTree = "<group>"; };
@@ -1544,8 +1540,6 @@
 				F7430FFC992C52FCFF898E178BB79373 /* SENTimelineMetric.m */,
 				01AE55D9438B53FEF51A715D320E96FC /* SENTimelineSegment.h */,
 				B67B4A60D78F2FBDBF99C6A1488D07B3 /* SENTimelineSegment.m */,
-				58C51E0B93F30350CAF5D66571261D73 /* SENTrend.h */,
-				4937D1298B96D51B5BF110A96DE2B61F /* SENTrend.m */,
 				8CF96F9D4DFF1F96867C89846CEFFC40 /* SENTrends.h */,
 				6372B1FADA81825324E05A80EA22A114 /* SENTrends.m */,
 				539AC8149B44D8E05759C188B9F41EDF /* SENTrendsGraph.h */,
@@ -2618,7 +2612,6 @@
 				A3D18CB341F6EAFB5F3A4DDD4B30F16E /* SENTimeline.h in Headers */,
 				7E4DF62088A96538BFE95459F259B1EA /* SENTimelineMetric.h in Headers */,
 				E1CCEA1C5D85C3A68E121501EE95B7CC /* SENTimelineSegment.h in Headers */,
-				5D47CC20349C52635D04AADEEAF902EB /* SENTrend.h in Headers */,
 				A785B17F6473C9D000F39B85054AEAA5 /* SENTrends.h in Headers */,
 				27B646EEC3E8C00FA71EEDCCB0CEE08B /* SENTrendsGraph.h in Headers */,
 				027C5829A603ACF0387AA58DAD8EE72F /* SenseKit.h in Headers */,
@@ -3005,7 +2998,6 @@
 				30C2FA66D318E7F681E5971C57D613F4 /* SENTimeline.m in Sources */,
 				08DDB1288DFE135F5EB2D16FDDC363B3 /* SENTimelineMetric.m in Sources */,
 				E0A4A732629EE37FBC92CF73FAD75924 /* SENTimelineSegment.m in Sources */,
-				F07782B7D18757B842B9CE2B7184FC8D /* SENTrend.m in Sources */,
 				B8F7A63989A68036BF099070931F54C3 /* SENTrends.m in Sources */,
 				28FCBC1CB2A88EADB00104D330AE2B19 /* SENTrendsGraph.m in Sources */,
 				B6D283443373650466D02F8BAA91CAB8 /* SenseKit-dummy.m in Sources */,

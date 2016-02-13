@@ -23,8 +23,6 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		8A22235219B66A4700C3480D /* SENTimelineSegmentSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A22235119B66A4700C3480D /* SENTimelineSegmentSpec.m */; };
 		8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */; };
-		8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */; };
-		8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */; };
 		8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */; };
 		8A45E66E1A819FBB0038AA7A /* SENTimelineMetricSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */; };
 		8A46E46919D49803005E784E /* SENAuthorizationServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A46E46819D49803005E784E /* SENAuthorizationServiceSpec.m */; };
@@ -97,8 +95,6 @@
 		8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A22235119B66A4700C3480D /* SENTimelineSegmentSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineSegmentSpec.m; sourceTree = "<group>"; };
 		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPINotificationSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendSpec.m; sourceTree = "<group>"; };
-		8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTrendDataPointSpec.m; sourceTree = "<group>"; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
 		8A4152BB1BB9BE2200413DCF /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineMetricSpec.m; sourceTree = "<group>"; };
@@ -306,8 +302,6 @@
 				8A45E66D1A819FBB0038AA7A /* SENTimelineMetricSpec.m */,
 				8A22235119B66A4700C3480D /* SENTimelineSegmentSpec.m */,
 				8AF2CFD519B63A1D00D09600 /* SENTimelineSpec.m */,
-				8A37BCC41A66E7C8007CDE44 /* SENTrendDataPointSpec.m */,
-				8A37BCC21A66DDEF007CDE44 /* SENTrendSpec.m */,
 				BF98FC321A96922D00AEC04C /* SENLocalPreferencesSpec.m */,
 				BFEB68571B3A663E002E8524 /* SENAccountSpec.m */,
 				BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */,
@@ -523,7 +517,6 @@
 				8AB29B7E196DC8C0004BE34E /* SENSensorSpec.m in Sources */,
 				BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */,
 				BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */,
-				8A37BCC51A66E7C8007CDE44 /* SENTrendDataPointSpec.m in Sources */,
 				BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */,
 				8A28CB0419CC983C0044A27D /* SENAPINotificationSpec.m in Sources */,
 				BF8339821C0FAF5600BFD0F4 /* SENRemoteImageSpec.m in Sources */,
@@ -537,7 +530,6 @@
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
 				BF8E1A951A6893F1009E421F /* SENPreferenceSpec.m in Sources */,
 				BFF03EC61A533D1E00BD65D4 /* SENServiceDeviceSpec.m in Sources */,
-				8A37BCC31A66DDEF007CDE44 /* SENTrendSpec.m in Sources */,
 				BFB7C3AA1B6072CC001A6280 /* SENSenseWiFiStatusSpec.m in Sources */,
 				8A380D0B19C3930B009D94BE /* SENAPIClientSpec.m in Sources */,
 				8A6659D819DCD35F00C88E9B /* SENAPIAlarmsSpec.m in Sources */,
