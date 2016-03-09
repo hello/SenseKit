@@ -27,10 +27,6 @@
 
     LSStubResponse* stubbedResponse = [[LSNocilla sharedInstance] responseForRequest:request];
 
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    [cookieStorage setCookies:[NSHTTPCookie cookiesWithResponseHeaderFields:stubbedResponse.headers forURL:request.url]
-                       forURL:request.URL mainDocumentURL:request.URL];
-
     if (stubbedResponse.shouldFail) {
         [client URLProtocol:self didFailWithError:stubbedResponse.error];
     } else {
@@ -48,6 +44,9 @@
             [client URLProtocol:self didLoadData:body];
             [client URLProtocolDidFinishLoading:self];
         } else {
+            NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+                      [cookieStorage setCookies:[NSHTTPCookie cookiesWithResponseHeaderFields:stubbedResponse.headers forURL:request.url]
+                                     forURL:request.URL mainDocumentURL:request.URL];
 
             NSURL *newURL = [NSURL URLWithString:[stubbedResponse.headers objectForKey:@"Location"] relativeToURL:request.URL];
             NSMutableURLRequest *redirectRequest = [NSMutableURLRequest requestWithURL:newURL];
