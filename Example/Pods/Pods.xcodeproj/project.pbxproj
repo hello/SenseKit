@@ -415,6 +415,16 @@
 		BF412E911C90E608009514A1 /* SENSleepSoundStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E8F1C90E608009514A1 /* SENSleepSoundStatus.m */; };
 		BF412E981C90EB12009514A1 /* SENSleepSoundRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E961C90EB12009514A1 /* SENSleepSoundRequest.h */; };
 		BF412E991C90EB12009514A1 /* SENSleepSoundRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E971C90EB12009514A1 /* SENSleepSoundRequest.m */; };
+		BF5BACA51C924AA7001E77F6 /* SENAPISleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E7E1C8FAA83009514A1 /* SENAPISleepSounds.h */; };
+		BF5BACA61C924AA7001E77F6 /* SENSleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E861C90D407009514A1 /* SENSleepSounds.h */; };
+		BF5BACA71C924AA7001E77F6 /* SENSleepSoundDurations.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E8A1C90E2EA009514A1 /* SENSleepSoundDurations.h */; };
+		BF5BACA81C924AA7001E77F6 /* SENSleepSoundStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E8E1C90E608009514A1 /* SENSleepSoundStatus.h */; };
+		BF5BACA91C924AA7001E77F6 /* SENSleepSoundRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E961C90EB12009514A1 /* SENSleepSoundRequest.h */; };
+		BF5BACAA1C924AB6001E77F6 /* SENAPISleepSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E7F1C8FAA83009514A1 /* SENAPISleepSounds.m */; };
+		BF5BACAB1C924AB6001E77F6 /* SENSleepSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E871C90D407009514A1 /* SENSleepSounds.m */; };
+		BF5BACAC1C924AB6001E77F6 /* SENSleepSoundDurations.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E8B1C90E2EA009514A1 /* SENSleepSoundDurations.m */; };
+		BF5BACAD1C924AB6001E77F6 /* SENSleepSoundStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E8F1C90E608009514A1 /* SENSleepSoundStatus.m */; };
+		BF5BACAE1C924AB6001E77F6 /* SENSleepSoundRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E971C90EB12009514A1 /* SENSleepSoundRequest.m */; };
 		C00E0C8060229F026DB90633DA44B2AC /* ExtendableMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 258782B12429BFCD793546BD0A2F8064 /* ExtendableMessage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C1E5EFA4AD8688D63EBDF3AE2CB5574C /* KWNotificationMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 586C0D3E56015676C0799B81E785ADE9 /* KWNotificationMatcher.h */; };
 		C32F0FD411CB695CDCDB88EBF13E066D /* LSMatcheable.h in Headers */ = {isa = PBXBuildFile; fileRef = 62B6033F3A76BB050552327034BEAA48 /* LSMatcheable.h */; };
@@ -2511,6 +2521,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF5BACA51C924AA7001E77F6 /* SENAPISleepSounds.h in Headers */,
+				BF5BACA61C924AA7001E77F6 /* SENSleepSounds.h in Headers */,
+				BF5BACA71C924AA7001E77F6 /* SENSleepSoundDurations.h in Headers */,
+				BF5BACA81C924AA7001E77F6 /* SENSleepSoundStatus.h in Headers */,
+				BF5BACA91C924AA7001E77F6 /* SENSleepSoundRequest.h in Headers */,
 				D229245F9F401D5F2F9E1C4A7FA3FCDE /* API.h in Headers */,
 				55401A2490EDB09DB24864279D8E5FB5 /* Analytics.h in Headers */,
 				2AE2CEFD6006313AD5A4F5F2B597141B /* BLE.h in Headers */,
@@ -3109,6 +3124,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF5BACAA1C924AB6001E77F6 /* SENAPISleepSounds.m in Sources */,
+				BF5BACAB1C924AB6001E77F6 /* SENSleepSounds.m in Sources */,
+				BF5BACAC1C924AB6001E77F6 /* SENSleepSoundDurations.m in Sources */,
+				BF5BACAD1C924AB6001E77F6 /* SENSleepSoundStatus.m in Sources */,
+				BF5BACAE1C924AB6001E77F6 /* SENSleepSoundRequest.m in Sources */,
 				323A21AC8B7523B5A00DB2CF40223CE0 /* Model.m in Sources */,
 				1CFE976ACDD67E8EE73D3FB96E0F8E50 /* SENAPIAccount.m in Sources */,
 				350A9F1CA0F357E1D035F57EB685419A /* SENAPIAlarms.m in Sources */,
