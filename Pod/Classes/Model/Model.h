@@ -20,6 +20,9 @@
 #import "SENRemoteImage.h"
 #import "SENTrends.h"
 #import "SENTrendsGraph.h"
+#import "SENSleepSoundDurations.h"
+#import "SENSleepSounds.h"
+#import "SENSleepSoundStatus.h"
 
 void SENClearModel();
 
