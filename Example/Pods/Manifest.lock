@@ -32,7 +32,7 @@ PODS:
   - FXKeychain (1.5.3)
   - Kiwi (2.4.0)
   - LGBluetooth (1.1.4)
-  - Nocilla (HEAD based on 0.10.0)
+  - Nocilla (0.10.0)
   - NSJSONSerialization-NSNullRemoval (1.0.1)
   - SenseKit (0.1.0):
     - SenseKit/Analytics (= 0.1.0)
@@ -61,7 +61,7 @@ PODS:
 DEPENDENCIES:
   - Kiwi
   - LGBluetooth (from `git@github.com:hello/LGBluetooth.git`)
-  - Nocilla (HEAD)
+  - Nocilla
   - SenseKit (from `../`)
   - SHSProtoBuf (from `git@github.com:hello/protobuf-objc.git`)
 
