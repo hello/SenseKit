@@ -405,16 +405,6 @@
 		BE5D743707F2083C1EC9638EF7BEC63C /* NSRegularExpression+Matcheable.h in Headers */ = {isa = PBXBuildFile; fileRef = E30438CC38E8F6FFFCA7AED8A3DFEB0E /* NSRegularExpression+Matcheable.h */; };
 		BED43F8261B643E476B5A211037E9209 /* KWBeWithinMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ED9AC8F23488A57FFAC2AF11C05C304 /* KWBeWithinMatcher.h */; };
 		BEEE3AB420234CC870CEA9A59E547749 /* UIImage+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B1A426DBF80F67C99D169D3CD0E4B6E /* UIImage+AFNetworking.h */; };
-		BF412E801C8FAA83009514A1 /* SENAPISleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E7E1C8FAA83009514A1 /* SENAPISleepSounds.h */; };
-		BF412E811C8FAA83009514A1 /* SENAPISleepSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E7F1C8FAA83009514A1 /* SENAPISleepSounds.m */; };
-		BF412E881C90D407009514A1 /* SENSleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E861C90D407009514A1 /* SENSleepSounds.h */; };
-		BF412E891C90D407009514A1 /* SENSleepSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E871C90D407009514A1 /* SENSleepSounds.m */; };
-		BF412E8C1C90E2EA009514A1 /* SENSleepSoundDurations.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E8A1C90E2EA009514A1 /* SENSleepSoundDurations.h */; };
-		BF412E8D1C90E2EA009514A1 /* SENSleepSoundDurations.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E8B1C90E2EA009514A1 /* SENSleepSoundDurations.m */; };
-		BF412E901C90E608009514A1 /* SENSleepSoundStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E8E1C90E608009514A1 /* SENSleepSoundStatus.h */; };
-		BF412E911C90E608009514A1 /* SENSleepSoundStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E8F1C90E608009514A1 /* SENSleepSoundStatus.m */; };
-		BF412E981C90EB12009514A1 /* SENSleepSoundRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E961C90EB12009514A1 /* SENSleepSoundRequest.h */; };
-		BF412E991C90EB12009514A1 /* SENSleepSoundRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = BF412E971C90EB12009514A1 /* SENSleepSoundRequest.m */; };
 		BF5BACA51C924AA7001E77F6 /* SENAPISleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E7E1C8FAA83009514A1 /* SENAPISleepSounds.h */; };
 		BF5BACA61C924AA7001E77F6 /* SENSleepSounds.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E861C90D407009514A1 /* SENSleepSounds.h */; };
 		BF5BACA71C924AA7001E77F6 /* SENSleepSoundDurations.h in Headers */ = {isa = PBXBuildFile; fileRef = BF412E8A1C90E2EA009514A1 /* SENSleepSoundDurations.h */; };
@@ -2602,21 +2592,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				598167F40C9B89D5AE68903ACDCF4BA7 /* AFHTTPRequestOperation.h in Headers */,
-				BF412E8C1C90E2EA009514A1 /* SENSleepSoundDurations.h in Headers */,
-				BF412E801C8FAA83009514A1 /* SENAPISleepSounds.h in Headers */,
 				A81E1823D3BAD9A2AC23B399F5FABB69 /* AFHTTPRequestOperationManager.h in Headers */,
 				9E83547D21CA75768CC5A29102F2538E /* AFHTTPSessionManager.h in Headers */,
 				4C9BB8C79B9835A13387286D5E4CFC23 /* AFNetworkActivityIndicatorManager.h in Headers */,
 				37403F9DFD88511E1D15D5E457B849BC /* AFNetworkReachabilityManager.h in Headers */,
 				2183738A53735A73DDD36E955735D075 /* AFNetworking.h in Headers */,
-				BF412E881C90D407009514A1 /* SENSleepSounds.h in Headers */,
 				C88A106EB344DFC060ED253400C80571 /* AFSecurityPolicy.h in Headers */,
 				E06D1C06AC098A97AA7DE7C450940D45 /* AFURLConnectionOperation.h in Headers */,
 				548BD3D836659EAA2EDB32B539D51707 /* AFURLRequestSerialization.h in Headers */,
 				15E39EC31A2EB838323C6788904A7166 /* AFURLResponseSerialization.h in Headers */,
 				B2D2EE7C013EFCD1D7C23C3AF6A321C4 /* AFURLSessionManager.h in Headers */,
 				9F9851D28FFF897DF4A41FA7B248808F /* UIActivityIndicatorView+AFNetworking.h in Headers */,
-				BF412E901C90E608009514A1 /* SENSleepSoundStatus.h in Headers */,
 				C8C2874E573C4D7DB836ED6D88D49233 /* UIAlertView+AFNetworking.h in Headers */,
 				2F060A6370D1C9B0A801D2967DB498A6 /* UIButton+AFNetworking.h in Headers */,
 				BEEE3AB420234CC870CEA9A59E547749 /* UIImage+AFNetworking.h in Headers */,
@@ -2625,7 +2611,6 @@
 				70C28F2466820CCD82FE54E84FF209BF /* UIProgressView+AFNetworking.h in Headers */,
 				353361ED2D29AA3FC0703BEBD4E4B91E /* UIRefreshControl+AFNetworking.h in Headers */,
 				688CAA50E6A83336C9FF70378F3D40DB /* UIWebView+AFNetworking.h in Headers */,
-				BF412E981C90EB12009514A1 /* SENSleepSoundRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3220,7 +3205,6 @@
 				7EA2CDDD038C1F37FC2F82921108C641 /* AFNetworkReachabilityManager.m in Sources */,
 				E4BBDF8FBE43F49B9685A35E77630AB0 /* AFNetworking-dummy.m in Sources */,
 				6B1D1837B4F7AF28EE38C507F1528CC5 /* AFSecurityPolicy.m in Sources */,
-				BF412E8D1C90E2EA009514A1 /* SENSleepSoundDurations.m in Sources */,
 				EEE1222221F0D81348453A0E09A96AFE /* AFURLConnectionOperation.m in Sources */,
 				94837062692D9FD3BFFA501510FD33F3 /* AFURLRequestSerialization.m in Sources */,
 				2BF20F75011E2A7FC5D4F893C50781B5 /* AFURLResponseSerialization.m in Sources */,
@@ -3230,12 +3214,8 @@
 				4A829FC86A2FDE7057B3E35F6F039803 /* UIButton+AFNetworking.m in Sources */,
 				6D8D5A9377625B5C74353C326F3B2860 /* UIImageView+AFNetworking.m in Sources */,
 				0AD01C4D871C19CEF58D0ADC8A70F8A5 /* UIProgressView+AFNetworking.m in Sources */,
-				BF412E991C90EB12009514A1 /* SENSleepSoundRequest.m in Sources */,
 				D5F4648DD8473927BCA55A2187AA91FE /* UIRefreshControl+AFNetworking.m in Sources */,
 				82C38575A496766949FE476AE214197E /* UIWebView+AFNetworking.m in Sources */,
-				BF412E891C90D407009514A1 /* SENSleepSounds.m in Sources */,
-				BF412E911C90E608009514A1 /* SENSleepSoundStatus.m in Sources */,
-				BF412E811C8FAA83009514A1 /* SENAPISleepSounds.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
