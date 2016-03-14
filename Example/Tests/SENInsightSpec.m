@@ -26,6 +26,7 @@ describe(@"SENInsight", ^{
                                @"title": @"The forecast calls for rain",
                                @"message": @"You may need to patch your roof, it is too damp for quality sleep.",
                                @"category": @"ROOF_SENSOR",
+                               @"insight_type" : @"BASIC",
                                @"image" : @{@"phone_1x" : @"https://someimage.url.com/1x",
                                             @"phone_2x" : @"https://someimage.url.com/2x",
                                             @"phone_3x" : @"https://someimage.url.com/3x"}};
@@ -64,6 +65,10 @@ describe(@"SENInsight", ^{
         it(@"is not equal to an insight with different properties", ^{
             SENInsight* other = [[SENInsight alloc] initWithDictionary:@{@"title":@"Blue moons are bad for you"}];
             [[insight shouldNot] equal:other];
+        });
+        
+        it(@"should set insight type", ^{
+            [[@(insight.type) should] equal:@(SENInsightTypeBasic)];
         });
 
     });
