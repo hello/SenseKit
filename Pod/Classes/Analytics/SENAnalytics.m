@@ -79,7 +79,6 @@ static NSMutableDictionary* providers;
     }];
 }
 
-
 + (void)reset:(NSString*)userId {
     [providers enumerateKeysAndObjectsUsingBlock:^(NSNumber* key, id<SENAnalyticsProvider> provider, BOOL *stop) {
         if ([provider respondsToSelector:@selector(reset:)]) {
