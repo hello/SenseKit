@@ -76,7 +76,8 @@ static NSMutableDictionary* providers;
     }
     [providers enumerateKeysAndObjectsUsingBlock:^(NSNumber* key, id<SENAnalyticsProvider> provider, BOOL *stop) {
         [provider track:eventName withProperties:mutableProps];
-    }];}
+    }];
+}
 
 
 + (void)reset:(NSString*)userId {
