@@ -70,11 +70,14 @@ static NSMutableDictionary* providers;
         [mutableProps setValue:@([error code]) forKey:kSENAnalyticsPropCode];
         [mutableProps setValue:[error localizedDescription] forKey:kSENAnalyticsPropMessage];
         [mutableProps setValue:[error domain] forKey:kSENAnalyticsPropDomain];
+        if ([[error userInfo] count] > 0) {
+            [mutableProps addEntriesFromDictionary:[error userInfo]];
+        }
     }
     [providers enumerateKeysAndObjectsUsingBlock:^(NSNumber* key, id<SENAnalyticsProvider> provider, BOOL *stop) {
         [provider track:eventName withProperties:mutableProps];
-    }];
-}
+    }];}
+
 
 + (void)reset:(NSString*)userId {
     [providers enumerateKeysAndObjectsUsingBlock:^(NSNumber* key, id<SENAnalyticsProvider> provider, BOOL *stop) {
