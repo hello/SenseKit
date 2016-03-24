@@ -42,6 +42,8 @@
 		BF1E2E791A031DF900DDD0D0 /* SENAPIInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E781A031DF900DDD0D0 /* SENAPIInsightSpec.m */; };
 		BF539CC91C0E2B46000F77AA /* SENPillMetadataSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF539CC81C0E2B46000F77AA /* SENPillMetadataSpec.m */; };
 		BF55D8741CA35B3300379FBF /* SENAPISleepSoundsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF55D8731CA35B3300379FBF /* SENAPISleepSoundsSpec.m */; };
+		BF55D8761CA4716B00379FBF /* SENSleepSoundsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF55D8751CA4716B00379FBF /* SENSleepSoundsSpec.m */; };
+		BF55D8781CA4750100379FBF /* SENSleepSoundDurationsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF55D8771CA4750100379FBF /* SENSleepSoundDurationsSpec.m */; };
 		BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */; };
 		BF658A451B3C9280003DDF0F /* SENAPISupportSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF658A441B3C9280003DDF0F /* SENAPISupportSpec.m */; };
 		BF8339821C0FAF5600BFD0F4 /* SENRemoteImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */; };
@@ -118,6 +120,8 @@
 		BF25061D19E4CA9900CD131A /* SenseKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SenseKit.entitlements; sourceTree = "<group>"; };
 		BF539CC81C0E2B46000F77AA /* SENPillMetadataSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENPillMetadataSpec.m; sourceTree = "<group>"; };
 		BF55D8731CA35B3300379FBF /* SENAPISleepSoundsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPISleepSoundsSpec.m; sourceTree = "<group>"; };
+		BF55D8751CA4716B00379FBF /* SENSleepSoundsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepSoundsSpec.m; sourceTree = "<group>"; };
+		BF55D8771CA4750100379FBF /* SENSleepSoundDurationsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSleepSoundDurationsSpec.m; sourceTree = "<group>"; };
 		BF5E444719ACEF6D00278A2F /* SENSenseManagerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseManagerSpec.m; sourceTree = "<group>"; };
 		BF658A441B3C9280003DDF0F /* SENAPISupportSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPISupportSpec.m; sourceTree = "<group>"; };
 		BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENRemoteImageSpec.m; sourceTree = "<group>"; };
@@ -310,6 +314,8 @@
 				BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */,
 				BF539CC81C0E2B46000F77AA /* SENPillMetadataSpec.m */,
 				BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */,
+				BF55D8751CA4716B00379FBF /* SENSleepSoundsSpec.m */,
+				BF55D8771CA4750100379FBF /* SENSleepSoundDurationsSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -512,7 +518,9 @@
 				8A45E66E1A819FBB0038AA7A /* SENTimelineMetricSpec.m in Sources */,
 				BF539CC91C0E2B46000F77AA /* SENPillMetadataSpec.m in Sources */,
 				BF9450A71BBF3E7800BA0023 /* SENAPIAppStatsSpecs.m in Sources */,
+				BF55D8781CA4750100379FBF /* SENSleepSoundDurationsSpec.m in Sources */,
 				BF658A451B3C9280003DDF0F /* SENAPISupportSpec.m in Sources */,
+				BF55D8761CA4716B00379FBF /* SENSleepSoundsSpec.m in Sources */,
 				BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */,
 				BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */,
 				BF55D8741CA35B3300379FBF /* SENAPISleepSoundsSpec.m in Sources */,
