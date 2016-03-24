@@ -252,6 +252,180 @@ describe(@"SENAPISleepSounds", ^{
         
     });
     
+    describe(@"+checkRequestStatus:", ^{
+        
+        context(@"server returned a dictionary for data", ^{
+            
+            __block SENSleepSoundStatus* status = nil;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (@{@"playing" : @(YES),
+                          @"sound" : @{},
+                          @"duration" : @{}}, nil);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds checkRequestStatus:^(id data, NSError *error) {
+                    status = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                status = nil;
+                apiError = nil;
+            });
+            
+            it(@"should return a status object", ^{
+                [[status should] beKindOfClass:[SENSleepSoundStatus class]];
+            });
+            
+            it(@"should be playing", ^{
+                [[@([status isPlaying]) should] beYes];
+            });
+            
+            it(@"should not return any errors back", ^{
+                [[apiError should] beNil];
+            });
+            
+        });
+        
+        context(@"server returned an error", ^{
+            
+            __block SENSleepSoundStatus* status = nil;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (nil, [NSError errorWithDomain:@"t"
+                                                 code:-1
+                                             userInfo:nil]);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds checkRequestStatus:^(id data, NSError *error) {
+                    status = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                status = nil;
+                apiError = nil;
+            });
+            
+            it(@"should not return a status object", ^{
+                [[status should] beNil];
+            });
+            
+            it(@"should return an error", ^{
+                [[apiError should] beNonNil];
+            });
+            
+        });
+        
+    });
+    
+    describe(@"+checkRequestStatus:", ^{
+        
+        context(@"execute a play request", ^{
+            
+            __block SENSleepSoundRequest* request;
+            __block NSError* apiError = nil;
+            __block BOOL calledBack = NO;
+            __block NSString* path = nil;
+            
+            beforeEach(^{
+                request = [SENSleepSoundRequestPlay new];
+                [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                    path = [params firstObject];
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (nil, nil);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds executeRequest:request completion:^(NSError *error) {
+                    calledBack = YES;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                request = nil;
+                apiError = nil;
+                path = nil;
+                calledBack = YES;
+            });
+            
+            it(@"should not return any errors back", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should have called the play api", ^{
+                NSString* lastPath = [path lastPathComponent];
+                [[lastPath should] equal:@"play"];
+            });
+            
+        });
+        
+        context(@"execute a stop request", ^{
+            
+            __block SENSleepSoundRequest* request;
+            __block NSError* apiError = nil;
+            __block BOOL calledBack = NO;
+            __block NSString* path = nil;
+            
+            beforeEach(^{
+                request = [SENSleepSoundRequestStop new];
+                [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                    path = [params firstObject];
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (nil, nil);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds executeRequest:request completion:^(NSError *error) {
+                    calledBack = YES;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                request = nil;
+                apiError = nil;
+                path = nil;
+                calledBack = YES;
+            });
+            
+            it(@"should not return any errors back", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+            it(@"should have called the stop api", ^{
+                NSString* lastPath = [path lastPathComponent];
+                [[lastPath should] equal:@"stop"];
+            });
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
