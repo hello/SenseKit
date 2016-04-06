@@ -426,6 +426,124 @@ describe(@"SENAPISleepSounds", ^{
         
     });
     
+    describe(@"+sleepSoundsState:", ^{
+        
+        context(@"server returned an error", ^{
+            
+            __block NSError* apiError = nil;
+            __block SENSleepSoundsState* state = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds sleepSoundsState:^(id data, NSError *error) {
+                    state = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                state = nil;
+                apiError = nil;
+            });
+            
+            it(@"should return an error", ^{
+                [[apiError should] beNonNil];
+            });
+            
+            it(@"should not return any state", ^{
+                [[state should] beNil];
+            });
+            
+        });
+        
+        context(@"server an unexpected json object", ^{
+            
+            __block NSError* apiError = nil;
+            __block SENSleepSoundsState* state = nil;
+            __block BOOL calledBack = NO;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (@[@{@"availableSounds" : @{}}], nil);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds sleepSoundsState:^(id data, NSError *error) {
+                    state = data;
+                    apiError = error;
+                    calledBack = YES;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                state = nil;
+                apiError = nil;
+                calledBack = NO;
+            });
+            
+            it(@"should return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should not return any state", ^{
+                [[state should] beNil];
+            });
+            
+            it(@"should have called back", ^{
+                [[@(calledBack) should] beYes];
+            });
+            
+        });
+        
+        context(@"server returned a combined state dictionary", ^{
+            
+            __block NSError* apiError = nil;
+            __block SENSleepSoundsState* state = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (@{@"availableSounds" : @{},
+                          @"availableDurations" : @{},
+                          @"status" : @{}}, nil);
+                    return nil;
+                }];
+                
+                [SENAPISleepSounds sleepSoundsState:^(id data, NSError *error) {
+                    state = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                state = nil;
+                apiError = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a state", ^{
+                [[state should] beKindOfClass:[SENSleepSoundsState class]];
+                [[[state sounds] should] beNonNil];
+                [[[state durations] should] beNonNil];
+                [[[state status] should] beNonNil];
+            });
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
