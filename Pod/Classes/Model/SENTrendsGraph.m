@@ -82,7 +82,7 @@ NSString* SENTrendsTimeScaleValueFromEnum(SENTrendsTimeScale timeScale) {
 @property (nonatomic, strong) NSArray<NSNumber*>* values;
 @property (nonatomic, strong) NSArray<NSString*>* titles;
 @property (nonatomic, strong) NSArray<NSNumber*>* highlightedValues;
-@property (nonatomic, strong) NSArray<NSString*>* highlightedTitles;
+@property (nonatomic, strong) NSArray<NSNumber*>* highlightedTitles;
 
 @end
 
