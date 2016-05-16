@@ -178,6 +178,21 @@ describe(@"SENAccount", ^{
             SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"long":@344}];
             [[[account dictionaryValue][@"long"] should] equal:@344];
         });
+        
+        it(@"sets first name", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"firstname":@"Jimmy"}];
+            [[[account dictionaryValue][@"firstname"] should] equal:@"Jimmy"];
+        });
+        
+        it(@"sets last name", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"lastname":@"Lu"}];
+            [[[account dictionaryValue][@"lastname"] should] equal:@"Lu"];
+        });
+        
+        it(@"sets time zone", ^{
+            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"time_zone":@"America/Los_Angeles"}];
+            [[[account dictionaryValue][@"time_zone"] should] equal:@"America/Los_Angeles"];
+        });
 
         context(@"gender is male", ^{
 
@@ -202,6 +217,7 @@ describe(@"SENAccount", ^{
                 [[[account dictionaryValue][@"gender"] should] equal:@"OTHER"];
             });
         });
+        
     });
     
     describe(@"-setBirthMonth:day:andYear:", ^{
