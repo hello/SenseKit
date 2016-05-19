@@ -94,6 +94,13 @@ NSString* const SENAccountPropertyCreated = @"created";
     return self;
 }
 
+- (NSString*)timeZone {
+    if (!_timeZone) {
+        _timeZone = [[[NSTimeZone localTimeZone] name] copy];
+    }
+    return _timeZone;
+}
+
 - (void)setBirthdate:(NSString *)birthdate {
     _birthdate = birthdate;
     [self setDobDate:nil];
