@@ -131,6 +131,10 @@ describe(@"SENAPIAccount", ^{
                 [[accountReturned should] beKindOfClass:[SENAccount class]];
             });
             
+            it(@"should have sent a password", ^{
+                [[accountDict[@"password"] should] beNonNil];
+            });
+            
         });
         
     });
