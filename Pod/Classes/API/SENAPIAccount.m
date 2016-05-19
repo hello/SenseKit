@@ -31,6 +31,7 @@ NSString* const SENAPIAccountErrorMessageEmailInvalid = @"EMAIL_INVALID";
          withPassword:(NSString*)password
            completion:(SENAPIDataBlock)completion {
     NSMutableDictionary* params = [[account dictionaryValue] mutableCopy];
+    params[SENAPIAccountPropertyPassword] = password;
     params[SENAPIAccountPropertyTimezoneOffset] = [self currentTimezoneInMillis]; // deprecated.  will remove in future versions
     
     NSString* path = [NSString stringWithFormat:@"%@?sig=%@", SENAPIAccountEndpoint, @"xxx"];
