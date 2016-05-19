@@ -90,6 +90,54 @@ describe(@"SENAPIAccount", ^{
         });
         
     });
+    
+    describe(@"+createAccount:withPassword:completion:", ^{
+        
+        context(@"no errors encountered", ^{
+            
+            __block NSString* path = nil;
+            __block NSDictionary* accountDict = nil;
+            __block NSError* apiError = nil;
+            __block SENAccount* accountReturned = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                    path = [params firstObject];
+                    accountDict = params[1];
+                    SENAPIDataBlock success = [params lastObject];
+                    success (@{}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIAccount createAccount:[SENAccount new] withPassword:@"test123" completion:^(id data, NSError *error) {
+                    accountReturned = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+            });
+            
+            it(@"should have sent a time_zone", ^{
+                [[accountDict[@"time_zone"] should] beNonNil];
+            });
+            
+            it(@"should not have error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return an account object", ^{
+                [[accountReturned should] beKindOfClass:[SENAccount class]];
+            });
+            
+            it(@"should have sent a password", ^{
+                [[accountDict[@"password"] should] beNonNil];
+            });
+            
+        });
+        
+    });
 
 });
 

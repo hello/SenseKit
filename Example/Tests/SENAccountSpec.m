@@ -31,11 +31,6 @@ describe(@"SENAccount", ^{
             [[[account lastModified] should] equal:@303444];
         });
 
-        it(@"sets name", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"name":@"Veronica Choi"}];
-            [[[account name] should] equal:@"Veronica Choi"];
-        });
-
         it(@"sets email", ^{
             SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"email":@"v@example.com"}];
             [[[account email] should] equal:@"v@example.com"];
@@ -132,11 +127,6 @@ describe(@"SENAccount", ^{
         it(@"does not populate missing values", ^{
             SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"weight":@399}];
             [[[account dictionaryValue][@"name"] should] beNil];
-        });
-
-        it(@"sets name", ^{
-            SENAccount* account = [[SENAccount alloc] initWithDictionary:@{@"name":@"Beth Parker"}];
-            [[[account dictionaryValue][@"name"] should] equal:@"Beth Parker"];
         });
 
         it(@"sets email", ^{
