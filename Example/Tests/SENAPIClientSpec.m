@@ -28,6 +28,18 @@ describe(@"SENAPIClient", ^{
         block(nil, responseData);
         return nil;
     };
+    
+    id(^successMockBlockWithProgress)(NSArray*) =^id(NSArray* params) {
+        void (^block)(NSURLSessionDataTask *, id) = params[3];
+        block(nil, responseData);
+        return nil;
+    };
+    
+    id (^failureMockBlockWithProgress)(NSArray*) = ^id(NSArray *params) {
+        void (^block)(NSURLSessionDataTask *, NSError *) = params[4];
+        block(nil, [NSError errorWithDomain:@"is.hello" code:420 userInfo:@{}]);
+        return nil;
+    };
 
     id (^failureMockBlock)(NSArray*) = ^id(NSArray *params) {
         void (^block)(NSURLSessionDataTask *, NSError *) = params[3];
@@ -71,13 +83,13 @@ describe(@"SENAPIClient", ^{
 
         describe(@"GET:parameters:completion:", ^{
             it(@"sends a GET request", ^{
-                [[sessionManager should] receive:@selector(GET:parameters:success:failure:)];
+                [[sessionManager should] receive:@selector(GET:parameters:progress:success:failure:)];
                 [SENAPIClient GET:@"/" parameters:nil completion:NULL];
             });
 
             it(@"invokes the completion block on success", ^{
                 __block BOOL callbackInvoked = NO;
-                [sessionManager stub:@selector(GET:parameters:success:failure:) withBlock:successMockBlock];
+                [sessionManager stub:@selector(GET:parameters:progress:success:failure:) withBlock:successMockBlockWithProgress];
                 [SENAPIClient GET:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
@@ -86,7 +98,7 @@ describe(@"SENAPIClient", ^{
 
             it(@"invokes the completion block on failure", ^{
                 __block BOOL callbackInvoked = NO;
-                [sessionManager stub:@selector(GET:parameters:success:failure:) withBlock:failureMockBlock];
+                [sessionManager stub:@selector(GET:parameters:progress:success:failure:) withBlock:failureMockBlockWithProgress];
                 [SENAPIClient GET:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
@@ -96,13 +108,13 @@ describe(@"SENAPIClient", ^{
 
         describe(@"POST:parameters:completion:", ^{
             it(@"sends a POST request", ^{
-                [[sessionManager should] receive:@selector(POST:parameters:success:failure:)];
+                [[sessionManager should] receive:@selector(POST:parameters:progress:success:failure:)];
                 [SENAPIClient POST:@"/" parameters:nil completion:NULL];
             });
 
             it(@"invokes the completion block on success", ^{
                 __block BOOL callbackInvoked = NO;
-                [sessionManager stub:@selector(POST:parameters:success:failure:) withBlock:successMockBlock];
+                [sessionManager stub:@selector(POST:parameters:progress:success:failure:) withBlock:successMockBlockWithProgress];
                 [SENAPIClient POST:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
@@ -111,7 +123,7 @@ describe(@"SENAPIClient", ^{
 
             it(@"invokes the completion block on failure", ^{
                 __block BOOL callbackInvoked = NO;
-                [sessionManager stub:@selector(POST:parameters:success:failure:) withBlock:failureMockBlock];
+                [sessionManager stub:@selector(POST:parameters:progress:success:failure:) withBlock:failureMockBlockWithProgress];
                 [SENAPIClient POST:@"/" parameters:nil completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
@@ -198,7 +210,7 @@ describe(@"SENAPIClient", ^{
     context(@"NSNull values are retrieved from API requests", ^{
 
         beforeEach(^{
-            [sessionManager stub:@selector(GET:parameters:success:failure:) withBlock:successMockBlock];
+            [sessionManager stub:@selector(GET:parameters:progress:success:failure:) withBlock:successMockBlockWithProgress];
         });
 
         it(@"removes NSNull values and keys", ^{
