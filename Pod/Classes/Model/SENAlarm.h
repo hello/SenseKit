@@ -19,31 +19,11 @@ struct SENAlarmTime {
 @interface SENAlarm : NSObject <NSCoding>
 
 /**
- *  Cached alarm
- *
- *  @return the alarms
- */
-+ (NSArray*)savedAlarms;
-
-/**
  *  Create a new alarm using the default settings
  *
  *  @return an alarm
  */
 + (SENAlarm*)createDefaultAlarm;
-
-/**
- *  Remove all cached alarms
- */
-+ (void)clearSavedAlarms;
-
-/**
- *  Replace existing saved alarms with new ones created from
- *  NSDictionary data
- *
- *  @param data an array of NSDictionary objects representing alarms
- */
-+ (NSArray*)updateSavedAlarmsWithData:(NSArray*)data;
 
 /**
  *  Presents a time in a locale-specific representation
@@ -71,28 +51,11 @@ struct SENAlarmTime {
 - (NSDate*)nextRingDate;
 
 /**
- *  Persists the alarm
- */
-- (void)save;
-
-/**
- *  Removes the alarm from the persistent store
- */
-- (void)delete;
-
-/**
  *  Presents the alarm time in a locale-specific representation
  *
  *  @return a string representing the alarm wake time
  */
 - (NSString*)localizedValue;
-
-/**
- *  Check whether the alarm has ever been persisted
- *
- *  @return YES if an alarm with a matching identifier is present in the data store
- */
-- (BOOL)isSaved;
 
 /**
  *  Compares alarm property values
