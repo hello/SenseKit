@@ -260,7 +260,6 @@
 		7A720547880FFECFF12EDD5C51C2FC5A /* KWHaveValueMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = F084D037A3F194275D41A0EF1A3FFEE7 /* KWHaveValueMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7B56A94D1FCB869288EBB2CAA92DD9EE /* SENAuthorizationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EA3C1AACD89708CD02EE1BC315F707 /* SENAuthorizationService.m */; };
 		7B663AE24AD48D9463F53E5EB6BCD0F1 /* NSData+Nocilla.h in Headers */ = {isa = PBXBuildFile; fileRef = D7915C5C7E7A40F84CC99F0C95C0CA1F /* NSData+Nocilla.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7C06B97C239E4560888000A77FF48744 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8055EDCA3DFD180C5D5715EE435F3265 /* XCTest.framework */; };
 		7C1707B0E89C3AD8C0C41816D5BFCCC3 /* SENAPIPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F7C9D657B7A749D6ACAB4CC05D2CF0 /* SENAPIPhoto.m */; };
 		7CF1B019F289F431FD6F2BE6F9D80E2F /* KWHaveMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BF07EC0B5732321C8A2C97AB21A8EB2A /* KWHaveMatcher.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		7F0578A0258E02384F6229C678E60D31 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D0E012A13F65AB64D43752578877B979 /* UIRefreshControl+AFNetworking.m */; };
@@ -924,7 +923,6 @@
 		7DF8083F6DC73DEA2D160C375A179DA7 /* KWMessageSpying.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMessageSpying.h; path = Classes/Core/KWMessageSpying.h; sourceTree = "<group>"; };
 		7FF09B2864C988911FE36398A3C9CCB6 /* NSInvocation+OCMAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSInvocation+OCMAdditions.h"; path = "Classes/Core/NSInvocation+OCMAdditions.h"; sourceTree = "<group>"; };
 		802EA69BB54B0D63AFDBCEBF1B1CDCCB /* KWBlockNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBlockNode.m; path = Classes/Nodes/KWBlockNode.m; sourceTree = "<group>"; };
-		8055EDCA3DFD180C5D5715EE435F3265 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		808F36C91A83F24688726155E6046BBD /* AFSecurityPolicy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		80EF71ED4776BFB2288823049AB83503 /* SENSleepSoundsState.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENSleepSoundsState.h; sourceTree = "<group>"; };
 		8161B0391181235F98B4422C5E889958 /* LSASIHTTPRequestAdapter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LSASIHTTPRequestAdapter.h; path = Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestAdapter.h; sourceTree = "<group>"; };
@@ -1299,7 +1297,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9267ABA194768348BAD07BFB332520BF /* Foundation.framework in Frameworks */,
-				7C06B97C239E4560888000A77FF48744 /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1655,7 +1652,6 @@
 				5BB7EF72C9F6AB11163649220B814051 /* MobileCoreServices.framework */,
 				789644CFCCF6CF1E90FD4BBD0E4D2C14 /* Security.framework */,
 				B0CFC466E7E24990AF98FFFB58FAA714 /* SystemConfiguration.framework */,
-				8055EDCA3DFD180C5D5715EE435F3265 /* XCTest.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
