@@ -1,10 +1,13 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
-pod 'LGBluetooth', :git => 'git@github.com:hello/LGBluetooth.git'
-pod "SenseKit", :path => "../"
-
-target 'Tests', :exclusive => true do
-  pod 'Kiwi'
-  pod 'Nocilla'
+target 'SenseKit' do
+    pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
+    pod 'LGBluetooth', :git => 'git@github.com:hello/LGBluetooth.git'
+    pod "SenseKit", :path => "../"
+    
+    target 'Tests' do
+        inherit! :search_paths
+        pod 'Kiwi'
+        pod 'Nocilla'
+    end
 end

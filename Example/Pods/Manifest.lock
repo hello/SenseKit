@@ -63,7 +63,7 @@ EXTERNAL SOURCES:
   LGBluetooth:
     :git: git@github.com:hello/LGBluetooth.git
   SenseKit:
-    :path: ../
+    :path: "../"
   SHSProtoBuf:
     :git: git@github.com:hello/protobuf-objc.git
 
@@ -87,4 +87,6 @@ SPEC CHECKSUMS:
   SenseKit: dcc809e4474e7a84ed9c95b4a176abb862f61198
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
 
-COCOAPODS: 0.38.2
+PODFILE CHECKSUM: 9c45ae211169f14637c16c9fd561f6e314818411
+
+COCOAPODS: 1.0.1

@@ -302,7 +302,8 @@ describe(@"SENAlarm", ^{
             });
 
             it(@"returns the saved alarm", ^{
-                [[[[SENAlarm savedAlarms] firstObject] should] equal:alarm];
+                SENAlarm* savedAlarm = [[SENAlarm savedAlarms] firstObject];
+                [[savedAlarm should] equal:alarm];
             });
 
             context(@"an alarm is saved again", ^{

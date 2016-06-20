@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		11B7BA23C423B83221983933 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -35,7 +34,6 @@
 		8ABA8A2D1A85A6BF00E8B51F /* SENInsightSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA8A2C1A85A6BF00E8B51F /* SENInsightSpec.m */; };
 		8AE8BD711A85ACD0009E257B /* SENInsightInfoSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE8BD701A85ACD0009E257B /* SENInsightInfoSpec.m */; };
 		8AF2CFD619B63A1D00D09600 /* SENTimelineSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2CFD519B63A1D00D09600 /* SENTimelineSpec.m */; };
-		A074E0189DF84269ACBD8754 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F567B2B7C8E6429891E89AFC /* libPods.a */; };
 		BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF05C8DD1A392032002A1307 /* SENSenseSpec.m */; };
 		BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */; };
 		BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */; };
@@ -53,6 +51,8 @@
 		BF98FC331A96922D00AEC04C /* SENLocalPreferencesSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF98FC321A96922D00AEC04C /* SENLocalPreferencesSpec.m */; };
 		BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */; };
 		BFB7C3AA1B6072CC001A6280 /* SENSenseWiFiStatusSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */; };
+		BFBEE90D1D1882C1007A986B /* libPods-SenseKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBEE90C1D1882C1007A986B /* libPods-SenseKit.a */; };
+		BFBEE90F1D1882CE007A986B /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBEE90E1D1882CE007A986B /* libPods-Tests.a */; };
 		BFC4C2071B8E670500BB7761 /* SENAPIAppFeedbackSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4C2061B8E670500BB7761 /* SENAPIAppFeedbackSpec.m */; };
 		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
 		BFE375F71CF385620029EE66 /* SENAPIPhotoSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE375F61CF385620029EE66 /* SENAPIPhotoSpec.m */; };
@@ -72,9 +72,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0D611FB683D84137898FB644 /* libPods-SenseKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SenseKit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		28A245DE25D80099C9119E8C /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		2BF37687914BD636988A8300 /* Pods-SenseKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SenseKit/Pods-SenseKit.debug.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* SenseKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SenseKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -91,12 +90,10 @@
 		6003F5A6195388D20070C39A /* SENViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SENViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		7947F1071D0449D58162C4F5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A22235119B66A4700C3480D /* SENTimelineSegmentSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineSegmentSpec.m; sourceTree = "<group>"; };
 		8A28CB0319CC983C0044A27D /* SENAPINotificationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPINotificationSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8A380D0A19C3930B009D94BE /* SENAPIClientSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIClientSpec.m; sourceTree = "<group>"; };
@@ -113,7 +110,7 @@
 		8ABA8A2C1A85A6BF00E8B51F /* SENInsightSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENInsightSpec.m; sourceTree = "<group>"; };
 		8AE8BD701A85ACD0009E257B /* SENInsightInfoSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENInsightInfoSpec.m; sourceTree = "<group>"; };
 		8AF2CFD519B63A1D00D09600 /* SENTimelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENTimelineSpec.m; sourceTree = "<group>"; };
-		BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		A6AB02DE8B3DB0C6406C5FA6 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF05C8DD1A392032002A1307 /* SENSenseSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseSpec.m; sourceTree = "<group>"; };
 		BF17A19E19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIQuestionsSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BF1E2E651A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPITimeZoneSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -132,14 +129,16 @@
 		BF98FC321A96922D00AEC04C /* SENLocalPreferencesSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENLocalPreferencesSpec.m; sourceTree = "<group>"; };
 		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIAccountSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseWiFiStatusSpec.m; sourceTree = "<group>"; };
+		BFBEE90A1D1882B1007A986B /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Tests.a"; path = "Pods/../build/Debug-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
+		BFBEE90C1D1882C1007A986B /* libPods-SenseKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-SenseKit.a"; path = "Pods/../build/Debug-iphoneos/libPods-SenseKit.a"; sourceTree = "<group>"; };
+		BFBEE90E1D1882CE007A986B /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Tests.a"; path = "Pods/../build/Debug-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
 		BFC4C2061B8E670500BB7761 /* SENAPIAppFeedbackSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAppFeedbackSpec.m; sourceTree = "<group>"; };
 		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BFE375F61CF385620029EE66 /* SENAPIPhotoSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIPhotoSpec.m; sourceTree = "<group>"; };
 		BFEB68571B3A663E002E8524 /* SENAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAccountSpec.m; sourceTree = "<group>"; };
 		BFEB68591B3A6EA9002E8524 /* SENAPITimelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITimelineSpec.m; sourceTree = "<group>"; };
 		BFF03EC51A533D1E00BD65D4 /* SENServiceDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENServiceDeviceSpec.m; sourceTree = "<group>"; };
-		E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F567B2B7C8E6429891E89AFC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C42E2751214A4BACD61C9D9C /* Pods-SenseKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SenseKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-SenseKit/Pods-SenseKit.release.xcconfig"; sourceTree = "<group>"; };
 		F82AF0792F344A2BB71AFFAF /* SenseKit.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = SenseKit.podspec; path = ../SenseKit.podspec; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
 
@@ -151,7 +150,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				A074E0189DF84269ACBD8754 /* libPods.a in Frameworks */,
+				BFBEE90D1D1882C1007A986B /* libPods-SenseKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,13 +160,24 @@
 			files = (
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				11B7BA23C423B83221983933 /* libPods-Tests.a in Frameworks */,
+				BFBEE90F1D1882CE007A986B /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		26D1253BF85801BE9B213C73 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2BF37687914BD636988A8300 /* Pods-SenseKit.debug.xcconfig */,
+				C42E2751214A4BACD61C9D9C /* Pods-SenseKit.release.xcconfig */,
+				A6AB02DE8B3DB0C6406C5FA6 /* Pods-Tests.debug.xcconfig */,
+				28A245DE25D80099C9119E8C /* Pods-Tests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -176,7 +186,7 @@
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
-				6A30AF198F2D38FD990B2CE0 /* Pods */,
+				26D1253BF85801BE9B213C73 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -192,14 +202,13 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BFBEE90E1D1882CE007A986B /* libPods-Tests.a */,
+				BFBEE90C1D1882C1007A986B /* libPods-SenseKit.a */,
+				BFBEE90A1D1882B1007A986B /* libPods-Tests.a */,
 				8A4152BB1BB9BE2200413DCF /* libresolv.tbd */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
-				6003F5AF195388D20070C39A /* XCTest.framework */,
-				0D611FB683D84137898FB644 /* libPods-SenseKit.a */,
-				E5B746BBF35C4AFEA88993A8 /* libPods-Tests.a */,
-				F567B2B7C8E6429891E89AFC /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -260,17 +269,6 @@
 				7947F1071D0449D58162C4F5 /* README.md */,
 			);
 			name = "Podspec Metadata";
-			sourceTree = "<group>";
-		};
-		6A30AF198F2D38FD990B2CE0 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */,
-				BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */,
-				8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */,
-				432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		8AFE76F519E718520000F881 /* API */ = {
@@ -338,11 +336,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "SenseKit" */;
 			buildPhases = (
-				D18FF329A03342899A990024 /* Check Pods Manifest.lock */,
+				36216B3FB94D92B9491CF076 /* [CP] Check Pods Manifest.lock */,
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				D3D575F0BE0B4D6BA2A59B93 /* Copy Pods Resources */,
+				3521F58EFDE6C6728812DBDE /* [CP] Embed Pods Frameworks */,
+				0052277169BA46CB8C09B93A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -357,11 +356,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				F59D15D8C16B46BEBDEA3249 /* Check Pods Manifest.lock */,
+				814F4C3823E4E86ED9AF3C52 /* [CP] Check Pods Manifest.lock */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AC195388D20070C39A /* Resources */,
-				3CDE065A6A6849B1B9986C77 /* Copy Pods Resources */,
+				014B31EE1E43AF33F9CD5152 /* [CP] Embed Pods Frameworks */,
+				99F6877DA527009392319F55 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -441,64 +441,94 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3CDE065A6A6849B1B9986C77 /* Copy Pods Resources */ = {
+		0052277169BA46CB8C09B93A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SenseKit/Pods-SenseKit-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		014B31EE1E43AF33F9CD5152 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3521F58EFDE6C6728812DBDE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SenseKit/Pods-SenseKit-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		36216B3FB94D92B9491CF076 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		814F4C3823E4E86ED9AF3C52 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		99F6877DA527009392319F55 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D18FF329A03342899A990024 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		D3D575F0BE0B4D6BA2A59B93 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F59D15D8C16B46BEBDEA3249 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -679,7 +709,7 @@
 		};
 		6003F5C0195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39E5A7A07011C17416A7F75A /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 2BF37687914BD636988A8300 /* Pods-SenseKit.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -699,8 +729,26 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/CGFloatType\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/FXKeychain\"",
+					"\"${PODS_ROOT}/Headers/Public/Kiwi\"",
+					"\"${PODS_ROOT}/Headers/Public/LGBluetooth\"",
+					"\"${PODS_ROOT}/Headers/Public/NSJSONSerialization-NSNullRemoval\"",
+					"\"${PODS_ROOT}/Headers/Public/Nocilla\"",
+					"\"${PODS_ROOT}/Headers/Public/SHSProtoBuf\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
+				);
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -738,7 +786,7 @@
 		};
 		6003F5C1195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BAAB663FB4ACE7276D1DDFDA /* Pods.release.xcconfig */;
+			baseConfigurationReference = C42E2751214A4BACD61C9D9C /* Pods-SenseKit.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -758,8 +806,26 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SenseKit/SenseKit-Prefix.pch";
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/CGFloatType\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/FXKeychain\"",
+					"\"${PODS_ROOT}/Headers/Public/Kiwi\"",
+					"\"${PODS_ROOT}/Headers/Public/LGBluetooth\"",
+					"\"${PODS_ROOT}/Headers/Public/NSJSONSerialization-NSNullRemoval\"",
+					"\"${PODS_ROOT}/Headers/Public/Nocilla\"",
+					"\"${PODS_ROOT}/Headers/Public/SHSProtoBuf\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
+				);
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -797,7 +863,7 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8013CA089045778381E1681D /* Pods-Tests.debug.xcconfig */;
+			baseConfigurationReference = A6AB02DE8B3DB0C6406C5FA6 /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SenseKit.app/SenseKit";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -813,7 +879,25 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/CGFloatType\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/FXKeychain\"",
+					"\"${PODS_ROOT}/Headers/Public/Kiwi\"",
+					"\"${PODS_ROOT}/Headers/Public/LGBluetooth\"",
+					"\"${PODS_ROOT}/Headers/Public/NSJSONSerialization-NSNullRemoval\"",
+					"\"${PODS_ROOT}/Headers/Public/Nocilla\"",
+					"\"${PODS_ROOT}/Headers/Public/SHSProtoBuf\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
+				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -823,7 +907,7 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 432A2FAB43091C8DA6D72BA9 /* Pods-Tests.release.xcconfig */;
+			baseConfigurationReference = 28A245DE25D80099C9119E8C /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/SenseKit.app/SenseKit";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -835,7 +919,25 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/CGFloatType\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/FXKeychain\"",
+					"\"${PODS_ROOT}/Headers/Public/Kiwi\"",
+					"\"${PODS_ROOT}/Headers/Public/LGBluetooth\"",
+					"\"${PODS_ROOT}/Headers/Public/NSJSONSerialization-NSNullRemoval\"",
+					"\"${PODS_ROOT}/Headers/Public/Nocilla\"",
+					"\"${PODS_ROOT}/Headers/Public/SHSProtoBuf\"/**",
+					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
+				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
