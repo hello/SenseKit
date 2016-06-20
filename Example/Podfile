@@ -6,6 +6,7 @@ target 'SenseKit' do
     pod "SenseKit", :path => "../"
     
     target 'Tests' do
+        inherit! :search_paths
         pod 'Kiwi'
         pod 'Nocilla'
     end

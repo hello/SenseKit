@@ -63,7 +63,7 @@ EXTERNAL SOURCES:
   LGBluetooth:
     :git: git@github.com:hello/LGBluetooth.git
   SenseKit:
-    :path: ../
+    :path: "../"
   SHSProtoBuf:
     :git: git@github.com:hello/protobuf-objc.git
 
