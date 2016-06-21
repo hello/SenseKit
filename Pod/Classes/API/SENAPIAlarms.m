@@ -112,7 +112,8 @@ static SENAPIDataBlock SENAPIAlarmDataBlock(SENAPIDataBlock completion) {
 {
     NSCalendarUnit flags = (NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitDay);
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    return [calendar components:flags fromDate:[alarm nextRingDate]];
+    NSDate* nextRingDate = [SENAlarm nextRingDateWithHour:[alarm hour] minute:[alarm minute]];
+    return [calendar components:flags fromDate:nextRingDate];
 }
 
 + (NSArray*)repeatDaysForAlarm:(SENAlarm*)alarm

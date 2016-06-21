@@ -4,6 +4,13 @@
 #import "SENKeyedArchiver.h"
 #import "SENPreference.h"
 
+@interface SENAlarm()
+
+@property (nonatomic, assign) BOOL saved;
+@property (nonatomic, getter=isEditable) BOOL editable;
+
+@end
+
 @implementation SENAlarm
 
 static NSString* const SENAlarmSoundKey = @"sound";
@@ -26,15 +33,30 @@ static BOOL const SENAlarmDefaultEditableState = YES;
 static BOOL const SENAlarmDefaultSmartAlarmState = YES;
 
 + (SENAlarm*)createDefaultAlarm {
-    return [[SENAlarm alloc] initWithDictionary:@{
-        SENAlarmSoundNameKey : SENAlarmDefaultSoundName,
-        SENAlarmHourKey : @(SENAlarmDefaultHour),
-        SENAlarmMinuteKey : @(SENAlarmDefaultMinute),
-        SENAlarmOnKey : @(SENAlarmDefaultOnState),
-        SENAlarmEditableKey : @(SENAlarmDefaultEditableState),
-        SENAlarmSmartKey : @(SENAlarmDefaultSmartAlarmState),
-        SENAlarmRepeatKey : @[]
-    }];
+    SENAlarm* alarm = [[self alloc] init];
+    alarm.soundName = SENAlarmDefaultSoundName;
+    alarm.hour = SENAlarmDefaultHour;
+    alarm.minute = SENAlarmDefaultMinute;
+    alarm.on = SENAlarmDefaultOnState;
+    alarm.editable = SENAlarmDefaultEditableState;
+    alarm.smartAlarm = SENAlarmDefaultSmartAlarmState;
+    alarm.repeatFlags = 0;
+    alarm.saved = NO;
+    return alarm;
+}
+
++ (NSDate*)nextRingDateWithHour:(NSUInteger)hour minute:(NSUInteger)minute {
+    NSDate* date = [NSDate date];
+    NSCalendarUnit flags = (NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitDay);
+    NSDateComponents* currentDateComponents = [[NSCalendar autoupdatingCurrentCalendar] components:flags fromDate:date];
+    NSInteger minuteOfDay = (currentDateComponents.hour * 60) + currentDateComponents.minute;
+    NSInteger alarmMinuteOfDay = (hour * 60) + minute;
+    NSDateComponents* diff = [NSDateComponents new];
+    diff.minute = alarmMinuteOfDay - minuteOfDay;
+    if (alarmMinuteOfDay < minuteOfDay) {
+        diff.day = 1;
+    }
+    return [[NSCalendar autoupdatingCurrentCalendar] dateByAddingComponents:diff toDate:date options:0];
 }
 
 + (NSString*)localizedValueForTime:(struct SENAlarmTime)time {
@@ -71,6 +93,7 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
         _smartAlarm = [dict[SENAlarmSmartKey] boolValue];
         _soundName = dict[SENAlarmSoundKey][SENAlarmSoundNameKey];
         _soundID = dict[SENAlarmSoundKey][SENAlarmSoundIDKey];
+        _saved = YES;
     }
     return self;
 }
@@ -160,20 +183,6 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
         && [self isSmartAlarm] == [alarm isSmartAlarm]
         && [self isEditable] == [alarm isEditable]
         && [self isOn] == [alarm isOn];
-}
-
-- (NSDate*)nextRingDate {
-    NSDate* date = [NSDate date];
-    NSCalendarUnit flags = (NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitDay);
-    NSDateComponents* currentDateComponents = [[NSCalendar autoupdatingCurrentCalendar] components:flags fromDate:date];
-    NSInteger minuteOfDay = (currentDateComponents.hour * 60) + currentDateComponents.minute;
-    NSInteger alarmMinuteOfDay = (self.hour * 60) + self.minute;
-    NSDateComponents* diff = [NSDateComponents new];
-    diff.minute = alarmMinuteOfDay - minuteOfDay;
-    if (alarmMinuteOfDay < minuteOfDay)
-        diff.day = 1;
-
-    return [[NSCalendar autoupdatingCurrentCalendar] dateByAddingComponents:diff toDate:date options:0];
 }
 
 @end

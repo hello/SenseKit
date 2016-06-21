@@ -19,6 +19,16 @@ struct SENAlarmTime {
 @interface SENAlarm : NSObject <NSCoding>
 
 /**
+ * Determine when the date for which the alarm should ring, given the hour and
+ * minute units
+ *
+ * @param hour: the hour for the alarm
+ * @param minute: the minute for the alarm
+ * @return the next ring date
+ */
++ (NSDate*)nextRingDateWithHour:(NSUInteger)hour minute:(NSUInteger)minute;
+
+/**
  *  Create a new alarm using the default settings
  *
  *  @return an alarm
@@ -42,13 +52,6 @@ struct SENAlarmTime {
  *  @return a new alarm or nil
  */
 - (instancetype)initWithDictionary:(NSDictionary*)dict;
-
-/**
- *  The next date and time at which this alarm will fire
- *
- *  @return a date
- */
-- (NSDate*)nextRingDate;
 
 /**
  *  Presents the alarm time in a locale-specific representation
@@ -81,7 +84,8 @@ struct SENAlarmTime {
 - (BOOL)isRepeatedOn:(SENAlarmRepeatDays)days;
 
 @property (nonatomic, getter=isOn) BOOL on;
-@property (nonatomic, readonly, getter=isEditable) BOOL editable;
+@property (nonatomic, readonly, assign, getter=isSaved) BOOL saved;
+@property (nonatomic, readonly, assign, getter=isEditable) BOOL editable;
 @property (nonatomic, getter=isSmartAlarm) BOOL smartAlarm;
 @property (nonatomic) NSUInteger hour;
 @property (nonatomic) NSUInteger minute;
