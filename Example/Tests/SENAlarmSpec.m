@@ -15,57 +15,12 @@ describe(@"SENAlarm", ^{
 
     afterEach(^{
         alarm = nil;
-        [SENAlarm clearSavedAlarms];
     });
 
     describe(@"+createDefaultAlarm", ^{
 
         it(@"creates a valid alarm", ^{
             [[[SENAlarm createDefaultAlarm] should] beKindOfClass:[SENAlarm class]];
-        });
-    });
-
-    describe(@"+updateSavedAlarmsWithData:", ^{
-
-        context(@"saved alarms exist", ^{
-
-            beforeEach(^{
-                [[[SENAlarm alloc] initWithDictionary:@{@"hour":@6,@"minute":@30}] save];
-            });
-
-            it(@"deletes existing alarms", ^{
-                [SENAlarm updateSavedAlarmsWithData:nil];
-                [[[SENAlarm savedAlarms] should] beEmpty];
-            });
-
-            it(@"creates saves from data", ^{
-                NSArray* alarms = @[@{@"hour":@18,@"minute":@30},@{@"hour":@7,@"minute":@45}];
-                [SENAlarm updateSavedAlarmsWithData:alarms];
-                [[[SENAlarm savedAlarms] should] haveCountOf:2];
-            });
-
-            it(@"returns saved alarms", ^{
-                NSArray* alarmData = @[@{@"hour":@18,@"minute":@30},@{@"hour":@7,@"minute":@45}];
-                NSArray* alarms = [SENAlarm updateSavedAlarmsWithData:alarmData];
-                [[alarms should] haveCountOf:2];
-            });
-        });
-
-        context(@"no saved alarms exist", ^{
-
-            it(@"creates alarms from data", ^{
-                NSArray* alarmData = @[@{@"hour":@22,@"minute":@0},@{@"hour":@8,@"minute":@30}];
-                [SENAlarm updateSavedAlarmsWithData:alarmData];
-                [[[SENAlarm savedAlarms] should] haveCountOf:2];
-            });
-
-            it(@"returns saved alarms", ^{
-                NSArray* alarmData = @[@{@"hour":@22,@"minute":@0},
-                                       @{@"hour":@8,@"minute":@30},
-                                       @{@"hour":@7,@"minute":@45}];
-                NSArray* alarms = [SENAlarm updateSavedAlarmsWithData:alarmData];
-                [[alarms should] haveCountOf:3];
-            });
         });
     });
 
@@ -249,101 +204,6 @@ describe(@"SENAlarm", ^{
         });
     });
 
-    describe(@"- isSaved", ^{
-        __block SENAlarm* alarm;
-
-        beforeEach(^{
-            alarm = [[SENAlarm alloc] init];
-        });
-
-        context(@"an alarm is unsaved", ^{
-
-            it(@"is false", ^{
-                [[@([alarm isSaved]) should] beNo];
-            });
-        });
-
-        context(@"an alarm is saved", ^{
-
-            beforeEach(^{
-                [alarm save];
-            });
-
-            it(@"is true", ^{
-                [[@([alarm isSaved]) should] beYes];
-            });
-
-            context(@"an alarm is deleted", ^{
-
-                beforeEach(^{
-                    [alarm delete];
-                });
-
-                it(@"is false", ^{
-                    [[@([alarm isSaved]) should] beNo];
-                });
-            });
-        });
-    });
-
-    describe(@"+ savedAlarms", ^{
-
-        it(@"is initially empty", ^{
-            [[[SENAlarm savedAlarms] should] haveCountOf:0];
-        });
-
-        context(@"an alarm is saved", ^{
-
-            __block SENAlarm* alarm;
-
-            beforeEach(^{
-                alarm = [[SENAlarm alloc] init];
-                [alarm save];
-            });
-
-            it(@"returns the saved alarm", ^{
-                SENAlarm* savedAlarm = [[SENAlarm savedAlarms] firstObject];
-                [[savedAlarm should] equal:alarm];
-            });
-
-            context(@"an alarm is saved again", ^{
-
-                beforeEach(^{
-                    [alarm save];
-                });
-
-                it(@"does not save duplicate alarms", ^{
-                    [[[SENAlarm savedAlarms] should] haveCountOf:1];
-                });
-            });
-
-            context(@"a different alarm is saved", ^{
-
-                __block SENAlarm* otherAlarm;
-
-                beforeEach(^{
-                    otherAlarm = [[SENAlarm alloc] init];
-                    [otherAlarm save];
-                });
-
-                it(@"saves separate alarms", ^{
-                    [[[SENAlarm savedAlarms] should] haveCountOf:2];
-                    [[[SENAlarm savedAlarms] should] containObjects:otherAlarm, alarm, nil];
-                });
-            });
-
-            context(@"an alarm is deleted", ^{
-
-                beforeEach(^{
-                    [alarm delete];
-                });
-
-                it(@"removes the alarm from the store", ^{
-                    [[[SENAlarm savedAlarms] should] haveCountOf:0];
-                });
-            });
-        });
-    });
 });
 
 SPEC_END
