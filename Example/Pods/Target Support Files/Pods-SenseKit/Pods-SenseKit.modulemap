@@ -1,0 +1,6 @@
+framework module Pods_SenseKit {
+  umbrella header "Pods-SenseKit-umbrella.h"
+
+  export *
+  module * { export * }
+}
