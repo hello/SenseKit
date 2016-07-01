@@ -12,11 +12,8 @@
 
 #import <LGBluetooth/LGBluetooth.h>
 
-#import "LGCentralManager.h"
-#import "LGPeripheral.h"
-
 #import "SENSenseManager.h"
-#import "SENSense+Protected.h"
+#import "SENSense.h"
 #import "SENSenseMessage.pb.h"
 #import "SENSenseWiFiStatus.h"
 #import "SENLocalPreferences.h"
@@ -39,7 +36,6 @@ static NSString* const kSENSenseCharacteristicInputId = @"BEEB";
 static NSString* const kSENSenseCharacteristicResponseId = @"B00B";
 static NSInteger const kSENSensePacketSize = 20;
 static NSInteger const kSENSenseAppVersion = 0;
-static NSInteger const kSENSenseMaxBleRetries = 10;
 
 typedef BOOL(^SENSenseUpdateBlock)(id response);
 
@@ -130,8 +126,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     LGCentralManager* btManager = [LGCentralManager sharedInstance];
     if (![btManager isCentralReady]) return NO;
     
-    [self stopScan]; // stop a scan if one is already started
-    
     DDLogVerbose(@"scanning for Sense started");
     CBUUID* serviceId = [CBUUID UUIDWithString:kSENSenseServiceID];
     [btManager scanForPeripheralsByInterval:timeout
@@ -155,46 +149,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     return YES;
 }
 
-+ (void)stopScan {
-    if ([[LGCentralManager sharedInstance] isScanning]) {
-        [[LGCentralManager sharedInstance] stopScanForPeripherals];
-        DDLogVerbose(@"scan stopped");
-    }
-}
-
-+ (BOOL)isScanning {
-    return [[LGCentralManager sharedInstance] isScanning];
-}
-
-+ (BOOL)isReady {
-    return [[LGCentralManager sharedInstance] isCentralReady];
-}
-
 + (void)whenBleStateAvailable:(void(^)(BOOL on))block {
-    [self recheckBleStateWithAttempt:0 onCompletion:block];
-}
-
-+ (void)recheckBleStateWithAttempt:(NSUInteger)attempt onCompletion:(void(^)(BOOL on))block {
-    CBCentralManagerState state = [[[LGCentralManager sharedInstance] manager] state];
-    if (state == CBCentralManagerStateUnknown || state == CBCentralManagerStateResetting) {
-        if (attempt < kSENSenseMaxBleRetries) {
-            NSTimeInterval delayInSeconds = 0.2f;
-            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(delay, dispatch_get_main_queue(), ^(void) {
-                [self recheckBleStateWithAttempt:attempt+1 onCompletion:block];
-            });
-        } else {
-            block (NO);
-        }
-    } else {
-        block (state == CBCentralManagerStatePoweredOn);
-    }
-}
-
-+ (BOOL)canScan {
-    CBCentralManagerState state = [[[LGCentralManager sharedInstance] manager] state];
-    return state != CBCentralManagerStateUnauthorized
-            && state != CBCentralManagerStateUnsupported;
+    [self whenReady:block];
 }
 
 - (instancetype)initWithSense:(SENSense*)sense {
