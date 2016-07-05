@@ -25,7 +25,7 @@ PODS:
     - CocoaLumberjack/Default
   - EVReflection (2.38.1)
   - FXKeychain (1.5.3)
-  - iOSDFULibrary (0.1.8):
+  - iOSDFULibrary (0.1.9):
     - EVReflection (~> 2.6)
     - Zip (~> 0.3)
   - Kiwi (2.4.0)
@@ -46,7 +46,7 @@ PODS:
     - NSJSONSerialization-NSNullRemoval (~> 1.0.0)
   - SenseKit/BLE (0.1.0):
     - CocoaLumberjack (~> 2.0.0)
-    - iOSDFULibrary (~> 0.1.8)
+    - iOSDFULibrary
     - LGBluetooth
     - SHSProtoBuf
   - SenseKit/Model (0.1.0):
@@ -59,6 +59,7 @@ PODS:
   - Zip (0.4.3)
 
 DEPENDENCIES:
+  - iOSDFULibrary (from `git@github.com:jimmymlu/IOS-Pods-DFU-Library.git`, branch `method-name-compatibility`)
   - Kiwi
   - LGBluetooth (from `git@github.com:hello/LGBluetooth.git`)
   - Nocilla
@@ -66,6 +67,9 @@ DEPENDENCIES:
   - SHSProtoBuf (from `git@github.com:hello/protobuf-objc.git`)
 
 EXTERNAL SOURCES:
+  iOSDFULibrary:
+    :branch: method-name-compatibility
+    :git: git@github.com:jimmymlu/IOS-Pods-DFU-Library.git
   LGBluetooth:
     :git: git@github.com:hello/LGBluetooth.git
   SenseKit:
@@ -74,6 +78,9 @@ EXTERNAL SOURCES:
     :git: git@github.com:hello/protobuf-objc.git
 
 CHECKOUT OPTIONS:
+  iOSDFULibrary:
+    :commit: 37ef2f90b695bb346521cadfa62f1bd6138950e1
+    :git: git@github.com:jimmymlu/IOS-Pods-DFU-Library.git
   LGBluetooth:
     :commit: bb9399161f3231e3bb3dddc89aae99018c77cdad
     :git: git@github.com:hello/LGBluetooth.git
@@ -87,15 +94,15 @@ SPEC CHECKSUMS:
   CocoaLumberjack: f58d8a19629f4d8379ae14bb3534def24161430e
   EVReflection: 8982495e0a5a9b7b1d4e766e4e08b0ffc6ca5469
   FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
-  iOSDFULibrary: 66071c0d5738618215ee5ffa52d91bc7a21bead3
+  iOSDFULibrary: 3f5081faeb578bd31ea90c1d70a76c0d686382f4
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   LGBluetooth: 79ee89969ebb6db8f566c35452aade206ea1d149
   Nocilla: ae0a2b05f3087b473624ac2b25903695df51246a
   NSJSONSerialization-NSNullRemoval: 4c50d948b7805807ea8ce690d48e05ee679ef5b7
-  SenseKit: 1b3b6780b85b61a7d4d38fba0a6adb1c46436a1c
+  SenseKit: c061883ef8ed2c6781fee3af2df870172e6303c0
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
   Zip: 670419a5ba9faaf5f24ed3650c4c38b4136e996b
 
-PODFILE CHECKSUM: 91da9d1949564410dd78fd480c0cf02ca6ca5bac
+PODFILE CHECKSUM: 3aaaf15f80e1b3635ad8acf1439c82090f425a28
 
 COCOAPODS: 1.0.0
