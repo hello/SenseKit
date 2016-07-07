@@ -43,4 +43,8 @@
     return [[[self peripheral] UUIDString] hash];
 }
 
+- (NSInteger)rssi {
+    return [[self peripheral] RSSI];
+}
+
 @end

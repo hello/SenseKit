@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class LGPeripheral;
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^SENPeripheralReadyCallback)(BOOL ready);
+typedef void(^SENPeripheralResponseCallback)(id _Nullable response, NSError* _Nullable error);
 
 @interface SENPeripheralManager : NSObject
 
@@ -52,6 +55,20 @@ typedef void(^SENPeripheralReadyCallback)(BOOL ready);
  * scanForSenseWithTimeout:completion:
  */
 + (void)stopScan;
+
+/**
+ * @discussion
+ * Retrieve LGCharacteristic objects - uuid pairs
+ *
+ * @param characteristicIds: a set of characteristic ids to retrieve
+ * @param peripheral:        a peripheral to retrieve from
+ * @param serviceUUID:       the service UUID that periphal supports
+ * @param completion:        the callback to make when complete
+ */
+- (void)characteristicsWithIds:(NSSet*)characteristicIds
+               insideServiceId:(NSString*)serviceUUID
+                 forPeripheral:(LGPeripheral*)peripheral
+                    completion:(SENPeripheralResponseCallback)completion;
 
 @end
 

@@ -367,7 +367,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     [self connectThen:^(NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
-        if (error != nil) {
+        if (error) {
             completion (nil, [strongSelf errorWithCode:SENSenseManagerErrorCodeConnectionFailed
                                            description:@"could not connect to Sense"
                                    fromUnderlyingError:error]);
@@ -375,100 +375,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
         }
         
         LGPeripheral* peripheral = [[strongSelf sense] peripheral];
-        NSDictionary* characteristics = [strongSelf cachedCharacteristicsWithIds:characteristicIds
-                                                                  fromPeripheral:peripheral
-                                                                    forServiceId:serviceUUID];
-        if ([characteristics count] > 0) {
-            completion (characteristics, nil);
-        } else {
-            [strongSelf usePeripheral:peripheral
-                           toDiscover:characteristicIds
-                     forServiceWithId:serviceUUID
-                           completion:completion];
-        }
+        [strongSelf characteristicsWithIds:characteristicIds
+                           insideServiceId:serviceUUID
+                             forPeripheral:peripheral
+                                completion:completion];
         
     }];
-}
-
-/**
- * @discussion
- * If peripheral contains cached service and characteristics, then use it rather
- * than discovering them through BLE.  If cache does exist and you still try and
- * discover them, CoreBluetooth will not make a callback.
- *
- * @param characteristicIds: a set of characteristicIds that the service broadcasts
- * @param peripheral:        Sense
- * @param serviceUUID:       the service UUID to discover
- *
- * @return dictionary of characteristics by ids, if any
- */
-- (NSDictionary*)cachedCharacteristicsWithIds:(NSSet*)characteristicIds
-                               fromPeripheral:(LGPeripheral*)peripheral
-                                 forServiceId:(NSString*)serviceUUID {
-    
-    NSDictionary* matching = nil;
-    for (LGService* service in [peripheral services]) {
-        if ([[[service UUIDString] uppercaseString] isEqualToString:serviceUUID]) {
-            matching = [self extracCharacteristicsWithIds:characteristicIds
-                                                     from:[service characteristics]];
-            DDLogVerbose(@"using cached Sense service and characteristics");
-            break;
-        }
-    }
-    return matching;
-}
-
-/**
- * @discussion
- * (Re)discover service by id and it's characteristics for the peripheral (Sense)
- *
- * @param peripheral:        Sense
- * @param characteristicIds: a set of characteristicIds that the service broadcasts
- * @param serviceUUID:       the service UUID to discover
- * @param completion:        the block to invoke when done
- */
-- (void)usePeripheral:(LGPeripheral*)peripheral
-           toDiscover:(NSSet*)characteristicIds
-     forServiceWithId:(NSString*)serviceUUID
-           completion:(SENSenseCompletionBlock)completion {
-    DDLogVerbose(@"discovering Sense service");
-    __weak typeof(self) weakSelf = self;
-    CBUUID* serviceId = [CBUUID UUIDWithString:serviceUUID];
-    [peripheral discoverServices:@[serviceId] completion:^(NSArray *services, NSError *error) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        
-        if (error != nil || [services count] != 1) {
-            completion (nil, error?error:[strongSelf errorWithCode:SENSenseManagerErrorCodeUnexpectedResponse
-                                                       description:@"could not discover services"
-                                               fromUnderlyingError:nil]);
-            return;
-        }
-        
-        DDLogVerbose(@"discovering characteristics for service");
-        LGService* lgService = [services firstObject];
-        [lgService discoverCharacteristicsWithCompletion:^(NSArray *characteristics, NSError *error) {
-            if (error != nil) {
-                completion (nil, error);
-                return;
-            }
-            completion ([strongSelf extracCharacteristicsWithIds:characteristicIds
-                                                            from:characteristics], nil);
-        }];
-    }];
-}
-
-- (NSDictionary*)extracCharacteristicsWithIds:(NSSet*)characteristicIds
-                                         from:(NSArray*)allCharacteristics {
-    
-    NSMutableDictionary* characteristics = [NSMutableDictionary dictionary];
-    NSString* uuid = nil;
-    for (LGCharacteristic* characteristic in allCharacteristics) {
-        uuid = [[characteristic UUIDString] uppercaseString];
-        if ([characteristicIds containsObject:uuid]) {
-            [characteristics setValue:characteristic forKey:uuid];
-        }
-    }
-    return characteristics;
 }
 
 - (void)characteristics:(SENSenseCompletionBlock)completion {

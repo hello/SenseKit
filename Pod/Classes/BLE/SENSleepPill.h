@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithPeripheral:(LGPeripheral*)peripheral;
 - (NSString*)name;
+- (NSInteger)rssi;
 
 @end
 
