@@ -1,8 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
 
 target 'SenseKit' do
     pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
     pod 'LGBluetooth', :git => 'git@github.com:hello/LGBluetooth.git'
+    pod 'iOSDFULibrary', :git => 'git@github.com:jimmymlu/IOS-Pods-DFU-Library.git', :branch => 'method-name-compatibility'
     pod "SenseKit", :path => "../"
     
     target 'Tests' do
