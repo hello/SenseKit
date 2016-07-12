@@ -391,7 +391,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
         LGCentralManager* central = [LGCentralManager sharedInstance];
         CBCentralManager* manager = [central manager];
         CBPeripheral* peripheral = [[[strongSelf sleepPill] peripheral] cbPeripheral];
-        DFUServiceInitiator* initiator = [[DFUServiceInitiator alloc] initWithCentralManager:[strongSelf dfuCentralManager]
+        DFUServiceInitiator* initiator = [[DFUServiceInitiator alloc] initWithCentralManager:manager
                                                                                       target:peripheral];
         
         [initiator withFirmwareFile:firmware];
