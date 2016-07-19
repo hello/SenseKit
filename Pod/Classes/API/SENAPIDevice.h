@@ -65,4 +65,22 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
 + (void)removeAssociationsToSense:(nonnull SENSenseMetadata*)senseMetadata
                        completion:(nonnull SENAPIDataBlock)completion;
 
+#pragma mark - OTA
+
+/**
+ * @discussion
+ * Get the current OTA status for the paired Sense
+ *
+ * @param completion: the block to call when response is returned
+ */
++ (void)getOTAStatus:(SENAPIDataBlock)completion;
+
+/**
+ * @discussion
+ * Force an OTA (DFU) for the currently paired Sense
+ *
+ * @param completion: the block to call when response is returned
+ */
++ (void)forceOTA:(SENAPIDataBlock)completion;
+
 @end

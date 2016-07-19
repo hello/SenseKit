@@ -62,10 +62,12 @@ final public class EVReflection {
                     }
                 }
                 if !skipKey {
-                    let mapping = keyMapping[k as? String ?? ""]
-                    let useKey: String = (mapping ?? k ?? "") as? String ?? ""
+                    let objectKey = k as? String ?? ""
+                    let mapping = keyMapping[objectKey]
+                    let useKey: String = (mapping ?? objectKey) as? String ?? ""
                     let original: NSObject? = getValue(anyObject, key: useKey)
-                    let (dictValue, valid) = dictionaryAndArrayConversion(anyObject, key: k as? String ?? "", fieldType: types[k as? String ?? ""] as? String ?? types[useKey] as? String, original: original, theDictValue: v, conversionOptions: conversionOptions)
+                    let dictKey: String = cleanupKey(anyObject, key: objectKey, tryMatch: types) ?? ""
+                    let (dictValue, valid) = dictionaryAndArrayConversion(anyObject, key: objectKey, fieldType: types[dictKey] as? String ?? types[useKey] as? String, original: original, theDictValue: v, conversionOptions: conversionOptions)
                     if dictValue != nil {
                         if let key: String = keyMapping[k as? String ?? ""] as? String {
                             setObjectValue(anyObject, key: key, theValue: (valid ? dictValue: v), typeInObject: types[key] as? String, valid: valid, conversionOptions: conversionOptions)
@@ -270,12 +272,10 @@ final public class EVReflection {
      - returns: The string representation of the object
      */
     public class func description(theObject: NSObject, conversionOptions: ConversionOptions = .DefaultSerialize) -> String {
-        var description: String = swiftStringFromClass(theObject) + " {\n   hash = \(hashValue(theObject))\n"
         let (hasKeys, _) = toDictionary(theObject, conversionOptions: conversionOptions)
-        for (key, value) in hasKeys {
-            description = description  + "   key = \(key), value = \(value)\n"
-        }
-        description = description + "}\n"
+
+        var description: String = (swiftStringFromClass(theObject) ?? "?") + " {\n   hash = \(hashValue(theObject))"
+        description = description + hasKeys.map {"   \($0) = \($1)"}.reduce("") {"\($0)\n\($1)"} + "\n}\n"
         return description
     }
     
@@ -412,9 +412,7 @@ final public class EVReflection {
             }
             appName = (bundle.bundleIdentifier!).characters.split(isSeparator: {$0 == "."}).map({ String($0) }).last ?? ""
         }
-        let cleanAppName = appName
-            .stringByReplacingOccurrencesOfString(" ", withString: "_", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-            .stringByReplacingOccurrencesOfString("-", withString: "_", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        let cleanAppName = appName.componentsSeparatedByCharactersInSet(illegalCharacterSet).joinWithSeparator("_")
         return cleanAppName
     }
     
@@ -451,9 +449,7 @@ final public class EVReflection {
     
     private static func bundleForClass(forClass: AnyClass, bundle: NSBundle) -> String {
         let appName = (bundle.infoDictionary![kCFBundleNameKey as String] as? String)!.characters.split(isSeparator: {$0 == "."}).map({ String($0) }).last ?? ""
-        let cleanAppName = appName
-            .stringByReplacingOccurrencesOfString(" ", withString: "_", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-            .stringByReplacingOccurrencesOfString("-", withString: "_", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        let cleanAppName = appName.componentsSeparatedByCharactersInSet(illegalCharacterSet).joinWithSeparator("_")
         return cleanAppName
     }
 
@@ -715,8 +711,14 @@ final public class EVReflection {
                 value = convertedValue.stringValue
             }
         } else if typeInObject == "NSNumber" && (type == "String" || type == "NSString") {
-            if let convertedValue = value as? String {
-                value = NSNumber(double: Double(convertedValue) ?? 0)
+            if let convertedValue = (value as? String)?.lowercaseString {
+                if convertedValue == "true" || convertedValue == "yes" {
+                    value = 1
+                } else if convertedValue == "false" || convertedValue == "no" {
+                    value = 0
+                } else {
+                    value = NSNumber(double: Double(convertedValue) ?? 0)
+                }
             }
         } else if typeInObject == "NSDate"  && (type == "String" || type == "NSString") {
             if let convertedValue = value as? String {
@@ -828,8 +830,13 @@ final public class EVReflection {
                 }
             }
         }
+        // Step 3 - from PascalCase or camelCase
+        newKey = PascalCaseToCamelCase(newKey)
+        if tryMatch?[newKey] != nil {
+            return newKey
+        }
         
-        // Step 3 - from PascalCase or camelCase to snakeCase
+        // Step 3 - from camelCase to snakeCase
         newKey = camelCaseToUnderscores(newKey)
         if tryMatch?[newKey] != nil {
             return newKey
@@ -894,6 +901,20 @@ final public class EVReflection {
         camelCaseToUnderscoresCache[input] = output
         return output
     }
+
+    
+    
+    /**
+     Convert a CamelCase to pascalCase
+     
+     - parameter input: the CamelCase string
+     
+     - returns: the pascalCase string
+     */
+    internal static func PascalCaseToCamelCase(input: String) -> String {
+        return String(input.characters.first!).lowercaseString + input.substringFromIndex(input.startIndex.successor())
+    }
+    
     
     
     /// List of swift keywords for cleaning up keys
