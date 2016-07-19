@@ -10,6 +10,8 @@
 
 #import "SENAPIClient.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
     SENAPIDeviceErrorInvalidParam = -1
 };
@@ -25,14 +27,14 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  *
  * @param completion: the completion block to invoke when request returns
  */
-+ (void)getPairedDevices:(nonnull SENAPIDataBlock)completion;
++ (void)getPairedDevices:(SENAPIDataBlock)completion;
 
 /**
  * Get pairing information for the currently paired Sense for the signed in user
  *
  * @param completion: the block to invoke upon completion
  */
-+ (void)getPairingInfo:(nonnull SENAPIDataBlock)completion;
++ (void)getPairingInfo:(SENAPIDataBlock)completion;
 
 /**
  * Unregister the pill from the currently signed in account (must be authorized).
@@ -40,8 +42,8 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  * @param pillMetadata: the metadata for the pill to unregister
  * @param completion: the completion block to invoke when done
  */
-+ (void)unregisterPill:(nonnull SENPillMetadata*)pillMetadata
-            completion:(nonnull SENAPIDataBlock)completion;
++ (void)unregisterPill:(SENPillMetadata*)pillMetadata
+            completion:(SENAPIDataBlock)completion;
 
 /**
  * Unregister Sense from the currently signed in account (must be authorized).
@@ -49,8 +51,8 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  * @param senseMetadata: the metadata for the sense to unregister
  * @param completion: the completion block to invoke when done
  */
-+ (void)unregisterSense:(nonnull SENSenseMetadata*)senseMetadata
-             completion:(nonnull SENAPIDataBlock)completion;
++ (void)unregisterSense:(SENSenseMetadata*)senseMetadata
+             completion:(SENAPIDataBlock)completion;
 
 /**
  * Remove associations to Sense represented by the SENSenseMetadata object.
@@ -62,8 +64,8 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  * @param senseMetadata: the sense metadata object representing Sense
  * @param completion:    the block to invoke upon completion.
  */
-+ (void)removeAssociationsToSense:(nonnull SENSenseMetadata*)senseMetadata
-                       completion:(nonnull SENAPIDataBlock)completion;
++ (void)removeAssociationsToSense:(SENSenseMetadata*)senseMetadata
+                       completion:(SENAPIDataBlock)completion;
 
 #pragma mark - OTA
 
@@ -81,6 +83,8 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  *
  * @param completion: the block to call when response is returned
  */
-+ (void)forceOTA:(SENAPIDataBlock)completion;
++ (void)forceOTA:(nullable SENAPIDataBlock)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END
