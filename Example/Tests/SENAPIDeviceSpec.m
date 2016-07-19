@@ -554,6 +554,79 @@ describe(@"SENAPIDevice", ^{
         
     });
     
+    describe(@"+getOTAStatus", ^{
+        
+        context(@"api returned an error", ^{
+            
+            __block SENDFUStatus* status = nil;
+            __block NSError* otaError = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:)
+                         withBlock:^id(NSArray *params) {
+                             SENAPIDataBlock cb = [params lastObject];
+                             cb (nil, [NSError errorWithDomain:@"test"
+                                                          code:-1
+                                                      userInfo:nil]);
+                             return nil;
+                         }];
+                
+                [SENAPIDevice getOTAStatus:^(id data, NSError *error) {
+                    status = data;
+                    otaError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+            });
+            
+            it(@"should not return a status", ^{
+                [[status should] beNil];
+            });
+            
+            it(@"should return an api error", ^{
+                [[otaError should] beNonNil];
+            });
+            
+        });
+        
+        context(@"api returned a required status, as a string", ^{
+            
+            __block SENDFUStatus* status = nil;
+            __block NSError* otaError = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:)
+                         withBlock:^id(NSArray *params) {
+                             SENAPIDataBlock cb = [params lastObject];
+                             cb (@"REQUIRED", nil);
+                             return nil;
+                         }];
+                
+                [SENAPIDevice getOTAStatus:^(id data, NSError *error) {
+                    status = data;
+                    otaError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+            });
+            
+            it(@"should return a required state", ^{
+                [[status should] beNonNil];
+                [[@([status currentState]) should] equal:@(SENDFUStateRequired)];
+            });
+            
+            it(@"should not return an api error", ^{
+                [[otaError should] beNil];
+            });
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
