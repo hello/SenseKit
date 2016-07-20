@@ -591,7 +591,7 @@ describe(@"SENAPIDevice", ^{
             
         });
         
-        context(@"api returned a required status, as a string", ^{
+        context(@"api returned a required status", ^{
             
             __block SENDFUStatus* status = nil;
             __block NSError* otaError = nil;
@@ -600,7 +600,7 @@ describe(@"SENAPIDevice", ^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:)
                          withBlock:^id(NSArray *params) {
                              SENAPIDataBlock cb = [params lastObject];
-                             cb (@"REQUIRED", nil);
+                             cb (@{@"status" : @"REQUIRED"}, nil);
                              return nil;
                          }];
                 

@@ -96,8 +96,9 @@ static NSString* const SENAPIDeviceOTARequestPath = @"request_ota";
     NSString* path = [SENAPIDeviceOTAEndpoint stringByAppendingPathComponent:SENAPIDeviceOTAStatusPath];
     [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
         SENDFUStatus* status = nil;
-        if (!error && data) {
-            status = [[SENDFUStatus alloc] initWithResponse:data];
+        NSDictionary* dict = SENObjectOfClass(data, [NSDictionary class]);
+        if (!error && dict) {
+            status = [[SENDFUStatus alloc] initWithDictionary:dict];
         }
         completion (status, error);
     }];
