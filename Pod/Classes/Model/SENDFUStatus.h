@@ -22,6 +22,8 @@ typedef NS_ENUM(NSUInteger, SENDFUState) {
 
 @property (nonatomic, assign, readonly) SENDFUState currentState;
 
-- (instancetype)initWithResponse:(id)response;
+- (instancetype)initWithDictionary:(NSDictionary*)response;
+- (BOOL)isRequired;
+- (BOOL)isInProgress;
 
 @end

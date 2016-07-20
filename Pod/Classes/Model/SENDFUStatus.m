@@ -9,6 +9,7 @@
 #import "SENDFUStatus.h"
 #import "Model.h"
 
+static NSString* const SENDFUStatusPropStatus = @"status";
 static NSString* const SENDFUStatusNotRequired = @"NOT_REQUIRED";
 static NSString* const SENDFUStatusRequired = @"REQUIRED";
 static NSString* const SENDFUStatusRequestSent = @"RESPONSE_SENT"; // EH?  should be request?
@@ -18,31 +19,45 @@ static NSString* const SENDFUStatusError = @"ERROR";
 
 @implementation SENDFUStatus
 
-- (instancetype)initWithResponse:(id)response {
+- (instancetype)initWithDictionary:(NSDictionary*)response {
     self = [super init];
     if (self) {
-        _currentState = [self enumValueFromResponse:response];
+        NSString* status = response[SENDFUStatusPropStatus];
+        _currentState = [self enumValueFromString:status];
     }
     return self;
 }
 
-- (SENDFUState)enumValueFromResponse:(id)response {
+- (SENDFUState)enumValueFromString:(NSString*)status {
     SENDFUState enumValue = SENDFUStateUnknown;
-    NSString* state = [SENObjectOfClass(response, [NSString class]) uppercaseString];
-    if ([state isEqualToString:SENDFUStatusNotRequired]) {
+    if ([status isEqualToString:SENDFUStatusNotRequired]) {
         enumValue = SENDFUStateNotRequired;
-    } else if ([state isEqualToString:SENDFUStatusRequired]) {
+    } else if ([status isEqualToString:SENDFUStatusRequired]) {
         enumValue = SENDFUStateRequired;
-    } else if ([state isEqualToString:SENDFUStatusRequestSent]) {
+    } else if ([status isEqualToString:SENDFUStatusRequestSent]) {
         enumValue = SENDFUStateRequestSent;
-    } else if ([state isEqualToString:SENDFUStatusInProgress]) {
+    } else if ([status isEqualToString:SENDFUStatusInProgress]) {
         enumValue = SENDFUStateInProgress;
-    } else if ([state isEqualToString:SENDFUStatusComplete]) {
+    } else if ([status isEqualToString:SENDFUStatusComplete]) {
         enumValue = SENDFUStateComplete;
-    } else if ([state isEqualToString:SENDFUStatusError]) {
+    } else if ([status isEqualToString:SENDFUStatusError]) {
         enumValue = SENDFUStateError;
     }
     return enumValue;
+}
+
+- (BOOL)isRequired {
+    return [self currentState] == SENDFUStatusRequired;
+}
+
+- (BOOL)isInProgress {
+    switch ([self currentState]) {
+        case SENDFUStateRequestSent:
+        case SENDFUStateInProgress:
+            return YES;
+        default:
+            return NO;
+    }
 }
 
 @end
