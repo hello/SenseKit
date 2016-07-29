@@ -20,6 +20,7 @@ describe(@"SENAPISpeech", ^{
             
             __block NSArray<SENSpeechResult*>* results = nil;
             __block NSError* apiError = nil;
+            __block NSString* path = nil;
             
             beforeEach(^{
                 
@@ -30,6 +31,7 @@ describe(@"SENAPISpeech", ^{
                             @"response_text": @"It's currently 71 degrees.",
                             @"command": @"room_temperature",
                             @"result": @"ok"}], nil);
+                    path = [params firstObject];
                     return nil;
                 }];
                 
@@ -58,6 +60,10 @@ describe(@"SENAPISpeech", ^{
             
             it(@"should not return an error", ^{
                 [[apiError should] beNil];
+            });
+            
+            it(@"should have a correct path", ^{
+                [[path should] equal:@"v1/speech/onboarding"];
             });
             
         });
