@@ -58,6 +58,11 @@ describe(@"SENAPISpeech", ^{
                 [[result should] beKindOfClass:[SENSpeechResult class]];
             });
             
+            it(@"should return an ok status", ^{
+                SENSpeechResult* result = [results firstObject];
+                [[@([result status]) should] equal:@(SENSpeechStatusOk)];
+            });
+            
             it(@"should not return an error", ^{
                 [[apiError should] beNil];
             });
