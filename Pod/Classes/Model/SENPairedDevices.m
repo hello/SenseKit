@@ -51,28 +51,46 @@ static NSString* const HEMDevicesDictPropPills = @"pills";
     return pills;
 }
 
-- (SENSenseMetadata*)senseMetadata {
-    return [[self senses] firstObject];
+- (SENSenseMetadata*)activeSenseMetadata {
+    SENSenseMetadata* activeSense = nil;
+    for (SENSenseMetadata* sense in [self senses]) {
+        if ([sense isActive]) {
+            activeSense = sense;
+            break;
+        }
+    }
+    return activeSense;
 }
 
-- (SENPillMetadata*)pillMetadata {
-    return [[self pills] firstObject];
+- (SENPillMetadata*)activePillMetadata {
+    SENPillMetadata* activePill = nil;
+    for (SENPillMetadata* pill in [self pills]) {
+        if ([pill isActive]) {
+            activePill = pill;
+            break;
+        }
+    }
+    return activePill;
 }
 
 - (BOOL)hasPairedSense {
-    return [[self senseMetadata] uniqueId] > 0;
+    return [[[self activeSenseMetadata] uniqueId] length] > 0;
 }
 
 - (BOOL)hasPairedPill {
-    return [[self pillMetadata] uniqueId] > 0;
+    return [[[self activePillMetadata] uniqueId] length] > 0;
 }
 
-- (void)removePairedPill {
-    [self setPills:[NSArray new]];
+- (void)removePill:(SENPillMetadata*)pillMetadata {
+    NSMutableArray<SENPillMetadata*>* mutablePills = [[self pills] mutableCopy];
+    [mutablePills removeObject:pillMetadata];
+    [self setPills:mutablePills];
 }
 
-- (void)removePairedSense {
-    [self setSenses:[NSArray new]];
+- (void)removeSense:(SENSenseMetadata*)senseMetadata {
+    NSMutableArray<SENSenseMetadata*>* mutableSenses = [[self senses] mutableCopy];
+    [mutableSenses removeObject:senseMetadata];
+    [self setSenses:mutableSenses];
 }
 
 @end
