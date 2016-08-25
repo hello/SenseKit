@@ -639,7 +639,7 @@ describe(@"SENAPIDevice", ^{
                 [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock cb = [params lastObject];
                     apiPath = [params firstObject];
-                    cb (@{}, nil);
+                    cb (@{@"status" : @"OK"}, nil);
                     return nil;
                 }];
                 
@@ -664,8 +664,61 @@ describe(@"SENAPIDevice", ^{
                 [[apiPath should] equal:@"v2/devices/swap"];
             });
             
-            it(@"should return a dictionary", ^{
-                [[responseData should] beKindOfClass:[NSDictionary class]];
+            it(@"should return a upgrade status", ^{
+                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
+            });
+            
+            it(@"should return an OK response", ^{
+                SENUpgradeStatus* status = responseData;
+                SENUpgradeResponse response = [status response];
+                [[@(response) should] equal:@(SENUpgradeResponseOk)];
+            });
+            
+        });
+        
+        context(@"api returns an error status", ^{
+            
+            __block NSError* apiError = nil;
+            __block id responseData = nil;
+            __block NSString* apiPath = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(PUT:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    apiPath = [params firstObject];
+                    cb (@{@"status" : @"NEW_SENSE_PAIRED_TO_DIFFERENT_ACCOUNT"}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice issueIntentToSwapWithDeviceId:@"abc" completion:^(id data, NSError *error) {
+                    apiError = error;
+                    responseData = data;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseData = nil;
+                apiPath = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should have made a request to correct path", ^{
+                [[apiPath should] equal:@"v2/devices/swap"];
+            });
+            
+            it(@"should return a upgrade status", ^{
+                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
+            });
+            
+            it(@"should return a paired to another response", ^{
+                SENUpgradeStatus* status = responseData;
+                SENUpgradeResponse response = [status response];
+                [[@(response) should] equal:@(SENUpgradeResponsePairedToAnother)];
             });
             
         });
