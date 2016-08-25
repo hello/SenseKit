@@ -145,11 +145,11 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
 }
 
 - (BOOL)shouldWarnAboutPillLastSeen {
-    return [self shouldWarnAboutLastSeenForDevice:[[self devices] pillMetadata]];
+    return [self shouldWarnAboutLastSeenForDevice:[[self devices] activePillMetadata]];
 }
 
 - (BOOL)shouldWarnAboutSenseLastSeen {
-    return [self shouldWarnAboutLastSeenForDevice:[[self devices] senseMetadata]];
+    return [self shouldWarnAboutLastSeenForDevice:[[self devices] activeSenseMetadata]];
 }
 
 #pragma mark - Scanning
@@ -205,7 +205,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         return NO;
     }
     
-    SENSenseMetadata* senseMetadata = [[self devices] senseMetadata];
+    SENSenseMetadata* senseMetadata = [[self devices] activeSenseMetadata];
     NSString* pairedDeviceId = [[senseMetadata uniqueId] lowercaseString];
     NSString* senseDeviceId = [[sense deviceId] lowercaseString];
     return [pairedDeviceId isEqualToString:senseDeviceId];
@@ -287,7 +287,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
     [self loadDeviceInfo:^(NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (error == nil) {
-            SENSenseMetadata* senseMetadata = [[strongSelf devices] senseMetadata];
+            SENSenseMetadata* senseMetadata = [[strongSelf devices] activeSenseMetadata];
             if ([[senseMetadata uniqueId] isEqualToString:[[senseManager sense] deviceId]]) {
                 [strongSelf setSenseManager:senseManager];
             } else {
@@ -339,7 +339,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         return;
     }
     
-    SENPillMetadata* pillMetadata = [[self devices] pillMetadata];
+    SENPillMetadata* pillMetadata = [[self devices] activePillMetadata];
     __weak typeof(self) weakSelf = self;
     [SENAPIDevice unregisterPill:pillMetadata completion:^(id data, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -348,7 +348,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         if (error != nil) {
             deviceError = [strongSelf errorWithType:SENServiceDeviceErrorUnlinkPillFromAccount];
         } else {
-            [[strongSelf devices] removePairedPill];
+            [[strongSelf devices] removePill:pillMetadata];
             [strongSelf notifyPillUnpaired];
         }
         
@@ -375,7 +375,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
         return;
     }
     
-    SENSenseMetadata* senseMetadata = [[self devices] senseMetadata];
+    SENSenseMetadata* senseMetadata = [[self devices] activeSenseMetadata];
     __weak typeof(self) weakSelf = self;
     [SENAPIDevice unregisterSense:senseMetadata completion:^(id data, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -386,7 +386,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
             deviceError = [strongSelf errorWithType:SENServiceDeviceErrorUnlinkSenseFromAccount];
         } else {
             [[strongSelf senseManager] disconnectFromSense];
-            [[strongSelf devices] removePairedSense];
+            [[strongSelf devices] removeSense:senseMetadata];
             [strongSelf setSenseManager:nil];
             [strongSelf notifySenseUnpaired];
         }
@@ -439,7 +439,7 @@ NSString* const SENServiceDeviceErrorDomain = @"is.hello.service.device";
                 return;
             }
             
-            SENSenseMetadata* senseMetadata = [[blockSelf devices] senseMetadata];
+            SENSenseMetadata* senseMetadata = [[blockSelf devices] activeSenseMetadata];
             [SENAPIDevice removeAssociationsToSense:senseMetadata completion:^(__unused id data, NSError *error) {
                 if (error != nil) {
                     turnOffLedThenFail(error);

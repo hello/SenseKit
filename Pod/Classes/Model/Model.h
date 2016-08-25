@@ -28,7 +28,7 @@
 #import "SENDFUStatus.h"
 #import "SENSpeechResult.h"
 #import "SENFeatures.h"
-#import "SENUpgradeStatus.h"
+#import "SENSwapStatus.h"
 
 void SENClearModel();
 
