@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, SENAPIDeviceError) {
  * @param deviceId: the device id of the new Sense to swap to
  * @param completion: the block to call when intent has been issued
  */
-+ (void)issueIntentToSwapWithDeviceId:(NSString*)deviceId completion:(SENAPIDataBlock)completion;
++ (void)issueIntentToSwapWithDeviceId:(NSString*)deviceId completion:(nullable SENAPIDataBlock)completion;
 
 @end
 
