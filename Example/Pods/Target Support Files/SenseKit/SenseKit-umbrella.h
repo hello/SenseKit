@@ -72,6 +72,7 @@
 #import "SENTimelineSegment.h"
 #import "SENTrends.h"
 #import "SENTrendsGraph.h"
+#import "SENUpgradeStatus.h"
 #import "SENService+Protected.h"
 #import "SENService.h"
 #import "SENServiceDevice.h"
