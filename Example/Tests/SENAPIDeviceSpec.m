@@ -665,13 +665,13 @@ describe(@"SENAPIDevice", ^{
             });
             
             it(@"should return a upgrade status", ^{
-                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
+                [[responseData should] beKindOfClass:[SENSwapStatus class]];
             });
             
             it(@"should return an OK response", ^{
-                SENUpgradeStatus* status = responseData;
-                SENUpgradeResponse response = [status response];
-                [[@(response) should] equal:@(SENUpgradeResponseOk)];
+                SENSwapStatus* status = responseData;
+                SENSwapResponse response = [status response];
+                [[@(response) should] equal:@(SENSwapResponseOk)];
             });
             
         });
@@ -712,13 +712,13 @@ describe(@"SENAPIDevice", ^{
             });
             
             it(@"should return a upgrade status", ^{
-                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
+                [[responseData should] beKindOfClass:[SENSwapStatus class]];
             });
             
             it(@"should return a paired to another response", ^{
-                SENUpgradeStatus* status = responseData;
-                SENUpgradeResponse response = [status response];
-                [[@(response) should] equal:@(SENUpgradeResponsePairedToAnother)];
+                SENSwapStatus* status = responseData;
+                SENSwapResponse response = [status response];
+                [[@(response) should] equal:@(SENSwapResponsePairedToAnother)];
             });
             
         });
