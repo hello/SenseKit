@@ -2,13 +2,12 @@
 #import <SenseKit/Model.h>
 #import <SenseKit/SENAPIDevice.h>
 
-NSDictionary* (^CreateFakeSenseData)(BOOL active) = ^(BOOL active) {
+NSDictionary* (^CreateFakeSenseData)(void) = ^(void) {
     return @{@"id" : @"1",
              @"firmware_version" : @"1",
              @"last_updated" : @([NSDate timeIntervalSinceReferenceDate]),
              @"state" : @"NORMAL",
              @"color" : @"BLACK",
-             @"active" : @(active),
              @"wifi_info" : @{@"ssid" : @"Hello",
                               @"rssi" : @(-50),
                               @"condition" : @"FAIR",
@@ -89,7 +88,7 @@ describe(@"SENAPIDevice", ^{
             __block NSDictionary* fakeSense = nil;
             
             beforeEach(^{
-                fakeSense = CreateFakeSenseData(YES);
+                fakeSense = CreateFakeSenseData();
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
                     block(@{@"senses" : @[fakeSense], @"pills" : @[]}, nil);
@@ -124,9 +123,8 @@ describe(@"SENAPIDevice", ^{
             
             it(@"should contain a proper sense metadata object", ^{
                 SENPairedDevices* devices = responseObj;
-                SENSenseMetadata* senseMetadata = [devices activeSenseMetadata];
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
                 [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
-                [[@([senseMetadata isActive]) should] beYes];
             });
             
             it(@"should not have a paired pill", ^{
@@ -183,9 +181,8 @@ describe(@"SENAPIDevice", ^{
             
             it(@"should contain a proper pill metadata object", ^{
                 SENPairedDevices* devices = responseObj;
-                SENPillMetadata* pillMetadata = [devices activePillMetadata];
+                SENPillMetadata* pillMetadata = [devices pillMetadata];
                 [[[pillMetadata uniqueId] should] equal:fakePill[@"id"]];
-                [[@([pillMetadata isActive]) should] beYes];
             });
         
         });
@@ -198,7 +195,7 @@ describe(@"SENAPIDevice", ^{
             __block NSDictionary* fakeSense = nil;
             
             beforeEach(^{
-                fakeSense = CreateFakeSenseData(YES);
+                fakeSense = CreateFakeSenseData();
                 fakePill = CreateFakePillData();
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
@@ -240,73 +237,14 @@ describe(@"SENAPIDevice", ^{
             
             it(@"should contain a proper sense metadata object", ^{
                 SENPairedDevices* devices = responseObj;
-                SENSenseMetadata* senseMetadata = [devices activeSenseMetadata];
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
                 [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
             });
             
             it(@"should contain a proper pill metadata object", ^{
                 SENPairedDevices* devices = responseObj;
-                SENPillMetadata* pillMetadata = [devices activePillMetadata];
+                SENPillMetadata* pillMetadata = [devices pillMetadata];
                 [[[pillMetadata uniqueId] should] equal:fakePill[@"id"]];
-            });
-            
-        });
-        
-        context(@"multiple senses, where 1 is inactive", ^{
-            
-            __block NSError* apiError = nil;
-            __block id responseObj = nil;
-            __block NSDictionary* activeSense = nil;
-            __block NSDictionary* inactiveSense = nil;
-            
-            beforeEach(^{
-                activeSense = CreateFakeSenseData(YES);
-                inactiveSense = CreateFakeSenseData(NO);
-                
-                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
-                    SENAPIDataBlock block = [params lastObject];
-                    block(@{@"senses" : @[activeSense, inactiveSense]}, nil);
-                    return nil;
-                }];
-                
-                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
-                    apiError = error;
-                    responseObj = data;
-                }];
-            });
-            
-            afterEach(^{
-                [SENAPIClient clearStubs];
-                apiError = nil;
-                responseObj = nil;
-                activeSense = nil;
-                inactiveSense = nil;
-            });
-            
-            it(@"should not return an error", ^{
-                [[apiError should] beNil];
-            });
-            
-            it(@"should return a SENPairedDevices object", ^{
-                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
-            });
-            
-            it(@"should return 2 Sense metdata objects", ^{
-                SENPairedDevices* devices = responseObj;
-                [[@([[devices senses] count]) should] equal:@2];
-            });
-            
-            it(@"should return 0 Pill metdata objects", ^{
-                SENPairedDevices* devices = responseObj;
-                [[@([[devices pills] count]) should] equal:@0];
-            });
-            
-            it(@"should return 1 active Sense, and 1 inactive Sense", ^{
-                SENPairedDevices* devices = responseObj;
-                SENSenseMetadata* firstSense = [[devices senses] firstObject];
-                SENSenseMetadata* lastSense = [[devices senses] lastObject];
-                [[@([firstSense isActive]) should] beYes];
-                [[@([lastSense isActive]) should] beNo];
             });
             
         });
@@ -483,7 +421,7 @@ describe(@"SENAPIDevice", ^{
                     return nil;
                 }];
                 
-                NSDictionary* fakeSenseData = CreateFakeSenseData(YES);
+                NSDictionary* fakeSenseData = CreateFakeSenseData();
                 SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
                 [SENAPIDevice unregisterSense:senseMetadata completion:^(id data, NSError *error) {
                     calledBack = YES;
@@ -520,7 +458,7 @@ describe(@"SENAPIDevice", ^{
                     return nil;
                 }];
                 
-                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData(YES) mutableCopy];
+                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData() mutableCopy];
                 [fakeSenseData removeObjectForKey:@"id"];
                 SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
                 [SENAPIDevice unregisterSense:senseMetadata completion:^(id data, NSError *error) {
@@ -557,7 +495,7 @@ describe(@"SENAPIDevice", ^{
                     return nil;
                 }];
                 
-                NSDictionary* fakeSenseData = CreateFakeSenseData(YES);
+                NSDictionary* fakeSenseData = CreateFakeSenseData();
                 SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
                 [SENAPIDevice removeAssociationsToSense:senseMetadata completion:^(id data, NSError *error) {
                     calledBack = YES;
@@ -594,7 +532,7 @@ describe(@"SENAPIDevice", ^{
                     return nil;
                 }];
                 
-                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData(YES) mutableCopy];
+                NSMutableDictionary* fakeSenseData = [CreateFakeSenseData() mutableCopy];
                 [fakeSenseData removeObjectForKey:@"id"];
                 SENSenseMetadata* senseMetadata = [[SENSenseMetadata alloc] initWithDictionary:fakeSenseData];
                 [SENAPIDevice removeAssociationsToSense:senseMetadata completion:^(id data, NSError *error) {
@@ -727,13 +665,13 @@ describe(@"SENAPIDevice", ^{
             });
             
             it(@"should return a upgrade status", ^{
-                [[responseData should] beKindOfClass:[SENSwapStatus class]];
+                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
             });
             
             it(@"should return an OK response", ^{
-                SENSwapStatus* status = responseData;
-                SENSwapResponse response = [status response];
-                [[@(response) should] equal:@(SENSwapResponseOk)];
+                SENUpgradeStatus* status = responseData;
+                SENUpgradeResponse response = [status response];
+                [[@(response) should] equal:@(SENUpgradeResponseOk)];
             });
             
         });
@@ -774,13 +712,13 @@ describe(@"SENAPIDevice", ^{
             });
             
             it(@"should return a upgrade status", ^{
-                [[responseData should] beKindOfClass:[SENSwapStatus class]];
+                [[responseData should] beKindOfClass:[SENUpgradeStatus class]];
             });
             
             it(@"should return a paired to another response", ^{
-                SENSwapStatus* status = responseData;
-                SENSwapResponse response = [status response];
-                [[@(response) should] equal:@(SENSwapResponsePairedToAnother)];
+                SENUpgradeStatus* status = responseData;
+                SENUpgradeResponse response = [status response];
+                [[@(response) should] equal:@(SENUpgradeResponsePairedToAnother)];
             });
             
         });

@@ -56,9 +56,9 @@ static NSString* const SENAPIDeviceSwapParamDeviceId = @"sense_id";
     NSDictionary* param = @{SENAPIDeviceSwapParamDeviceId : deviceId ?: @""};
     [SENAPIClient PUT:path parameters:param completion:^(id data, NSError *error) {
         if (completion) {
-            SENSwapStatus* status = nil;
+            SENUpgradeStatus* status = nil;
             if ([data isKindOfClass:[NSDictionary class]]) {
-                status = [[SENSwapStatus alloc] initWithDictionary:data];
+                status = [[SENUpgradeStatus alloc] initWithDictionary:data];
             }
             completion (status, error);
         }
