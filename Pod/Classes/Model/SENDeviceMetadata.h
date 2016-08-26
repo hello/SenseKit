@@ -7,19 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SENSerializable.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface SENDeviceMetadata : NSObject <SENSerializable>
+@interface SENDeviceMetadata : NSObject
 
 @property (nonatomic, copy, readonly, nullable) NSString* uniqueId;
 @property (nonatomic, copy, readonly, nullable) NSString* firmwareVersion;
 @property (nonatomic, strong, readonly, nullable) NSDate* lastSeenDate;
-@property (nonatomic, assign, readonly, getter=isActive) BOOL active;
 
-- (NSDictionary*)dictionaryValue;
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary*)dict;
+- (nonnull NSDictionary*)dictionaryValue;
 
 @end
-
-NS_ASSUME_NONNULL_END

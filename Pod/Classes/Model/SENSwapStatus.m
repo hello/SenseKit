@@ -1,5 +1,5 @@
 //
-//  SENSwapStatus.m
+//  SENUpgradeStatus.m
 //  Pods
 //
 //  Created by Jimmy Lu on 8/25/16.
