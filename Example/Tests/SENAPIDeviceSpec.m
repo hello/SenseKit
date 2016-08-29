@@ -8,11 +8,26 @@ NSDictionary* (^CreateFakeSenseData)(void) = ^(void) {
              @"last_updated" : @([NSDate timeIntervalSinceReferenceDate]),
              @"state" : @"NORMAL",
              @"color" : @"BLACK",
+             @"hw_version" : @"SENSE",
              @"wifi_info" : @{@"ssid" : @"Hello",
                               @"rssi" : @(-50),
                               @"condition" : @"FAIR",
                               @"last_updated" : @([NSDate timeIntervalSinceReferenceDate])}};
 };
+
+NSDictionary* (^CreateFakeSenseVoiceData)(void) = ^(void) {
+    return @{@"id" : @"1",
+             @"firmware_version" : @"1",
+             @"last_updated" : @([NSDate timeIntervalSinceReferenceDate]),
+             @"state" : @"NORMAL",
+             @"color" : @"BLACK",
+             @"hw_version" : @"SENSE_WITH_VOICE",
+             @"wifi_info" : @{@"ssid" : @"Hello",
+                              @"rssi" : @(-50),
+                              @"condition" : @"FAIR",
+                              @"last_updated" : @([NSDate timeIntervalSinceReferenceDate])}};
+};
+
 
 NSDictionary* (^CreateFakePillData)(void) = ^(void) {
     return @{@"id" : @"1",
@@ -125,6 +140,7 @@ describe(@"SENAPIDevice", ^{
                 SENPairedDevices* devices = responseObj;
                 SENSenseMetadata* senseMetadata = [devices senseMetadata];
                 [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
+                [[@([senseMetadata hardwareVersion]) should] equal:@(SENSenseHardwareOne)];
             });
             
             it(@"should not have a paired pill", ^{
@@ -132,6 +148,54 @@ describe(@"SENAPIDevice", ^{
                 [[@([devices hasPairedPill]) should] beNo];
             });
             
+        });
+        
+        context(@"a sense with voice is paired", ^{
+            __block NSError* apiError = nil;
+            __block id responseObj = nil;
+            __block NSDictionary* fakeSense = nil;
+            
+            beforeEach(^{
+                fakeSense = CreateFakeSenseVoiceData();
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock block = [params lastObject];
+                    block(@{@"senses" : @[fakeSense], @"pills" : @[]}, nil);
+                    return nil;
+                }];
+                
+                [SENAPIDevice getPairedDevices:^(id data, NSError *error) {
+                    apiError = error;
+                    responseObj = data;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                apiError = nil;
+                responseObj = nil;
+                fakeSense = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return a SENPairedDevices object", ^{
+                [[responseObj should] beKindOfClass:[SENPairedDevices class]];
+            });
+            
+            it(@"should have a paired sense", ^{
+                SENPairedDevices* devices = responseObj;
+                [[@([devices hasPairedSense]) should] beYes];
+            });
+            
+            it(@"should have a hardware version for voice", ^{
+                SENPairedDevices* devices = responseObj;
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
+                [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
+                [[@([senseMetadata hardwareVersion]) should] equal:@(SENSenseHardwareVoice)];
+            });
+
         });
         
         context(@"a pill is paired", ^{
