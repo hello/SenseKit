@@ -55,6 +55,7 @@
 		BFA205691D53D53A0090265B /* SENAPIFeatureSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA205681D53D53A0090265B /* SENAPIFeatureSpec.m */; };
 		BFB6D47219BA4342004CA11B /* SENAPIAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */; };
 		BFB7C3AA1B6072CC001A6280 /* SENSenseWiFiStatusSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */; };
+		BFB9898A1D78AA470042D527 /* SENAPISensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB989891D78AA470042D527 /* SENAPISensorSpec.m */; };
 		BFC4C2071B8E670500BB7761 /* SENAPIAppFeedbackSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4C2061B8E670500BB7761 /* SENAPIAppFeedbackSpec.m */; };
 		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
 		BFE375F71CF385620029EE66 /* SENAPIPhotoSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE375F61CF385620029EE66 /* SENAPIPhotoSpec.m */; };
@@ -136,6 +137,7 @@
 		BFA205681D53D53A0090265B /* SENAPIFeatureSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIFeatureSpec.m; sourceTree = "<group>"; };
 		BFB6D47119BA4342004CA11B /* SENAPIAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIAccountSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BFB7C3A91B6072CC001A6280 /* SENSenseWiFiStatusSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseWiFiStatusSpec.m; sourceTree = "<group>"; };
+		BFB989891D78AA470042D527 /* SENAPISensorSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPISensorSpec.m; sourceTree = "<group>"; };
 		BFBEE90A1D1882B1007A986B /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Tests.a"; path = "Pods/../build/Debug-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
 		BFBEE90C1D1882C1007A986B /* libPods-SenseKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-SenseKit.a"; path = "Pods/../build/Debug-iphoneos/libPods-SenseKit.a"; sourceTree = "<group>"; };
 		BFBEE90E1D1882CE007A986B /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Tests.a"; path = "Pods/../build/Debug-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				BF238DDC1D19F76600F6E62C /* SENAPIShareSpec.m */,
 				BF6098801D4ACC8C0005C8F0 /* SENAPISpeechSpec.m */,
 				BFA205681D53D53A0090265B /* SENAPIFeatureSpec.m */,
+				BFB989891D78AA470042D527 /* SENAPISensorSpec.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -683,6 +686,7 @@
 				BF1E2E791A031DF900DDD0D0 /* SENAPIInsightSpec.m in Sources */,
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
 				8ABA8A2D1A85A6BF00E8B51F /* SENInsightSpec.m in Sources */,
+				BFB9898A1D78AA470042D527 /* SENAPISensorSpec.m in Sources */,
 				BFEB685A1B3A6EA9002E8524 /* SENAPITimelineSpec.m in Sources */,
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
 				BF8E1A951A6893F1009E421F /* SENPreferenceSpec.m in Sources */,

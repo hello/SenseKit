@@ -18,3 +18,4 @@
 #import "SENAPIShare.h"
 #import "SENAPISpeech.h"
 #import "SENAPIFeature.h"
+#import "SENAPISensor.h"
