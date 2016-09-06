@@ -365,17 +365,6 @@ describe(@"SENSenseManager", ^{
                 
             });
             
-            it(@"WPA2 passwords should return data with no error", ^{
-                
-                NSError* error = nil;
-                NSData* data = [manager dataValueForWiFiPassword:@"password"
-                                                withSecurityType:SENWifiEndpointSecurityTypeWpa2
-                                                 formattingError:&error];
-                [[error should] beNil];
-                [[data should] beNonNil];
-                
-            });
-            
             it(@"WPA passwords should return data with no error", ^{
                 
                 NSError* error = nil;

@@ -36,8 +36,15 @@ message SENWifiEndpoint {
     enum SecurityType {
         OPEN = 0;
         WEP = 1;
-        WPA = 2;
-        WPA2 = 3;
+        WPA = 2; /* same as WPA2 */
+        WPS_PBC = 3;
+        WPS_PIN = 4;
+        WPA_ENTERPRISE = 5;
+        P2P_PBC = 6;
+        P2P_PIN_KEYPAD = 7;
+        P2P_PIN_DISPLAY = 8;
+        P2P_PIN_AUTO = 9;
+        WEP_SHARED = 10;
     }
     required string ssid = 1;
     optional bytes bssid = 2;
