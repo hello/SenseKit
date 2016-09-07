@@ -10,36 +10,33 @@
 #import "SENAPIClient.h"
 
 @class SENSensor;
+@class SENSensorDataRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString* const SENAPISensorErrorDomain;
-
-typedef NS_ENUM(NSInteger, SENAPISensorErrorCode) {
-    SENAPISensorErrorCodeInvalidResponse = -1
-};
-
-typedef NS_ENUM(NSUInteger, SENAPISensorTempUnit) {
-    SENAPISensorTempUnitCelcius = 0, // default
-    SENAPISensorTempUnitFahrenheit
-};
-
-typedef NS_ENUM(NSUInteger, SENAPISensorDataScope) {
-    SENAPISensorDataScopeDay = 0,
-    SENAPISensorDataScopeWeek
-};
-
 @interface SENAPISensor : NSObject
 
-+ (void)dataForAllSensorsWithScope:(SENAPISensorDataScope)scope
-                        completion:(SENAPIDataBlock)completion;
+/**
+ * @description
+ * Get the status of sensors as a SENSensorStatus object
+ * 
+ * @param completion: the block to call upon completion
+ */
++ (void)getSensorStatus:(SENAPIDataBlock)completion;
 
-+ (void)dataForSensor:(SENSensor*)sensor
-            withScope:(SENAPISensorDataScope)scope
-           completion:(SENAPIDataBlock)completion;
-
-+ (void)currentConditionsWithTempUnit:(SENAPISensorTempUnit)unit
-                           completion:(SENAPIDataBlock)completion;
+/**
+ * @description
+ * Get data points for sensor(s) specified in the request.  For each sensor
+ * requested, an object representing the sensor and it's data is returned in
+ * a dictionary format:
+ * 
+ *      SENSOR_TYPE : [<SENSensorDataPoint>,...]
+ *
+ * @param request: the data request object
+ * @param completion: the block to call upon completion
+ */
++ (void)getSensorDataWithRequest:(SENSensorDataRequest*)request
+                      completion:(SENAPIDataBlock)completion;
 
 @end
 

@@ -7,7 +7,6 @@
 #import "SENAPINotification.h"
 #import "SENAPIPreferences.h"
 #import "SENAPIQuestions.h"
-#import "SENAPIRoom.h"
 #import "SENAPITimeline.h"
 #import "SENAPITimeZone.h"
 #import "SENAPITrends.h"
