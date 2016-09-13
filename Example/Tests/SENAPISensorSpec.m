@@ -50,7 +50,7 @@ describe(@"SENAPISensor", ^{
         context(@"api returns sensor status", ^{
             
             NSDictionary* raw = @{@"status" : @"OK",
-                                  @"sensors" : @[@{@"type" : @"TEMP",
+                                  @"sensors" : @[@{@"type" : @"TEMPERATURE",
                                                   @"name" : @"Temperature",
                                                   @"unit" : @"CELCIUS",
                                                   @"value" : @70,
@@ -104,7 +104,7 @@ describe(@"SENAPISensor", ^{
     
     describe(@"+getSensorDataWithRequest:completion:", ^{
         
-        NSDictionary* sensorDict = @{@"type" : @"TEMP",
+        NSDictionary* sensorDict = @{@"type" : @"TEMPERATURE",
                                      @"name" : @"Temperature",
                                      @"unit" : @"CELCIUS",
                                      @"value" : @70,
@@ -183,9 +183,9 @@ describe(@"SENAPISensor", ^{
                 [[expectFutureValue(apiError) shouldSoon] beNil];
             });
             
-            it(@"should return a dictionary with temperature data", ^{
-                [[expectFutureValue(apiResponse) shouldSoon] beKindOfClass:[NSDictionary class]];
-                [[expectFutureValue([apiResponse objectForKey:[sensor typeStringValue]]) shouldSoon] beKindOfClass:[NSArray class]];
+            it(@"should return a data collection", ^{
+                Class clazz = [SENSensorDataCollection class];
+                [[expectFutureValue(apiResponse) shouldSoon] beKindOfClass:clazz];
             });
             
         });
