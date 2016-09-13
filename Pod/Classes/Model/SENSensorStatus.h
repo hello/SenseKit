@@ -11,7 +11,8 @@
 #import "SENSensor.h"
 
 typedef NS_ENUM(NSUInteger, SENSensorState) {
-    SENSensorStateOk = 0,
+    SENSensorStateUnknown = 0,
+    SENSensorStateOk,
     SENSensorStateNoSense,
     SENSensorStateWaiting
 };

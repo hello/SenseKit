@@ -13,7 +13,7 @@ static NSString* const kSENSensorStatusSensors = @"sensors";
 static NSString* const kSENSensorStatusAttrStatus = @"status";
 static NSString* const kSENSensorStatusValueOk = @"OK";
 static NSString* const kSENSensorStatusValueNoSense = @"NO_SENSE";
-static NSString* const kSENSensorStatusValueWaiting = @"WAITING";
+static NSString* const kSENSensorStatusValueWaiting = @"WAITING_FOR_DATA";
 
 @implementation SENSensorStatus
 
@@ -31,8 +31,10 @@ static NSString* const kSENSensorStatusValueWaiting = @"WAITING";
         return SENSensorStateNoSense;
     } else if ([stateUpper isEqualToString:kSENSensorStatusValueWaiting]) {
         return SENSensorStateWaiting;
-    } else {
+    } else if ([stateUpper isEqualToString:kSENSensorStatusValueOk]) {
         return SENSensorStateOk;
+    } else {
+        return SENSensorStateUnknown;
     }
 }
 

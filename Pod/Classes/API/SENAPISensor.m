@@ -34,31 +34,25 @@ static NSUInteger const kSENAPISensorDefaultDataPointCapacity = 288;
     // A POST is used to send complex parameters in the body
     NSDictionary* params = [request dictionaryValue];
     [SENAPIClient POST:kSENAPISensorPath parameters:params completion:^(id data, NSError *error) {
+        //  {
+        //      "timestamps" : [
+        //      ],
+        //      "sensors" : {
+        //          "TEMP" : [],
+        //          "HUMIDITY" : [],
+        //                ...
+        //      }
+        //  }
         if (!error && [data isKindOfClass:[NSDictionary class]]) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                __block NSMutableDictionary* dataBySensorType = [NSMutableDictionary dictionary];
-                
-                [data enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL * stop) {
-                    NSUInteger capacity = kSENAPISensorDefaultDataPointCapacity;
-                    NSMutableArray<SENSensorDataPoint*>* points = [NSMutableArray arrayWithCapacity:capacity];
-                    
-                    if ([obj isKindOfClass:[NSArray class]]) {
-                        for (id dataObj in obj) {
-                            [points addObject:[[SENSensorDataPoint alloc] initWithDictionary:dataObj]];
-                        }
-                    }
-                    
-                    dataBySensorType[key] = points;
-                }];
-                
+                SENSensorDataCollection* collection = [[SENSensorDataCollection alloc] initWithDictionary:data];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion (dataBySensorType, error);
+                    completion (collection, error);
                 });
-                
             });
 
         } else {
-            completion (data, error);
+            completion (nil, error);
         }
     }];
 }

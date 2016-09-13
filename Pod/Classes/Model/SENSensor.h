@@ -10,7 +10,7 @@ extern NSInteger const SENSensorSentinelValue;
 
 typedef NS_ENUM(NSUInteger, SENSensorUnit) {
     SENSensorUnitUnknown = 0,
-    SENSensorUnitCelcius,
+    SENSensorUnitCelsius,
     SENSensorUnitFahrenheit,
     SENSensorUnitMGCM,
     SENSensorUnitPercent,
@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, SENSensorUnit) {
 typedef NS_ENUM(NSUInteger, SENSensorType) {
     SENSensorTypeUnknown = 0,
     SENSensorTypeTemp,
-    SENSensorTypeAir,
+    SENSensorTypeDust,
     SENSensorTypeHumidity,
     SENSensorTypeVOC,
     SENSensorTypeCO2,
@@ -42,6 +42,21 @@ typedef NS_ENUM(NSUInteger, SENSensorType) {
 @property (nonatomic, strong, readonly) NSDate* date;
 @property (nonatomic, strong, readonly) NSNumber* value;
 @property (nonatomic, strong, readonly) NSNumber* dateOffset;
+
+@end
+
+@interface SENSensorTime : NSObject <SENSerializable>
+
+@property (nonatomic, strong, readonly) NSNumber* offset;
+@property (nonatomic, strong, readonly) NSDate* date;
+
+@end
+
+@interface SENSensorDataCollection : NSObject <SENSerializable>
+
+@property (nonatomic, strong, readonly) NSArray<SENSensorTime*>* timestamps;
+
+- (NSArray<NSNumber*>*)dataPointsForSensorType:(SENSensorType)type;
 
 @end
 
@@ -61,6 +76,7 @@ typedef NS_ENUM(NSUInteger, SENSensorType) {
 @property (nonatomic, strong, readonly) NSNumber* value;
 @property (nonatomic, assign, readonly) SENSensorUnit unit;
 @property (nonatomic, assign, readonly) SENSensorType type;
+@property (nonatomic, assign, readonly) SENCondition condition;
 @property (nonatomic, copy, readonly) NSArray<SENSensorScale*>* scales;
 
 - (NSString*)typeStringValue;

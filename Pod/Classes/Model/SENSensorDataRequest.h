@@ -23,9 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SENSensorDataRequest : NSObject
 
+@property (nonatomic, strong, readonly) NSUUID* identifier;
+
 - (void)addRequestForSensor:(SENSensor*)sensor
                 usingMethod:(SENSensorDataMethod)method
                   withScope:(SENSensorDataScope)scope;
+
+- (void)addRequestForSensors:(NSArray<SENSensor*>*)sensors
+                 usingMethod:(SENSensorDataMethod)method
+                   withScope:(SENSensorDataScope)scope;
 
 - (NSDictionary*)dictionaryValue;
 

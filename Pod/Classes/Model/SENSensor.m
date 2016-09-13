@@ -5,7 +5,7 @@
 NSInteger const SENSensorSentinelValue = -1;
 
 // unit values
-static NSString* const kSENSensorUnitValueCelcius = @"CELCIUS";
+static NSString* const kSENSensorUnitValueCelsius = @"CELCIUS";
 static NSString* const kSENSensorUnitValueFahrenheit = @"FAHRENHEIT";
 static NSString* const kSENSensorUnitValueMGCM = @"MG_CM";
 static NSString* const kSENSensorUnitValuePercent = @"PERCENT";
@@ -18,8 +18,8 @@ static NSString* const kSENSensorUnitValueKelvin = @"KELVIN";
 static NSString* const kSENSensorUnitValueKPA = @"KPA";
 
 // type values
-static NSString* const kSENSensorTypeValueTemp = @"TEMP";
-static NSString* const kSENSensorTypeValueAir = @"AIR";
+static NSString* const kSENSensorTypeValueTemp = @"TEMPERATURE";
+static NSString* const kSENSensorTypeValueAir = @"PARTICULATES";
 static NSString* const kSENSensorTypeValueHumidity = @"HUMIDITY";
 static NSString* const kSENSensorTypeValueVOC = @"VOC";
 static NSString* const kSENSensorTypeValueCO2 = @"C02";
@@ -32,8 +32,8 @@ static
 
 SENSensorUnit SensorUnitFromString(NSString* unitString) {
     NSString* unitStringUpper = [unitString uppercaseString];
-    if ([unitStringUpper isEqualToString:kSENSensorUnitValueCelcius]) {
-        return SENSensorUnitCelcius;
+    if ([unitStringUpper isEqualToString:kSENSensorUnitValueCelsius]) {
+        return SENSensorUnitCelsius;
     } else if ([unitStringUpper isEqualToString:kSENSensorUnitValueFahrenheit]) {
         return SENSensorUnitFahrenheit;
     } else if ([unitStringUpper isEqualToString:kSENSensorUnitValueMGCM]) {
@@ -64,7 +64,7 @@ SENSensorType SensorTypeFromString (NSString* typeString) {
     if ([typeUpper isEqualToString:kSENSensorTypeValueTemp]) {
         return  SENSensorTypeTemp;
     } else if ([typeUpper isEqualToString:kSENSensorTypeValueAir]) {
-        return SENSensorTypeAir;
+        return SENSensorTypeDust;
     } else if ([typeUpper isEqualToString:kSENSensorTypeValueHumidity]) {
         return SENSensorTypeHumidity;
     } else if ([typeUpper isEqualToString:kSENSensorTypeValueVOC]) {
@@ -83,6 +83,34 @@ SENSensorType SensorTypeFromString (NSString* typeString) {
         return SENSensorTypePressure;
     } else {
         return SENSensorTypeUnknown;
+    }
+}
+
+NSString* TypeStringFromEnum (SENSensorType type) {
+    switch (type) {
+        case SENSensorTypeTemp:
+            return kSENSensorTypeValueTemp;
+        case SENSensorTypeUV:
+            return kSENSensorTypeValueUV;
+        case SENSensorTypeDust:
+            return kSENSensorTypeValueAir;
+        case SENSensorTypeCO2:
+            return kSENSensorTypeValueCO2;
+        case SENSensorTypeVOC:
+            return kSENSensorTypeValueVOC;
+        case SENSensorTypeLight:
+            return kSENSensorTypeValueLight;
+        case SENSensorTypeLightTemp:
+            return kSENSensorTypeValueLightTemp;
+        case SENSensorTypeSound:
+            return kSENSensorTypeValueSound;
+        case SENSensorTypeHumidity:
+            return kSENSensorTypeValueHumidity;
+        case SENSensorTypePressure:
+            return kSENSensorTypeValuePressure;
+        case SENSensorTypeUnknown:
+        default:
+            return @"";
     }
 }
 
@@ -113,13 +141,86 @@ static NSString* const SENSensorDataPointDateOffsetKey = @"offset_millis";
     
     SENSensorDataPoint* other = object;
     return SENObjectIsEqual([self value], [other value])
-        && SENObjectIsEqual([self date], [other date])
-        && SENObjectIsEqual([self dateOffset], [other dateOffset]);
+    && SENObjectIsEqual([self date], [other date])
+    && SENObjectIsEqual([self dateOffset], [other dateOffset]);
 }
 
 - (NSString *)description {
     static NSString* const SENSensorDataPointDescriptionFormat =  @"<SENSensorDataPoint @date=%@ @value=%@>";
     return [NSString stringWithFormat:SENSensorDataPointDescriptionFormat, self.date, self.value];
+}
+
+@end
+
+@implementation SENSensorTime
+
+static NSString* const kSENSensorTimeAttrOffset = @"o";
+static NSString* const kSENSensorTimeAttrTimestamp = @"t";
+
+- (instancetype)initWithDictionary:(NSDictionary *)data {
+    if (self = [super init]) {
+        _offset = SENObjectOfClass(data[kSENSensorTimeAttrOffset], [NSNumber class]);
+        _date = SENDateFromNumber(data[kSENSensorTimeAttrTimestamp]);
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[self class]]) {
+        return NO;
+    }
+    
+    SENSensorTime* other = object;
+    return SENObjectIsEqual([self offset], [other offset])
+        && SENObjectIsEqual([self date], [other date]);
+}
+
+@end
+
+@interface SENSensorDataCollection()
+
+@property (nonatomic, copy) NSDictionary<NSString*, NSArray<NSNumber*>*>* dataPointsBySensor;
+
+@end
+
+@implementation SENSensorDataCollection
+
+static NSString* const kSENSensorDataCollectionAttrTimestamps = @"timestamps";
+static NSString* const kSENSensorDataCollectionAttrSensorData = @"sensors";
+
+- (instancetype)initWithDictionary:(NSDictionary *)data {
+    if (self = [super init]) {
+        _dataPointsBySensor = [SENObjectOfClass(data[kSENSensorDataCollectionAttrSensorData], [NSDictionary class]) copy];
+        
+        NSMutableArray* timestamps = [NSMutableArray arrayWithCapacity:[_dataPointsBySensor count]];
+        NSArray* rawTimestamps = SENObjectOfClass(data[kSENSensorDataCollectionAttrTimestamps], [NSArray class]);
+        for (id rawObj in rawTimestamps) {
+            if ([rawObj isKindOfClass:[NSDictionary class]]) {
+                [timestamps addObject:[[SENSensorTime alloc] initWithDictionary:rawObj]];
+            }
+        }
+        _timestamps = timestamps;
+    }
+    return self;
+}
+
+- (NSArray<NSNumber*>*)dataPointsForSensorType:(SENSensorType)type {
+    NSString* typeString = TypeStringFromEnum(type);
+    return [self dataPointsBySensor][typeString];
+}
+
+- (BOOL)isEqual:(id)object {
+    if (![object isKindOfClass:[self class]]) {
+        return NO;
+    }
+ 
+    SENSensorDataCollection* other = object;
+    return SENObjectIsEqual([other timestamps], [self timestamps])
+        && SENObjectIsEqual([other dataPointsBySensor], [self dataPointsBySensor]);
+}
+
+- (NSInteger)hash {
+    return [[self timestamps] hash] + [[self dataPointsBySensor] hash];
 }
 
 @end
@@ -169,6 +270,7 @@ static NSString* const kSENSensorAttrValue = @"value";
 static NSString* const kSENSensorAttrUnit = @"unit";
 static NSString* const kSENSensorAttrType = @"type";
 static NSString* const kSENSensorAttrScale = @"scale";
+static NSString* const kSENSensorAttrCondition = @"condition";
 
 - (instancetype)initWithDictionary:(NSDictionary *)data {
     if (self = [super init]) {
@@ -178,6 +280,7 @@ static NSString* const kSENSensorAttrScale = @"scale";
         _unit = SensorUnitFromString(SENObjectOfClass(data[kSENSensorAttrUnit], [NSString class]));
         _type = SensorTypeFromString(SENObjectOfClass(data[kSENSensorAttrType], [NSString class]));
         _scales = [self scaleArrayFromObject:SENObjectOfClass(data[kSENSensorAttrScale], [NSArray class])];
+        _condition = SENConditionFromString(SENObjectOfClass(data[kSENSensorAttrCondition], [NSString class]));
     }
     return self;
 }
@@ -218,31 +321,7 @@ static NSString* const kSENSensorAttrScale = @"scale";
 }
 
 - (NSString*)typeStringValue {
-    switch ([self type]) {
-        case SENSensorTypeTemp:
-            return kSENSensorTypeValueTemp;
-        case SENSensorTypeUV:
-            return kSENSensorTypeValueUV;
-        case SENSensorTypeAir:
-            return kSENSensorTypeValueAir;
-        case SENSensorTypeCO2:
-            return kSENSensorTypeValueCO2;
-        case SENSensorTypeVOC:
-            return kSENSensorTypeValueVOC;
-        case SENSensorTypeLight:
-            return kSENSensorTypeValueLight;
-        case SENSensorTypeLightTemp:
-            return kSENSensorTypeValueLightTemp;
-        case SENSensorTypeSound:
-            return kSENSensorTypeValueSound;
-        case SENSensorTypeHumidity:
-            return kSENSensorTypeValueHumidity;
-        case SENSensorTypePressure:
-            return kSENSensorTypeValuePressure;
-        case SENSensorTypeUnknown:
-        default:
-            return @"";
-    }
+    return TypeStringFromEnum([self type]);
 }
 
 - (NSString*)unitStringValue {
@@ -261,8 +340,8 @@ static NSString* const kSENSensorAttrScale = @"scale";
             return kSENSensorUnitValueRatio;
         case SENSensorUnitKelvin:
             return kSENSensorUnitValueKelvin;
-        case SENSensorUnitCelcius:
-            return kSENSensorUnitValueCelcius;
+        case SENSensorUnitCelsius:
+            return kSENSensorUnitValueCelsius;
         case SENSensorUnitFahrenheit:
             return kSENSensorUnitValueFahrenheit;
         case SENSensorUnitDecibel:
