@@ -190,6 +190,56 @@ describe(@"SENAPISensor", ^{
             
         });
         
+        context(@"3 hour scope requested", ^{
+            
+            __block id parameters = nil;
+            __block NSError* apiError = nil;
+            __block id apiResponse;
+            __block SENSensor* sensor = nil;
+            
+            beforeEach(^{
+                sensor = [[SENSensor alloc] initWithDictionary:sensorDict];
+                
+                [SENAPIClient stub:@selector(POST:parameters:completion:) withBlock:^id(NSArray *params) {
+                    parameters = params[1];
+                    SENAPIDataBlock cb = [params lastObject];
+                    NSString* sensorType = [sensor typeStringValue];
+                    cb (@{sensorType : @[]}, nil);
+                    return nil;
+                }];
+                
+                SENSensorDataRequest* request = [SENSensorDataRequest new];
+                [request addRequestForSensor:sensor usingMethod:SENSensorDataMethodAverage withScope:SENSensorDataScopeLast3H5Min];
+                [SENAPISensor getSensorDataWithRequest:request completion:^(id data, NSError *error) {
+                    apiResponse = data;
+                    apiError = error;
+                }];
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+            });
+            
+            it(@"should not return an api error", ^{
+                [[expectFutureValue(apiError) shouldSoon] beNil];
+            });
+            
+            it(@"should return a data collection", ^{
+                Class clazz = [SENSensorDataCollection class];
+                [[expectFutureValue(apiResponse) shouldSoon] beKindOfClass:clazz];
+            });
+            
+            it(@"should have set scope parameters accordingly", ^{
+                [[parameters should] beKindOfClass:[NSDictionary class]];
+                
+                NSDictionary* params = parameters;
+                NSArray* sensors = params[@"sensors"];
+                NSDictionary* sensor = [sensors firstObject];
+                [[sensor[@"scope"] should] equal:@"LAST_3H_5_MINUTE"];
+            });
+            
+        });
+        
     });
     
 });
