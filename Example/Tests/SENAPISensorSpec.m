@@ -52,7 +52,7 @@ describe(@"SENAPISensor", ^{
             NSDictionary* raw = @{@"status" : @"OK",
                                   @"sensors" : @[@{@"type" : @"TEMPERATURE",
                                                   @"name" : @"Temperature",
-                                                  @"unit" : @"CELCIUS",
+                                                  @"unit" : @"CELSIUS",
                                                   @"value" : @70,
                                                   @"message" : @"The temperature is just right",
                                                   @"scale" : @[@{@"name" : @"Cold",
@@ -106,7 +106,7 @@ describe(@"SENAPISensor", ^{
         
         NSDictionary* sensorDict = @{@"type" : @"TEMPERATURE",
                                      @"name" : @"Temperature",
-                                     @"unit" : @"CELCIUS",
+                                     @"unit" : @"CELSIUS",
                                      @"value" : @70,
                                      @"message" : @"The temperature is just right",
                                      @"scale" : @[@{@"name" : @"Cold",

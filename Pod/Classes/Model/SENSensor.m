@@ -5,7 +5,7 @@
 NSInteger const SENSensorSentinelValue = -1;
 
 // unit values
-static NSString* const kSENSensorUnitValueCelsius = @"CELCIUS";
+static NSString* const kSENSensorUnitValueCelsius = @"CELSIUS";
 static NSString* const kSENSensorUnitValueFahrenheit = @"FAHRENHEIT";
 static NSString* const kSENSensorUnitValueMGCM = @"MG_CM";
 static NSString* const kSENSensorUnitValuePercent = @"PERCENT";
