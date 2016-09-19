@@ -63,7 +63,7 @@ internal class DFUStreamBin : DFUStream {
         return binaries
     }
     
-    var currentInitPacket:NSData? {
+    var initPacket:NSData? {
         return initPacketBinaries
     }
     
