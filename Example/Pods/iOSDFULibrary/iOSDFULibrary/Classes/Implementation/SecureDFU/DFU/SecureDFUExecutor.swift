@@ -50,10 +50,10 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
     private var offset          : UInt32?
     private var crc             : UInt32?
 
-    private var initPacketSent  : Bool = false
-    private var firmwareSent    : Bool = false
-    private var sendingFirmware : Bool = false
-    private var isResuming      : Bool = false
+    private var currentInitPacketSent  : Bool = false
+    private var firmwareSent           : Bool = false
+    private var sendingFirmware        : Bool = false
+    private var isResuming             : Bool = false
 
     // MARK: - Initialization
     init(_ initiator:SecureDFUServiceInitiator) {
@@ -99,7 +99,7 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
         //to get the maximum write size.
         self.firmwareSent    = false
         self.sendingFirmware = false
-        self.initPacketSent  = false
+        self.currentInitPacketSent  = false
 
         dispatch_async(dispatch_get_main_queue(), {
             self.delegate?.didStateChangedTo(DFUState.Starting)
@@ -149,13 +149,13 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
     
     func resumeSendInitpacket(atOffset anOffset : UInt32) {
         
-        let initPacketLength = UInt32((self.firmware.initPacket?.length)!)
+        let initPacketLength = UInt32((self.firmware.currentInitPacket?.length)!)
         
         //Log how much of the packet has been already sent
         let sentPercentage = Int(Double(anOffset) / Double(initPacketLength) * 100.0)
         self.initiator.logger?.logWith(.Info, message: String(format:"%d%% of init packet sent, resuming!", sentPercentage))
         //get remaining data to send
-        let data = self.firmware.initPacket?.subdataWithRange(NSRange(location: Int(anOffset), length: Int(initPacketLength - anOffset)))
+        let data = self.firmware.currentInitPacket?.subdataWithRange(NSRange(location: Int(anOffset), length: Int(initPacketLength - anOffset)))
         
         //Send data
         self.peripheral.sendInitpacket(data!)
@@ -168,14 +168,14 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
 
         if self.offset > 0 && self.crc > 0 {
             isResuming = true
-            let match = self.verifyDataCRC(fordata: self.firmware.initPacket!, andPacketOffset: offset, andperipheralCRC: crc)
+            let match = self.verifyDataCRC(fordata: self.firmware.currentInitPacket!, andPacketOffset: offset, andperipheralCRC: crc)
             if match == true {
                 //Resume Init
-                if self.offset < UInt32((self.firmware.initPacket?.length)!) {
+                if self.offset < UInt32((self.firmware.currentInitPacket?.length)!) {
                     self.initiator.logger?.logWith(.Info, message: "Init packet was incomplete, resuming..")
                     self.resumeSendInitpacket(atOffset: offset)
                 }else{
-                    self.initPacketSent  = true
+                    self.currentInitPacketSent  = true
                     self.firmwareSent    = false
                     self.sendingFirmware = false
                     self.initiator.logger?.logWith(.Info, message: "Init packet was complete, verify data object")
@@ -185,14 +185,14 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
                 //Start new flash, we either are flashing a different firmware
                 //or we are resuming from a BL/SD + App and need to start all over again.
                 self.initiator.logger?.logWith(.Info, message: "firmare init packet doesn't match, will overwrite and start again")
-                self.initPacketSent = false
+                self.currentInitPacketSent = false
                 self.firmwareSent = false
                 self.sendingFirmware = false
                 self.isResuming = false //We're no longer resuming, but starting from scratch.
-                peripheral.createObjectCommand(UInt32((self.firmware.initPacket?.length)!))
+                peripheral.createObjectCommand(UInt32((self.firmware.currentInitPacket?.length)!))
             }
         }else{
-            peripheral.createObjectCommand(UInt32((self.firmware.initPacket?.length)!))
+            peripheral.createObjectCommand(UInt32((self.firmware.currentInitPacket?.length)!))
         }
     }
     
@@ -284,11 +284,11 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
     }
 
     func setPRNValueCompleted() {
-        if initPacketSent == false {
+        if currentInitPacketSent == false {
             dispatch_async(dispatch_get_main_queue(), {
                 self.delegate?.didStateChangedTo(DFUState.EnablingDfuMode)
             })
-            peripheral.sendInitpacket(self.firmware.initPacket!)
+            peripheral.sendInitpacket(self.firmware.currentInitPacket!)
         }else if firmwareSent == false{
             if isResuming == false {
                 peripheral.ReadObjectInfoData()
@@ -312,7 +312,7 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
     }
     
     func initPacketSendCompleted() {
-        self.initPacketSent = true
+        self.currentInitPacketSent = true
         peripheral.sendCalculateChecksumCommand()
     }
 
@@ -335,9 +335,9 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
             }
         }
 
-        if initPacketSent == true && firmwareSent == false {
-            if offset == UInt32((firmware.initPacket?.length)!) {
-                let calculatedCRC = CRC32(data: self.firmware.initPacket!).crc
+        if currentInitPacketSent == true && firmwareSent == false {
+            if offset == UInt32((firmware.currentInitPacket?.length)!) {
+                let calculatedCRC = CRC32(data: self.firmware.currentInitPacket!).crc
                 if calculatedCRC == self.crc {
                     self.initiator.logger?.logWith(.Info, message: "CRC match, send execute command")
                     peripheral.sendExecuteCommand()
@@ -362,12 +362,12 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
             }
         }
         
-        if initPacketSent == true && firmwareSent == false {
+        if currentInitPacketSent == true && firmwareSent == false {
             peripheral.setPRNValue(12) //Enable PRN at 12 packets
         } else {
             self.firmwareSent    = false
             self.sendingFirmware = false
-            self.initPacketSent  = false
+            self.currentInitPacketSent  = false
 
             //Reset ranges
             if self.firmware.hasNextPart() {
@@ -376,7 +376,7 @@ internal class SecureDFUExecutor : SecureDFUPeripheralDelegate {
                 self.firmware.switchToNextPart()
                 //Get new ranges for new part
                 self.firmwareRanges  = self.calculateFirmwareRanges()
-                self.initPacketSent  = false
+                self.currentInitPacketSent  = false
                 self.sendingFirmware = false
                 self.firmwareSent    = false
                 self.isResuming      = false

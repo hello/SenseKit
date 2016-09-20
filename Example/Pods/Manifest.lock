@@ -57,14 +57,18 @@ PODS:
   - Zip (0.4.3)
 
 DEPENDENCIES:
-  - iOSDFULibrary (= 1.0.12)
+  - iOSDFULibrary (from `git@github.com:jimmymlu/IOS-Pods-DFU-Library.git`, branch `method-name-compatibility`)
   - Kiwi
   - LGBluetooth (from `git@github.com:hello/LGBluetooth.git`)
   - Nocilla
   - SenseKit (from `../`)
   - SHSProtoBuf (from `git@github.com:hello/protobuf-objc.git`)
+  - Zip (= 0.4.3)
 
 EXTERNAL SOURCES:
+  iOSDFULibrary:
+    :branch: method-name-compatibility
+    :git: git@github.com:jimmymlu/IOS-Pods-DFU-Library.git
   LGBluetooth:
     :git: git@github.com:hello/LGBluetooth.git
   SenseKit:
@@ -73,6 +77,9 @@ EXTERNAL SOURCES:
     :git: git@github.com:hello/protobuf-objc.git
 
 CHECKOUT OPTIONS:
+  iOSDFULibrary:
+    :commit: 30024d5ac7ee90fc09f7836d46385474deb671a7
+    :git: git@github.com:jimmymlu/IOS-Pods-DFU-Library.git
   LGBluetooth:
     :commit: bb9399161f3231e3bb3dddc89aae99018c77cdad
     :git: git@github.com:hello/LGBluetooth.git
@@ -94,6 +101,6 @@ SPEC CHECKSUMS:
   SHSProtoBuf: 89a179d27f35dea460139a630e8ac22378eabbe3
   Zip: 670419a5ba9faaf5f24ed3650c4c38b4136e996b
 
-PODFILE CHECKSUM: 59fd5635e0ae2f2d639043f2847fd9b907a00b98
+PODFILE CHECKSUM: 05b1df1c803ce346a47b1d1305270b6a6c005f4a
 
 COCOAPODS: 1.0.0
