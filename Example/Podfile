@@ -4,7 +4,8 @@ use_frameworks!
 target 'SenseKit' do
     pod 'SHSProtoBuf', :git => 'git@github.com:hello/protobuf-objc.git'
     pod 'LGBluetooth', :git => 'git@github.com:hello/LGBluetooth.git'
-    pod 'iOSDFULibrary', '1.0.12'
+    pod 'iOSDFULibrary', :git => 'git@github.com:jimmymlu/IOS-Pods-DFU-Library.git', :branch => 'method-name-compatibility'
+    pod 'Zip', '= 0.4.3'
     pod "SenseKit", :path => "../"
     
     target 'Tests' do

@@ -81,7 +81,7 @@ internal class LegacyDFUExecutor : DFUPeripheralDelegate {
     // MARK: - DFU Peripheral Delegate methods
     
     func onDeviceReady() {
-        if firmware.initPacket == nil && peripheral.isInitPacketRequired() {
+        if firmware.currentInitPacket == nil && peripheral.isInitPacketRequired() {
             didErrorOccur(DFUError.ExtendedInitPacketRequired, withMessage: "The init packet is required by the target device")
             return
         }
@@ -129,7 +129,7 @@ internal class LegacyDFUExecutor : DFUPeripheralDelegate {
 
     func onStartDfuSent() {
         // Check if the init packet is present for this part
-        if let initPacket = firmware.initPacket {
+        if let initPacket = firmware.currentInitPacket {
             peripheral.sendInitPacket(initPacket)
             return
         }
