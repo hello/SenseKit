@@ -129,8 +129,8 @@ describe(@"SENAPISensor", ^{
                     return nil;
                 }];
                 
-                SENSensorDataRequest* request = [SENSensorDataRequest new];
-                [request addRequestForSensor:sensor usingMethod:SENSensorDataMethodAverage withScope:SENSensorDataScopeDay5Min];
+                SENSensorDataRequest* request = [[SENSensorDataRequest alloc] initWithScope:SENSensorDataScopeDay5Min];
+                [request addSensor:sensor];
                 [SENAPISensor getSensorDataWithRequest:request completion:^(id data, NSError *error) {
                     apiResponse = data;
                     apiError = error;
@@ -167,8 +167,8 @@ describe(@"SENAPISensor", ^{
                     return nil;
                 }];
                 
-                SENSensorDataRequest* request = [SENSensorDataRequest new];
-                [request addRequestForSensor:sensor usingMethod:SENSensorDataMethodAverage withScope:SENSensorDataScopeDay5Min];
+                SENSensorDataRequest* request = [[SENSensorDataRequest alloc] initWithScope:SENSensorDataScopeDay5Min];
+                [request addSensor:sensor];
                 [SENAPISensor getSensorDataWithRequest:request completion:^(id data, NSError *error) {
                     apiResponse = data;
                     apiError = error;
@@ -208,8 +208,8 @@ describe(@"SENAPISensor", ^{
                     return nil;
                 }];
                 
-                SENSensorDataRequest* request = [SENSensorDataRequest new];
-                [request addRequestForSensor:sensor usingMethod:SENSensorDataMethodAverage withScope:SENSensorDataScopeLast3H5Min];
+                SENSensorDataRequest* request = [[SENSensorDataRequest alloc] initWithScope:SENSensorDataScopeLast3H5Min];
+                [request addSensor:sensor];
                 [SENAPISensor getSensorDataWithRequest:request completion:^(id data, NSError *error) {
                     apiResponse = data;
                     apiError = error;
@@ -229,13 +229,16 @@ describe(@"SENAPISensor", ^{
                 [[expectFutureValue(apiResponse) shouldSoon] beKindOfClass:clazz];
             });
             
-            it(@"should have set scope parameters accordingly", ^{
+            it(@"should have set parameters accordingly", ^{
                 [[parameters should] beKindOfClass:[NSDictionary class]];
                 
                 NSDictionary* params = parameters;
                 NSArray* sensors = params[@"sensors"];
-                NSDictionary* sensor = [sensors firstObject];
-                [[sensor[@"scope"] should] equal:@"LAST_3H_5_MINUTE"];
+                NSString* sensorType = [sensors firstObject];
+                NSString* scope = params[@"scope"];
+                
+                [[scope should] equal:@"LAST_3H_5_MINUTE"];
+                [[sensorType should] equal:[sensor typeStringValue]];
             });
             
         });
