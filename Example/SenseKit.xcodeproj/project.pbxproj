@@ -56,6 +56,7 @@
 		BFB9898A1D78AA470042D527 /* SENAPISensorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB989891D78AA470042D527 /* SENAPISensorSpec.m */; };
 		BFC4C2071B8E670500BB7761 /* SENAPIAppFeedbackSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC4C2061B8E670500BB7761 /* SENAPIAppFeedbackSpec.m */; };
 		BFCD7E9E19D4DF4A004AE99D /* SENAPIDeviceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */; };
+		BFD7E7991D9B25CB007DB6E4 /* SENAPIExpansionSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD7E7981D9B25CB007DB6E4 /* SENAPIExpansionSpec.m */; };
 		BFE375F71CF385620029EE66 /* SENAPIPhotoSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE375F61CF385620029EE66 /* SENAPIPhotoSpec.m */; };
 		BFEB68581B3A663E002E8524 /* SENAccountSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFEB68571B3A663E002E8524 /* SENAccountSpec.m */; };
 		BFEB685A1B3A6EA9002E8524 /* SENAPITimelineSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BFEB68591B3A6EA9002E8524 /* SENAPITimelineSpec.m */; };
@@ -139,6 +140,7 @@
 		BFBEE90E1D1882CE007A986B /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Tests.a"; path = "Pods/../build/Debug-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
 		BFC4C2061B8E670500BB7761 /* SENAPIAppFeedbackSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAppFeedbackSpec.m; sourceTree = "<group>"; };
 		BFCD7E9C19D4DF4A004AE99D /* SENAPIDeviceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SENAPIDeviceSpec.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BFD7E7981D9B25CB007DB6E4 /* SENAPIExpansionSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIExpansionSpec.m; sourceTree = "<group>"; };
 		BFE375F61CF385620029EE66 /* SENAPIPhotoSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIPhotoSpec.m; sourceTree = "<group>"; };
 		BFEB68571B3A663E002E8524 /* SENAccountSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAccountSpec.m; sourceTree = "<group>"; };
 		BFEB68591B3A6EA9002E8524 /* SENAPITimelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPITimelineSpec.m; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				BF6098801D4ACC8C0005C8F0 /* SENAPISpeechSpec.m */,
 				BFA205681D53D53A0090265B /* SENAPIFeatureSpec.m */,
 				BFB989891D78AA470042D527 /* SENAPISensorSpec.m */,
+				BFD7E7981D9B25CB007DB6E4 /* SENAPIExpansionSpec.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -678,6 +681,7 @@
 				BF1E2E791A031DF900DDD0D0 /* SENAPIInsightSpec.m in Sources */,
 				8AB29B7D196DC8C0004BE34E /* SENAlarmSpec.m in Sources */,
 				8ABA8A2D1A85A6BF00E8B51F /* SENInsightSpec.m in Sources */,
+				BFD7E7991D9B25CB007DB6E4 /* SENAPIExpansionSpec.m in Sources */,
 				BFB9898A1D78AA470042D527 /* SENAPISensorSpec.m in Sources */,
 				BFEB685A1B3A6EA9002E8524 /* SENAPITimelineSpec.m in Sources */,
 				BF05C8DE1A392032002A1307 /* SENSenseSpec.m in Sources */,
