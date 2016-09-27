@@ -144,8 +144,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
         __strong typeof(weakSelf) strongSelf = weakSelf;
         NSUUID* existingUUID = [[NSUUID alloc] initWithUUIDString:[[strongSelf sleepPill] identifier]];
         NSArray* peripherals = [[LGCentralManager sharedInstance] retrievePeripheralsWithIdentifiers:@[existingUUID]];
-        if ([peripherals count] == 1) {
-            [strongSelf setRediscoveryRequired:NO];
+        if ([peripherals count] == 1 && ![strongSelf rediscoveryRequired]) {
             [strongSelf setSleepPill:[[SENSleepPill alloc] initWithPeripheral:[peripherals firstObject]]];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion (nil);
@@ -252,6 +251,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
 - (void)enableDfuTimeout {
     [self setTimeoutTimer:nil];
+    [[self class] stopScan]; // in case it was scanning
     DDLogVerbose(@"enable dfu timed out");
     
     if ([self enableDfuBlock]) {
@@ -494,32 +494,32 @@ currentSpeedBytesPerSecond:(double)currentSpeedBytesPerSecond
     }
 }
 
-- (void)didStateChangedTo:(enum State)state {
+- (void)didStateChangedTo:(enum DFUState)state {
     [self scheduleOperationTimeout:SENSleepPillDfuTimeout action:@selector(dfuTimeout)];
     DDLogVerbose(@"did change state to %ld", (long)state);
     switch (state) {
-        case StateAborted: {
+        case DFUStateAborted: {
             SENSleepPillErrorCode code = SENSleepPillErrorCodeDfuAborted;
             NSError* error = [[self class] errorWithCode:code reason:@"dfu aborted"];
             [self endDfuWithError:error];
             [self setCurrentDfuState:SENSleepPillDfuStateError];
             break;
         }
-        case StateConnecting:
+        case DFUStateConnecting:
             [self setCurrentDfuState:SENSleepPillDfuStateConnecting];
             break;
-        case StateStarting:
-        case StateUploading:
-        case StateEnablingDfuMode:
+        case DFUStateStarting:
+        case DFUStateUploading:
+        case DFUStateEnablingDfuMode:
             [self setCurrentDfuState:SENSleepPillDfuStateUpdating];
             break;
-        case StateValidating:
+        case DFUStateValidating:
             [self setCurrentDfuState:SENSleepPillDfuStateValidating];
             break;
-        case StateDisconnecting:
+        case DFUStateDisconnecting:
             [self setCurrentDfuState:SENSleepPillDfuStateDisconnecting];
             break;
-        case StateCompleted:
+        case DFUStateCompleted:
             [self setCurrentDfuState:SENSleepPillDfuStateCompleted];
             [self endDfuWithError:nil];
             break;
@@ -530,6 +530,7 @@ currentSpeedBytesPerSecond:(double)currentSpeedBytesPerSecond
 }
 
 - (void)didErrorOccur:(enum DFUError)error withMessage:(NSString *)message {
+    DDLogVerbose(@"dfu did encounter error, %@", message);
     SENSleepPillErrorCode code = SENSleepPillErrorCodeDfuError;
     NSError* localError = [[self class] errorWithCode:code reason:message];
     [self endDfuWithError:localError];
@@ -551,6 +552,10 @@ currentSpeedBytesPerSecond:(double)currentSpeedBytesPerSecond
     
     if ([self isConnected]) {
         [self disconnect:nil];
+    }
+    
+    if (_localDFUBinaryFileURL) {
+        [self removeLocalFirmwareBinaryIfExists:_localDFUBinaryFileURL];
     }
 }
 
