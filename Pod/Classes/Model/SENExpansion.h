@@ -30,10 +30,8 @@ typedef NS_ENUM(NSUInteger, SENExpansionState) {
 @property (nonatomic, copy, readonly) NSString* authCompletionUri;
 @property (nonatomic, copy, readonly) NSString* expansionDescription;
 @property (nonatomic, strong, readonly) SENRemoteImage* remoteIcon;
-@property (nonatomic, assign, readonly) SENExpansionState state;
+@property (nonatomic, assign) SENExpansionState state;
 
-- (void)enable:(BOOL)enable;
-- (void)disconnect:(BOOL)disconnect;
 - (NSDictionary*)dictionaryValueForUpdate;
 
 @end

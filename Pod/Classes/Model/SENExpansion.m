@@ -99,14 +99,6 @@ static NSString* const kSENExpansionStateEnumNotConfigured = @"NOT_CONFIGURED";
     return [[self identifier] hash];
 }
 
-- (void)enable:(BOOL)enable {
-    _state = enable ? SENExpansionStateConnectedOn : SENExpansionStateConnectedOff;
-}
-
-- (void)disconnect:(BOOL)disconnect {
-    _state = SENExpansionStateNotConnected;
-}
-
 - (NSDictionary*)dictionaryValueForUpdate {
     return @{kSENExpansionAttrState : [self stateStringFromEnum:[self state]]};
 }
