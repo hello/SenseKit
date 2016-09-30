@@ -69,7 +69,7 @@ describe(@"SENAPIExpansion", ^{
             
             __block id responseObj = nil;
             __block NSError* apiError = nil;
-            __block NSString* expansionId = @"1";
+            __block NSNumber* expansionId = @1;
             
             beforeEach(^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
@@ -85,7 +85,7 @@ describe(@"SENAPIExpansion", ^{
                     return nil;
                 }];
                 
-                [SENAPIExpansion getExpansionById:expansionId completion:^(id data, NSError *error) {
+                [SENAPIExpansion getExpansionById:[expansionId stringValue] completion:^(id data, NSError *error) {
                     responseObj = data;
                     apiError = error;
                 }];
