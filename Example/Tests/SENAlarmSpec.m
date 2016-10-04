@@ -203,6 +203,89 @@ describe(@"SENAlarm", ^{
             });
         });
     });
+    
+    describe(@"-dictionaryValue:", ^{
+        
+        context(@"called during a day that requires DST change, but before DST is actually triggered", ^{
+            
+            __block SENAlarm* alarm = nil;
+            __block NSDictionary* dict = nil;
+            
+            beforeEach(^{
+                // 1457861592.089f points to March 13th, 2016 at 1:33 AM
+                NSDate* dstChange = [NSDate dateWithTimeIntervalSince1970:1457861592.089f];
+                [NSDate stub:@selector(date) andReturn:dstChange];
+                
+                alarm = [SENAlarm new];
+                [alarm setMinute:30];
+                [alarm setHour:7];
+                [alarm setOn:YES];
+                [alarm setSoundID:@"1"];
+                [alarm setSoundName:@"test"];
+                [alarm setSmartAlarm:NO];
+                
+                dict = [alarm dictionaryValue];
+            });
+            
+            afterEach(^{
+                [NSDate clearStubs];
+                alarm = nil;
+                dict = nil;
+            });
+            
+            it(@"should not change hour of dict", ^{
+                [[dict[@"hour"] should] equal:@([alarm hour])];
+            });
+            
+            it(@"should not change minute of dict", ^{
+                [[dict[@"minute"] should] equal:@([alarm minute])];
+            });
+            
+        });
+        
+        context(@"called after the set hour and minute", ^{
+            
+            __block SENAlarm* alarm = nil;
+            __block NSDictionary* dict = nil;
+            
+            beforeEach(^{
+                // 1457861592.089f points to March 13th, 2016 at 1:33 AM
+                NSDate* dstChange = [NSDate dateWithTimeIntervalSince1970:1457861592.089f];
+                [NSDate stub:@selector(date) andReturn:dstChange];
+                
+                alarm = [SENAlarm new];
+                [alarm setMinute:10];
+                [alarm setHour:1];
+                [alarm setOn:YES];
+                [alarm setSoundID:@"1"];
+                [alarm setSoundName:@"test"];
+                [alarm setSmartAlarm:NO];
+                
+                dict = [alarm dictionaryValue];
+            });
+            
+            afterEach(^{
+                [NSDate clearStubs];
+                alarm = nil;
+                dict = nil;
+            });
+            
+            it(@"should change the day to be the 14th", ^{
+                [[dict[@"day_of_month"] should] equal:@(14)];
+            });
+            
+            it(@"should not change hour of dict", ^{
+                [[dict[@"hour"] should] equal:@([alarm hour])];
+            });
+            
+            it(@"should not change minute of dict", ^{
+                [[dict[@"minute"] should] equal:@([alarm minute])];
+            });
+            
+        });
+        
+    });
+
 
 });
 
