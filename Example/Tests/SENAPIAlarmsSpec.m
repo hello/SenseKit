@@ -119,54 +119,66 @@ describe(@"SENAPIAlarms", ^{
         });
 
         context(@"the API call succeeds", ^{
-            NSArray* alarmData = @[
-                @{@"hour":@6, @"minute":@25, @"editable": @(YES)},
-                @{@"hour":@16, @"minute":@0, @"repeated": @(YES), @"day_of_week":@[@1,@3,@5]}
-            ];
+            NSDictionary* alarmCollection = @{@"classic" : @[@{@"hour":@6, @"minute":@25, @"editable": @(YES)},
+                                                             @{@"hour":@16, @"minute":@0, @"repeated": @(YES), @"day_of_week":@[@1,@3,@5]}]};
 
             beforeEach(^{
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock block = [params lastObject];
-                    block(alarmData, nil);
+                    block(alarmCollection, nil);
                     return nil;
                 }];
             });
 
-            it(@"formats alarm data as an array", ^{
-                __block NSArray* alarms = nil;
+            it(@"formats alarm data as a SENAlarmCollection object", ^{
+                __block id alarms = nil;
                 [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
                     alarms = data;
                 }];
-                [[expectFutureValue(alarms) shouldSoon] haveCountOf:2];
+                [[alarms should] beKindOfClass:[SENAlarmCollection class]];
+            });
+            
+            it(@"returns an array of classic alarms and nothing else", ^{
+                __block id alarms = nil;
+                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
+                    alarms = data;
+                }];
+                [[[alarms classicAlarms] should] haveCountOf:2];
+                [[[alarms voiceAlarms] should] haveCountOf:0];
+                [[[alarms expansionAlarms] should] haveCountOf:0];
             });
 
             it(@"preserves the ordering of alarms", ^{
                 __block SENAlarm* firstAlarm = nil, * lastAlarm = nil;
-                [SENAPIAlarms alarmsWithCompletion:^(NSArray* data, NSError *error) {
-                    firstAlarm = [data firstObject];
-                    lastAlarm = [data lastObject];
+                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
+                    SENAlarmCollection* alarms = data;
+                    firstAlarm = [[alarms classicAlarms] firstObject];
+                    lastAlarm = [[alarms classicAlarms] lastObject];
                 }];
-                [[expectFutureValue(@(firstAlarm.hour)) shouldSoon] equal:@6];
-                [[expectFutureValue(@(lastAlarm.hour)) shouldSoon] equal:@16];
+                [[@(firstAlarm.hour) should] equal:@6];
+                [[@(lastAlarm.hour) should] equal:@16];
             });
 
             it(@"sets repeat days", ^{
                 __block SENAlarm* lastAlarm = nil;
-                [SENAPIAlarms alarmsWithCompletion:^(NSArray* data, NSError *error) {
-                    lastAlarm = [data lastObject];
+                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
+                    SENAlarmCollection* alarms = data;
+                    lastAlarm = [[alarms classicAlarms] lastObject];
                 }];
                 NSNumber* repeatFlags = @(SENAlarmRepeatMonday | SENAlarmRepeatWednesday | SENAlarmRepeatFriday);
-                [[expectFutureValue(@(lastAlarm.repeatFlags)) shouldSoon] equal:repeatFlags];
+                [[@(lastAlarm.repeatFlags) should] equal:repeatFlags];
             });
 
             it(@"sets editable", ^{
                 __block SENAlarm* firstAlarm = nil, * lastAlarm = nil;
-                [SENAPIAlarms alarmsWithCompletion:^(NSArray* data, NSError *error) {
-                    firstAlarm = [data firstObject];
-                    lastAlarm = [data lastObject];
+                [SENAPIAlarms alarmsWithCompletion:^(id data, NSError *error) {
+                    SENAlarmCollection* alarms = data;
+                    firstAlarm = [[alarms classicAlarms] firstObject];
+                    lastAlarm = [[alarms classicAlarms] lastObject];
                 }];
-                [[expectFutureValue(@([firstAlarm isEditable])) shouldSoon] beYes];
-                [[expectFutureValue(@([lastAlarm isEditable])) shouldSoon] beNo];
+                
+                [[@([firstAlarm isEditable]) should] beYes];
+                [[@([lastAlarm isEditable]) should] beNo];
             });
         });
 
@@ -201,7 +213,7 @@ describe(@"SENAPIAlarms", ^{
 
         it(@"makes a POST request", ^{
             [[SENAPIClient should] receive:@selector(POST:parameters:completion:)];
-            [SENAPIAlarms updateAlarms:nil completion:NULL];
+            [SENAPIAlarms updateAlarms:[SENAlarmCollection new] completion:NULL];
         });
 
         context(@"the API call succeeds", ^{
@@ -214,7 +226,7 @@ describe(@"SENAPIAlarms", ^{
                     block(nil, nil);
                     return nil;
                 }];
-                [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
+                [SENAPIAlarms updateAlarms:[SENAlarmCollection new] completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                 }];
             });
@@ -235,7 +247,7 @@ describe(@"SENAPIAlarms", ^{
                     block(nil, [NSError errorWithDomain:@"is.hello" code:500 userInfo:nil]);
                     return nil;
                 }];
-                [SENAPIAlarms updateAlarms:@[] completion:^(id data, NSError *error) {
+                [SENAPIAlarms updateAlarms:[SENAlarmCollection new] completion:^(id data, NSError *error) {
                     callbackInvoked = YES;
                     errorCode = error.code;
                 }];
@@ -250,89 +262,7 @@ describe(@"SENAPIAlarms", ^{
             });
         });
     });
-    
-    describe(@"+dictionaryForAlarm:", ^{
         
-        context(@"called during a day that requires DST change, but before DST is actually triggered", ^{
-            
-            __block SENAlarm* alarm = nil;
-            __block NSDictionary* dict = nil;
-            
-            beforeEach(^{
-                // 1457861592.089f points to March 13th, 2016 at 1:33 AM
-                NSDate* dstChange = [NSDate dateWithTimeIntervalSince1970:1457861592.089f];
-                [NSDate stub:@selector(date) andReturn:dstChange];
-                
-                alarm = [SENAlarm new];
-                [alarm setMinute:30];
-                [alarm setHour:7];
-                [alarm setOn:YES];
-                [alarm setSoundID:@"1"];
-                [alarm setSoundName:@"test"];
-                [alarm setSmartAlarm:NO];
-                
-                dict = [SENAPIAlarms dictionaryForAlarm:alarm];
-            });
-            
-            afterEach(^{
-                [NSDate clearStubs];
-                alarm = nil;
-                dict = nil;
-            });
-            
-            it(@"should not change hour of dict", ^{
-                [[dict[@"hour"] should] equal:@([alarm hour])];
-            });
-            
-            it(@"should not change minute of dict", ^{
-                [[dict[@"minute"] should] equal:@([alarm minute])];
-            });
-            
-        });
-        
-        context(@"called after the set hour and minute", ^{
-            
-            __block SENAlarm* alarm = nil;
-            __block NSDictionary* dict = nil;
-            
-            beforeEach(^{
-                // 1457861592.089f points to March 13th, 2016 at 1:33 AM
-                NSDate* dstChange = [NSDate dateWithTimeIntervalSince1970:1457861592.089f];
-                [NSDate stub:@selector(date) andReturn:dstChange];
-                
-                alarm = [SENAlarm new];
-                [alarm setMinute:10];
-                [alarm setHour:1];
-                [alarm setOn:YES];
-                [alarm setSoundID:@"1"];
-                [alarm setSoundName:@"test"];
-                [alarm setSmartAlarm:NO];
-                
-                dict = [SENAPIAlarms dictionaryForAlarm:alarm];
-            });
-            
-            afterEach(^{
-                [NSDate clearStubs];
-                alarm = nil;
-                dict = nil;
-            });
-            
-            it(@"should change the day to be the 14th", ^{
-                [[dict[@"day_of_month"] should] equal:@(14)];
-            });
-            
-            it(@"should not change hour of dict", ^{
-                [[dict[@"hour"] should] equal:@([alarm hour])];
-            });
-            
-            it(@"should not change minute of dict", ^{
-                [[dict[@"minute"] should] equal:@([alarm minute])];
-            });
-            
-        });
-        
-    });
-    
 });
 
 SPEC_END
