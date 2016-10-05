@@ -107,9 +107,9 @@ static BOOL const SENAlarmDefaultSmartAlarmState = YES;
 - (SENALarmSource)sourceForName:(NSString*)name {
     NSString* upperName = [name uppercaseString];
     if ([upperName isEqualToString:SENALarmSourceValueVoice]) {
-        return SENALarmSourceVoice;
+        return SENAlarmSourceVoice;
     } else if ([upperName isEqualToString:SENALarmSourceValueOther]) {
-        return SENALarmSourceOther;
+        return SENAlarmSourceOther;
     } else { // default to mobile, since that was the only way to create alarms
         return SENAlarmSourceMobile;
     }

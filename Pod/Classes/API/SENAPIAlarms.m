@@ -6,7 +6,7 @@
 @implementation SENAPIAlarms
 
 static NSString* const kSENAPIAlarmsResource = @"v2/alarms";
-static NSString* const kSENAPIAlarmsUpdateClientTimeFormat = @"%.0f";
+static NSString* const kSENAPIAlarmsUpdateClientTimeFormat = @"/%.0f";
 static NSString* const kSENAPIAlarmsSoundsPath = @"sounds";
 
 static SENAPIDataBlock SENAPIAlarmDataBlock(SENAPIDataBlock completion) {

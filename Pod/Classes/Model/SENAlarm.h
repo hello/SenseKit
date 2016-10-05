@@ -24,8 +24,8 @@ typedef NS_ENUM(NSUInteger, SENALarmRepeatDayValue) {
 
 typedef NS_ENUM(NSUInteger, SENALarmSource) {
     SENAlarmSourceMobile = 0,
-    SENALarmSourceVoice,
-    SENALarmSourceOther
+    SENAlarmSourceVoice,
+    SENAlarmSourceOther
 };
 
 struct SENAlarmTime {

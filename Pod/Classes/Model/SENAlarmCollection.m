@@ -29,6 +29,31 @@ static NSString* const kSENAlarmsAttrClassic = @"classic";
     return self;
 }
 
+- (instancetype)initWithAlarms:(NSArray<SENAlarm*>*)alarms {
+    if (self = [super init]) {
+        NSMutableArray* expansionAlarms = [NSMutableArray array];
+        NSMutableArray* voiceAlarms = [NSMutableArray array];
+        NSMutableArray* classicAlarms = [NSMutableArray array];
+        for (SENAlarm* alarm in alarms) {
+            switch ([alarm source]) {
+                case SENAlarmSourceVoice:
+                    [voiceAlarms addObject:alarm];
+                    break;
+                case SENAlarmSourceMobile:
+                case SENAlarmSourceOther:
+                    [classicAlarms addObject:alarm];
+                    break;
+                default:
+                    break;
+            }
+        }
+        _expansionAlarms = expansionAlarms;
+        _voiceAlarms = voiceAlarms;
+        _classicAlarms = classicAlarms;
+    }
+    return self;
+}
+
 - (NSArray<SENAlarm*>*)alarmsFromResponse:(NSArray*)rawAlarms {
     NSMutableArray<SENAlarm*>* alarms = [NSMutableArray arrayWithCapacity:[rawAlarms count]];
     for (id rawAlarm in rawAlarms) {
