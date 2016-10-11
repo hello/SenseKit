@@ -144,7 +144,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
         __strong typeof(weakSelf) strongSelf = weakSelf;
         NSUUID* existingUUID = [[NSUUID alloc] initWithUUIDString:[[strongSelf sleepPill] identifier]];
         NSArray* peripherals = [[LGCentralManager sharedInstance] retrievePeripheralsWithIdentifiers:@[existingUUID]];
-        if ([peripherals count] == 1) {
+        if ([peripherals count] == 1 && ![strongSelf rediscoveryRequired]) {
             [strongSelf setSleepPill:[[SENSleepPill alloc] initWithPeripheral:[peripherals firstObject]]];
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion (nil);
@@ -457,8 +457,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
         [strongSelf cancelTimeout];
         [strongSelf disconnect:nil];
         [strongSelf removeLocalFirmwareBinaryIfExists:[strongSelf localDFUBinaryFileURL]];
-        [[strongSelf dfuController] abort];
         [strongSelf setDfuController:nil];
+        [strongSelf setDfuProgress:0];
         [[strongSelf class] stopScan];
         
         if ([strongSelf dfuCompletionBlock]) {
