@@ -21,7 +21,6 @@ static NSString* const SENSleepPillCharacteristicUUID = @"DEED";
 
 static NSInteger const SENSleepPillDFUDelayInSecs = 1.5f;
 static NSInteger const SENSleepPillMaxScanPeripherals = 200;
-static NSInteger const SENSleepPillMaxRescanPeripherals = 40;
 static CGFloat const SENSleepPillDefaultScanTimeout = 10.0f;
 static CGFloat const SENSleepPillConnectionTimeout = 10.0f;
 static int8_t const SENSleepPillDfuPayload = 8;
