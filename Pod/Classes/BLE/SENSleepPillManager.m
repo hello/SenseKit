@@ -19,6 +19,7 @@ static NSString* const SENSleepPillDfuServiceUUID = @"00001530-1212-EFDE-1523-78
 static NSString* const SENSleepPillServiceUUID = @"0000e110-1212-efde-1523-785feabcd123";
 static NSString* const SENSleepPillCharacteristicUUID = @"DEED";
 
+static NSInteger const SENSleepPillDFUDelayInSecs = 1.5f;
 static NSInteger const SENSleepPillMaxScanPeripherals = 200;
 static NSInteger const SENSleepPillMaxRescanPeripherals = 40;
 static CGFloat const SENSleepPillDefaultScanTimeout = 10.0f;
@@ -134,23 +135,22 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
     void(^rescan)(void) = ^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         DDLogVerbose(@"rescanning for pill peripheral");
-        [[strongSelf class] scanForMaxSleepPills:SENSleepPillMaxRescanPeripherals
-                                      completion:^(NSArray<SENSleepPill *> * pills, NSError * error) {
-                                          if (error || [pills count] == 0) {
-                                              fail ( error );
-                                          } else {
-                                              for (SENSleepPill* pill in pills) {
-                                                  if ([[pill identifier] isEqualToString:[[strongSelf sleepPill] identifier]]) {
-                                                      [strongSelf setSleepPill:pill];
-                                                      [strongSelf setRediscoveryRequired:NO];
-                                                      completion (nil);
-                                                      return;
-                                                  }
-                                              }
-                                              // if out of the loop without returning, fail
-                                              fail ( nil );
-                                          }
-                                      }];
+        [[strongSelf class] scanForSleepPills:^(NSArray<SENSleepPill *> * _Nullable pills, NSError * _Nullable error) {
+            if (error || [pills count] == 0) {
+                fail ( error );
+            } else {
+                for (SENSleepPill* pill in pills) {
+                    if ([[pill identifier] isEqualToString:[[strongSelf sleepPill] identifier]]) {
+                        [strongSelf setSleepPill:pill];
+                        [strongSelf setRediscoveryRequired:NO];
+                        completion (nil);
+                        return;
+                    }
+                }
+                // if out of the loop without returning, fail
+                fail ( nil );
+            }
+        }];
     };
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -454,21 +454,30 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 }
 
 - (void)beginDfuWithLocalURL:(NSURL*)localURL {
+    DDLogVerbose(@"starting DFU after delay");
+    // initialization of the DFUFirmware using the localURL will load the binary
+    // synchronously and thus should be kept in the background thread.
     DFUFirmware* firmware = [[DFUFirmware alloc] initWithUrlToBinOrHexFile:localURL
                                                               urlToDatFile:nil
                                                                       type:DFUFirmwareTypeApplication];
     
-    LGCentralManager* central = [LGCentralManager sharedInstance];
-    CBCentralManager* manager = [central manager];
-    CBPeripheral* peripheral = [[[self sleepPill] peripheral] cbPeripheral];
-    DFUServiceInitiator* initiator = [[DFUServiceInitiator alloc] initWithCentralManager:manager
-                                                                                  target:peripheral];
-    [initiator setLogger:self];
-    [initiator withFirmwareFile:firmware];
-    [initiator setProgressDelegate:self];
-    [initiator setDelegate:self];
-    
-    [self setDfuController:[initiator start]];
+    __weak typeof(self) weakSelf = self;
+    int64_t delayInSecs = (int64_t)(SENSleepPillDfuDelay * NSEC_PER_SEC);
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, delayInSecs);
+    dispatch_after(delay, dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        LGCentralManager* central = [LGCentralManager sharedInstance];
+        CBCentralManager* manager = [central manager];
+        CBPeripheral* peripheral = [[[strongSelf sleepPill] peripheral] cbPeripheral];
+        DFUServiceInitiator* initiator = [[DFUServiceInitiator alloc] initWithCentralManager:manager
+                                                                                      target:peripheral];
+        [initiator setLogger:strongSelf];
+        [initiator withFirmwareFile:firmware];
+        [initiator setProgressDelegate:strongSelf];
+        [initiator setDelegate:strongSelf];
+        
+        [strongSelf setDfuController:[initiator start]];
+    });
 }
 
 - (void)endDfuWithError:(NSError*)error {
