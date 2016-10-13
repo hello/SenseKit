@@ -15,7 +15,6 @@
 		03CA6CD0B201C3FE1F62CFE70020FCC7 /* SENAlarm.m in Sources */ = {isa = PBXBuildFile; fileRef = 15847D06C1A0BB5A41639F3377F46B20 /* SENAlarm.m */; };
 		0430782AA92DCEE5B926ADD8096279A3 /* KWAsyncVerifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 56A497A4B0278F474435E33230F6958A /* KWAsyncVerifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04C9C05A51E35F8E2BD4CF3A282DD0A3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6857F3C058F011D5820C1C1043ACC2AF /* Foundation.framework */; };
-		04F90BA7D3E8172F26B7BB4A4EB92E01 /* SENFeatures.m in Sources */ = {isa = PBXBuildFile; fileRef = 174DD40B1CE0FB2F5853AD4DA29A6D18 /* SENFeatures.m */; };
 		051F0FE6864F88873C6B6E0C01ABFEEA /* SENQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8A9D78215754D21EF138AD0F12B7E6 /* SENQuestion.m */; };
 		0568570CD7813AF51CB162039D3AE31C /* KWEqualMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 204411374B58C50CFF4128883871B0CD /* KWEqualMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		05AF6A590C20F9516CCC23FC142487B5 /* KWMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 33D95B5581907A19AA010086FA9BAA79 /* KWMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -144,7 +143,6 @@
 		305811134BCE608BF10B3703482D34DA /* SENAPITimeZone.h in Headers */ = {isa = PBXBuildFile; fileRef = A991BC17303752949841B884E95D8E20 /* SENAPITimeZone.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		306E2DE2914BE343FB4F861454B60695 /* SENAPIAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BA93EE7867BA1684CEAF426E242C563 /* SENAPIAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30AA080B8C01FF36208F2F2582EEBD76 /* KWConformToProtocolMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = A6217DBBBE7DE52AD15A370C3CD9CF01 /* KWConformToProtocolMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		30C46022BC1CD88A5E8FA5DCF4D0A8AD /* SENAPIFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 21D545D95BDFCB1EB2EFC62AAB62A240 /* SENAPIFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3124C0016AB3962C96DA7FAA7C5A1EFC /* KWSharedExample.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B4D540FBFD3C0422BC5FA6BCB72AF7D /* KWSharedExample.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31464ADC3D3CA44DB8FC98D9502BC238 /* DFUControlPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1587ABCFC1F0A05F84A02C254643A19 /* DFUControlPoint.swift */; };
 		32B603802BA83B26A838FD0A7A84BC9D /* DFUFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1663E873E40EAC9C8DF4592C74F64E17 /* DFUFirmware.swift */; };
@@ -231,7 +229,6 @@
 		4DEA938F1EACED5EFF9D45FD037D3BB2 /* LSHTTPRequestDiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A000C443E7FC330851BB1E58C858A0A /* LSHTTPRequestDiff.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		4E89B39FD63F9A8F7A162F60D58809A5 /* SENTimelineSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 7389E87AB7407499F484D7F1D4CAAB0D /* SENTimelineSegment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E93D2BF7FABF562F649E1662908FAC1 /* LGBluetooth-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9788C2FB3EFFC2A49A088AAB4ED4CA44 /* LGBluetooth-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4EAC2F35E0835B8008DC0794B7EA274C /* SENAPIFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = BD3A9381CD80E06D13A7659DAF7A6E14 /* SENAPIFeature.m */; };
 		4ECA9BE68D373E094EFA019CC4EA1720 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23DA1BD8A27A66F6EA7C0F485FB5DA1 /* CoreGraphics.framework */; };
 		4FB51EC7534A106E263B3151B55526B6 /* SENAlarm.h in Headers */ = {isa = PBXBuildFile; fileRef = 92996CFECD2CE44E8E9E566FC618CAA6 /* SENAlarm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4FE3D0FC60D1370E831CBFF9680FA8EB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45995B7581C26376A109D2B8EEAE3DEE /* MobileCoreServices.framework */; };
@@ -459,7 +456,6 @@
 		AC0C8FAE182C6BA0A6CFF5368CD01074 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DEE0B1DEE543A1F613032A36E6E699B /* ioapi.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		AC8BD732C91100EBF9794B6A0F5100D8 /* MessageBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 07662A91A65B46591BB10D740936C6EB /* MessageBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AC9708165866D823D013D5932884DB3F /* DFUPeripheralSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0025966AAAFFB343FC1986EB4BD659 /* DFUPeripheralSelector.swift */; };
-		ACABF90B260DA89D76FB22414AB328B3 /* SENFeatures.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A4EA2176A2B2309CDDDD7D1EB326DC5 /* SENFeatures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE2A07407FB50BA249984DC0620E84C0 /* UIWebView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 909387429069B229B5F43FA063150432 /* UIWebView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE6FD7D176F0DBCD234E6478076B9A3E /* DFUExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20534EB9D31EAEB59405D707F412D20 /* DFUExecutor.swift */; };
 		AF03C11A1FAC8132AD3749D8F541701A /* UIButton+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4A5E13CE528EA13DA950AFA387FF0B /* UIButton+AFNetworking.m */; };
@@ -886,7 +882,6 @@
 		1663E873E40EAC9C8DF4592C74F64E17 /* DFUFirmware.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DFUFirmware.swift; path = iOSDFULibrary/Classes/Implementation/GenericDFU/DFU/DFUFirmware.swift; sourceTree = "<group>"; };
 		16D3164D28F646F36F0258B7F79B83F6 /* MutableField.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MutableField.m; path = src/runtime/Classes/MutableField.m; sourceTree = "<group>"; };
 		1746514B42D31AC75A9FB553A72E5CA1 /* KWInequalityMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWInequalityMatcher.m; path = Classes/Matchers/KWInequalityMatcher.m; sourceTree = "<group>"; };
-		174DD40B1CE0FB2F5853AD4DA29A6D18 /* SENFeatures.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENFeatures.m; sourceTree = "<group>"; };
 		177418D8BC37A779152BE492E7937A04 /* AbstractMessageBuilder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AbstractMessageBuilder.h; path = src/runtime/Classes/AbstractMessageBuilder.h; sourceTree = "<group>"; };
 		179CD9517A57B7FDC6ADA48BF6E40E57 /* Field.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Field.h; path = src/runtime/Classes/Field.h; sourceTree = "<group>"; };
 		199E2FDD79815C6A6164DC16D734C1A0 /* KWExistVerifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExistVerifier.h; path = Classes/Verifiers/KWExistVerifier.h; sourceTree = "<group>"; };
@@ -911,7 +906,6 @@
 		2101556CFB52A71A12E8B996DC0C2B2A /* SENAPITimeZone.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENAPITimeZone.m; sourceTree = "<group>"; };
 		218110DE66785899C005B97201A44EA3 /* SENInsight.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENInsight.h; sourceTree = "<group>"; };
 		21CE402680ADAB6622782DDB76E978C8 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		21D545D95BDFCB1EB2EFC62AAB62A240 /* SENAPIFeature.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENAPIFeature.h; sourceTree = "<group>"; };
 		228A161E0BDC86E7291BD3F58024EA8F /* KWReceiveMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWReceiveMatcher.m; path = Classes/Matchers/KWReceiveMatcher.m; sourceTree = "<group>"; };
 		229B55624FBE403D8C7591EE03EB9B10 /* SENSleepSoundDurations.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENSleepSoundDurations.h; sourceTree = "<group>"; };
 		22AFBEBCE3A2A03046866DEF2A7B6EDE /* API.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
@@ -974,7 +968,6 @@
 		3A000C443E7FC330851BB1E58C858A0A /* LSHTTPRequestDiff.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LSHTTPRequestDiff.m; path = Nocilla/Diff/LSHTTPRequestDiff.m; sourceTree = "<group>"; };
 		3A03AD30559B586E4C536985ADA588BC /* KWSuiteConfigurationBase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSuiteConfigurationBase.m; path = Classes/Config/KWSuiteConfigurationBase.m; sourceTree = "<group>"; };
 		3A45C4EE7BE584964FBBD7A33FA08545 /* Kiwi.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kiwi.h; path = Classes/Core/Kiwi.h; sourceTree = "<group>"; };
-		3A4EA2176A2B2309CDDDD7D1EB326DC5 /* SENFeatures.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENFeatures.h; sourceTree = "<group>"; };
 		3AB17E6EFF0B4B94B0C6DA31BDF36D44 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = Classes/Extensions/DDContextFilterLogFormatter.h; sourceTree = "<group>"; };
 		3AD3B39AE9D526F8622B4C6EE058355D /* ProtocolBuffers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ProtocolBuffers.h; path = src/runtime/Classes/ProtocolBuffers.h; sourceTree = "<group>"; };
 		3AFEDE6CDFED8613D4917E68D8F70C3E /* Pods-Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -1325,7 +1318,6 @@
 		BC7E2ACEDBAFD5B183F95F16BF266F69 /* Message.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Message.h; path = src/runtime/Classes/Message.h; sourceTree = "<group>"; };
 		BCCF93D0B77AB86732E74AA2F12FB6EC /* NSJSONSerialization-NSNullRemoval-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSJSONSerialization-NSNullRemoval-dummy.m"; sourceTree = "<group>"; };
 		BD2169167EE558A520F7F55A36C89FF8 /* KWMessageSpying.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMessageSpying.h; path = Classes/Core/KWMessageSpying.h; sourceTree = "<group>"; };
-		BD3A9381CD80E06D13A7659DAF7A6E14 /* SENAPIFeature.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SENAPIFeature.m; sourceTree = "<group>"; };
 		BE35288D6A424CC509CBB119948BF40F /* KWExistVerifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWExistVerifier.m; path = Classes/Verifiers/KWExistVerifier.m; sourceTree = "<group>"; };
 		BE49530539E4A02BACE796CCC33D34CC /* DDLog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Classes/DDLog.h; sourceTree = "<group>"; };
 		BE54FCFFF4A7ACBBA183CF0C430ABF04 /* KWExampleSuiteBuilder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWExampleSuiteBuilder.m; path = Classes/Core/KWExampleSuiteBuilder.m; sourceTree = "<group>"; };
@@ -1777,8 +1769,6 @@
 				59AABC8757585784BBEF32291AEE228B /* SENAPIDevice.m */,
 				E73644D1CFF9F70C0B1144270456B1AC /* SENAPIExpansion.h */,
 				F4CCAB0B48E73BEA0B7648D8323B8ABC /* SENAPIExpansion.m */,
-				21D545D95BDFCB1EB2EFC62AAB62A240 /* SENAPIFeature.h */,
-				BD3A9381CD80E06D13A7659DAF7A6E14 /* SENAPIFeature.m */,
 				0FA79039D9270B3DE1FE29A1C816986A /* SENAPIInsight.h */,
 				60194B6707C8A0D08B67B86E25DD245F /* SENAPIInsight.m */,
 				89288C7C43275746D5EED0278B9FEBD2 /* SENAPINotification.h */,
@@ -2447,8 +2437,6 @@
 				770CDF7B51987CABC215E84BA64BB122 /* SENDFUStatus.m */,
 				7EAEDF0569D030F119962E034E97694C /* SENExpansion.h */,
 				5B179EFB01366055B05523FA91BDCF09 /* SENExpansion.m */,
-				3A4EA2176A2B2309CDDDD7D1EB326DC5 /* SENFeatures.h */,
-				174DD40B1CE0FB2F5853AD4DA29A6D18 /* SENFeatures.m */,
 				218110DE66785899C005B97201A44EA3 /* SENInsight.h */,
 				D09E103637D8FC3E2EFC09836EB3D8B3 /* SENInsight.m */,
 				19E7D9F6DA2D08A594FD62FAE2D6F07D /* SENKeyedArchiver.h */,
@@ -2960,7 +2948,6 @@
 				B9D1315E2E64734016716647F7DE83A8 /* SENAPIClient.h in Headers */,
 				36319422DBD5AAD8C68981C0E0409FC4 /* SENAPIDevice.h in Headers */,
 				2065DD4D3198261F2499CA7EBEEE1497 /* SENAPIExpansion.h in Headers */,
-				30C46022BC1CD88A5E8FA5DCF4D0A8AD /* SENAPIFeature.h in Headers */,
 				35CE9E24C400C1A11C87D84DE2BFDD76 /* SENAPIInsight.h in Headers */,
 				0BA754B0B4584CD5CC02E93054189390 /* SENAPINotification.h in Headers */,
 				A9ACCD347BC5A002B679DF432B760BC6 /* SENAPIPhoto.h in Headers */,
@@ -2983,7 +2970,6 @@
 				E1002BF6AFDE4433E4A9B7D6C988923C /* SENDevicePairingInfo.h in Headers */,
 				1957A3FF812AF6CDB2BC69A59A33BD2E /* SENDFUStatus.h in Headers */,
 				EEE81DE21E944EEED36ECA2E7FB9C77D /* SENExpansion.h in Headers */,
-				ACABF90B260DA89D76FB22414AB328B3 /* SENFeatures.h in Headers */,
 				8D0D4E4659753264E832EF5A02186E47 /* SENInsight.h in Headers */,
 				A6E724E6E949835565021F93086CC830 /* SENKeyedArchiver.h in Headers */,
 				C1FC1B92C43224ED5BCEEC20CB0EE163 /* SENLocalPreferences.h in Headers */,
@@ -3705,7 +3691,6 @@
 				AADA5D72B9321E47D9D128F03A07EF92 /* SENAPIClient.m in Sources */,
 				70F6D7EDCCE834F5C869E3986E078AD7 /* SENAPIDevice.m in Sources */,
 				943951C3E3DD4C2189D59D1B2AF40887 /* SENAPIExpansion.m in Sources */,
-				4EAC2F35E0835B8008DC0794B7EA274C /* SENAPIFeature.m in Sources */,
 				8035C5A82F5F767B99AC417CAE7BF861 /* SENAPIInsight.m in Sources */,
 				C25028D45CA8E7C2568196D75E78A6F5 /* SENAPINotification.m in Sources */,
 				625448A04122B72A67289627E4721CBA /* SENAPIPhoto.m in Sources */,
@@ -3728,7 +3713,6 @@
 				15AB25D0CE1D45AB6DD086315AEEEC46 /* SENDevicePairingInfo.m in Sources */,
 				B23B8D4D8B682EA5D59F157C360C04ED /* SENDFUStatus.m in Sources */,
 				2D439F3421EA24DBE517285D19879282 /* SENExpansion.m in Sources */,
-				04F90BA7D3E8172F26B7BB4A4EB92E01 /* SENFeatures.m in Sources */,
 				A9B7B989025BBC5FD5EE65AD5FB099C6 /* SENInsight.m in Sources */,
 				139DDD27E495257E5CF2D665F7A4CBF0 /* SENKeyedArchiver.m in Sources */,
 				C4877F0645777415FAEE062ED94CAC2B /* SENLocalPreferences.m in Sources */,
