@@ -39,16 +39,21 @@
 }
 
 - (void)processAdvertisementData:(NSDictionary*)data {
-    SENSenseMode mode = SENSenseModeUnknown;
     NSDictionary* serviceData = data[CBAdvertisementDataServiceDataKey];
-    NSMutableString* deviceIdInHex = nil;
-    NSMutableString* macAddress = nil;
-    
     if ([serviceData count] == 1) {
         NSData* deviceIdData = [serviceData allValues][0];
-        const unsigned char* dataBuffer = (const unsigned char*)[deviceIdData bytes];
+        [self processAdvertisementServiceData:deviceIdData];
+    }
+}
+
+- (void)processAdvertisementServiceData:(NSData*)serviceData {
+    NSMutableString* deviceIdInHex = nil;
+    SENSenseMode mode = SENSenseModeUnknown;
+    
+    if (serviceData) { // serviceData is the device id data
+        const unsigned char* dataBuffer = (const unsigned char*)[serviceData bytes];
         if (dataBuffer) {
-            NSInteger len = [deviceIdData length];
+            NSInteger len = [serviceData length];
             NSInteger deviceIdLength = len;
             
             // per Pang, if device id data is odd in length, the last byte indicates
@@ -65,26 +70,53 @@
             for (int i = 0; i < deviceIdLength; i++) {
                 [deviceIdInHex appendString:[NSString stringWithFormat:@"%02lX", (unsigned long)dataBuffer[i]]];
             }
-            
-            // determine mac address from device id (based on code from fw)
-            int macSize = 6;
-            char* mac[6] = {0x5c,0x6b,0x4f,0,0,0};
-            mac[3] = dataBuffer[len - 3];
-            mac[4] = dataBuffer[len - 2];
-            mac[5] = dataBuffer[len - 1];
-            
-            macAddress = [NSMutableString new];
-            for (int i = 0; i < macSize; i++) {
-                [macAddress appendString:[NSString stringWithFormat:@"%@%02lX",
-                                          [macAddress length] > 0 ? @":" : @"",
-                                          (unsigned long)mac[i]]];
-            }
         }
     }
     
     [self setDeviceId:deviceIdInHex];
-    [self setMacAddress:macAddress];
     [self setMode:mode];
+}
+
+- (NSString*)macAddressFrom:(unsigned char*)deviceId deviceIdLength:(NSInteger)length {
+    // determine mac address from device id (based on code from fw)
+    int macSize = 6;
+    char* mac[6] = {0x5c,0x6b,0x4f,0,0,0};
+    mac[3] = deviceId[length - 3];
+    mac[4] = deviceId[length - 2];
+    mac[5] = deviceId[length - 1];
+    
+    NSMutableString* macAddress = [NSMutableString new];
+    for (int i = 0; i < macSize; i++) {
+        [macAddress appendString:[NSString stringWithFormat:@"%@%02lX",
+                                  [macAddress length] > 0 ? @":" : @"",
+                                  (unsigned long)mac[i]]];
+    }
+    
+    return macAddress;
+}
+
+- (NSString*)macAddress {
+    if ([[self deviceId] length] == 0) {
+        return nil;
+    }
+    
+    if (!_macAddress) {
+        NSMutableData* deviceIdData = [NSMutableData data];
+        int idx;
+        for (idx = 0; idx+2 <= [[self deviceId] length]; idx+=2) {
+            NSRange range = NSMakeRange(idx, 2);
+            NSString* hexStr = [[self deviceId] substringWithRange:range];
+            NSScanner* scanner = [NSScanner scannerWithString:hexStr];
+            unsigned int intValue;
+            [scanner scanHexInt:&intValue];
+            [deviceIdData appendBytes:&intValue length:1];
+        }
+        NSInteger len = [deviceIdData length];
+        const unsigned char* dataBuffer = (const unsigned char*)[deviceIdData bytes];
+        _macAddress = [self macAddressFrom:dataBuffer deviceIdLength:len];
+    }
+    
+    return _macAddress;
 }
 
 - (NSString*)name {
