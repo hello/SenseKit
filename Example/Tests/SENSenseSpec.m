@@ -21,7 +21,7 @@ describe(@"SENSense", ^{
     
     describe(@"-processAdvertisementData: (private)", ^{
         
-        it(@"should properly extract name and mode when mode exists", ^{
+        it(@"should properly extract id, mac, and mode when mode exists", ^{
             NSString* rawId = @"EEF54712354EEF99";
             NSString* deviceIdWithMode = [rawId stringByAppendingString:@"1"];
             NSDictionary* advertisementData = @{
@@ -41,10 +41,11 @@ describe(@"SENSense", ^{
             [sense processAdvertisementData:advertisementData];
             
             [[[sense deviceId] should] beNonNil];
+            [[[sense macAddress] should] beNonNil];
             [[@([sense mode]) should] equal:@(SENSenseModeNormal)];
         });
         
-        it(@"mode should be unknown when not set", ^{
+        it(@"should be unknown mode when not set", ^{
             NSString* rawId = @"EEF54712354EEF99";
             NSDictionary* advertisementData = @{
                 CBAdvertisementDataServiceDataKey : @{@"data" : [rawId dataUsingEncoding:NSUTF8StringEncoding]}
@@ -55,7 +56,6 @@ describe(@"SENSense", ^{
             [[[sense deviceId] should] beNonNil];
             [[@([sense mode]) should] equal:@(SENSenseModeUnknown)];
         });
-
         
     });
     
