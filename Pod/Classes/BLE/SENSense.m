@@ -75,10 +75,9 @@
             
             macAddress = [NSMutableString new];
             for (int i = 0; i < macSize; i++) {
-                if ([macAddress length] > 0) {
-                    [macAddress appendString:@":"];
-                }
-                [macAddress appendString:[NSString stringWithFormat:@"%02lX", (unsigned long)mac[i]]];
+                [macAddress appendString:[NSString stringWithFormat:@"%@%02lX",
+                                          [macAddress length] > 0 ? @":" : @"",
+                                          (unsigned long)mac[i]]];
             }
         }
     }
