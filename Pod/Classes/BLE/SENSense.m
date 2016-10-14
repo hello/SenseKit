@@ -12,6 +12,7 @@
 @interface SENSense()
 
 @property (nonatomic, copy, readwrite) NSString* deviceId;
+@property (nonatomic, copy, readwrite) NSString* macAddress;
 @property (nonatomic, assign, readwrite) SENSenseMode mode;
 @property (nonatomic, strong) LGPeripheral* peripheral;
 
@@ -41,6 +42,7 @@
     SENSenseMode mode = SENSenseModeUnknown;
     NSDictionary* serviceData = data[CBAdvertisementDataServiceDataKey];
     NSMutableString* deviceIdInHex = nil;
+    NSMutableString* macAddress = nil;
     
     if ([serviceData count] == 1) {
         NSData* deviceIdData = [serviceData allValues][0];
@@ -63,10 +65,25 @@
             for (int i = 0; i < deviceIdLength; i++) {
                 [deviceIdInHex appendString:[NSString stringWithFormat:@"%02lX", (unsigned long)dataBuffer[i]]];
             }
+            
+            // determine mac address from device id (based on code from fw)
+            int macSize = 6;
+            char* mac[6] = {0x5c,0x6b,0x4f,0,0,0};
+            mac[3] = dataBuffer[len - 3];
+            mac[4] = dataBuffer[len - 2];
+            mac[5] = dataBuffer[len - 1];
+            
+            macAddress = [NSMutableString new];
+            for (int i = 0; i < macSize; i++) {
+                [macAddress appendString:[NSString stringWithFormat:@"%@%02lX",
+                                          [macAddress length] > 0 ? @":" : @"",
+                                          (unsigned long)mac[i]]];
+            }
         }
     }
     
     [self setDeviceId:deviceIdInHex];
+    [self setMacAddress:macAddress];
     [self setMode:mode];
 }
 
@@ -75,7 +92,8 @@
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"Sense: %@, in mode: %ld, id: %@", [self name], (long)[self mode], [self deviceId]];
+    return [NSString stringWithFormat:@"Sense: %@, mac: %@, in mode: %ld, id: %@",
+            [self name], [self macAddress], (long)[self mode], [self deviceId]];
 }
 
 - (BOOL)isEqual:(id)object {
