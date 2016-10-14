@@ -39,15 +39,21 @@
 }
 
 - (void)processAdvertisementData:(NSDictionary*)data {
-    SENSenseMode mode = SENSenseModeUnknown;
     NSDictionary* serviceData = data[CBAdvertisementDataServiceDataKey];
-    NSMutableString* deviceIdInHex = nil;
-    
     if ([serviceData count] == 1) {
         NSData* deviceIdData = [serviceData allValues][0];
-        const unsigned char* dataBuffer = (const unsigned char*)[deviceIdData bytes];
+        [self processAdvertisementServiceData:deviceIdData];
+    }
+}
+
+- (void)processAdvertisementServiceData:(NSData*)serviceData {
+    NSMutableString* deviceIdInHex = nil;
+    SENSenseMode mode = SENSenseModeUnknown;
+    
+    if (serviceData) { // serviceData is the device id data
+        const unsigned char* dataBuffer = (const unsigned char*)[serviceData bytes];
         if (dataBuffer) {
-            NSInteger len = [deviceIdData length];
+            NSInteger len = [serviceData length];
             NSInteger deviceIdLength = len;
             
             // per Pang, if device id data is odd in length, the last byte indicates

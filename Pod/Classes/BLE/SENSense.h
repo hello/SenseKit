@@ -16,6 +16,11 @@ typedef NS_ENUM(NSUInteger, SENSenseMode) {
     SENSenseModePairing = 2
 };
 
+typedef NS_ENUM(NSUInteger, SENSenseAdvertisedVersion) {
+    SENSenseAdvertisedVersionUnknown = 0,
+    SENSenseAdvertisedVersionVoice
+};
+
 @interface SENSense : NSObject
 
 @property (nonatomic, copy, readonly) NSString* name;
