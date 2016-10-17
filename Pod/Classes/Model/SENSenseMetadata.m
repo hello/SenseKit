@@ -55,6 +55,15 @@ static NSString* const SENSenseVoiceDictPropPrmaryUser = @"is_primary_user";
 static NSString* const SENSenseVoiceDictPropVolume = @"volume";
 static NSString* const SENSenseVoiceDictPropMuted = @"muted";
 
+- (instancetype)initWithDictionary:(NSDictionary *)data {
+    if (self = [super init]) {
+        _volume = SENObjectOfClass(data[SENSenseVoiceDictPropVolume], [NSNumber class]);
+        _primaryUser = [SENObjectOfClass(data[SENSenseVoiceDictPropPrmaryUser], [NSNumber class]) boolValue];
+        _muted = [SENObjectOfClass(data[SENSenseVoiceDictPropMuted], [NSNumber class]) boolValue];
+    }
+    return self;
+}
+
 @end
 
 @implementation SENSenseMetadata
