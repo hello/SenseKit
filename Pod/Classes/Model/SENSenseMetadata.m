@@ -64,6 +64,12 @@ static NSString* const SENSenseVoiceDictPropMuted = @"muted";
     return self;
 }
 
+- (NSDictionary*)dictionaryValue {
+    return @{SENSenseVoiceDictPropPrmaryUser : @([self isPrimaryUser]),
+             SENSenseVoiceDictPropMuted : @([self isMuted]),
+             SENSenseVoiceDictPropVolume : [self volume] ?: @1};
+}
+
 @end
 
 @implementation SENSenseMetadata
