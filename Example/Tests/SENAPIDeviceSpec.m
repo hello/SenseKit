@@ -22,6 +22,9 @@ NSDictionary* (^CreateFakeSenseVoiceData)(void) = ^(void) {
              @"state" : @"NORMAL",
              @"color" : @"BLACK",
              @"hw_version" : @"SENSE_WITH_VOICE",
+             @"voice_metadata" : @{@"is_primary_user" : @(YES),
+                                   @"volume" : @100,
+                                   @"muted" : @(NO)},
              @"wifi_info" : @{@"ssid" : @"Hello",
                               @"rssi" : @(-50),
                               @"condition" : @"FAIR",
@@ -194,6 +197,16 @@ describe(@"SENAPIDevice", ^{
                 SENSenseMetadata* senseMetadata = [devices senseMetadata];
                 [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
                 [[@([senseMetadata hardwareVersion]) should] equal:@(SENSenseHardwareVoice)];
+            });
+            
+            it(@"should have voice info", ^{
+                SENPairedDevices* devices = responseObj;
+                SENSenseMetadata* senseMetadata = [devices senseMetadata];
+                [[[senseMetadata voiceInfo] should] beNonNil];
+                
+                [[@([[senseMetadata voiceInfo] isMuted]) should] beNo];
+                [[[[senseMetadata voiceInfo] volume] should] beNonNil];
+                [[@([[senseMetadata voiceInfo] isPrimaryUser]) should] beYes];
             });
 
         });
@@ -785,6 +798,62 @@ describe(@"SENAPIDevice", ^{
                 [[@(response) should] equal:@(SENSwapResponsePairedToAnother)];
             });
             
+        });
+        
+    });
+    
+    describe(@"+updateVoiceInfo:forSenseId:completion:", ^{
+        
+        __block NSString* path = nil;
+        __block NSDictionary* payload = nil;
+        __block SENSenseVoiceInfo* voiceInfo = nil;
+        __block NSError* apiError = nil;
+        __block BOOL calledBack = NO;
+        
+        beforeEach(^{
+            voiceInfo = [SENSenseVoiceInfo new];
+            [voiceInfo setPrimaryUser:YES];
+            [voiceInfo setMuted:YES];
+            [voiceInfo setVolume:@88];
+            
+            [SENAPIClient stub:@selector(PATCH:parameters:completion:) withBlock:^id(NSArray *params) {
+                path = [params firstObject];
+                payload = params[1];
+                SENAPIDataBlock cb = [params lastObject];
+                cb (nil, nil);
+                return nil;
+            }];
+            
+            [SENAPIDevice updateVoiceInfo:voiceInfo forSenseId:@"1" completion:^(id data, NSError *error) {
+                calledBack = YES;
+                apiError = error;
+            }];
+        });
+        
+        afterEach(^{
+            [SENAPIClient clearStubs];
+            voiceInfo = nil;
+            calledBack = NO;
+            apiError = nil;
+            path = nil;
+        });
+        
+        it(@"should not return an error", ^{
+            [[apiError should] beNil];
+        });
+        
+        it(@"should have called back", ^{
+            [[@(calledBack) should] beYes];
+        });
+        
+        it(@"should have set a correct path", ^{
+            [[path should] equal:@"v2/devices/sense/1/voice"];
+        });
+        
+        it(@"should have sent request with correct payload", ^{
+            [[payload[@"muted"] should] equal:@([voiceInfo isMuted])];
+            [[payload[@"is_primary_user"] should] equal:@([voiceInfo isPrimaryUser])];
+            [[payload[@"volume"] should] equal:[voiceInfo volume]];
         });
         
     });
