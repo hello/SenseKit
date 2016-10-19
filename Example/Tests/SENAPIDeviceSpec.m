@@ -198,16 +198,6 @@ describe(@"SENAPIDevice", ^{
                 [[[senseMetadata uniqueId] should] equal:fakeSense[@"id"]];
                 [[@([senseMetadata hardwareVersion]) should] equal:@(SENSenseHardwareVoice)];
             });
-            
-            it(@"should have voice info", ^{
-                SENPairedDevices* devices = responseObj;
-                SENSenseMetadata* senseMetadata = [devices senseMetadata];
-                [[[senseMetadata voiceInfo] should] beNonNil];
-                
-                [[@([[senseMetadata voiceInfo] isMuted]) should] beNo];
-                [[[[senseMetadata voiceInfo] volume] should] beNonNil];
-                [[@([[senseMetadata voiceInfo] isPrimaryUser]) should] beYes];
-            });
 
         });
         
