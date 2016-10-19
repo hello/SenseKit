@@ -1,15 +1,15 @@
 //
-//  SENSenseVoiceInfo.m
+//  SENSenseVoiceSettings.m
 //  Pods
 //
 //  Created by Jimmy Lu on 10/19/16.
 //
 //
 
-#import "SENSenseVoiceInfo.h"
+#import "SENSenseVoiceSettings.h"
 #import "Model.h"
 
-@implementation SENSenseVoiceInfo
+@implementation SENSenseVoiceSettings
 
 static NSString* const SENSenseVoiceDictPropPrmaryUser = @"is_primary_user";
 static NSString* const SENSenseVoiceDictPropVolume = @"volume";
@@ -35,7 +35,7 @@ static NSString* const SENSenseVoiceDictPropMuted = @"muted";
         return NO;
     }
     
-    SENSenseVoiceInfo* other = object;
+    SENSenseVoiceSettings* other = object;
     return SENObjectIsEqual([self volume], [other volume])
         && [self isPrimaryUser] && [other isPrimaryUser]
         && [self isMuted] && [other isMuted];
