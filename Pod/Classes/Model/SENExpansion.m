@@ -29,7 +29,7 @@ static NSString* const kSENExpansionStateEnumRevoked = @"REVOKED";
 static NSString* const kSENExpansionStateEnumNotConfigured = @"NOT_CONFIGURED";
 
 static NSString* const kSENExpansionCategoryEnumLights = @"LIGHT";
-static NSString* const kSENExpansionCategoryEnumThermostat = @"THERMOSTAT";
+static NSString* const kSENExpansionCategoryEnumTemp = @"TEMPERATURE";
 
 static NSString* const kSENExpansionValueRangeAttrMin = @"min";
 static NSString* const kSENExpansionValueRangeAttrMax = @"max";
@@ -39,10 +39,21 @@ static NSString* const kSENExpansionValueRangeAttrSetpoint = @"setpoint";
     NSString* upperString = [typeString uppercaseString];
     if ([upperString isEqualToString:kSENExpansionCategoryEnumLights]) {
         return SENExpansionTypeLights;
-    } else if ([upperString isEqualToString:kSENExpansionCategoryEnumThermostat]) {
+    } else if ([upperString isEqualToString:kSENExpansionCategoryEnumTemp]) {
         return SENExpansionTypeThermostat;
     } else {
         return SENExpansionTypeUnknown;
+    }
+}
+
++ (NSString*)typeStringFromEnum:(SENExpansionType)type {
+    switch (type) {
+        case SENExpansionTypeLights:
+            return kSENExpansionCategoryEnumLights;
+        case SENExpansionTypeThermostat:
+            return kSENExpansionCategoryEnumTemp;
+        case SENExpansionTypeUnknown:
+            return @"";
     }
 }
 
@@ -82,17 +93,6 @@ static NSString* const kSENExpansionValueRangeAttrSetpoint = @"setpoint";
         _valueRange = [[self class] valueRangeFromDict:range];
     }
     return self;
-}
-
-- (NSString*)typeStringFromEnum:(SENExpansionType)type {
-    switch (type) {
-        case SENExpansionTypeLights:
-            return kSENExpansionCategoryEnumLights;
-        case SENExpansionTypeThermostat:
-            return kSENExpansionCategoryEnumThermostat;
-        case SENExpansionTypeUnknown:
-            return @"";
-    }
 }
 
 - (SENExpansionState)stateFromString:(NSString*)stateString {
