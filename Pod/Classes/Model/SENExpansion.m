@@ -20,6 +20,7 @@ static NSString* const kSENExpansionAttrAuthUri = @"auth_uri";
 static NSString* const kSENExpansionAttrCompletionUri = @"completion_uri";
 static NSString* const kSENExpansionAttrState = @"state";
 static NSString* const kSENExpansionAttrDescription = @"description";
+static NSString* const kSENExpansionAttrValueRange = @"value_range";
 
 static NSString* const kSENExpansionStateEnumNotConnected = @"NOT_CONNECTED";
 static NSString* const kSENExpansionStateEnumConnectedOn = @"CONNECTED_ON";
@@ -27,10 +28,41 @@ static NSString* const kSENExpansionStateEnumConnectedOff = @"CONNECTED_OFF";
 static NSString* const kSENExpansionStateEnumRevoked = @"REVOKED";
 static NSString* const kSENExpansionStateEnumNotConfigured = @"NOT_CONFIGURED";
 
+static NSString* const kSENExpansionCategoryEnumLights = @"LIGHT";
+static NSString* const kSENExpansionCategoryEnumThermostat = @"THERMOSTAT";
+
+static NSString* const kSENExpansionValueRangeAttrMin = @"min";
+static NSString* const kSENExpansionValueRangeAttrMax = @"max";
+static NSString* const kSENExpansionValueRangeAttrSetpoint = @"setpoint";
+
++ (SENExpansionType)typeFromString:(NSString*)typeString {
+    NSString* upperString = [typeString uppercaseString];
+    if ([upperString isEqualToString:kSENExpansionCategoryEnumLights]) {
+        return SENExpansionTypeLights;
+    } else if ([upperString isEqualToString:kSENExpansionCategoryEnumThermostat]) {
+        return SENExpansionTypeThermostat;
+    } else {
+        return SENExpansionTypeUnknown;
+    }
+}
+
++ (SENExpansionValueRange)valueRangeFromDict:(NSDictionary*)dict {
+    SENExpansionValueRange range;
+    range.min = [SENObjectOfClass(dict[kSENExpansionValueRangeAttrMin], [NSNumber class]) integerValue];
+    range.max = [SENObjectOfClass(dict[kSENExpansionValueRangeAttrMax], [NSNumber class]) integerValue];
+    range.setpoint = [SENObjectOfClass(dict[kSENExpansionValueRangeAttrSetpoint], [NSNumber class]) integerValue];
+    return range;
+}
+
++ (NSDictionary*)dictionaryValueFromRange:(SENExpansionValueRange)range {
+    return @{kSENExpansionValueRangeAttrMin : @(range.min),
+             kSENExpansionValueRangeAttrMax : @(range.max),
+             kSENExpansionValueRangeAttrSetpoint : @(range.setpoint)};
+}
+
 - (instancetype)initWithDictionary:(NSDictionary*)dict {
     if (self = [super init]) {
         _identifier = SENObjectOfClass(dict[kSENExpansionAttrId], [NSNumber class]);
-        _category = SENObjectOfClass(dict[kSENExpansionAttrCategory], [NSString class]);
         _deviceName = SENObjectOfClass(dict[kSENExpansionAttrDeviceName], [NSString class]);
         _serviceName = SENObjectOfClass(dict[kSENExpansionAttrServiceName], [NSString class]);
         _authUri = SENObjectOfClass(dict[kSENExpansionAttrAuthUri], [NSString class]);
@@ -40,10 +72,27 @@ static NSString* const kSENExpansionStateEnumNotConfigured = @"NOT_CONFIGURED";
         NSDictionary* iconDict = SENObjectOfClass(dict[kSENExpansionAttrIcon], [NSDictionary class]);
         _remoteIcon = [[SENRemoteImage alloc] initWithDictionary:iconDict];
         
+        NSString* typeText = SENObjectOfClass(dict[kSENExpansionAttrCategory], [NSString class]);
+        _type = [[self class] typeFromString:typeText];
+        
         NSString* stateText = SENObjectOfClass(dict[kSENExpansionAttrState], [NSString class]);
         _state = [self stateFromString:stateText];
+        
+        NSDictionary* range = SENObjectOfClass(dict[kSENExpansionAttrValueRange], [NSDictionary class]);
+        _valueRange = [[self class] valueRangeFromDict:range];
     }
     return self;
+}
+
+- (NSString*)typeStringFromEnum:(SENExpansionType)type {
+    switch (type) {
+        case SENExpansionTypeLights:
+            return kSENExpansionCategoryEnumLights;
+        case SENExpansionTypeThermostat:
+            return kSENExpansionCategoryEnumThermostat;
+        case SENExpansionTypeUnknown:
+            return @"";
+    }
 }
 
 - (SENExpansionState)stateFromString:(NSString*)stateString {
@@ -87,12 +136,12 @@ static NSString* const kSENExpansionStateEnumNotConfigured = @"NOT_CONFIGURED";
     
     SENExpansion* other = object;
     return SENObjectIsEqual([self identifier], [other identifier])
-        && SENObjectIsEqual([self category], [other category])
         && SENObjectIsEqual([self deviceName], [other deviceName])
         && SENObjectIsEqual([self serviceName], [other serviceName])
         && SENObjectIsEqual([self authUri], [other authUri])
         && SENObjectIsEqual([self authCompletionUri], [other authCompletionUri])
-        && [self state] == [other state];
+        && [self state] == [other state]
+        && [self type] == [other type];
 }
 
 - (NSUInteger)hash {
