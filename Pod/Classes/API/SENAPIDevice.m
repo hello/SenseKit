@@ -70,7 +70,7 @@ static NSString* const SENAPIDeviceSwapParamDeviceId = @"sense_id";
                       SENAPIDeviceVoicePath];
     [SENAPIClient GET:path parameters:nil completion:^(id data, NSError *error) {
         SENSenseVoiceSettings* voiceSettings = nil;
-        if (error && [data isKindOfClass:[NSDictionary class]]) {
+        if (!error && [data isKindOfClass:[NSDictionary class]]) {
             voiceSettings = [[SENSenseVoiceSettings alloc] initWithDictionary:data];
         }
         completion (voiceSettings, error);
