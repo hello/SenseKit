@@ -46,6 +46,7 @@
 		BF6098811D4ACC8C0005C8F0 /* SENAPISpeechSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6098801D4ACC8C0005C8F0 /* SENAPISpeechSpec.m */; };
 		BF658A451B3C9280003DDF0F /* SENAPISupportSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF658A441B3C9280003DDF0F /* SENAPISupportSpec.m */; };
 		BF8339821C0FAF5600BFD0F4 /* SENRemoteImageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */; };
+		BF87232F1DB85A5E0040D091 /* SENSenseVoiceSettingsSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF87232E1DB85A5E0040D091 /* SENSenseVoiceSettingsSpec.m */; };
 		BF8E1A951A6893F1009E421F /* SENPreferenceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */; };
 		BF8E1A981A6898CD009E421F /* SENAPIPreferenceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8E1A971A6898CD009E421F /* SENAPIPreferenceSpec.m */; };
 		BF9450A71BBF3E7800BA0023 /* SENAPIAppStatsSpecs.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9450A61BBF3E7800BA0023 /* SENAPIAppStatsSpecs.m */; };
@@ -126,6 +127,7 @@
 		BF6098801D4ACC8C0005C8F0 /* SENAPISpeechSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPISpeechSpec.m; sourceTree = "<group>"; };
 		BF658A441B3C9280003DDF0F /* SENAPISupportSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPISupportSpec.m; sourceTree = "<group>"; };
 		BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENRemoteImageSpec.m; sourceTree = "<group>"; };
+		BF87232E1DB85A5E0040D091 /* SENSenseVoiceSettingsSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENSenseVoiceSettingsSpec.m; sourceTree = "<group>"; };
 		BF8E1A941A6893F1009E421F /* SENPreferenceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENPreferenceSpec.m; sourceTree = "<group>"; };
 		BF8E1A971A6898CD009E421F /* SENAPIPreferenceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIPreferenceSpec.m; sourceTree = "<group>"; };
 		BF9450A61BBF3E7800BA0023 /* SENAPIAppStatsSpecs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENAPIAppStatsSpecs.m; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				BF8339811C0FAF5600BFD0F4 /* SENRemoteImageSpec.m */,
 				BF55D8751CA4716B00379FBF /* SENSleepSoundsSpec.m */,
 				BF55D8771CA4750100379FBF /* SENSleepSoundDurationsSpec.m */,
+				BF87232E1DB85A5E0040D091 /* SENSenseVoiceSettingsSpec.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -666,6 +669,7 @@
 				8A9266A11A5CC11F00D908EC /* SENSoundSpec.m in Sources */,
 				8AF2CFD619B63A1D00D09600 /* SENTimelineSpec.m in Sources */,
 				BF1E2E661A01AE6400DDD0D0 /* SENAPITimeZoneSpec.m in Sources */,
+				BF87232F1DB85A5E0040D091 /* SENSenseVoiceSettingsSpec.m in Sources */,
 				BF5E444819ACEF6D00278A2F /* SENSenseManagerSpec.m in Sources */,
 				BF238DDD1D19F76600F6E62C /* SENAPIShareSpec.m in Sources */,
 				BF17A19F19C3C8B500C4B6CA /* SENAPIQuestionsSpec.m in Sources */,
