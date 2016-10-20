@@ -32,7 +32,7 @@
 #import "SENSensorDataRequest.h"
 #import "SENExpansion.h"
 #import "SENAlarmCollection.h"
-#import "SENSenseVoiceInfo.h"
+#import "SENSenseVoiceSettings.h"
 
 void SENClearModel();
 

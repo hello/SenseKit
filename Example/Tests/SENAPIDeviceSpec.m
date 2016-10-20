@@ -796,12 +796,12 @@ describe(@"SENAPIDevice", ^{
         
         __block NSString* path = nil;
         __block NSDictionary* payload = nil;
-        __block SENSenseVoiceInfo* voiceInfo = nil;
+        __block SENSenseVoiceSettings* voiceInfo = nil;
         __block NSError* apiError = nil;
         __block BOOL calledBack = NO;
         
         beforeEach(^{
-            voiceInfo = [SENSenseVoiceInfo new];
+            voiceInfo = [SENSenseVoiceSettings new];
             [voiceInfo setPrimaryUser:YES];
             [voiceInfo setMuted:YES];
             [voiceInfo setVolume:@88];
@@ -814,7 +814,7 @@ describe(@"SENAPIDevice", ^{
                 return nil;
             }];
             
-            [SENAPIDevice updateVoiceInfo:voiceInfo forSenseId:@"1" completion:^(id data, NSError *error) {
+            [SENAPIDevice updateVoiceSettings:voiceInfo forSenseId:@"1" completion:^(id data, NSError *error) {
                 calledBack = YES;
                 apiError = error;
             }];

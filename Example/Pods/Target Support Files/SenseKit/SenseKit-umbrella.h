@@ -56,7 +56,7 @@
 #import "SENQuestion.h"
 #import "SENRemoteImage.h"
 #import "SENSenseMetadata.h"
-#import "SENSenseVoiceInfo.h"
+#import "SENSenseVoiceSettings.h"
 #import "SENSenseWiFiStatus.h"
 #import "SENSensor.h"
 #import "SENSensorDataRequest.h"
