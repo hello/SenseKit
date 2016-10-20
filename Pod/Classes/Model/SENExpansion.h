@@ -47,6 +47,7 @@ typedef struct {
 
 + (SENExpansionValueRange)valueRangeFromDict:(NSDictionary*)dict;
 + (SENExpansionType)typeFromString:(NSString*)typeString;
++ (NSString*)typeStringFromEnum:(SENExpansionType)type;
 + (NSDictionary*)dictionaryValueFromRange:(SENExpansionValueRange)range;
 - (NSDictionary*)dictionaryValueForUpdate;
 
