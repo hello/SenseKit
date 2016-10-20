@@ -11,7 +11,7 @@
 
 @implementation SENSenseVoiceSettings
 
-static NSString* const SENSenseVoiceDictPropPrmaryUser = @"is_primary_account";
+static NSString* const SENSenseVoiceDictPropPrmaryUser = @"is_primary_user";
 static NSString* const SENSenseVoiceDictPropVolume = @"volume";
 static NSString* const SENSenseVoiceDictPropMuted = @"muted";
 
