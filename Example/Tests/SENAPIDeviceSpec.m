@@ -22,7 +22,7 @@ NSDictionary* (^CreateFakeSenseVoiceData)(void) = ^(void) {
              @"state" : @"NORMAL",
              @"color" : @"BLACK",
              @"hw_version" : @"SENSE_WITH_VOICE",
-             @"voice_metadata" : @{@"is_primary_account" : @(YES),
+             @"voice_metadata" : @{@"is_primary_user" : @(YES),
                                    @"volume" : @100,
                                    @"muted" : @(NO)},
              @"wifi_info" : @{@"ssid" : @"Hello",
@@ -842,7 +842,7 @@ describe(@"SENAPIDevice", ^{
         
         it(@"should have sent request with correct payload", ^{
             [[payload[@"muted"] should] equal:@([voiceInfo isMuted])];
-            [[payload[@"is_primary_account"] should] equal:@([voiceInfo isPrimaryUser])];
+            [[payload[@"is_primary_user"] should] equal:@([voiceInfo isPrimaryUser])];
             [[payload[@"volume"] should] equal:[voiceInfo volume]];
         });
         
