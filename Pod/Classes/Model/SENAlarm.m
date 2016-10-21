@@ -13,7 +13,7 @@
 @implementation SENAlarmExpansion
 
 static NSString* const SENAlarmExpansionIdKey = @"id";
-static NSString* const SENAlarmExpansionEnableKey = @"enable";
+static NSString* const SENAlarmExpansionEnableKey = @"enabled";
 static NSString* const SENAlarmExpansionCategoryKey = @"category";
 static NSString* const SENAlarmExpansionTargetRangeKey = @"target_value";
 

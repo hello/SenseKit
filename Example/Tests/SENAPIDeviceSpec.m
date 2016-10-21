@@ -802,8 +802,8 @@ describe(@"SENAPIDevice", ^{
         
         beforeEach(^{
             voiceInfo = [SENSenseVoiceSettings new];
-            [voiceInfo setPrimaryUser:YES];
-            [voiceInfo setMuted:YES];
+            [voiceInfo setPrimaryUser:@(YES)];
+            [voiceInfo setMuted:@(YES)];
             [voiceInfo setVolume:@88];
             
             [SENAPIClient stub:@selector(PATCH:parameters:completion:) withBlock:^id(NSArray *params) {
