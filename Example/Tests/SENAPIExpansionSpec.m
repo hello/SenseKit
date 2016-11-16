@@ -120,20 +120,22 @@ describe(@"SENAPIExpansion", ^{
             __block SENExpansion* expansion = nil;
             
             beforeEach(^{
-                expansion = [[SENExpansion alloc] initWithDictionary:@{@"id" : @"1",
-                                                                       @"category" : @"TEMPERATURE",
-                                                                       @"device_name" : @"Nest Thermostat",
-                                                                       @"service_name" : @"Nest",
-                                                                       @"icon_uri" : @"https://s3.amazon.com",
-                                                                       @"auth_uri" : @"https://oauth.com",
-                                                                       @"completion_uri" : @"https://complete.oauth.com",
-                                                                       @"state" : @"NOT_CONNECTED"}];
+                NSDictionary* expDict = @{@"id" : @"1",
+                                          @"category" : @"TEMPERATURE",
+                                          @"device_name" : @"Nest Thermostat",
+                                          @"service_name" : @"Nest",
+                                          @"icon_uri" : @"https://s3.amazon.com",
+                                          @"auth_uri" : @"https://oauth.com",
+                                          @"completion_uri" : @"https://complete.oauth.com",
+                                          @"state" : @"NOT_CONNECTED"};
+                expansion = [[SENExpansion alloc] initWithDictionary:expDict];
                 [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
                     SENAPIDataBlock cb = [params lastObject];
                     cb (@[@{@"id" : @"1",
                             @"name" : @"bedroom"},
                           @{@"id" : @"2",
-                            @"name" : @"living room"}], nil);
+                            @"name" : @"living room",
+                            @"capabilities" : @[@"HEAT", @"COOL"]}], nil);
                     return nil;
                 }];
                 
@@ -159,6 +161,13 @@ describe(@"SENAPIExpansion", ^{
             
             it(@"should not return an error", ^{
                 [[apiError should] beNil];
+            });
+            
+            it(@"last object should contain 2 capabilities", ^{
+                SENExpansionConfig* config = [responseObj lastObject];
+                [[[config capabilities] should] haveCountOf:2];
+                [[@([config hasCapability:SENExpansionCapabilityHeat]) should] beYes];
+                [[@([config hasCapability:SENExpansionCapabilityCool]) should] beYes];
             });
             
         });
