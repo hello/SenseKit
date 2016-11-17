@@ -176,8 +176,6 @@ describe(@"SENAuthorizationService", ^{
                 
                 [SENAPIClient stub:@selector(DELETE:parameters:completion:) withBlock:^id(NSArray *params) {
                     apiCalled = YES;
-                    SENAPIDataBlock block = [params lastObject];
-                    block (nil, nil);
                     return nil;
                 }];
                 

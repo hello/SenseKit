@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
     ss.source_files = 'Pod/Classes/BLE/**/*.{h,m}'
     ss.dependency 'LGBluetooth'
     ss.dependency 'SHSProtoBuf'
-    ss.dependency 'iOSDFULibrary'
+    ss.dependency 'iOSDFULibrary', '2.1.6'
     ss.dependency 'CocoaLumberjack', '~> 2.0.0'
   end
 
