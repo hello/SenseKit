@@ -407,6 +407,7 @@
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
 						DevelopmentTeam = MSG86J7GNF;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -784,7 +785,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -825,7 +826,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -877,7 +878,7 @@
 					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
 				);
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -914,6 +915,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -957,7 +959,7 @@
 					"\"${PODS_ROOT}/Headers/Public/SenseKit\"",
 				);
 				INFOPLIST_FILE = "SenseKit/SenseKit-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -994,6 +996,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = is.hello.SenseKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
