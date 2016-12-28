@@ -7,7 +7,8 @@
 #import "SENAPIClient.h"
 
 NSString* const SENAuthorizationServiceKeychainService = @"is.hello.Sense";
-NSString* const SENAuthorizationServiceAppIdPrefix = @"MSG86J7GNF";
+NSString* const SENAuthorizationServiceKeychainBundleKey = @"SenseKeychainGroup";
+NSString* const SENAuthorizationServiceKeychainGroupId = @"MSG86J7GNF.is.hello.Sense";
 NSString* const SENAuthorizationServiceDidAuthorizeNotification = @"SENAuthorizationServiceDidAuthorize";
 NSString* const SENAuthorizationServiceDidDeauthorizeNotification = @"SENAuthorizationServiceDidDeauthorize";
 NSString* const SENAuthorizationServiceDidReauthorizeNotification = @"SENAuthorizationServiceDidReauthorize";
@@ -27,26 +28,11 @@ static NSString* const SENAuthorizationServiceContentType = @"application/x-www-
     static FXKeychain* keychain = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString* bundleId = [[NSBundle mainBundle] objectForInfoDictionaryKey:kCFBundleIdentifierKey];
-        NSArray* idComponents = [bundleId componentsSeparatedByString:@"."];
-        if ([idComponents count] > 3) {
-            // To maintain backward compatibility and to reduce risk, we'll need
-            // to filter out the extension identifier, that is appended to the
-            // the host application's identifier.  This is a bit hacky, but this
-            // is preferred over creating riskier code.
-            NSMutableString* mainAppBundleId = [NSMutableString string];
-            NSString* component = nil;
-            for (NSInteger i = 0; i < 3; i++) {
-                component = idComponents[i];
-                if ([mainAppBundleId length] > 0) {
-                    [mainAppBundleId appendString:@"."];
-                }
-                [mainAppBundleId appendString:component];
-            }
-            bundleId = [mainAppBundleId copy];
+        NSString* groupId = [[NSBundle mainBundle] objectForInfoDictionaryKey:SENAuthorizationServiceKeychainBundleKey];
+        if (!groupId) {
+            groupId = SENAuthorizationServiceKeychainGroupId;
         }
-        NSString* group = [NSString stringWithFormat:@"%@.%@", SENAuthorizationServiceAppIdPrefix, bundleId];
-        keychain = [[FXKeychain alloc] initWithService:SENAuthorizationServiceKeychainService accessGroup:group];
+        keychain = [[FXKeychain alloc] initWithService:SENAuthorizationServiceKeychainService accessGroup:groupId];
     });
     return keychain;
 }
