@@ -59,6 +59,49 @@ describe(@"SENAPISystemAlerts", ^{
             
         });
         
+        context(@"api returns 1 sense is muted alert", ^{
+            
+            __block id returnedObj = nil;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params  lastObject];
+                    cb (@[@{@"title" : @"title",
+                            @"body" : @"body",
+                            @"category" : @"SENSE_MUTED"}], nil);
+                    return nil;
+                }];
+                
+                [SENAPISystemAlerts getSystemAlerts:^(id data, NSError *error) {
+                    returnedObj = data;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                returnedObj = nil;
+                apiError = nil;
+            });
+            
+            it(@"should return an array of 1 alert object with proper category", ^{
+                [[returnedObj should] beKindOfClass:[NSArray class]];
+                [[returnedObj should] haveCountOf:1];
+                
+                SENSystemAlert* alert = [returnedObj firstObject];
+                [[[alert localizedTitle] should] beNonNil];
+                [[[alert localizedBody] should] beNonNil];
+                [[@([alert category]) should] equal:@(SENAlertCategoryMuted)];
+            });
+            
+            it(@"should not have an error", ^{
+                [[apiError should] beNil];
+            });
+            
+        });
+        
     });
     
 });
