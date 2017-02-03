@@ -477,6 +477,8 @@
 		BB0F35C6FCCFF2A63A2C234CA3C2A3E3 /* KWMatcherFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6B864F86B7C2905D79481B526D793D /* KWMatcherFactory.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		BBBF0CC2B71A364148251BDF96F1423D /* SENSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 673306E57C6CECDDFC3F3F068AA6D3E7 /* SENSound.m */; };
 		BC397572D9F74C49F519AA263CCD4354 /* KWBeEmptyMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = A486809D768F042C1B547B128661D8DD /* KWBeEmptyMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BF0871C41E4505D800E57C8C /* SENNotificationSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = BF0871C21E4505D800E57C8C /* SENNotificationSetting.h */; };
+		BF0871C51E4505D800E57C8C /* SENNotificationSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = BF0871C31E4505D800E57C8C /* SENNotificationSetting.m */; };
 		BF8F9FAF0FACE0468BA518AF15A47D8B /* NSJSONSerialization-NSNullRemoval-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C77F5A0EB756D71735586D27D9D545EA /* NSJSONSerialization-NSNullRemoval-dummy.m */; };
 		BFC7FF4903B5266B73F616DF25C22FCD /* KWContainMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 062FD4BBB41A5E71E9A37FE256302459 /* KWContainMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C012854963E90C5ED326C04D6E26EE10 /* Zip-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 639E4FACA367E9143ADE3FE5B1994DF7 /* Zip-dummy.m */; };
@@ -1305,6 +1307,8 @@
 		BBB33B4153DB933544CEE64EB80CA0C6 /* FXKeychain.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = FXKeychain.modulemap; sourceTree = "<group>"; };
 		BCB7DF1016096248A66B95E957AA0767 /* LSASIHTTPRequestAdapter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LSASIHTTPRequestAdapter.m; path = Nocilla/Hooks/ASIHTTPRequest/LSASIHTTPRequestAdapter.m; sourceTree = "<group>"; };
 		BEF4407AB755E441AD04FBEBEFBD86DE /* KWEqualMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWEqualMatcher.m; path = Classes/Matchers/KWEqualMatcher.m; sourceTree = "<group>"; };
+		BF0871C21E4505D800E57C8C /* SENNotificationSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SENNotificationSetting.h; sourceTree = "<group>"; };
+		BF0871C31E4505D800E57C8C /* SENNotificationSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SENNotificationSetting.m; sourceTree = "<group>"; };
 		BF4682EADE7BC51A157E028978AC34E0 /* KWGenericMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWGenericMatcher.m; path = Classes/Matchers/KWGenericMatcher.m; sourceTree = "<group>"; };
 		BF4998C70791442BCA13E7D604A3F7BE /* LSHTTPStubURLProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LSHTTPStubURLProtocol.h; path = Nocilla/Hooks/NSURLRequest/LSHTTPStubURLProtocol.h; sourceTree = "<group>"; };
 		BF72860B578E4CA29C018F431FDD94EF /* SENSenseMessage.pb.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SENSenseMessage.pb.h; sourceTree = "<group>"; };
@@ -2082,6 +2086,8 @@
 				AB5652F68DE07EB584F83979FE7BAD8D /* SENTrends.m */,
 				26187AB9FD6E8DD04321C4B223469958 /* SENTrendsGraph.h */,
 				DF53D153E9E33C71A5E300D7871FEFBE /* SENTrendsGraph.m */,
+				BF0871C21E4505D800E57C8C /* SENNotificationSetting.h */,
+				BF0871C31E4505D800E57C8C /* SENNotificationSetting.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2997,6 +3003,7 @@
 				60E3009342BEE96D32C546BE2DB60052 /* UIImageView+AFNetworking.h in Headers */,
 				659960F7E28E993E08CCC1E8A383E710 /* UIKit+AFNetworking.h in Headers */,
 				D9F4E833E37B611B432F6B5D7072DDA2 /* UIProgressView+AFNetworking.h in Headers */,
+				BF0871C41E4505D800E57C8C /* SENNotificationSetting.h in Headers */,
 				C6354FEC7728A4C86DAD8092509BA7D4 /* UIRefreshControl+AFNetworking.h in Headers */,
 				AE2A07407FB50BA249984DC0620E84C0 /* UIWebView+AFNetworking.h in Headers */,
 			);
@@ -3569,6 +3576,7 @@
 				CFA8D6B529A0EBFF0316F2629AB2556E /* AFImageDownloader.m in Sources */,
 				A6C6019D45BE62C61210A9CC619368EF /* AFNetworkActivityIndicatorManager.m in Sources */,
 				3D2789FC760A97301909F0B1201626CD /* AFNetworking-dummy.m in Sources */,
+				BF0871C51E4505D800E57C8C /* SENNotificationSetting.m in Sources */,
 				68A38977EBAE334DC3C22386D00D2622 /* AFNetworkReachabilityManager.m in Sources */,
 				20607BE2B1E5F31765026E5AC64DB27D /* AFSecurityPolicy.m in Sources */,
 				DFFA215EEAA8DDBD540076927535275C /* AFURLRequestSerialization.m in Sources */,
