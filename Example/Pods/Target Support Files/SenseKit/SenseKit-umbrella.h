@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "SenseKit.h"
 #import "API.h"
@@ -51,6 +53,7 @@
 #import "SENInsight.h"
 #import "SENKeyedArchiver.h"
 #import "SENLocalPreferences.h"
+#import "SENNotificationSetting.h"
 #import "SENPairedDevices.h"
 #import "SENPillMetadata.h"
 #import "SENPreference.h"

@@ -45,6 +45,7 @@ static NSString* kSENScheduleParamMinute = @"minute";
 
 @interface SENNotificationSetting()
 
+@property (nonatomic, copy) NSString* typeString;
 @property (nonatomic, copy) NSString* localizedName;
 @property (nonatomic, assign) SENNotificationType type;
 @property (nonatomic, assign, getter=isEnabled) BOOL enabled;
@@ -81,17 +82,17 @@ static NSString* kSENSettingTypeSleepReminder = @"SLEEP_REMINDER";
     NSString* typeString = SENObjectOfClass(data[kSENSettingType], [NSString class]);
     NSNumber* enabled = SENObjectOfClass(data[kSENSettingEnabled], [NSNumber class]);
     NSDictionary* scheduleDict = SENObjectOfClass(data[kSENSettingSchedule], [NSDictionary class]);
-    SENNotificationType type = [SENNotificationSetting typeFromString:typeString];
     
-    if (!name || type == SENNotificationTypeUnknown) {
+    if (!name || !typeString) {
         return nil;
     }
     
     if (self = [super init]) {
         _localizedName = [name copy];
-        _type = type;
+        _type = [SENNotificationSetting typeFromString:typeString];
         _enabled = [enabled boolValue];
         _schedule = _schedule;
+        _typeString = typeString;
     }
     
     return self;
@@ -100,7 +101,7 @@ static NSString* kSENSettingTypeSleepReminder = @"SLEEP_REMINDER";
 - (NSDictionary*)dictionaryValue {
     NSMutableDictionary* dict = [NSMutableDictionary dictionary];
     [dict addEntriesFromDictionary:@{kSENSettingName: [self localizedName],
-                                     kSENSettingType: [self stringValueOfType],
+                                     kSENSettingType: [self typeString],
                                      kSENSettingEnabled: @([self isEnabled])}];
     
     if ([self schedule]) {
@@ -109,19 +110,6 @@ static NSString* kSENSettingTypeSleepReminder = @"SLEEP_REMINDER";
     }
     
     return dict;
-}
-
-- (NSString*)stringValueOfType {
-    switch ([self type]) {
-        case SENNotificationTypeSleepReminder:
-            return kSENSettingTypeSleepReminder;
-        case SENNotificationTypeSystem:
-            return kSENSettingTypeSystem;
-        case SENNotificationTypeSleepScore:
-            return kSENSettingTypeSleepReminder;
-        default:
-            return @"";
-    }
 }
 
 @end
