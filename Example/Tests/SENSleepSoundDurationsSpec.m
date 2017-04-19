@@ -7,7 +7,7 @@
 //
 
 #import <Kiwi/Kiwi.h>
-#import "Model.h"
+#import <SenseKit/Model.h>
 
 SPEC_BEGIN(SENSleepSoundDurationsSpec)
 

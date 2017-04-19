@@ -110,6 +110,96 @@ describe(@"SENAPISpeech", ^{
         
     });
     
+    describe(@"+getSupportedVoiceCommands:", ^{
+        
+        context(@"API returned list of commands", ^{
+            
+            __block NSDictionary* response = nil;
+            __block NSArray<SENVoiceCommandGroup*>* commands = nil;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                response = @{@"voice_command_topics" : @[@{@"title" : @"Alarm and Sleep Sounds",
+                                                           @"description" : @"Wake me up at 10 AM.",
+                                                           @"subtopics" : @[@{@"command_title" : @"Alarms",
+                                                                              @"commands" : @[@"wake me up at 10 AM."]}]}]};
+                
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (response, nil);
+                    return nil;
+                }];
+                
+                [SENAPISpeech getSupportedVoiceCommands:^(id data, NSError *error) {
+                    commands = data;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                commands = nil;
+                apiError = nil;
+            });
+            
+            it(@"should not return an error", ^{
+                [[apiError should] beNil];
+            });
+            
+            it(@"should return an array of command groups", ^{
+                [[commands should] beKindOfClass:[NSArray class]];
+                
+                id firstObject = [commands firstObject];
+                [[firstObject should] beKindOfClass:[SENVoiceCommandGroup class]];
+            });
+            
+            it(@"should have 1 sub command group", ^{
+                SENVoiceCommandGroup* command = (id) [commands firstObject];
+                [[[command groups] should] haveCountOf:1];
+            });
+            
+        });
+        
+        context(@"API returned an error", ^{
+            
+            __block NSArray<SENVoiceCommandGroup*>* commands = nil;
+            __block NSError* apiError = nil;
+            
+            beforeEach(^{
+                
+                [SENAPIClient stub:@selector(GET:parameters:completion:) withBlock:^id(NSArray *params) {
+                    SENAPIDataBlock cb = [params lastObject];
+                    cb (nil, [NSError errorWithDomain:@"test" code:-1 userInfo:nil]);
+                    return nil;
+                }];
+                
+                [SENAPISpeech getSupportedVoiceCommands:^(id data, NSError *error) {
+                    commands = data;
+                    apiError = error;
+                }];
+                
+            });
+            
+            afterEach(^{
+                [SENAPIClient clearStubs];
+                commands = nil;
+                apiError = nil;
+            });
+            
+            it(@"should return an error", ^{
+                [[apiError should] beNonNil];
+            });
+            
+            it(@"should not return an array of command groups", ^{
+                [[commands should] beNil];
+            });
+            
+        });
+        
+    });
+    
 });
 
 SPEC_END
