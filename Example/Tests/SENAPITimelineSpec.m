@@ -39,6 +39,8 @@ describe(@"SENAPITimeline", ^{
         context(@"a timeline exists for the date", ^{
 
             NSDictionary* json = @{@"score": @78,
+                                   @"locked_down" : @1,
+                                   @"sleep_periods" : @[@"NIGHT"],
                                    @"score_condition": @"ALERT",
                                    @"message": @"You were asleep for 7.8 hours and sleeping soundly for 5.4 hours.",
                                    @"date": @"2015-03-11",
@@ -93,6 +95,15 @@ describe(@"SENAPITimeline", ^{
             it(@"does not return an error", ^{
                 [[error should] beNil];
             });
+            
+            it(@"should be locked", ^{
+                [[@([timeline isLocked]) should] beYes];
+            });
+            
+            it(@"should contain 1 sleep period", ^{
+                [[[timeline sleepPeriods] should] haveCountOf:1];
+            });
+        
         });
 
         context(@"no timeline exists for the date", ^{
