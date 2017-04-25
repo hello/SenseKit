@@ -248,9 +248,10 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
         }
     }
     if (data[SENTimelineSegmentSleepPeriodKey]) {
-        NSInteger sleepPeriod = [data[SENTimelineSegmentSleepPeriodKey] integerValue];
-        if (self.sleepPeriod != sleepPeriod) {
-            self.sleepPeriod = sleepPeriod;
+        NSString* sleepPeriod = data[SENTimelineSegmentSleepPeriodKey];
+        SENTimelineSegmentSleepPeriod period = SENTimelineSegmentPeriodFromString(sleepPeriod);
+        if (self.sleepPeriod != period) {
+            self.sleepPeriod = period;
             changed = YES;
         }
     }
