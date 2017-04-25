@@ -16,7 +16,9 @@ extern NSInteger const SENTimelineSentinelValue;
 @property (nonatomic) SENCondition scoreCondition;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSArray* segments;
+@property (nonatomic, strong) NSOrderedSet* sleepPeriods;
 @property (nonatomic, strong) NSArray* metrics;
+@property (nonatomic, assign, getter=isLocked) BOOL locked;
 
 /**
  *  Persist changes

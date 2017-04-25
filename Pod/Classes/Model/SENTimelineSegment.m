@@ -99,6 +99,33 @@ SENTimelineSegmentAction SENTimelineSegmentActionFromStrings(NSArray* actions) {
     return action;
 }
 
+SENTimelineSegmentSleepPeriod SENTimelineSegmentPeriodFromString(NSString* sleepPeriod) {
+    NSString* periodUpper = [sleepPeriod uppercaseString];
+    if ([periodUpper isEqualToString:@"NIGHT"]) {
+        return SENTimelineSegmentSleepPeriodNight;
+    } else if ([periodUpper isEqualToString:@"MORNING"]) {
+        return SENTimelineSegmentSleepPeriodMorning;
+    } else if ([periodUpper isEqualToString:@"AFTERNOON"]) {
+        return SENTimelineSegmentSleepPeriodNoon;
+    } else {
+        return SENTimelineSegmentSleepPeriodUnknown;
+    }
+}
+
+NSString* SENTimelineSegmentPeriodFromType(SENTimelineSegmentSleepPeriod type) {
+    switch (type) {
+        case SENTimelineSegmentSleepPeriodNight:
+            return @"NIGHT";
+        case SENTimelineSegmentSleepPeriodMorning:
+            return @"MORNING";
+        case SENTimelineSegmentSleepPeriodNoon:
+            return @"AFTERNOON";
+        case SENTimelineSegmentSleepPeriodUnknown:
+        default:
+            return @"NONE";
+    }
+}
+
 @implementation SENTimelineSegment
 
 static NSString* const SENTimelineSegmentServerID = @"id";
@@ -108,6 +135,7 @@ static NSString* const SENTimelineSegmentEventType = @"event_type";
 static NSString* const SENTimelineSegmentMessage = @"message";
 static NSString* const SENTimelineSegmentSleepDepth = @"sleep_depth";
 static NSString* const SENTimelineSegmentSleepStateKey = @"sleep_state";
+static NSString* const SENTimelineSegmentSleepPeriodKey = @"sleep_period";
 static NSString* const SENTimelineSegmentActions = @"valid_actions";
 static NSString* const SENTimelineSegmentTimezoneOffset = @"timezone_offset";
 static NSString* const SENTimelineSegmentDate = @"event_timestamp";
@@ -122,6 +150,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
         _type = SENTimelineSegmentTypeFromString(segmentData[SENTimelineSegmentEventType]);
         _sleepDepth = [SENObjectOfClass(segmentData[SENTimelineSegmentSleepDepth], [NSNumber class]) integerValue];
         _sleepState = SENTimelineSegmentSleepStateFromString(segmentData[SENTimelineSegmentSleepStateKey]);
+        _sleepPeriod = SENTimelineSegmentPeriodFromString(segmentData[SENTimelineSegmentSleepPeriodKey]);
         _timezone = SENTimelineTimezoneFromOffset(segmentData[SENTimelineSegmentTimezoneOffset]);
         _possibleActions = SENTimelineSegmentActionFromStrings(segmentData[SENTimelineSegmentActions]);
     }
@@ -136,6 +165,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
         _message = [aDecoder decodeObjectForKey:SENTimelineSegmentMessage];
         _type = [aDecoder decodeIntegerForKey:SENTimelineSegmentEventType];
         _sleepDepth = [aDecoder decodeIntegerForKey:SENTimelineSegmentSleepDepth];
+        _sleepPeriod = [aDecoder decodeIntegerForKey:SENTimelineSegmentSleepPeriodKey];
         _sleepState = [aDecoder decodeIntegerForKey:SENTimelineSegmentSleepStateKey];
         _possibleActions = [aDecoder decodeIntegerForKey:SENTimelineSegmentActions];
         _timezone = [aDecoder decodeObjectOfClass:[NSTimeZone class] forKey:SENTimelineSegmentTimezoneOffset];
@@ -145,8 +175,8 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
 
 - (NSString*)description
 {
-    static NSString* const SENTimelineSegmentDescriptionFormat = @"<SENTimelineSegment @sleepDepth=%ld @duration=%f @eventType=%ld>";
-    return [NSString stringWithFormat:SENTimelineSegmentDescriptionFormat, (long)self.sleepDepth, self.duration, (long)self.type];
+    static NSString* const SENTimelineSegmentDescriptionFormat = @"<SENTimelineSegment @sleepDepth=%ld @duration=%f @eventType=%ld @sleepPeriod=%ld>";
+    return [NSString stringWithFormat:SENTimelineSegmentDescriptionFormat, (long)self.sleepDepth, self.duration, (long)self.type, (long)self.sleepPeriod];
 }
 
 - (void)encodeWithCoder:(NSCoder*)aCoder
@@ -156,6 +186,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
     [aCoder encodeObject:self.message forKey:SENTimelineSegmentMessage];
     [aCoder encodeInteger:self.type forKey:SENTimelineSegmentEventType];
     [aCoder encodeInteger:self.sleepDepth forKey:SENTimelineSegmentSleepDepth];
+    [aCoder encodeInteger:self.sleepPeriod forKey:SENTimelineSegmentSleepPeriodKey];
     [aCoder encodeInteger:self.possibleActions forKey:SENTimelineSegmentActions];
     [aCoder encodeInteger:self.sleepState forKey:SENTimelineSegmentSleepStateKey];
     [aCoder encodeObject:self.timezone forKey:SENTimelineSegmentTimezoneOffset];
@@ -171,6 +202,7 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
         && ((self.timezone && [self.timezone isEqual:object.timezone]) || (!self.timezone && !object.timezone))
         && self.sleepDepth == object.sleepDepth
         && self.sleepState == object.sleepState
+        && self.sleepPeriod == object.sleepPeriod
         && self.duration == object.duration
         && self.possibleActions == object.possibleActions;
 }
@@ -212,6 +244,14 @@ static NSString* const SENTimelineSegmentKeyType = @"event_type";
         NSInteger sleepDepth = [data[SENTimelineSegmentSleepDepth] integerValue];
         if (self.sleepDepth != sleepDepth) {
             self.sleepDepth = sleepDepth;
+            changed = YES;
+        }
+    }
+    if (data[SENTimelineSegmentSleepPeriodKey]) {
+        NSString* sleepPeriod = data[SENTimelineSegmentSleepPeriodKey];
+        SENTimelineSegmentSleepPeriod period = SENTimelineSegmentPeriodFromString(sleepPeriod);
+        if (self.sleepPeriod != period) {
+            self.sleepPeriod = period;
             changed = YES;
         }
     }

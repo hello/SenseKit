@@ -1,5 +1,6 @@
 
 #import "SENTimeline.h"
+#import "Model.h"
 #import "SENKeyedArchiver.h"
 
 NSInteger const SENTimelineSentinelValue = -1;
@@ -33,6 +34,11 @@ static NSString* const SENTimelineSegments = @"events";
 static NSString* const SENTimelineMetrics = @"metrics";
 static NSString* const SENTimelineRetrievalKeyFormat = @"Timeline-v2-%ld-%ld-%ld";
 static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
+static NSString* const SENTimelinePeriods = @"sleep_periods";
+static NSString* const SENTimelineLock = @"locked_down";
+static NSString* const SENTimelinePeriodMorning = @"MORNING";
+static NSString* const SENTimelinePeriodAfternoon = @"AFTERNOON";
+static NSString* const SENTimelinePeriodNight = @"NIGHT";
 
 + (NSDateFormatter*)dateFormatter
 {
@@ -79,6 +85,8 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
         _message = sleepData[SENTimelineMessage];
         _segments = [self parseSegmentsFromArray:sleepData[SENTimelineSegments]];
         _metrics = [self parseMetricsFromArray:sleepData[SENTimelineMetrics]];
+        _locked = [SENObjectOfClass(sleepData[SENTimelineLock], [NSNumber class]) boolValue];
+        _sleepPeriods = [self parseSleepPeriodsFromArray:sleepData[SENTimelinePeriods]];
     }
     return self;
 }
@@ -92,6 +100,8 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
         _segments = [aDecoder decodeObjectForKey:SENTimelineSegments];
         _metrics = [aDecoder decodeObjectForKey:SENTimelineMetrics];
         _scoreCondition = [aDecoder decodeIntegerForKey:SENTimelineScoreCondition];
+        _locked = [aDecoder decodeBoolForKey:SENTimelineLock];
+        _sleepPeriods = [aDecoder decodeObjectForKey:SENTimelinePeriods];
     }
     return self;
 }
@@ -109,7 +119,9 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
     [aCoder encodeObject:_message forKey:SENTimelineMessage];
     [aCoder encodeObject:_segments forKey:SENTimelineSegments];
     [aCoder encodeObject:_metrics forKey:SENTimelineMetrics];
+    [aCoder encodeBool:_locked forKey:SENTimelineLock];
     [aCoder encodeInteger:_scoreCondition forKey:SENTimelineScoreCondition];
+    [aCoder encodeObject:_sleepPeriods forKey:SENTimelinePeriods];
 }
 
 - (BOOL)updateWithDictionary:(NSDictionary*)data
@@ -151,6 +163,21 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
             changed = YES;
         }
     }
+    if (data[SENTimelineLock]) {
+        BOOL lock = [SENObjectOfClass(data[SENTimelineLock], [NSNumber class]) boolValue];
+        if (self.isLocked != lock) {
+            self.locked = lock;
+            changed = YES;
+        }
+    }
+    if (data[SENTimelinePeriods]) {
+        NSArray* periods = data[SENTimelinePeriods];
+        NSOrderedSet* set = [self parseSleepPeriodsFromArray:periods];
+        if (![self.sleepPeriods isEqual:set]) {
+            self.sleepPeriods = set;
+            changed = YES;
+        }
+    }
     return changed;
 }
 
@@ -172,6 +199,14 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
             [metrics addObject:metric];
     }
     return metrics;
+}
+
+- (NSOrderedSet *)parseSleepPeriodsFromArray:(NSArray *)sleepPeriodsData {
+    NSMutableOrderedSet* periods = [NSMutableOrderedSet orderedSetWithCapacity:[sleepPeriodsData count]];
+    for (NSString* period in sleepPeriodsData) {
+        [periods addObject:@(SENTimelineSegmentPeriodFromString(period))];
+    }
+    return periods;
 }
 
 - (NSArray *)parseSegmentsFromArray:(NSArray *)segmentsData {
@@ -209,6 +244,8 @@ static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
         && ((self.metrics && [self.metrics isEqualToArray:object.metrics]) || (!self.metrics && !object.metrics))
         && ((self.score && [self.score isEqual:object.score]) || (!self.score && !object.score))
         && self.scoreCondition == object.scoreCondition
+        && self.isLocked == object.isLocked
+        && SENObjectIsEqual(self.sleepPeriods, object.sleepPeriods)
         && ((self.message && [self.message isEqual:object.message]) || (!self.message && !object.message));
 }
 
