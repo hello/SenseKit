@@ -33,6 +33,10 @@ static NSString* const SENTimelineSegments = @"events";
 static NSString* const SENTimelineMetrics = @"metrics";
 static NSString* const SENTimelineRetrievalKeyFormat = @"Timeline-v2-%ld-%ld-%ld";
 static NSString* const SENTimelineDateFormat = @"yyyy-MM-dd";
+static NSString* const SENTimelinePeriods = @"sleep_periods";
+static NSString* const SENTimelinePeriodMorning = @"MORNING";
+static NSString* const SENTimelinePeriodAfternoon = @"AFTERNOON";
+static NSString* const SENTimelinePeriodNight = @"NIGHT";
 
 + (NSDateFormatter*)dateFormatter
 {

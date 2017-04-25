@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "SENSerializable.h"
 
+typedef NS_ENUM(NSInteger, SENTimelineSegmentSleepPeriod) {
+    SENTimelineSegmentSleepPeriodUnknown,
+    SENTimelineSegmentSleepPeriodNight,
+    SENTimelineSegmentSleepPeriodMorning,
+    SENTimelineSegmentSleepPeriodNoon
+};
+
 typedef NS_ENUM(NSInteger, SENTimelineSegmentSleepState) {
     SENTimelineSegmentSleepStateUnknown,
     SENTimelineSegmentSleepStateAwake,
@@ -45,9 +52,11 @@ typedef NS_ENUM(NSInteger, SENTimelineSegmentAction) {
     SENTimelineSegmentActionIncorrect  = 1 << 4
 };
 
+SENTimelineSegmentSleepPeriod SENTimelineSegmentPeriodFromString(NSString* sleepPeriod);
 SENTimelineSegmentSleepState SENTimelineSegmentSleepStateFromString(NSString *segmentType);
 SENTimelineSegmentType SENTimelineSegmentTypeFromString(NSString *segmentType);
 NSString* SENTimelineSegmentTypeNameFromType(SENTimelineSegmentType type);
+NSString* SENTimelineSegmentPeriodFromType(SENTimelineSegmentSleepPeriod type);
 SENTimelineSegmentAction SENTimelineSegmentActionFromStrings(NSArray* actions);
 
 @interface SENTimelineSegment : NSObject <NSCoding, SENSerializable, SENUpdatable>
@@ -58,6 +67,7 @@ SENTimelineSegmentAction SENTimelineSegmentActionFromStrings(NSArray* actions);
 @property (nonatomic) NSTimeInterval duration;
 @property (nonatomic) SENTimelineSegmentType type;
 @property (nonatomic) NSInteger sleepDepth;
+@property (nonatomic) SENTimelineSegmentSleepPeriod sleepPeriod;
 @property (nonatomic) SENTimelineSegmentSleepState sleepState;
 @property (nonatomic) SENTimelineSegmentAction possibleActions;
 

@@ -5,18 +5,20 @@
 
 @implementation SENAPITimeline
 
-static NSString* const SENAPITimelineEndpointFormat = @"v2/timeline/%ld-%02ld-%02ld";
+static NSString* const SENAPITimelineEndpointFormat = @"v2/timeline/%ld-%02ld-%02ldT%02ld:%02ld";
 static NSString* const SENAPITimelineEndpoint = @"v2/timeline";
 static NSString* const SENAPITimelineErrorDomain = @"is.hello.api.timeline";
 static NSString* const SENAPITimelineFeedbackPath = @"events";
 static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
+static NSString* const SENAPITimelineFeedbackParamSleepPeriod = @"sleep_period";
 
 + (void)timelineForDate:(NSDate *)date completion:(SENAPIDataBlock)block
 {
     NSString* const SENAPITimelineUnparsedErrorFormat = @"Raw timeline could not be parsed: %@";
     if (!block)
         return;
-    [SENAPIClient  GET:[self timelinePathForDate:date] parameters:nil completion:^(id data, NSError *error) {
+    NSString* path = [self timelinePathForDate:date];
+    [SENAPIClient  GET:path parameters:nil completion:^(id data, NSError *error) {
         if (error) {
             block(nil, error);
         } else if ([data isKindOfClass:[NSDictionary class]]) {
@@ -83,7 +85,9 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
 
     NSString* path = [self feedbackPathForDateOfSleep:date withEvent:sleepEvent];
     NSString* formattedTime = [self formattedValueWithHour:hour minutes:minutes];
-    NSDictionary* parameters = @{SENAPITimelineFeedbackParamNewTime : formattedTime};
+    NSString* sleepPeriod = SENTimelineSegmentPeriodFromType([sleepEvent sleepPeriod]);
+    NSDictionary* parameters = @{SENAPITimelineFeedbackParamNewTime : formattedTime,
+                                 SENAPITimelineFeedbackParamSleepPeriod : sleepPeriod ?: @""};
     [SENAPIClient PATCH:path parameters:parameters completion:^(id data, NSError *error) {
         SENTimeline* timeline = nil;
         if (!error && [data isKindOfClass:[NSDictionary class]]) {
@@ -92,7 +96,6 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
         if (block)
             block(timeline, error);
     }];
-
 }
 
 #pragma mark - Helpers
@@ -135,8 +138,12 @@ static NSString* const SENAPITimelineFeedbackParamNewTime = @"new_event_time";
     NSCalendar* calendar = [[NSCalendar alloc] initWithCalendarIdentifier:calendarId];
     NSCalendarUnit flags = (NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear);
     NSDateComponents* components = [calendar components:flags fromDate:date];
+    
+    NSCalendarUnit timeFlags = (NSCalendarUnitHour | NSCalendarUnitMinute);
+    NSDateComponents* currentComponents = [calendar components:timeFlags fromDate:[NSDate date]];
     return [NSString stringWithFormat:SENAPITimelineEndpointFormat,
-            (long)components.year, (long)components.month, (long)components.day];
+            (long)components.year, (long)components.month, (long)components.day,
+            (long)currentComponents.hour, (long)currentComponents.minute];
 }
 
 @end

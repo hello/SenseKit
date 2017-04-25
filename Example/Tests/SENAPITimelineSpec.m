@@ -151,12 +151,14 @@ describe(@"SENAPITimeline", ^{
             NSCalendar* calendar =
                 [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
             
-            NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+            NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute;
             NSDateComponents* components = [calendar components:flags fromDate:date];
-            gregorianDatePath = [NSString stringWithFormat:@"%ld-%02ld-%02ld",
+            gregorianDatePath = [NSString stringWithFormat:@"%ld-%02ld-%02ldT%02ld:%02ld",
                                  (long)[components year],
                                  (long)[components month],
-                                 (long)[components day]];
+                                 (long)[components day],
+                                 (long)[components hour],
+                                 (long)[components minute]];
         });
         
         afterEach(^{
